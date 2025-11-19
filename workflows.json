@@ -1,0 +1,168 @@
+{
+  "version": "0.1",
+  "description": "Reusable PressPilot OS workflows you can drop into any build.",
+  "workflows": [
+    {
+      "id": "pp-brand-kit-from-input",
+      "name": "Create Brand Kit From Logo or Description",
+      "summary": "Start with a PressPilotSaaSInput payload and turn it into a PressPilot-ready brand kit + normalized context.",
+      "inputs": [
+        "PressPilotSaaSInput payload"
+      ],
+      "outputs": [
+        "PressPilotNormalizedContext",
+        "Brand summary (tone, vibe, audience)",
+        "Color palette (7–9 colors, accessibility-safe variants included)",
+        "Font recommendations",
+        "Core messaging (tagline, value prop, 3–5 key statements)",
+        "Structured JSON ready for theme.json and patterns"
+      ],
+      "steps": [
+        "Use module: apply_business_inputs (produce PressPilotNormalizedContext)",
+        "Use module: analyze-brand-input (read brand + narrative cues)",
+        "Use module: generate_color_palette",
+        "Use module: choose_google_font_pair",
+        "Use module: build-brand-json-schema"
+      ],
+      "tags": ["brand", "design", "input-prep"],
+      "status": "stable"
+    },
+    {
+      "id": "pp-generate-theme-json",
+      "name": "Generate theme.json for WordPress Starter Theme",
+      "summary": "Take the normalized brand kit JSON and output a production-ready theme.json for pp-starter.",
+      "inputs": [
+        "Brand JSON (from pp-brand-kit-from-input)",
+        "PressPilotNormalizedContext",
+        "Optional: theme presets (layout density, corner style)"
+      ],
+      "outputs": [
+        "Complete theme.json file for the WordPress block theme"
+      ],
+      "steps": [
+        "Use module: map-brand-to-theme-tokens",
+        "Use module: build-theme-json-structure",
+        "Use module: validate-theme-json"
+      ],
+      "tags": ["wordpress", "theme", "tokens"],
+      "status": "stable"
+    },
+    {
+      "id": "pp-generate-3-design-variations",
+      "name": "Generate Three Design Variations",
+      "summary": "Give users three visual directions based on one PressPilotNormalizedContext before they lock in a kit.",
+      "inputs": [
+        "PressPilotNormalizedContext",
+        "Variation preset definitions (spacing, radii, motion)",
+        "Mode + navigation requirements from context.modes"
+      ],
+      "outputs": [
+        "PressPilotVariationSet (context + 3 manifests)",
+        "Preview assets or links for each variation",
+        "Metadata describing the differences for UI tabs"
+      ],
+      "steps": [
+        "Ensure PressPilotNormalizedContext is available (run apply_business_inputs if starting from payload)",
+        "Use module: generate_color_palette",
+        "Use module: choose_google_font_pair",
+        "Use module: build_pattern_set",
+        "Assemble three PressPilotVariationManifest objects with different palette/font/layout combos, including nav flags from context.modes",
+        "Return a PressPilotVariationSet for the preview UI"
+      ],
+      "tags": ["design", "preview", "variations"],
+      "status": "planned"
+    },
+    {
+      "id": "pp-restaurant-menu-generator",
+      "name": "Restaurant Menu Generator",
+      "summary": "Create a menu page and navigation item for restaurant/café mode using PressPilotSaaSInput.modes.restaurant.",
+      "inputs": [
+        "PressPilotNormalizedContext",
+        "Restaurant menu sections and PDF fields from PressPilotSaaSInput.modes.restaurant"
+      ],
+      "outputs": [
+        "Menu page pattern markup",
+        "Navigation item metadata for Menu",
+        "Localized menu copy blocks"
+      ],
+      "steps": [
+        "Ensure PressPilotNormalizedContext is available (run apply_business_inputs if needed)",
+        "Use module: generate_menu_page_from_pdf",
+        "Use module: build_pattern_set for menu blocks"
+      ],
+      "tags": ["restaurant", "patterns", "content"],
+      "status": "planned"
+    },
+    {
+      "id": "pp-woocommerce-population",
+      "name": "WooCommerce Population",
+      "summary": "Generate starter products, categories, and copy for ecommerce mode using PressPilotNormalizedContext.",
+      "inputs": [
+        "PressPilotNormalizedContext",
+        "Ecommerce product/category fields from PressPilotSaaSInput.modes.ecommerce"
+      ],
+      "outputs": [
+        "WooCommerce-ready seed data (products, categories, shipping)",
+        "Content JSON for kit bundling"
+      ],
+      "steps": [
+        "Ensure PressPilotNormalizedContext is available (run apply_business_inputs if needed)",
+        "Use module: generate_woocommerce_seed_content"
+      ],
+      "tags": ["ecommerce", "content", "woocommerce"],
+      "status": "planned"
+    },
+    {
+      "id": "pp-build-wp-kit",
+      "name": "Build WordPress Kit",
+      "summary": "Assemble the selected variation, patterns, and content into a WordPress block theme folder plus kit manifest.",
+      "inputs": [
+        "PressPilotNormalizedContext",
+        "Selected PressPilotVariationManifest",
+        "Pattern set (hero, pricing, features, contact)",
+        "Mode-specific assets (menu blocks or WooCommerce seed data)",
+        "Multilingual copy blocks"
+      ],
+      "outputs": [
+        "WordPress block theme folder structure",
+        "Content XML/JSON payload",
+        "Kit manifest describing assets"
+      ],
+      "steps": [
+        "Use module: build_pattern_set",
+        "Merge mode-specific assets into the theme folder structure",
+        "Attach navigation requirements (Menu/Shop) from PressPilotNormalizedContext.modes"
+      ],
+      "tags": ["wordpress", "kit", "assembly"],
+      "status": "planned"
+    },
+    {
+      "id": "pp-export-final-kits",
+      "name": "Export Final Kits",
+      "summary": "Package the theme folder, static site, and kit manifest into downloadable artifacts for the dashboard.",
+      "inputs": [
+        "PressPilotNormalizedContext",
+        "WordPress block theme directory",
+        "Kit manifest",
+        "Content payloads",
+        "Static site folder"
+      ],
+      "outputs": [
+        "Theme folder in ./build/themes/{slug}",
+        "PressPilot kit zip in ./build/kits/{slug}.zip",
+        "Static site folder in ./build/static/{slug}",
+        "Static site zip in ./build/static/{slug}.zip",
+        "Download metadata for both artifacts"
+      ],
+      "steps": [
+        "Validate folder structure and manifests",
+        "Use module: generate_static_site_bundle",
+        "Compress kit assets into zip",
+        "Compress static site folder into zip",
+        "Register download metadata for both downloads in the SaaS dashboard"
+      ],
+      "tags": ["export", "build", "distribution"],
+      "status": "planned"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "theme": "presspilot-golden-foundation",
+  "version": "0.5.0",
+  "businessTypes": [
+    {
+      "id": "saas",
+      "label": "SaaS / Product",
+      "styleVariation": "saas-bright",
+      "frontPagePatterns": [
+        "presspilot/hero-centered",
+        "presspilot/features-grid",
+        "presspilot/pricing-columns",
+        "presspilot/contact-simple"
+      ]
+    },
+    {
+      "id": "local-biz",
+      "label": "Local Business / Services",
+      "styleVariation": "local-biz-soft",
+      "frontPagePatterns": [
+        "presspilot/hero-centered",
+        "presspilot/features-grid",
+        "presspilot/pricing-columns",
+        "presspilot/contact-simple"
+      ]
+    },
+    {
+      "id": "ecom",
+      "label": "E-Commerce / Store",
+      "styleVariation": "ecom-bold",
+      "frontPagePatterns": [
+        "presspilot/hero-centered",
+        "presspilot/features-grid",
+        "presspilot/pricing-columns",
+        "presspilot/contact-simple"
+      ]
+    },
+    {
+      "id": "dark-pro",
+      "label": "Dark Pro / Portfolio",
+      "styleVariation": "dark-pro",
+      "frontPagePatterns": [
+        "presspilot/hero-centered",
+        "presspilot/features-grid",
+        "presspilot/pricing-columns",
+        "presspilot/contact-simple"
+      ]
+    }
+  ],
+  "aiCopyTargets": {
+    "hero": {
+      "headlineSelector": ".pp-hero-headline",
+      "subheadlineSelector": ".pp-hero-subheadline",
+      "primaryCtaSelector": ".pp-hero-cta-primary",
+      "secondaryCtaSelector": ".pp-hero-cta-secondary"
+    },
+    "features": {
+      "itemHeadlineSelector": ".pp-feature-title",
+      "itemBodySelector": ".pp-feature-body"
+    },
+    "pricing": {
+      "planNameSelector": ".pp-plan-name",
+      "planPriceSelector": ".pp-plan-price",
+      "planFeatureSelector": ".pp-plan-feature"
+    },
+    "contact": {
+      "headingSelector": ".pp-contact-heading",
+      "bodySelector": ".pp-contact-body"
+    }
+  }
+}

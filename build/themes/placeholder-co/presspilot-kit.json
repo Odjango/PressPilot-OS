@@ -1,0 +1,207 @@
+{
+  "theme": "presspilot-golden-foundation",
+  "version": "0.6.0",
+  "businessTypes": [
+    {
+      "id": "saas",
+      "label": "SaaS / Product",
+      "styleVariation": "saas-bright",
+      "hero": {
+        "title": "Launch your next SaaS in minutes",
+        "subtitle": "Drop in your brand and let PressPilot assemble a production-ready marketing site.",
+        "primaryCta": "Get started",
+        "secondaryCta": "See live demo"
+      },
+      "featuresHeading": "Everything you need to ship faster",
+      "features": [
+        {
+          "icon": "🚀",
+          "label": "Fast builds",
+          "description": "Generate complete landing pages and patterns in minutes, not weeks."
+        },
+        {
+          "icon": "🎨",
+          "label": "Flexible styles",
+          "description": "Swap between curated palettes and typography without touching code."
+        },
+        {
+          "icon": "🌍",
+          "label": "Multilingual-ready",
+          "description": "Serve global audiences with RTL-aware content and layouts."
+        },
+        {
+          "icon": "🔐",
+          "label": "Production ready",
+          "description": "Clean block markup, solid theme tokens, and exportable static builds."
+        }
+      ],
+      "contact": {
+        "headline": "Ready to launch?",
+        "body": "Tell us about your product and we’ll help you ship a polished marketing site.",
+        "primaryCta": "Book a call"
+      },
+      "frontPagePatterns": [
+        "presspilot/hero-centered",
+        "presspilot/features-grid",
+        "presspilot/pricing-columns",
+        "presspilot/contact-simple"
+      ]
+    },
+    {
+      "id": "local-biz",
+      "label": "Local Business / Services",
+      "styleVariation": "local-biz-soft",
+      "hero": {
+        "title": "Book more local clients",
+        "subtitle": "Give your neighborhood business a trustworthy site with clear services and calls to action.",
+        "primaryCta": "Schedule a consult",
+        "secondaryCta": "See sample site"
+      },
+      "featuresHeading": "Built for neighborhood services",
+      "features": [
+        {
+          "icon": "📍",
+          "label": "Local-first layout",
+          "description": "Show service areas, hours, and Google-friendly copy blocks."
+        },
+        {
+          "icon": "📅",
+          "label": "Booking friendly",
+          "description": "Highlight phone, booking links, or walk-in details with dedicated CTAs."
+        },
+        {
+          "icon": "🧾",
+          "label": "Service menus",
+          "description": "Prebuilt patterns for pricing tables, testimonials, and FAQs."
+        },
+        {
+          "icon": "🤝",
+          "label": "Trust-building sections",
+          "description": "Drop in reviews, certifications, and community highlights."
+        }
+      ],
+      "contact": {
+        "headline": "Need a local partner?",
+        "body": "Share a bit about your services and the neighborhoods you cover. We’ll tailor the kit around it.",
+        "primaryCta": "Request a callback"
+      },
+      "frontPagePatterns": [
+        "presspilot/hero-centered",
+        "presspilot/features-grid",
+        "presspilot/pricing-columns",
+        "presspilot/contact-simple"
+      ]
+    },
+    {
+      "id": "ecom",
+      "label": "E-Commerce / Store",
+      "styleVariation": "ecom-bold",
+      "hero": {
+        "title": "Ship a conversion-ready storefront",
+        "subtitle": "Give your product line a premium home with Woo-ready patterns and strong CTAs.",
+        "primaryCta": "Preview the shop",
+        "secondaryCta": "Talk to sales"
+      },
+      "featuresHeading": "Tools for modern storefronts",
+      "features": [
+        {
+          "icon": "🛒",
+          "label": "Product storytelling",
+          "description": "Hero, feature, and testimonial blocks geared for merch drops and launches."
+        },
+        {
+          "icon": "💳",
+          "label": "Payment-ready sections",
+          "description": "Highlight offers, bundles, and flexible pricing with purpose-built cards."
+        },
+        {
+          "icon": "📦",
+          "label": "Catalog friendly",
+          "description": "Grid layouts optimized for MOQ, bundle, or SKU callouts."
+        },
+        {
+          "icon": "📈",
+          "label": "Marketing ready",
+          "description": "Sections for promos, reviews, and newsletter capture built-in."
+        }
+      ],
+      "contact": {
+        "headline": "Scale your storefront",
+        "body": "Tell us about your products and fulfillment flow. We’ll tune the kit for your offer.",
+        "primaryCta": "Chat with a specialist"
+      },
+      "frontPagePatterns": [
+        "presspilot/hero-centered",
+        "presspilot/features-grid",
+        "presspilot/pricing-columns",
+        "presspilot/contact-simple"
+      ]
+    },
+    {
+      "id": "dark-pro",
+      "label": "Dark Pro / Portfolio",
+      "styleVariation": "dark-pro",
+      "hero": {
+        "title": "Give your studio a bold presence",
+        "subtitle": "Dark mode visuals and editorial typography for agencies, creators, and consultants.",
+        "primaryCta": "View case studies",
+        "secondaryCta": "Book intro call"
+      },
+      "featuresHeading": "Why teams hire your studio",
+      "features": [
+        {
+          "icon": "🖤",
+          "label": "Premium aesthetic",
+          "description": "High-contrast sections built for dramatic imagery and typography."
+        },
+        {
+          "icon": "🧠",
+          "label": "Strategy sections",
+          "description": "Show process, services, and expertise with flexible blocks."
+        },
+        {
+          "icon": "🗂️",
+          "label": "Case study ready",
+          "description": "Modular layouts for showcasing wins, metrics, and testimonials."
+        },
+        {
+          "icon": "⚡",
+          "label": "Quick handoff",
+          "description": "All copy hooks and CTAs wired for high-end consultative work."
+        }
+      ],
+      "contact": {
+        "headline": "Start a project",
+        "body": "Tell us about your client roster or the next campaign. We’ll prep a polished starter kit.",
+        "primaryCta": "Book discovery call"
+      },
+      "frontPagePatterns": [
+        "presspilot/hero-centered",
+        "presspilot/features-grid",
+        "presspilot/pricing-columns",
+        "presspilot/contact-simple"
+      ]
+    }
+  ],
+  "aiCopyTargets": {
+    "hero": {
+      "headlineSelector": ".pp-hero-headline",
+      "subheadlineSelector": ".pp-hero-subheadline",
+      "primaryCtaSelector": ".pp-hero-cta-primary",
+      "secondaryCtaSelector": ".pp-hero-cta-secondary"
+    },
+    "features": {
+      "itemHeadlineSelector": ".pp-feature-title",
+      "itemBodySelector": ".pp-feature-body"
+    },
+    "pricing": {
+      "planNameSelector": ".pp-plan-name",
+      "planPriceSelector": ".pp-plan-price",
+      "planFeatureSelector": ".pp-plan-feature"
+    },
+    "contact": {
+      "headingSelector": ".pp-contact-heading",
+      "bodySelector": ".pp-contact-body"
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 2,
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "name": "Primary",
+          "slug": "primary",
+          "color": "#111827"
+        },
+        {
+          "name": "Accent",
+          "slug": "accent",
+          "color": "#2563eb"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "name": "Heading",
+          "slug": "heading",
+          "fontFamily": "pp-fontpair-01"
+        },
+        {
+          "name": "Body",
+          "slug": "body",
+          "fontFamily": "pp-fontpair-01"
+        }
+      ]
+    },
+    "spacing": {
+      "scale": {
+        "space": "1.5"
+      }
+    },
+    "border": {
+      "radius": "12px"
+    }
+  },
+  "patterns": [
+    "presspilot/hero"
+  ],
+  "presspilotMeta": {
+    "siteArchetype": "ecommerce",
+    "navigation": [
+      {
+        "id": "home",
+        "label": "Home",
+        "path": "/#home"
+      },
+      {
+        "id": "about",
+        "label": "About",
+        "path": "/#about"
+      },
+      {
+        "id": "shop",
+        "label": "Shop",
+        "path": "/#shop"
+      },
+      {
+        "id": "blog",
+        "label": "Blog",
+        "path": "/#blog"
+      },
+      {
+        "id": "contact",
+        "label": "Contact",
+        "path": "/#contact"
+      }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2025-11-17T14:40:48.647Z",
+  "kits": [
+    {
+      "slug": "cloudspark-crm",
+      "brandName": "CloudSpark CRM",
+      "businessTypeId": "saas",
+      "styleVariation": "saas-bright",
+      "themeZip": "cloudspark-crm/theme.zip",
+      "staticZip": "cloudspark-crm/static.zip",
+      "kitSummary": "cloudspark-crm/presspilot-kit.json"
+    },
+    {
+      "slug": "neighborhood-fixers",
+      "brandName": "Neighborhood Fixers",
+      "businessTypeId": "local-biz",
+      "styleVariation": "local-biz-soft",
+      "themeZip": "neighborhood-fixers/theme.zip",
+      "staticZip": "neighborhood-fixers/static.zip",
+      "kitSummary": "neighborhood-fixers/presspilot-kit.json"
+    },
+    {
+      "slug": "new-tony-pizza",
+      "brandName": "New Tony Pizza",
+      "businessTypeId": "restaurant_cafe",
+      "styleVariation": "restaurant-soft",
+      "themeZip": "new-tony-pizza/theme.zip",
+      "staticZip": "new-tony-pizza/static.zip",
+      "kitSummary": "new-tony-pizza/presspilot-kit.json"
+    },
+    {
+      "slug": "pixel-sneaks-store",
+      "brandName": "Pixel Sneaks Store",
+      "businessTypeId": "ecommerce_store",
+      "styleVariation": "ecom-bold",
+      "themeZip": "pixel-sneaks-store/theme.zip",
+      "staticZip": "pixel-sneaks-store/static.zip",
+      "kitSummary": "pixel-sneaks-store/presspilot-kit.json"
+    }
+  ]
+}

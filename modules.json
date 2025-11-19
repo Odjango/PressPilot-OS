@@ -1,0 +1,113 @@
+{
+  "version": "0.1",
+  "description": "Small PressPilot OS building blocks you can plug into workflows.",
+  "modules": [
+    {
+      "id": "analyze-brand-input",
+      "name": "Analyze Brand Input",
+      "purpose": "Translate a logo, URL, or text brief into a structured view of tone, audience, niche, and goals.",
+      "inputs": [
+        "Logo image OR brand description OR URL",
+        "Optional notes from Mort"
+      ],
+      "outputs": [
+        "Structured brand summary (JSON)",
+        "Key adjectives and tone words"
+      ]
+    },
+    {
+      "id": "generate_color_palette",
+      "name": "Generate Color Palette",
+      "purpose": "Map palette_id + brand cues from PressPilotNormalizedContext to 5–7 accessible palette options for theme tokens.",
+      "inputs": [
+        "PressPilotNormalizedContext",
+        "Palette preset definitions"
+      ],
+      "outputs": [
+        "Array of 5–7 WCAG-checked palette objects"
+      ]
+    },
+    {
+      "id": "choose_google_font_pair",
+      "name": "Choose Google Font Pair",
+      "purpose": "Select heading and body font pairs from the curated Google Fonts list using font_pair_id + vibe from PressPilotNormalizedContext.",
+      "inputs": [
+        "PressPilotNormalizedContext",
+        "Approved Google Font list"
+      ],
+      "outputs": [
+        "Heading font token",
+        "Body font token",
+        "Fallback stack"
+      ]
+    },
+    {
+      "id": "build_pattern_set",
+      "name": "Build Pattern Set",
+      "purpose": "Assemble hero, pricing, features, and contact patterns using tokens/content inside PressPilotNormalizedContext plus layout presets.",
+      "inputs": [
+        "PressPilotNormalizedContext",
+        "Layout presets"
+      ],
+      "outputs": [
+        "Pattern files for hero, pricing, features, and contact sections"
+      ]
+    },
+    {
+      "id": "apply_business_inputs",
+      "name": "Apply Business Inputs",
+      "purpose": "Take a PressPilotSaaSInput payload and normalize it into a PressPilotNormalizedContext with slug, RTL flag, and explicit mode/nav requirements (see Stage 02 spec for full TypeScript interfaces).",
+      "inputs": [
+        "PressPilotSaaSInput payload"
+      ],
+      "outputs": [
+        "PressPilotNormalizedContext",
+        "Raw payload echo (for debugging/exports)"
+      ]
+    },
+    {
+      "id": "generate_menu_page_from_pdf",
+      "name": "Generate Menu Page From PDF",
+      "purpose": "Extract menu items and pricing from normalized restaurant data or a PDF to build the menu page plus navigation entry.",
+      "inputs": [
+        "PressPilotNormalizedContext (restaurant subset)",
+        "Menu sections from modes.restaurant.menu_sections",
+        "Optional menu PDF URL from modes.restaurant.menu_pdf_url",
+        "Primary language and rtl_required flags"
+      ],
+      "outputs": [
+        "Menu page block markup (FSE-ready)",
+        "Navigation entry descriptor for Menu item"
+      ]
+    },
+    {
+      "id": "generate_woocommerce_seed_content",
+      "name": "Generate WooCommerce Seed Content",
+      "purpose": "Create starter products, categories, and copy for ecommerce mode using PressPilotNormalizedContext.",
+      "inputs": [
+        "PressPilotNormalizedContext (ecommerce subset)",
+        "Product categories from modes.ecommerce.product_categories",
+        "Sample products from modes.ecommerce.sample_products",
+        "Store currency and store_type"
+      ],
+      "outputs": [
+        "WooCommerce seed data JSON (products, categories, basic settings)",
+        "Translated product copy blocks"
+      ]
+    },
+    {
+      "id": "generate_static_site_bundle",
+      "name": "Generate Static Site Bundle",
+      "purpose": "Take the selected variation, PressPilotNormalizedContext, and assets to build a static HTML/CSS/JS version of the site.",
+      "inputs": [
+        "Selected variation manifest",
+        "PressPilotNormalizedContext",
+        "Multilingual copy blocks"
+      ],
+      "outputs": [
+        "Static site folder path",
+        "Static site file listing ready for zipping"
+      ]
+    }
+  ]
+}

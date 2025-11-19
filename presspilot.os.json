@@ -1,0 +1,129 @@
+{
+  "version": "0.1",
+  "schemaVersion": 1,
+  "kits": {
+    "saas": {
+      "id": "saas",
+      "label": "SaaS / Product",
+      "description": "Bright SaaS preset for software launches.",
+      "styleVariationId": "saas-bright",
+      "copyId": "copy.saas",
+      "allowedSections": ["hero", "features", "pricing", "contact"],
+      "tokens": ["HERO_TITLE", "HERO_SUBTITLE", "HERO_PRIMARY_CTA", "HERO_SECONDARY_CTA"]
+    },
+    "local-biz": {
+      "id": "local-biz",
+      "label": "Local Business / Services",
+      "description": "Warm preset for service providers and neighborhood shops.",
+      "styleVariationId": "local-biz-soft",
+      "copyId": "copy.localBiz",
+      "allowedSections": ["hero", "features", "pricing", "contact"],
+      "tokens": ["HERO_TITLE", "HERO_SUBTITLE", "HERO_PRIMARY_CTA", "HERO_SECONDARY_CTA"]
+    },
+    "ecommerce_store": {
+      "id": "ecommerce_store",
+      "label": "E-Commerce Store",
+      "description": "Product-focused layout for online shops.",
+      "styleVariationId": "ecom-bold",
+      "copyId": "copy.ecommerceStore",
+      "allowedSections": ["hero", "features", "pricing", "contact"],
+      "tokens": ["HERO_TITLE", "HERO_SUBTITLE", "HERO_PRIMARY_CTA", "HERO_SECONDARY_CTA"]
+    },
+    "restaurant_cafe": {
+      "id": "restaurant_cafe",
+      "label": "Restaurant / Café",
+      "description": "Terracotta palette tuned for dining rooms and menus.",
+      "styleVariationId": "restaurant-soft",
+      "copyId": "copy.restaurant",
+      "allowedSections": ["hero", "features", "pricing", "contact"],
+      "tokens": ["HERO_TITLE", "HERO_SUBTITLE", "HERO_PRIMARY_CTA", "HERO_SECONDARY_CTA"]
+    }
+  },
+  "styles": {
+    "saas-bright": {
+      "id": "saas-bright",
+      "title": "SaaS Bright",
+      "paletteFile": "styles/saas-bright.json",
+      "description": "Modern blue/neutral palette for SaaS launches."
+    },
+    "local-biz-soft": {
+      "id": "local-biz-soft",
+      "title": "Local Biz Soft",
+      "paletteFile": "styles/local-biz-soft.json",
+      "description": "Warm muted palette for community businesses."
+    },
+    "restaurant-soft": {
+      "id": "restaurant-soft",
+      "title": "Restaurant Soft",
+      "paletteFile": "styles/restaurant-soft.json",
+      "description": "Terracotta + olive palette tuned for dining."
+    },
+    "ecom-bold": {
+      "id": "ecom-bold",
+      "title": "E-Commerce Bold",
+      "paletteFile": "styles/ecom-bold.json",
+      "description": "Bold emerald + charcoal palette tuned for storefront CTAs."
+    }
+  },
+  "copy": {
+    "copy.ecommerceStore": {
+      "id": "copy.ecommerceStore",
+      "hero": {
+        "title": "Ship a conversion-ready storefront",
+        "subtitle": "Showcase best sellers, new drops, and promos with Woo-ready sections.",
+        "primaryCta": { "label": "Shop best sellers", "href": "#shop" },
+        "secondaryCta": { "label": "View full catalog", "href": "#catalog" }
+      },
+      "sections": {
+        "features": {
+          "heading": "Tools for modern storefronts",
+          "items": [
+            {
+              "icon": "🛒",
+              "title": "Product storytelling",
+              "description": "Hero, feature, and testimonial blocks geared for merch drops and launches."
+            },
+            {
+              "icon": "💳",
+              "title": "Payment-ready sections",
+              "description": "Highlight offers, bundles, and flexible pricing with purpose-built cards."
+            },
+            {
+              "icon": "📦",
+              "title": "Catalog friendly",
+              "description": "Grid layouts optimized for MOQ, bundle, or SKU callouts."
+            },
+            {
+              "icon": "📈",
+              "title": "Marketing ready",
+              "description": "Sections for promos, reviews, and newsletter capture built-in."
+            }
+          ]
+        },
+        "pricing": {
+          "heading": "Perks shoppers love",
+          "items": [
+            {
+              "title": "Free shipping tiers",
+              "description": "Set thresholds and communicate fulfillment timelines clearly."
+            },
+            {
+              "title": "Easy returns",
+              "description": "Offer transparent return policies to build long-term trust."
+            },
+            {
+              "title": "Member rewards",
+              "description": "Highlight loyalty programs, bundles, or subscription add-ons."
+            }
+          ]
+        }
+      },
+      "contact": {
+        "headline": "Scale your storefront",
+        "body": "Tell us about your products and fulfillment flow. We’ll tune the kit for your offer.",
+        "primaryCta": { "label": "Chat with a specialist", "href": "#contact" }
+      }
+    }
+  }
+}
+

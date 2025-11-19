@@ -1,0 +1,45 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","layout":{"type":"constrained","contentSize":"900px"}} -->
+<main class="wp-block-group">
+  <!-- wp:group {"tagName":"section","anchor":"home","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained","contentSize":"900px"}} -->
+  <section id="home" class="wp-block-group" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:pattern {"slug":"presspilot/hero-centered"} /-->
+  </section>
+  <!-- /wp:group -->
+
+  <!-- wp:group {"tagName":"section","anchor":"about","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained","contentSize":"900px"}} -->
+  <section id="about" class="wp-block-group" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:pattern {"slug":"presspilot/features-grid"} /-->
+  </section>
+  <!-- /wp:group -->
+
+  <!-- wp:group {"tagName":"section","anchor":"shop","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained","contentSize":"900px"}} -->
+  <section id="shop" class="wp-block-group" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:pattern {"slug":"presspilot/pricing-columns"} /-->
+  </section>
+  <!-- /wp:group -->
+
+  <!-- wp:group {"tagName":"section","anchor":"blog","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained","contentSize":"900px"},"className":"presspilot-blog-section"} -->
+  <section id="blog" class="wp-block-group presspilot-blog-section" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:heading {"textAlign":"center","level":2} -->
+    <h2 class="wp-block-heading has-text-align-center">Latest updates</h2>
+    <!-- /wp:heading -->
+
+    <!-- wp:paragraph {"align":"center","style":{"typography":{"lineHeight":"1.6"}}} -->
+    <p class="has-text-align-center" style="line-height:1.6">Share recent launches, press mentions, and content drops to keep visitors engaged.</p>
+    <!-- /wp:paragraph -->
+
+    <!-- wp:latest-posts {"displayAuthor":true,"displayDate":true,"postsToShow":3,"className":"presspilot-blog-list"} /-->
+  </section>
+  <!-- /wp:group -->
+
+  <!-- wp:group {"tagName":"section","anchor":"contact","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained","contentSize":"900px"}} -->
+  <section id="contact" class="wp-block-group" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:pattern {"slug":"presspilot/contact-simple"} /-->
+  </section>
+  <!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
