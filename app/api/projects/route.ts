@@ -7,7 +7,7 @@ const TABLE_NAME = 'pp_projects';
 
 const normalizeStatus = (status?: string | null) => {
   if (!status || typeof status !== 'string') return 'draft';
-  return status.trim().toLowerCase();
+  return (status ?? '').trim().toLowerCase();
 };
 
 export async function GET(_request: NextRequest) {

@@ -21,8 +21,8 @@ const STATUS_OPTIONS = [
   { label: 'Archived', value: 'archived' },
 ];
 
-const slugify = (value: string) =>
-  value
+const slugify = (value: string | null | undefined) =>
+  (value ?? '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
@@ -56,7 +56,7 @@ const formatProjectError = (error: unknown) => {
 
 type ProjectsClientProps = {
   initialProjects: ProjectRecord[];
-  userEmail: string;
+  userEmail: string | null;
 };
 
 export default function ProjectsClient({
@@ -76,6 +76,12 @@ export default function ProjectsClient({
   >({ type: 'idle' });
 
   const refreshProjects = useCallback(async () => {
+    if (!userEmail) {
+      setProjects([]);
+      setIsLoadingList(false);
+      return;
+    }
+
     setIsLoadingList(true);
     setListError(null);
 
@@ -118,16 +124,22 @@ export default function ProjectsClient({
 
   const handleCreate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
+    if (!userEmail) {
+      setStatus({ type: 'error', message: 'Please sign in to create projects.' });
+      return;
+    }
+
     setStatus({ type: 'saving', message: 'Creating project…' });
 
     try {
       const { data, error } = await supabase
         .from('pp_projects')
         .insert({
-          owner_email: userEmail.toLowerCase(),
-          name: form.name,
-          slug: form.slug,
-          status: form.status,
+          owner_email: (userEmail ?? '').toLowerCase(),
+          name: form.name ?? '',
+          slug: (form.slug ?? '').trim() || slugify(form.name),
+          status: form.status ?? 'draft',
         })
         .select('id,owner_email,name,slug,status,created_at')
         .single();
@@ -150,6 +162,11 @@ export default function ProjectsClient({
   };
 
   const handleStatusUpdate = async (projectId: string, statusValue: string) => {
+    if (!userEmail) {
+      setStatus({ type: 'error', message: 'Please sign in to update projects.' });
+      return;
+    }
+
     setStatus({ type: 'saving', message: 'Updating project…' });
 
     try {
