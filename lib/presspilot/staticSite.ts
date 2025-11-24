@@ -4,6 +4,8 @@ import AdmZip from 'adm-zip';
 import { PressPilotNormalizedContext, PressPilotVariationManifest } from '@/types/presspilot';
 import { resolveBusinessCopy, PressPilotBusinessCopy } from '@/lib/presspilot/kit';
 import { KitSummary, writeKitSummaryFile } from '@/lib/presspilot/kitSummary';
+import { buildWpImportXmlFromKit } from '@/lib/presspilot/wpImport';
+import { getBusinessCategoryById } from '@/app/mvp-demo/businessCategories';
 import {
   renderHeroBasic,
   renderFeaturesGrid,
@@ -39,9 +41,19 @@ export async function buildStaticSite(
 
   await fs.writeFile(path.join(assetsDir, 'styles.css'), buildStyles(variation), 'utf8');
 
-  const html = buildHtml(context, copy);
+  const html = buildHtml(context, copy, options);
   await fs.writeFile(path.join(siteDir, 'index.html'), html, 'utf8');
-  await writeKitSummaryFile(siteDir, options?.kitSummary ?? null);
+
+  const summaryWithTagline = options?.kitSummary
+    ? { ...options.kitSummary, tagline: copy.hero.subtitle }
+    : null;
+  await writeKitSummaryFile(siteDir, summaryWithTagline);
+  if (summaryWithTagline) {
+    const importerXml = buildWpImportXmlFromKit({ kit: summaryWithTagline, copy });
+    const importerPath = path.join(siteDir, 'presspilot-demo-content.xml');
+    await fs.writeFile(importerPath, importerXml, 'utf8');
+    console.log('[WPImport] wrote static demo XML:', importerPath);
+  }
 
   const staticZipPath = path.join(STATIC_ROOT, `${context.brand.slug}.zip`);
   const zip = new AdmZip();
@@ -306,24 +318,68 @@ footer {
 `;
 }
 
-function buildHtml(context: PressPilotNormalizedContext, copy: PressPilotBusinessCopy) {
-  const navLinks = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'shop', label: 'Shop' },
-    { id: 'blog', label: 'Blog' },
-    { id: 'contact', label: 'Contact' }
-  ]
+function buildHtml(
+  context: PressPilotNormalizedContext,
+  copy: PressPilotBusinessCopy,
+  options?: { businessTypeId?: string | null }
+) {
+  const isEcommerce = options?.businessTypeId === 'ecommerce_store' ||
+    options?.businessTypeId?.toLowerCase().includes('ecom') ||
+    options?.businessTypeId?.toLowerCase().includes('store');
+  const isRestaurant = options?.businessTypeId === 'restaurant_cafe' ||
+    options?.businessTypeId?.toLowerCase().includes('restaurant') ||
+    options?.businessTypeId?.toLowerCase().includes('cafe');
+
+  // Get business category and use its defaultMenu for nav items
+  // Note: BusinessCategory from types/presspilot.ts may not match BusinessCategoryId from businessCategories.ts
+  // We cast it and handle the case where it doesn't exist
+  const businessCategory = getBusinessCategoryById(context.brand.category as any);
+  const menuItems = businessCategory?.defaultMenu || ['Home', 'About', 'Blog', 'Contact'];
+
+  // Map menu labels to section IDs (lowercase slugs)
+  const navLinks = menuItems
+    .map((label) => {
+      const id = label.toLowerCase().replace(/\s+/g, '-');
+      return { id, label };
+    })
     .map((item) => `<a href="#${item.id}">${item.label}</a>`)
     .join('');
 
+  // Build sections array, conditionally including menu section for restaurants
   const sections = [
     renderHeroBasic(copy.hero),
     renderFeaturesGrid(copy.featuresHeading, copy.features),
+  ];
+
+  // Add menu section for restaurants (before pricing)
+  if (isRestaurant) {
+    sections.push(`  <section id="menu" class="presspilot-section menu-section">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 4rem 1.5rem;">
+      <h2 style="text-align: center; font-size: 2rem; margin-bottom: 1rem;">Menu</h2>
+      <p style="text-align: center; color: var(--presspilot-muted); margin-bottom: 3rem;">Explore our delicious offerings.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+        <div style="border: 1px solid var(--presspilot-border); border-radius: var(--presspilot-radius); padding: 2rem; background: var(--presspilot-soft);">
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Coffee & Beverages</h3>
+          <p style="color: var(--presspilot-muted); font-size: 0.95rem;">Espresso, cappuccino, and specialty drinks.</p>
+        </div>
+        <div style="border: 1px solid var(--presspilot-border); border-radius: var(--presspilot-radius); padding: 2rem; background: var(--presspilot-soft);">
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Pastries & Treats</h3>
+          <p style="color: var(--presspilot-muted); font-size: 0.95rem;">Fresh baked goods and sweet treats.</p>
+        </div>
+        <div style="border: 1px solid var(--presspilot-border); border-radius: var(--presspilot-radius); padding: 2rem; background: var(--presspilot-soft);">
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Light Meals</h3>
+          <p style="color: var(--presspilot-muted); font-size: 0.95rem;">Sandwiches, salads, and daily specials.</p>
+        </div>
+      </div>
+    </div>
+  </section>`);
+  }
+
+  sections.push(
     renderPricingColumns(context),
     renderBlogTeasers(context),
     renderCtaContact(copy.contact)
-  ].join('\n');
+  );
 
   return `<!DOCTYPE html>
 <html lang="${context.language.primary}">

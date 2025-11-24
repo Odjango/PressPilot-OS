@@ -1,0 +1,127 @@
+{
+  "slug": "ledo-pizza",
+  "brandName": "Ledo Pizza",
+  "businessTypeId": "restaurant_cafe",
+  "styleVariation": "restaurant-soft",
+  "createdAt": "2025-11-23T17:59:07.586Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Ledo Pizza",
+        "sections": [
+          {
+            "id": "hero-1",
+            "kind": "hero",
+            "heading": "Ledo Pizza",
+            "subheading": "Powered by PressPilot OS",
+            "body": "Ledo Pizza has the best pizza in town. Savor the unique flavor today!"
+          },
+          {
+            "id": "features-1",
+            "kind": "features",
+            "heading": "What Makes Us Special",
+            "body": "Fresh dough, premium cheese, and signature square slices. Enjoy the taste locals love."
+          },
+          {
+            "id": "cta-1",
+            "kind": "call_to_action",
+            "heading": "Order Now",
+            "body": "Experience Ledo Pizza. Visit us or order online for quick pickup."
+          }
+        ]
+      },
+      {
+        "slug": "menu",
+        "title": "Menu",
+        "sections": [
+          {
+            "id": "menu-hero",
+            "kind": "hero",
+            "heading": "Our Menu",
+            "body": "Explore favorites like Classic Pepperoni, Veggie Supreme, and unique Ledo creations."
+          },
+          {
+            "id": "menu-list",
+            "kind": "list",
+            "heading": "Popular Picks",
+            "body": "Signature Square Pizza, Wings, Garlic Bread, Salads, and More."
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About",
+        "sections": [
+          {
+            "id": "about-us-hero",
+            "kind": "hero",
+            "heading": "Our Story",
+            "body": "Ledo Pizza has served communities globally with square, legendary pies since day one."
+          },
+          {
+            "id": "mission-section",
+            "kind": "text",
+            "heading": "Our Mission",
+            "body": "Delivering memorable pizza experiences and quality meals for everyone."
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-hero",
+            "kind": "hero",
+            "heading": "Get in Touch",
+            "body": "Questions or feedback? We're here to help. Reach out to Ledo Pizza."
+          },
+          {
+            "id": "contact-form",
+            "kind": "form",
+            "heading": "Contact Us",
+            "body": "Send us a message. We love hearing from our pizza fans."
+          }
+        ]
+      }
+    ]
+  },
+  "tagline": "Ledo pizza has the best pizza in town",
+  "businessCategoryId": "restaurant_cafe",
+  "business": {
+    "name": "Ledo Pizza",
+    "category_id": "restaurant_cafe"
+  },
+  "wpImport": {
+    "front_page_slug": "home",
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home"
+      },
+      {
+        "slug": "menu",
+        "title": "Menu"
+      },
+      {
+        "slug": "about",
+        "title": "About"
+      },
+      {
+        "slug": "contact",
+        "title": "Contact"
+      }
+    ],
+    "menu": {
+      "location": "primary",
+      "name": "Main Menu",
+      "items": [
+        "home",
+        "menu",
+        "about",
+        "contact"
+      ]
+    }
+  }
+}

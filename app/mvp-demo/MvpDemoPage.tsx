@@ -1,6 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import {
+  BUSINESS_CATEGORIES,
+  type BusinessCategoryId,
+  getBusinessCategoryById,
+} from './businessCategories';
 
 type BusinessType = {
   id: string;
@@ -45,6 +50,8 @@ export default function MvpDemoPage() {
   const [themeSlug, setThemeSlug] = useState<string>('presspilot-golden-foundation');
 
   // form data
+  const [selectedBusinessCategoryId, setSelectedBusinessCategoryId] =
+    useState<BusinessCategoryId | null>('local_service');
   const [businessName, setBusinessName] = useState('Placeholder Co.');
   const [businessDescription, setBusinessDescription] = useState(
     'Describe the business in full sentences so the preview has real copy.'
@@ -176,15 +183,63 @@ export default function MvpDemoPage() {
     try {
       setStages((s) => ({ ...s, inputsNormalized: true }));
 
-      const selectedStyleVariation =
-        businessTypes.find((t) => t.id === selectedBusinessTypeId)?.styleVariation ?? null;
+      // Map business category to style variation - prioritize category over businessTypeId
+      const category = getBusinessCategoryById(selectedBusinessCategoryId);
+      let selectedStyleVariation: string | null = null;
+
+      if (category) {
+        // Map business category to appropriate style variation
+        const categoryToStyleMap: Record<string, string> = {
+          restaurant_cafe: 'restaurant-soft',
+          local_service: 'local-biz-soft',
+          health_fitness: 'local-biz-soft',
+          beauty_salon: 'local-biz-soft',
+          professional_services: 'saas-bright',
+          online_coach: 'saas-bright',
+          saas_product: 'saas-bright',
+        };
+        selectedStyleVariation = categoryToStyleMap[category.id] ?? null;
+      }
+
+      // Fallback to businessTypeId style variation if category mapping not found
+      if (!selectedStyleVariation) {
+        selectedStyleVariation =
+          businessTypes.find((t) => t.id === selectedBusinessTypeId)?.styleVariation ?? null;
+      }
+
+      const wpImportPreset = category
+        ? {
+            menu: category.defaultMenu,
+            pages: category.defaultPages,
+            frontPageSlug: 'home' as const,
+          }
+        : null;
+
+      // Map business category to businessTypeId if category is selected
+      let effectiveBusinessTypeId = selectedBusinessTypeId;
+      if (category) {
+        const categoryToBusinessTypeMap: Record<string, string> = {
+          restaurant_cafe: 'restaurant_cafe',
+          local_service: 'local-biz',
+          saas_product: 'saas',
+          health_fitness: 'local-biz',
+          beauty_salon: 'local-biz',
+          professional_services: 'saas',
+          online_coach: 'saas',
+        };
+        if (categoryToBusinessTypeMap[category.id]) {
+          effectiveBusinessTypeId = categoryToBusinessTypeMap[category.id];
+        }
+      }
 
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          businessTypeId: selectedBusinessTypeId,
+          businessTypeId: effectiveBusinessTypeId,
           styleVariation: selectedStyleVariation,
+          businessCategoryId: selectedBusinessCategoryId,
+          wpImportPreset,
           input: {
             businessName,
             businessDescription,
@@ -282,6 +337,65 @@ export default function MvpDemoPage() {
             Internal playground. Golden Foundation v5 · Style-aware. Not for customers.
           </p>
         </header>
+
+        <section className="rounded-2xl border border-slate-800 bg-slate-950/40 p-4 sm:p-6 space-y-3 mb-6">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                Step 1 · Business Category
+              </p>
+              <h2 className="text-base sm:text-lg font-semibold text-slate-50">
+                What type of business is this?
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-400">
+                This helps PressPilot pick better pages, menu and wording.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {BUSINESS_CATEGORIES.map((cat) => {
+              const selected = cat.id === selectedBusinessCategoryId;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedBusinessCategoryId(cat.id);
+                    // Sync businessTypeId to match category for style variation
+                    const categoryToBusinessTypeMap: Record<string, string> = {
+                      restaurant_cafe: 'restaurant_cafe',
+                      local_service: 'local-biz',
+                      saas_product: 'saas',
+                      ecommerce_store: 'ecommerce_store',
+                    };
+                    const matchingBusinessType = categoryToBusinessTypeMap[cat.id];
+                    if (matchingBusinessType && businessTypes.find((t) => t.id === matchingBusinessType)) {
+                      setSelectedBusinessTypeId(matchingBusinessType);
+                    }
+                    resetEngineState();
+                  }}
+                  className={[
+                    'text-left rounded-xl border px-3 py-3 sm:px-4 sm:py-4 transition',
+                    selected
+                      ? 'border-emerald-400 bg-emerald-400/10 shadow-sm'
+                      : 'border-slate-700 hover:border-slate-500 hover:bg-slate-900',
+                  ].join(' ')}
+                >
+                  <div className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    {cat.shortLabel}
+                  </div>
+                  <div className="mt-1 text-sm font-medium text-slate-50">
+                    {cat.label}
+                  </div>
+                  <div className="mt-1 text-xs text-slate-400 line-clamp-2">
+                    {cat.description}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
 
         {error && (
           <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700 shadow-sm">
@@ -562,7 +676,7 @@ function ensureCorePresets(types: BusinessType[]): BusinessType[] {
     {
       id: 'restaurant_cafe',
       label: 'Restaurant / Café',
-      description: 'Designed for dining experiences',
+      description: 'Warm terracotta and olive tones for dining rooms.',
       styleVariation: 'restaurant-soft',
     },
     {

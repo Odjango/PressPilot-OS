@@ -7,6 +7,22 @@ export interface KitSummary {
   businessTypeId: string | null;
   styleVariation: string | null;
   createdAt: string;
+  plan?: Record<string, unknown>;
+  tagline?: string | null;
+  businessCategoryId?: string | null;
+  business?: {
+    name?: string;
+    category_id?: string | null;
+  };
+  wpImport?: {
+    front_page_slug?: string;
+    pages?: { slug: string; title: string }[];
+    menu?: {
+      location: string;
+      name: string;
+      items: string[];
+    };
+  } | null;
 }
 
 export async function writeKitSummaryFile(targetDir: string, summary?: KitSummary | null) {

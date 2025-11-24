@@ -1,11 +1,19 @@
 import type { Metadata } from 'next';
-import MvpDemoPage from './mvp-demo/MvpDemoPage';
+import { redirect } from 'next/navigation';
+
+import { getUserAuthContext } from '@/lib/auth';
 
 export const metadata: Metadata = {
-  title: 'PressPilot MVP',
-  description: 'PressPilot SaaS playground',
+  title: 'PressPilot',
+  description: 'PressPilot Studio dashboard',
 };
 
-export default function HomePage() {
-  return <MvpDemoPage />;
+export default async function HomePage() {
+  const { user } = await getUserAuthContext();
+
+  if (!user?.email) {
+    redirect('/auth');
+  }
+
+  redirect('/projects');
 }

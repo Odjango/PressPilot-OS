@@ -1,0 +1,109 @@
+{
+  "slug": "rooroo-cafe",
+  "brandName": "RooRoo Cafe",
+  "businessTypeId": "restaurant_cafe",
+  "styleVariation": "restaurant-soft",
+  "createdAt": "2025-11-23T17:30:24.134Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero",
+            "heading": "Welcome to RooRoo Cafe",
+            "subheading": "Powered by PressPilot OS",
+            "body": "Enjoy the best coffee and atmosphere in town."
+          },
+          {
+            "id": "about",
+            "kind": "about",
+            "heading": "Our Story",
+            "body": "RooRoo Cafe crafts memorable moments through specialty coffee and a cozy environment."
+          },
+          {
+            "id": "cta-visit",
+            "kind": "call_to_action",
+            "heading": "Visit Us",
+            "body": "Grab a cup and unwind at RooRoo Cafe."
+          }
+        ]
+      },
+      {
+        "slug": "menu",
+        "title": "Menu",
+        "sections": [
+          {
+            "id": "menu-intro",
+            "kind": "intro",
+            "heading": "Our Menu",
+            "body": "Taste our popular brews and treats."
+          },
+          {
+            "id": "menu-list",
+            "kind": "menu",
+            "heading": "Coffee & Eats",
+            "body": "Espresso, cappuccino, pastries and more."
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-details",
+            "kind": "contact",
+            "heading": "Get in Touch",
+            "body": "Questions? Reach out to RooRoo Cafe, your neighborhood coffee spot."
+          },
+          {
+            "id": "cta-location",
+            "kind": "call_to_action",
+            "heading": "Find Us",
+            "body": "Your next favorite brew awaits."
+          }
+        ]
+      }
+    ]
+  },
+  "tagline": "RooRoo Cafe has the best coffee and atmosphere in town",
+  "businessCategoryId": "restaurant_cafe",
+  "business": {
+    "name": "RooRoo Cafe",
+    "category_id": "restaurant_cafe"
+  },
+  "wpImport": {
+    "front_page_slug": "home",
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home"
+      },
+      {
+        "slug": "menu",
+        "title": "Menu"
+      },
+      {
+        "slug": "about",
+        "title": "About"
+      },
+      {
+        "slug": "contact",
+        "title": "Contact"
+      }
+    ],
+    "menu": {
+      "location": "primary",
+      "name": "Main Menu",
+      "items": [
+        "home",
+        "menu",
+        "about",
+        "contact"
+      ]
+    }
+  }
+}

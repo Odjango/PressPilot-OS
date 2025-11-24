@@ -1,0 +1,79 @@
+{
+  "slug": "test-project-2",
+  "brandName": "Test Project 2",
+  "businessTypeId": null,
+  "styleVariation": null,
+  "createdAt": "2025-11-23T03:12:10.338Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero",
+            "heading": "Unlock Premium Web Experiences",
+            "subheading": "Elevate your brand with Test Project 2. Powered by PressPilot OS.",
+            "body": "Modern solutions. Studio quality. Delivered globally.",
+            "notes": "CTA: Start Your Project"
+          },
+          {
+            "id": "features",
+            "kind": "features",
+            "heading": "Why Choose Us?",
+            "body": "Polished designs. Seamless performance. Built for ambitious brands."
+          },
+          {
+            "id": "process",
+            "kind": "steps",
+            "heading": "How We Work",
+            "body": "1. Discover your vision\n2. Build with precision\n3. Launch with impact"
+          },
+          {
+            "id": "cta",
+            "kind": "cta",
+            "heading": "Ready to Elevate Your Site?",
+            "body": "Work with our premium studio team today.",
+            "notes": "CTA: Book a Consultation"
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About",
+        "sections": [
+          {
+            "id": "about-intro",
+            "kind": "text",
+            "heading": "About Test Project 2",
+            "body": "We combine modern design and expert WordPress craft for world-class digital results."
+          },
+          {
+            "id": "approach",
+            "kind": "values",
+            "heading": "Our Approach",
+            "body": "Studio-led, future-ready, and globally powered by PressPilot OS."
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-form",
+            "kind": "form",
+            "heading": "Get in Touch",
+            "body": "Let’s craft your next digital experience. Fill out the form and our team will connect soon."
+          },
+          {
+            "id": "contact-info",
+            "kind": "text",
+            "body": "Email: hello@testproject2.com"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -4,11 +4,16 @@ import { demoKitSpecs } from '../lib/presspilot/demo/specs';
 import { validateSaaSInput } from '../lib/presspilot/validation';
 import { applyBusinessInputs } from '../lib/presspilot/context';
 import { resolveBusinessTypeStyle } from '../lib/presspilot/kit';
-import { generatePressPilotVariations } from '../lib/presspilot/variations';
+import {
+  buildVariationSetFromAI,
+  VARIATION_IDS,
+  type RawVariationResponse,
+} from '../lib/presspilot/variations';
 import { buildFallbackVariationSet } from '../lib/presspilot/fallbackVariations';
 import { buildWordPressTheme } from '../lib/presspilot/themeKit';
 import { buildStaticSite } from '../lib/presspilot/staticSite';
 import type { KitSummary } from '../lib/presspilot/kitSummary';
+import { callPressPilotJson } from '../lib/openai';
 
 const DEMO_ROOT = path.join(process.cwd(), 'build', 'demo');
 
@@ -52,7 +57,25 @@ async function run() {
 
     let variationSet;
     try {
-      variationSet = await generatePressPilotVariations(context);
+      const aiResponse = (await callPressPilotJson({
+        system:
+          'You are the PressPilot Studio design engine. ' +
+          'Given normalized business inputs, respond ONLY with JSON { variations: Variation[] } ' +
+          'matching the PressPilotVariationManifest schema. ' +
+          'Use ids variation_a, variation_b, variation_c. Populate tokens, nav, preview, and pattern_set_id.',
+        user: {
+          requestedIds: VARIATION_IDS,
+          brand: context.brand,
+          narrative: context.narrative,
+          visual: context.visual,
+          modes: context.modes,
+          request: {
+            businessTypeId: spec.businessTypeId ?? null,
+            styleVariation: appliedStyleVariation ?? null,
+          },
+        },
+      })) as RawVariationResponse;
+      variationSet = buildVariationSetFromAI(context, aiResponse);
     } catch (error) {
       console.warn('[demo-kits] Variation engine unavailable, using fallback for', resolvedSlug, error);
       variationSet = buildFallbackVariationSet(context);

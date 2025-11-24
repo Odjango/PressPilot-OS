@@ -1,0 +1,88 @@
+{
+  "slug": "doody-store",
+  "brandName": "Doody Store",
+  "businessTypeId": null,
+  "styleVariation": null,
+  "createdAt": "2025-11-23T14:00:02.882Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero",
+            "heading": "Elevate Your Online Presence",
+            "subheading": "Launch with Doody Store. Premium WordPress studio service, powered by PressPilot OS.",
+            "body": "Start your web journey with a powerful, streamlined platform designed for global impact.",
+            "notes": "Modern tone, premium feel"
+          },
+          {
+            "id": "cta-primary",
+            "kind": "call_to_action",
+            "heading": "Ready to Launch?",
+            "body": "Contact us for a demo and see the PressPilot difference.",
+            "notes": "Primary CTA"
+          },
+          {
+            "id": "features",
+            "kind": "features",
+            "heading": "Why Doody Store?",
+            "body": "White-glove service; Modern toolkit; Global-ready; Seamless integration; Powered by PressPilot OS."
+          },
+          {
+            "id": "showcase",
+            "kind": "media_gallery",
+            "heading": "See Studio Kits in Action",
+            "body": "Browse sample projects and playground demos.",
+            "notes": "Gallery placeholder"
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About",
+        "sections": [
+          {
+            "id": "studio-intro",
+            "kind": "text",
+            "heading": "Our Studio Mission",
+            "body": "We empower creators and brands with performance-driven WordPress solutions. Every kit is crafted with care."
+          },
+          {
+            "id": "platform-overview",
+            "kind": "text",
+            "heading": "Powered by PressPilot OS",
+            "body": "PressPilot OS delivers security, scalability, and customization for any studio project."
+          },
+          {
+            "id": "call-to-demo",
+            "kind": "call_to_action",
+            "heading": "Book a Demo",
+            "body": "See how Doody Store can transform your site. Fast setup, premium results."
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-intro",
+            "kind": "text",
+            "heading": "Get in Touch",
+            "body": "Questions or project inquiries? Our team responds promptly to all messages."
+          },
+          {
+            "id": "contact-form",
+            "kind": "form",
+            "heading": "Contact Doody Store",
+            "notes": "Basic form: Name, Email, Message"
+          }
+        ]
+      }
+    ]
+  },
+  "tagline": "Doody Store needs a polished WordPress kit with modern hero copy, clear CTAs, and a tone that matches a premium web studio."
+}

@@ -3,6 +3,7 @@ import path from 'path';
 import { PressPilotNormalizedContext, PressPilotVariationManifest } from '@/types/presspilot';
 import { VariationSchema } from '@/lib/presspilot/schema';
 import { getVariationById } from '@/lib/presspilot/variationRegistry';
+import { BUSINESS_CATEGORIES, type BusinessCategoryId } from '@/app/mvp-demo/businessCategories';
 
 export interface PressPilotHeroConfig {
   title: string;
@@ -26,11 +27,31 @@ export interface PressPilotContactConfig {
   email?: string;
 }
 
+export interface PressPilotPricingTier {
+  name: string;
+  price: string;
+  features: string[];
+  cta: string;
+  highlight?: boolean;
+}
+
+export interface PressPilotUpdateCard {
+  eyebrow: string;
+  title: string;
+  body: string;
+}
+
 export interface PressPilotBusinessCopy {
   hero: PressPilotHeroConfig;
   features: PressPilotFeatureConfig[];
   contact: PressPilotContactConfig;
   featuresHeading: string;
+  pricingHeading: string;
+  pricingSubheading: string;
+  pricing: PressPilotPricingTier[];
+  updatesHeading: string;
+  updatesSubheading: string;
+  updates: PressPilotUpdateCard[];
 }
 
 export interface PressPilotBusinessTypeConfig {
@@ -87,25 +108,121 @@ const DEFAULT_FEATURES: PressPilotFeatureConfig[] = [
 
 const DEFAULT_CONTACT: PressPilotContactConfig = {
   headline: 'Ready to ship?',
-  body: 'Tell us about your business and we’ll tailor a kit to match your goals.',
+  body: 'Tell us about your business and we\'ll tailor a kit to match your goals.',
   primaryCta: 'Book a call',
   email: 'hello@presspilot.app'
 };
 
-function getGoldenFoundationKitPath() {
-  return path.join(process.cwd(), 'build', 'themes', GOLDEN_FOUNDATION_THEME, 'presspilot-kit.json');
+const DEFAULT_PRICING: PressPilotPricingTier[] = [
+  {
+    name: 'Starter',
+    price: '$19 / month',
+    features: ['1 brand setup', 'Basic analytics', 'Email support'],
+    cta: 'Choose Starter'
+  },
+  {
+    name: 'Growth',
+    price: '$49 / month',
+    features: ['Unlimited kits', 'Mode-aware add-ons', 'Priority support'],
+    cta: 'Choose Growth',
+    highlight: true
+  },
+  {
+    name: 'Pro',
+    price: '$99 / month',
+    features: ['Dedicated strategist', 'Custom exports', 'Training & SLA'],
+    cta: 'Choose Pro'
+  }
+];
+
+const DEFAULT_UPDATES: PressPilotUpdateCard[] = [
+  {
+    eyebrow: 'Playbook',
+    title: '{{brand}} release notes',
+    body: 'Share a concise summary of your latest platform update or feature drop.'
+  },
+  {
+    eyebrow: 'Case study',
+    title: 'How teams ship faster',
+    body: 'Highlight a customer win, metric, or testimonial from recent work.'
+  },
+  {
+    eyebrow: 'Announcement',
+    title: 'What\'s next for {{brand}}',
+    body: 'Tease upcoming launches, events, or community projects to keep people excited.'
+  }
+];
+
+/**
+ * Builds a PressPilotKitConfig from code-only sources (businessCategories).
+ * This avoids reading from disk at runtime, which is critical for production
+ * environments (e.g., Coolify) where /build may be empty on container startup.
+ *
+ * The file-based presspilot-kit.json is still written into generated theme
+ * folders for PHP activation bootstrap to read, but Node.js runtime should
+ * never depend on it existing.
+ */
+function buildPressPilotKitFromCode(): PressPilotKitConfig {
+  // Map business categories to business types with style variations
+  const businessTypeMap: Record<string, string> = {
+    'restaurant_cafe': 'restaurant-soft',
+    'ecommerce_store': 'ecom-bold',
+    'local_service': 'local-biz-soft',
+    'health_fitness': 'saas-bright',
+    'beauty_salon': 'local-biz-soft',
+    'professional_services': 'saas-bright',
+    'online_coach': 'saas-bright',
+    'saas_product': 'saas-bright',
+  };
+
+  const businessTypes: PressPilotBusinessTypeConfig[] = BUSINESS_CATEGORIES.map((category) => ({
+    id: category.id,
+    label: category.label,
+    styleVariation: businessTypeMap[category.id] || 'saas-bright',
+    frontPagePatterns: ['hero-basic', 'features-grid', 'pricing-columns', 'blog-teasers', 'cta-contact'],
+  }));
+
+  return {
+    theme: GOLDEN_FOUNDATION_THEME,
+    version: '0.6.0',
+    businessTypes,
+    aiCopyTargets: {},
+  };
 }
 
+function getGoldenFoundationKitPath() {
+  return path.join(process.cwd(), 'themes', GOLDEN_FOUNDATION_THEME, 'presspilot-kit.json');
+}
+
+/**
+ * Loads PressPilot kit configuration.
+ * Tries to read from disk first (for local dev), but falls back to code-only
+ * generation if the file doesn't exist (production/Coolify).
+ * 
+ * This ensures /api/generate and /api/variations work even when /build is empty.
+ */
 export async function loadPressPilotKit(): Promise<PressPilotKitConfig> {
   const kitPath = getGoldenFoundationKitPath();
-  const raw = await fs.readFile(kitPath, 'utf8');
-  const data = JSON.parse(raw) as PressPilotKitConfig;
+  
+  try {
+    // Try to read from disk (for local dev convenience)
+    const raw = await fs.readFile(kitPath, 'utf8');
+    const data = JSON.parse(raw) as PressPilotKitConfig;
 
-  if (!data.businessTypes || !Array.isArray(data.businessTypes)) {
-    throw new Error('presspilot-kit.json: businessTypes missing or invalid');
+    if (data.businessTypes && Array.isArray(data.businessTypes) && data.businessTypes.length > 0) {
+      return data;
+    }
+  } catch (error) {
+    // File doesn't exist or is invalid - this is expected in production
+    // Fall through to code-only generation
+    if (error instanceof Error && 'code' in error && error.code !== 'ENOENT') {
+      // Log non-ENOENT errors (permission issues, etc.) but still fall back
+      console.warn('[PressPilot] Could not read kit JSON, using code-only fallback:', error.message);
+    }
   }
 
-  return data;
+  // Fallback: build from code (production-safe)
+  return buildPressPilotKitFromCode();
 }
 
 export async function getPressPilotBusinessTypes(): Promise<PressPilotBusinessTypeConfig[]> {
@@ -155,8 +272,21 @@ export async function resolveBusinessCopy(
   const contact = buildContactCopy(context, match?.contact);
   const featuresHeading =
     interpolateText(match?.featuresHeading, context) || `Why ${context.brand.name}?`;
+  const pricing = buildPricingCopy(context);
+  const updates = buildUpdatesCopy(context);
 
-  return { hero, features, contact, featuresHeading };
+  return {
+    hero,
+    features,
+    contact,
+    featuresHeading,
+    pricingHeading: pricing.heading,
+    pricingSubheading: pricing.subheading,
+    pricing: pricing.tiers,
+    updatesHeading: updates.heading,
+    updatesSubheading: updates.subheading,
+    updates: updates.cards
+  };
 }
 
 function buildHeroCopy(
@@ -201,7 +331,7 @@ function buildContactCopy(
   override?: PressPilotContactConfig
 ): PressPilotContactConfig {
   const email = `hello@${context.brand.slug}.com`;
-  const fallbackBody = `Tell us about ${context.brand.name} and we’ll assemble your next launch.`;
+  const fallbackBody = `Tell us about ${context.brand.name} and we'll assemble your next launch.`;
   const baseBody = interpolateText(override?.body, context) ?? fallbackBody;
   const bodyWithEmail = baseBody.includes(email) ? baseBody : `${baseBody} Reach us at ${email}.`;
 
@@ -213,8 +343,46 @@ function buildContactCopy(
   };
 }
 
+function buildPricingCopy(
+  context: PressPilotNormalizedContext,
+  overrides?: PressPilotPricingTier[]
+): { heading: string; subheading: string; tiers: PressPilotPricingTier[] } {
+  const tiers = (overrides && overrides.length ? overrides : DEFAULT_PRICING).map((tier) => ({
+    ...tier,
+    name: interpolateText(tier.name, context) ?? tier.name,
+    features: tier.features.map((feature) => interpolateText(feature, context) ?? feature),
+    cta: interpolateText(tier.cta, context) ?? tier.cta
+  }));
+
+  return {
+    heading: `Plans for every ${context.brand.category}`,
+    subheading: `${context.brand.name} can switch tiers any time—kits stay in sync automatically.`,
+    tiers
+  };
+}
+
+function buildUpdatesCopy(
+  context: PressPilotNormalizedContext,
+  overrides?: PressPilotUpdateCard[]
+): { heading: string; subheading: string; cards: PressPilotUpdateCard[] } {
+  const cards = (overrides && overrides.length ? overrides : DEFAULT_UPDATES).map((card) => ({
+    eyebrow: interpolateText(card.eyebrow, context) ?? card.eyebrow,
+    title: interpolateText(card.title, context) ?? card.title,
+    body: interpolateText(card.body, context) ?? card.body
+  }));
+
+  while (cards.length < 3) {
+    cards.push(cards[0]);
+  }
+
+  return {
+    heading: 'Latest updates',
+    subheading: 'Use this space to share product launches, playbooks, or insights.',
+    cards: cards.slice(0, 3)
+  };
+}
+
 function interpolateText(value: string | undefined, context: PressPilotNormalizedContext): string | undefined {
   if (!value) return undefined;
   return value.replace(/{{\s*brand\s*}}/gi, context.brand.name);
 }
-

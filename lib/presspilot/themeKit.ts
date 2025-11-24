@@ -6,6 +6,7 @@ import { applyStyleVariationToThemeJson } from '@/lib/presspilot/themeStyle';
 import { resolveBusinessCopy, resolveBusinessTypeStyle } from '@/lib/presspilot/kit';
 import { applyBusinessCopyToTheme } from '@/lib/presspilot/contentInject';
 import { KitSummary, writeKitSummaryFile } from '@/lib/presspilot/kitSummary';
+import { buildWpImportXmlFromKit } from '@/lib/presspilot/wpImport';
 
 export interface ThemeBuildResult {
   themeDir: string;
@@ -15,7 +16,8 @@ export interface ThemeBuildResult {
 const BUILD_ROOT = path.join(process.cwd(), 'build');
 const THEMES_ROOT = path.join(BUILD_ROOT, 'themes');
 const FOUNDATION_THEME_SLUG = 'presspilot-golden-foundation';
-const FOUNDATION_THEME_DIR = path.join(THEMES_ROOT, FOUNDATION_THEME_SLUG);
+// Source theme lives in themes/ at repo root, not in build/
+const FOUNDATION_THEME_DIR = path.join(process.cwd(), 'themes', FOUNDATION_THEME_SLUG);
 
 export async function buildWordPressTheme(
   context: PressPilotNormalizedContext,
@@ -43,7 +45,17 @@ export async function buildWordPressTheme(
 
   const copy = await resolveBusinessCopy(context, variation, options?.businessTypeId ?? null);
   await applyBusinessCopyToTheme(themeDir, copy, context.brand.name);
-  await writeKitSummaryFile(themeDir, options?.kitSummary ?? null);
+  // Ensure tagline is set in kitSummary
+  const summaryWithTagline = options?.kitSummary
+    ? { ...options.kitSummary, tagline: copy.hero.subtitle }
+    : null;
+  await writeKitSummaryFile(themeDir, summaryWithTagline);
+  if (summaryWithTagline) {
+    const importerXml = buildWpImportXmlFromKit({ kit: summaryWithTagline, copy });
+    const importerPath = path.join(themeDir, 'presspilot-demo-content.xml');
+    await fs.writeFile(importerPath, importerXml, 'utf8');
+    console.log('[WPImport] wrote theme demo XML:', importerPath);
+  }
   await writeThemeStyleHeader(themeDir, context, variation, kit.version);
 
   const themeZipPath = path.join(THEMES_ROOT, `${context.brand.slug}.zip`);
@@ -60,7 +72,7 @@ async function ensureFoundationThemeExists() {
     await fs.access(FOUNDATION_THEME_DIR);
   } catch (error) {
     throw new Error(
-      `PressPilot foundation theme not found at ${FOUNDATION_THEME_DIR}. Ensure build/themes/${FOUNDATION_THEME_SLUG} exists before generating kits.`
+      `PressPilot foundation theme not found at ${FOUNDATION_THEME_DIR}. Ensure themes/${FOUNDATION_THEME_SLUG} exists before generating kits.`
     );
   }
 }

@@ -1,0 +1,135 @@
+{
+  "slug": "zoozoo-restaurant",
+  "brandName": "ZooZoo Restaurant",
+  "businessTypeId": "restaurant_cafe",
+  "styleVariation": "restaurant-soft",
+  "createdAt": "2025-11-23T16:39:50.574Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero_image",
+            "heading": "Welcome to ZooZoo Restaurant",
+            "subheading": "Powered by PressPilot OS",
+            "body": "Experience the best dinner in town in a warm, modern space."
+          },
+          {
+            "id": "about-brief",
+            "kind": "about_summary",
+            "heading": "About Us",
+            "body": "ZooZoo Restaurant is your destination for memorable dining, serving inspired cuisine globally."
+          }
+        ]
+      },
+      {
+        "slug": "menu",
+        "title": "Menu",
+        "sections": [
+          {
+            "id": "menu-featured",
+            "kind": "menu_highlights",
+            "heading": "Featured Dishes",
+            "body": "Discover our chef's specials and seasonal favorites."
+          },
+          {
+            "id": "menu-experience",
+            "kind": "info_section",
+            "heading": "The Dinner Experience",
+            "body": "Unforgettable flavors, vibrant atmosphere, and exceptional service await you."
+          }
+        ]
+      },
+      {
+        "slug": "gallery",
+        "title": "Gallery",
+        "sections": [
+          {
+            "id": "photo-gallery",
+            "kind": "image_gallery",
+            "heading": "See Inside ZooZoo",
+            "body": "Browse moments from our lively restaurant and signature dishes."
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About",
+        "sections": [
+          {
+            "id": "about-long",
+            "kind": "about_story",
+            "heading": "Our Story",
+            "body": "ZooZoo Restaurant delivers innovative cuisine and warm hospitality for a unique dining adventure."
+          },
+          {
+            "id": "niche-tags",
+            "kind": "tag_list",
+            "heading": "Our Niche",
+            "body": "studio, presspilot"
+          },
+          {
+            "id": "audience-notes",
+            "kind": "info_note",
+            "heading": "Note",
+            "body": "Studio playground submission"
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-details",
+            "kind": "contact_info",
+            "heading": "Get In Touch",
+            "body": "Contact us to reserve your table or for special event bookings."
+          },
+          {
+            "id": "location-info",
+            "kind": "location_map",
+            "heading": "Find Us",
+            "body": "ZooZoo Restaurant is proud to serve guests worldwide."
+          }
+        ]
+      }
+    ]
+  },
+  "businessCategoryId": "restaurant_cafe",
+  "wpImport": {
+    "front_page_slug": "home",
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home"
+      },
+      {
+        "slug": "menu",
+        "title": "Menu"
+      },
+      {
+        "slug": "about",
+        "title": "About"
+      },
+      {
+        "slug": "contact",
+        "title": "Contact"
+      }
+    ],
+    "menu": {
+      "location": "primary",
+      "name": "Main Menu",
+      "items": [
+        "home",
+        "menu",
+        "about",
+        "contact"
+      ]
+    }
+  },
+  "tagline": "ZooZoo restaurant has the best dinner experience in town"
+}

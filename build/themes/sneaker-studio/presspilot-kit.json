@@ -1,0 +1,66 @@
+{
+  "slug": "sneaker-studio",
+  "brandName": "Sneaker-Studio",
+  "businessTypeId": "ecommerce_store",
+  "styleVariation": "ecom-bold",
+  "createdAt": "2025-11-23T06:29:46.578Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Sneaker-Studio",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero",
+            "heading": "All Your Sneaker Dreams",
+            "subheading": "Powered by PressPilot OS",
+            "body": "Shop the latest, greatest sneakers under one roof. Global picks for every style."
+          },
+          {
+            "id": "features",
+            "kind": "features",
+            "heading": "Why Sneaker-Studio?",
+            "body": "Curated brands. Fast global shipping. PressPilot-powered service. Exclusive releases."
+          },
+          {
+            "id": "shop-now",
+            "kind": "cta",
+            "heading": "Shop Now",
+            "body": "Explore our latest releases and studio exclusives."
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About Sneaker-Studio",
+        "sections": [
+          {
+            "id": "our-story",
+            "kind": "text",
+            "heading": "Under One Roof",
+            "body": "Sneaker-Studio sets the standard for ecom sneaker curation and global service."
+          },
+          {
+            "id": "presspilot-note",
+            "kind": "note",
+            "body": "Studio playground submission. Powered by PressPilot OS."
+          }
+        ]
+      },
+      {
+        "slug": "shop",
+        "title": "Shop Sneakers",
+        "sections": [
+          {
+            "id": "shop-collection",
+            "kind": "collection",
+            "heading": "Featured Sneakers",
+            "body": "Browse bold new releases, collabs, and must-haves. Shop your style!"
+          }
+        ]
+      }
+    ]
+  },
+  "tagline": "Sneaker-Studio the store that has all your sneakers dreams under one roof."
+}

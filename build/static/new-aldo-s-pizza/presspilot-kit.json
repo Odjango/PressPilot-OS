@@ -1,0 +1,115 @@
+{
+  "slug": "new-aldo-s-pizza",
+  "brandName": "New Aldo's Pizza",
+  "businessTypeId": "restaurant_cafe",
+  "styleVariation": "restaurant-soft",
+  "createdAt": "2025-11-23T20:04:16.237Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Welcome",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero",
+            "heading": "New Aldo's Pizza",
+            "subheading": "Powered by PressPilot OS",
+            "body": "The best pizza in town — served fresh, globally."
+          },
+          {
+            "id": "about",
+            "kind": "about",
+            "heading": "Our Story",
+            "body": "Founded with passion, we deliver delicious pizza to every customer, everywhere."
+          },
+          {
+            "id": "menu-preview",
+            "kind": "menu_preview",
+            "heading": "Popular Pizzas",
+            "body": "Try our favorites: classic Margherita, pepperoni, and signature Aldo’s Special."
+          }
+        ]
+      },
+      {
+        "slug": "menu",
+        "title": "Menu",
+        "sections": [
+          {
+            "id": "menu-list",
+            "kind": "menu",
+            "heading": "Our Pizza Menu",
+            "body": "Browse our hand-crafted pizzas, sides, and beverages."
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About Us",
+        "sections": [
+          {
+            "id": "why-choose-us",
+            "kind": "info",
+            "heading": "Why Choose New Aldo's?",
+            "body": "We focus on fresh ingredients, classic recipes, and friendly global service."
+          },
+          {
+            "id": "presspilot-note",
+            "kind": "note",
+            "heading": "Powered by PressPilot",
+            "body": "This demo kit highlights what you can build with PressPilot OS."
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-form",
+            "kind": "contact",
+            "heading": "Get in Touch",
+            "body": "Questions, comments, or large orders? Reach out and we'll respond soon."
+          }
+        ]
+      }
+    ]
+  },
+  "tagline": "New Aldo's Pizza has the best pizza in town",
+  "businessCategoryId": "restaurant_cafe",
+  "business": {
+    "name": "New Aldo's Pizza",
+    "category_id": "restaurant_cafe"
+  },
+  "wpImport": {
+    "front_page_slug": "home",
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home"
+      },
+      {
+        "slug": "menu",
+        "title": "Menu"
+      },
+      {
+        "slug": "about",
+        "title": "About"
+      },
+      {
+        "slug": "contact",
+        "title": "Contact"
+      }
+    ],
+    "menu": {
+      "location": "primary",
+      "name": "Main Menu",
+      "items": [
+        "home",
+        "menu",
+        "about",
+        "contact"
+      ]
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "slug": "presspilot-demo-co",
+  "brandName": "PressPilot Demo Co.",
+  "businessTypeId": "restaurant_cafe",
+  "styleVariation": "restaurant-soft",
+  "createdAt": "2025-11-24T02:13:46.171Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero",
+            "heading": "PressPilot Demo Co.",
+            "subheading": "Powered by PressPilot OS",
+            "body": "A modern business generated via PressPilot. Studio playground submission."
+          },
+          {
+            "id": "about",
+            "kind": "about",
+            "heading": "About",
+            "body": "We showcase studio-driven service kits for demo. Explore PressPilot capabilities."
+          },
+          {
+            "id": "call-to-action",
+            "kind": "cta",
+            "heading": "Explore PressPilot OS",
+            "body": "Experience easy, modern, and polished press kits."
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About Us",
+        "sections": [
+          {
+            "id": "overview",
+            "kind": "info",
+            "heading": "Who We Are",
+            "body": "PressPilot Demo Co. is a modern service brand built to demo the PressPilot kit platform globally."
+          },
+          {
+            "id": "audience",
+            "kind": "info",
+            "heading": "Our Audience",
+            "body": "Ideal for studios, agencies, and anyone seeking polished press kits."
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-form",
+            "kind": "form",
+            "heading": "Get in Touch",
+            "body": "Reach out to learn more about PressPilot Demo Co. or request a demo kit."
+          }
+        ]
+      }
+    ]
+  },
+  "tagline": "A modern business generated via PressPilot.",
+  "businessCategoryId": "restaurant_cafe",
+  "business": {
+    "name": "PressPilot Demo Co.",
+    "category_id": "restaurant_cafe"
+  },
+  "wpImport": {
+    "front_page_slug": "home",
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home"
+      },
+      {
+        "slug": "menu",
+        "title": "Menu"
+      },
+      {
+        "slug": "about",
+        "title": "About"
+      },
+      {
+        "slug": "services",
+        "title": "Services"
+      },
+      {
+        "slug": "blog",
+        "title": "Blog"
+      },
+      {
+        "slug": "contact",
+        "title": "Contact"
+      }
+    ],
+    "menu": {
+      "location": "primary",
+      "name": "Main Menu",
+      "items": [
+        "home",
+        "menu",
+        "about",
+        "services",
+        "blog",
+        "contact"
+      ]
+    }
+  }
+}

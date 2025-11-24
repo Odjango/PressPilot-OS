@@ -1,0 +1,133 @@
+{
+  "slug": "aldo-s-pizza",
+  "brandName": "Aldo's Pizza",
+  "businessTypeId": "local-biz",
+  "styleVariation": "local-biz-soft",
+  "createdAt": "2025-11-23T19:28:33.721Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Aldo's Pizza",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero",
+            "heading": "Aldo's Pizza",
+            "subheading": "Best Pizza in Town",
+            "body": "Powered by PressPilot OS"
+          },
+          {
+            "id": "about",
+            "kind": "about",
+            "heading": "About Us",
+            "body": "Serving delicious, fresh pizza worldwide. Experience taste and tradition with every slice."
+          },
+          {
+            "id": "menu-preview",
+            "kind": "menu_preview",
+            "heading": "Sample Menu",
+            "body": "Classic Margherita, Pepperoni, Veggie Supreme, and more."
+          },
+          {
+            "id": "cta",
+            "kind": "call_to_action",
+            "heading": "Order Now",
+            "body": "Experience pizza perfection. Dine in or order for delivery."
+          }
+        ]
+      },
+      {
+        "slug": "menu",
+        "title": "Menu",
+        "sections": [
+          {
+            "id": "menu-list",
+            "kind": "menu_list",
+            "heading": "Our Signature Pizzas",
+            "body": "Classic, specialty, and custom pizzas. Something for every craving."
+          },
+          {
+            "id": "drinks-desserts",
+            "kind": "menu_list",
+            "heading": "Drinks & Desserts",
+            "body": "Soft drinks, craft sodas, and classic Italian desserts."
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About",
+        "sections": [
+          {
+            "id": "story",
+            "kind": "text",
+            "heading": "Our Story",
+            "body": "Aldo's Pizza blends heritage recipes with fresh ingredients. Global flavors, local feel."
+          },
+          {
+            "id": "values",
+            "kind": "list",
+            "heading": "Our Values",
+            "body": "Quality, Hospitality, Tradition, Innovation"
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-details",
+            "kind": "contact",
+            "heading": "Get in Touch",
+            "body": "Reach out for orders, questions, or feedback."
+          },
+          {
+            "id": "map",
+            "kind": "map",
+            "heading": "Find Us",
+            "body": "Multiple locations worldwide. Check your nearest branch."
+          }
+        ]
+      }
+    ]
+  },
+  "tagline": "Aldo's Pizza has the best pizza in town",
+  "businessCategoryId": "local_service",
+  "business": {
+    "name": "Aldo's Pizza",
+    "category_id": "local_service"
+  },
+  "wpImport": {
+    "front_page_slug": "home",
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home"
+      },
+      {
+        "slug": "services",
+        "title": "Services"
+      },
+      {
+        "slug": "about",
+        "title": "About"
+      },
+      {
+        "slug": "contact",
+        "title": "Contact"
+      }
+    ],
+    "menu": {
+      "location": "primary",
+      "name": "Main Menu",
+      "items": [
+        "home",
+        "services",
+        "about",
+        "contact"
+      ]
+    }
+  }
+}

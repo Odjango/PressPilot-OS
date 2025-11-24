@@ -6,29 +6,33 @@
  * Description: Modular hero section with badges, headline, and dual CTAs.
  */
 ?>
-<!-- wp:group {"align":"full","backgroundColor":"soft-bg","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-pattern hero-basic"} -->
-<div class="wp-block-group alignfull presspilot-pattern hero-basic has-soft-bg-background-color has-background">
+<!-- wp:group {"align":"full","backgroundColor":"soft-bg","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern hero-basic"} -->
+<div class="wp-block-group alignfull presspilot-section presspilot-pattern hero-basic has-soft-bg-background-color has-background">
   <!-- wp:group {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|20"}}} -->
   <div class="wp-block-group">
-    <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"xs"} -->
-    <p class="has-text-align-center has-muted-color has-xs-font-size">Built with PressPilot Golden Foundation</p>
+    <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"xs","className":"hero-eyebrow"} -->
+    <p class="has-text-align-center has-muted-color has-xs-font-size hero-eyebrow">Built with PressPilot Golden Foundation</p>
     <!-- /wp:paragraph -->
   </div>
   <!-- /wp:group -->
 
-  <!-- wp:heading {"textAlign":"center","level":1,"fontSize":"xxl"} -->
-  <h1 class="wp-block-heading has-text-align-center has-xxl-font-size pp-hero-headline">CloudSpark CRM</h1>
+  <!-- wp:heading {"textAlign":"center","level":1,"fontSize":"xxl","className":"hero-title"} -->
+  <h1 class="wp-block-heading has-text-align-center has-xxl-font-size pp-hero-headline hero-title">CloudSpark CRM</h1>
   <!-- /wp:heading -->
 
-  <!-- wp:paragraph {"align":"center","fontSize":"lg"} -->
-  <p class="has-text-align-center has-lg-font-size pp-hero-subheadline">CloudSpark CRM helps RevOps leaders collapse spreadsheets, email threads, and call notes into one clear timeline so teams respond faster. The platform includes AI nudges, territory mapping, and ready-to-send playbooks…</p>
+  <!-- wp:paragraph {"align":"center","fontSize":"lg","className":"hero-subtitle"} -->
+  <p class="has-text-align-center has-lg-font-size pp-hero-subheadline hero-subtitle">CloudSpark CRM helps RevOps leaders collapse spreadsheets, email threads, and call notes into one clear timeline so teams respond faster. The platform includes AI nudges, territory mapping, and ready-to-send playbooks…</p>
   <!-- /wp:paragraph -->
 
-  <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}}} -->
-  <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
-    <!-- wp:button {"text":"Get started","url":"#contact"} /-->
+  <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}},"className":"pp-hero-ctas hero-ctas"} -->
+  <div class="wp-block-buttons pp-hero-ctas hero-ctas" style="margin-top:var(--wp--preset--spacing--40)">
+    <!-- wp:button {"className":"pp-button-primary btn primary","textColor":"contrast","style":{"elements":{"link":{"color":{"text":"var:preset|color|contrast"}}}}} -->
+    <div class="wp-block-button pp-button-primary btn primary has-contrast-color has-text-color has-link-color"><a class="wp-block-button__link wp-element-button pp-hero-cta-primary btn primary" href="#contact">Get started</a></div>
+    <!-- /wp:button -->
 
-    <!-- wp:button {"text":"See live demo","url":"#features","className":"is-style-outline"} /-->
+    <!-- wp:button {"className":"pp-button-secondary is-style-outline btn secondary","style":{"border":{"width":"1px"}}} -->
+    <div class="wp-block-button pp-button-secondary is-style-outline btn secondary has-custom-border wp-element-button" style="border-width:1px"><a class="wp-block-button__link wp-element-button pp-hero-cta-secondary btn secondary" href="#features">See live demo</a></div>
+    <!-- /wp:button -->
   </div>
   <!-- /wp:buttons -->
 </div>

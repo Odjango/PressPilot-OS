@@ -1,0 +1,83 @@
+{
+  "slug": "kooki-store",
+  "brandName": "Kooki Store",
+  "businessTypeId": null,
+  "styleVariation": null,
+  "createdAt": "2025-11-23T13:58:26.970Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero",
+            "heading": "Elevate Your Web Presence",
+            "subheading": "Premium WordPress Studio Solutions",
+            "body": "Get modern, seamless WordPress sites powered by PressPilot OS. Built for visionaries.",
+            "notes": "Primary call to action: 'Get Started'"
+          },
+          {
+            "id": "features",
+            "kind": "feature-list",
+            "heading": "Why Choose Kooki Store?",
+            "body": "Modern design, top-tier performance, and effortless management—all in one platform.",
+            "notes": "Highlight service features such as modern UI, scalability, and dedicated support."
+          },
+          {
+            "id": "cta-main",
+            "kind": "cta",
+            "heading": "Ready to Launch?",
+            "body": "Partner with us for your next digital project. Experience the difference.",
+            "notes": "Include secondary CTA: 'View Portfolio'"
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About",
+        "sections": [
+          {
+            "id": "studio-intro",
+            "kind": "intro",
+            "heading": "About Kooki Store",
+            "body": "We deliver studio-grade WordPress solutions for creatives and agencies around the world."
+          },
+          {
+            "id": "approach",
+            "kind": "info",
+            "heading": "Our Approach",
+            "body": "Combining design excellence with PressPilot's robust OS, we ensure results that stand apart."
+          },
+          {
+            "id": "values",
+            "kind": "list",
+            "heading": "Our Values",
+            "body": "Quality, innovation, transparency, and client success guide every project."
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-form",
+            "kind": "form",
+            "heading": "Let's Work Together",
+            "body": "Share your vision. We’ll help you realize it with world-class WordPress expertise.",
+            "notes": "Short, clear form for lead capture."
+          },
+          {
+            "id": "studio-details",
+            "kind": "info",
+            "heading": "Global Studio",
+            "body": "Kooki Store works with clients worldwide. Reach us anytime for a prompt response."
+          }
+        ]
+      }
+    ]
+  },
+  "tagline": "Kooki Store needs a polished WordPress kit with modern hero copy, clear CTAs, and a tone that matches a premium web studio."
+}

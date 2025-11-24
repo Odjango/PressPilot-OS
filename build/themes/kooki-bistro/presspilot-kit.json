@@ -1,0 +1,88 @@
+{
+  "slug": "kooki-bistro",
+  "brandName": "Kooki Bistro",
+  "businessTypeId": null,
+  "styleVariation": null,
+  "createdAt": "2025-11-23T15:26:26.251Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero",
+            "heading": "Create. Launch. Inspire.",
+            "subheading": "Elevate your studio online with Kooki Bistro—powered by PressPilot OS.",
+            "body": "Premium WordPress solutions for studios who demand creative impact.",
+            "notes": "Modern hero, premium tone, concise."
+          },
+          {
+            "id": "cta",
+            "kind": "call_to_action",
+            "heading": "Transform Your Studio’s Site",
+            "body": "Explore a tailored WordPress kit that stands out. Ready to take off?",
+            "notes": "Primary CTA, bold and direct."
+          },
+          {
+            "id": "features",
+            "kind": "features",
+            "heading": "Why Kooki Bistro?",
+            "body": "• Studio-grade design\n• Fast, flexible layouts\n• Seamless PressPilot OS integration",
+            "notes": "Feature highlights, concise."
+          },
+          {
+            "id": "testimonials",
+            "kind": "testimonials",
+            "heading": "Studios Love PressPilot",
+            "body": "\"The easiest launch we've ever done.\" — Digital Owl Studio",
+            "notes": "Single, strong testimonial for demo."
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About",
+        "sections": [
+          {
+            "id": "about-hero",
+            "kind": "hero",
+            "heading": "Your Studio’s Playground",
+            "subheading": "Expert polish meets creative freedom.",
+            "body": "Built for web studios eager to showcase unforgettable digital work.",
+            "notes": "Premium studio intro."
+          },
+          {
+            "id": "approach",
+            "kind": "text",
+            "heading": "Our Approach",
+            "body": "Modern design, quick setup, and seamless management with PressPilot OS.",
+            "notes": "Focused on premium-value proposition."
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "cta-contact",
+            "kind": "call_to_action",
+            "heading": "Ready to Level Up?",
+            "body": "Get in touch to see how Kooki Bistro fuels creative studios.",
+            "notes": "Contact CTA, concise."
+          },
+          {
+            "id": "contact-form",
+            "kind": "form",
+            "heading": "Start Your Project",
+            "body": "Drop a message and our team will get back to you soon.",
+            "notes": "Demo form section."
+          }
+        ]
+      }
+    ]
+  },
+  "tagline": "Kooki Bistro needs a polished WordPress kit with modern hero copy, clear CTAs, and a tone that matches a premium web studio."
+}

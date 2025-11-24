@@ -1,0 +1,109 @@
+{
+  "slug": "bendo-pizza",
+  "brandName": "Bendo Pizza",
+  "businessTypeId": "local-biz",
+  "styleVariation": "local-biz-soft",
+  "createdAt": "2025-11-23T20:15:43.777Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home",
+        "sections": [
+          {
+            "id": "hero-1",
+            "kind": "hero",
+            "heading": "Bendo Pizza",
+            "subheading": "Powered by PressPilot OS",
+            "body": "The best pizza in town."
+          },
+          {
+            "id": "about-1",
+            "kind": "about",
+            "heading": "About Us",
+            "body": "Bendo Pizza crafts top-quality pizza using fresh ingredients. Enjoy friendly service and a cozy atmosphere."
+          },
+          {
+            "id": "call-to-action-1",
+            "kind": "call_to_action",
+            "heading": "Order Now",
+            "body": "Taste the best pizza in town. Explore our menu and place your order!"
+          }
+        ]
+      },
+      {
+        "slug": "menu",
+        "title": "Menu",
+        "sections": [
+          {
+            "id": "menu-list-1",
+            "kind": "menu_list",
+            "heading": "Our Pizzas",
+            "body": "A selection of our best oven-baked pizzas, made fresh daily."
+          },
+          {
+            "id": "menu-specials-1",
+            "kind": "specials",
+            "heading": "Specials",
+            "body": "Check out our daily and seasonal specials."
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-info-1",
+            "kind": "contact_info",
+            "heading": "Contact Bendo Pizza",
+            "body": "For orders or questions, reach out via phone, email, or visit our location."
+          },
+          {
+            "id": "location-1",
+            "kind": "location",
+            "heading": "Visit Us",
+            "body": "Find our pizza shop in the heart of town."
+          }
+        ]
+      }
+    ]
+  },
+  "tagline": "Bendo Pizza has the best pizza in town",
+  "businessCategoryId": "local_service",
+  "business": {
+    "name": "Bendo Pizza",
+    "category_id": "local_service"
+  },
+  "wpImport": {
+    "front_page_slug": "home",
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home"
+      },
+      {
+        "slug": "services",
+        "title": "Services"
+      },
+      {
+        "slug": "about",
+        "title": "About"
+      },
+      {
+        "slug": "contact",
+        "title": "Contact"
+      }
+    ],
+    "menu": {
+      "location": "primary",
+      "name": "Main Menu",
+      "items": [
+        "home",
+        "services",
+        "about",
+        "contact"
+      ]
+    }
+  }
+}

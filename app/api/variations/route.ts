@@ -1,10 +1,19 @@
 import { NextResponse } from 'next/server';
 import { PressPilotSaaSInput } from '@/types/presspilot';
+
+import { callPressPilotJson } from '@/lib/openai';
 import { applyBusinessInputs } from '@/lib/presspilot/context';
-import { generatePressPilotVariations } from '@/lib/presspilot/variations';
+import {
+  buildVariationSetFromAI,
+  VARIATION_IDS,
+  type RawVariationResponse,
+} from '@/lib/presspilot/variations';
 import { validateSaaSInput } from '@/lib/presspilot/validation';
 import { resolveBusinessTypeStyle } from '@/lib/presspilot/kit';
-import { buildSaaSInputFromStudioInput, StudioFormInput } from '@/lib/presspilot/studioAdapter';
+import {
+  buildSaaSInputFromStudioInput,
+  type StudioFormInput,
+} from '@/lib/presspilot/studioAdapter';
 import { buildFallbackVariationSet } from '@/lib/presspilot/fallbackVariations';
 
 interface VariationRequestBody {
@@ -28,9 +37,27 @@ export async function POST(request: Request) {
     const context = applyBusinessInputs(payload);
     let variationSet;
     try {
-      variationSet = await generatePressPilotVariations(context);
+      const aiResponse = (await callPressPilotJson({
+        system:
+          'You are the PressPilot Studio design engine. ' +
+          'Given normalized business inputs, respond ONLY with JSON { variations: Variation[] } ' +
+          'matching the PressPilotVariationManifest schema. ' +
+          'Use ids variation_a, variation_b, variation_c. Populate tokens, nav, preview, and pattern_set_id.',
+        user: {
+          requestedIds: VARIATION_IDS,
+          brand: context.brand,
+          narrative: context.narrative,
+          visual: context.visual,
+          modes: context.modes,
+          request: {
+            businessTypeId: body.businessTypeId ?? null,
+            styleVariation: styleVariation ?? null,
+          },
+        },
+      })) as RawVariationResponse;
+      variationSet = buildVariationSetFromAI(context, aiResponse);
     } catch (err) {
-      console.error('[api/variations] falling back to stub variations', err);
+      console.error('[api/variations] AI engine unavailable, using fallback', err);
       variationSet = buildFallbackVariationSet(context);
     }
 

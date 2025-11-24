@@ -1,0 +1,970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:wp="http://wordpress.org/export/1.2/"
+  xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
+>
+  <channel>
+  <title>Aldo's Pizza</title>
+  <link>https://presspilot.local/aldo-s-pizza</link>
+  <description>Aldo's Pizza has the best pizza in town</description>
+  <pubDate>Sun, 23 Nov 2025 19:28:35 GMT</pubDate>
+  <generator>https://presspilot.os</generator>
+  <language>en-US</language>
+  <wp:wxr_version>1.2</wp:wxr_version>
+  <wp:base_site_url>https://presspilot.local/aldo-s-pizza</wp:base_site_url>
+  <wp:base_blog_url>https://presspilot.local/aldo-s-pizza</wp:base_blog_url>
+  <wp:author>
+    <wp:author_id>1</wp:author_id>
+    <wp:author_login><![CDATA[presspilot]]></wp:author_login>
+    <wp:author_email><![CDATA[importer@presspilot.app]]></wp:author_email>
+    <wp:author_display_name><![CDATA[PressPilot Importer]]></wp:author_display_name>
+    <wp:author_first_name><![CDATA[PressPilot]]></wp:author_first_name>
+    <wp:author_last_name><![CDATA[Importer]]></wp:author_last_name>
+  </wp:author>
+
+  <item>
+    <title>Home</title>
+    <link>https://presspilot.local/aldo-s-pizza/home</link>
+    <pubDate>Sun, 23 Nov 2025 19:28:35 GMT</pubDate>
+    <dc:creator><![CDATA[presspilot]]></dc:creator>
+    <guid isPermaLink="false">https://presspilot.local/aldo-s-pizza/?page_id=1</guid>
+    <description></description>
+    <content:encoded><![CDATA[<!-- wp:group {"align":"full","backgroundColor":"soft-bg","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern hero-basic"} -->
+<div class="wp-block-group alignfull presspilot-section presspilot-pattern hero-basic has-soft-bg-background-color has-background">
+  <!-- wp:group {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|20"}}} -->
+  <div class="wp-block-group">
+    <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"xs","className":"hero-eyebrow"} -->
+    <p class="has-text-align-center has-muted-color has-xs-font-size hero-eyebrow">Built with PressPilot Golden Foundation</p>
+    <!-- /wp:paragraph -->
+  </div>
+  <!-- /wp:group -->
+
+  <!-- wp:heading {"textAlign":"center","level":1,"fontSize":"xxl","className":"hero-title"} -->
+  <h1 class="wp-block-heading has-text-align-center has-xxl-font-size pp-hero-headline hero-title">Aldo's Pizza</h1>
+  <!-- /wp:heading -->
+
+  <!-- wp:paragraph {"align":"center","fontSize":"lg","className":"hero-subtitle"} -->
+  <p class="has-text-align-center has-lg-font-size pp-hero-subheadline hero-subtitle">Aldo's Pizza has the best pizza in town</p>
+  <!-- /wp:paragraph -->
+
+  <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}},"className":"pp-hero-ctas hero-ctas"} -->
+  <div class="wp-block-buttons pp-hero-ctas hero-ctas" style="margin-top:var(--wp--preset--spacing--40)">
+    <!-- wp:button {"className":"pp-button-primary btn primary"} -->
+    <div class="wp-block-button pp-button-primary btn primary">
+      <a class="wp-block-button__link pp-hero-cta-primary btn primary" href="#contact">Schedule a consult</a>
+    </div>
+    <!-- /wp:button -->
+    
+    <!-- wp:button {"className":"pp-button-secondary is-style-outline btn secondary"} -->
+    <div class="wp-block-button pp-button-secondary is-style-outline btn secondary">
+      <a class="wp-block-button__link pp-hero-cta-secondary btn secondary" href="#portfolio">See sample site</a>
+    </div>
+    <!-- /wp:button -->
+  </div>
+  <!-- /wp:buttons -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|50","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern features-grid"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern features-grid" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
+  <h2 class="wp-block-heading has-text-align-center has-xl-font-size">Built for neighborhood services</h2>
+  <!-- /wp:heading -->
+
+  <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40","margin":{"top":"var:preset|spacing|40"}}},"className":"feature-grid"} -->
+  <div class="wp-block-columns feature-grid" style="margin-top:var(--wp--preset--spacing--40)">
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-card feature-card"} -->
+      <div class="wp-block-group has-soft-bg-background-color pp-card feature-card has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-feature-title">📍 Local-first layout</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-feature-body">Show service areas, hours, and Google-friendly copy blocks.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-card feature-card"} -->
+      <div class="wp-block-group has-soft-bg-background-color pp-card feature-card has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-feature-title">📅 Booking friendly</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-feature-body">Highlight phone, booking links, or walk-in details with dedicated CTAs.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-card feature-card"} -->
+      <div class="wp-block-group has-soft-bg-background-color pp-card feature-card has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-feature-title">🧾 Service menus</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-feature-body">Prebuilt patterns for pricing tables, testimonials, and FAQs.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-card feature-card"} -->
+      <div class="wp-block-group has-soft-bg-background-color pp-card feature-card has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-feature-title">🤝 Trust-building sections</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-feature-body">Drop in reviews, certifications, and community highlights.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|50","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern pricing-columns"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern pricing-columns" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
+  <h2 class="wp-block-heading has-text-align-center has-xl-font-size">Plans for every restaurant_cafe</h2>
+  <!-- /wp:heading -->
+
+  <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"sm","className":"section-subhead"} -->
+  <p class="has-text-align-center has-muted-color has-sm-font-size section-subhead">Aldo's Pizza can switch tiers any time—kits stay in sync automatically.</p>
+  <!-- /wp:paragraph -->
+
+  <!-- wp:columns {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|40"}},"className":"pricing-grid"} -->
+  <div class="wp-block-columns pricing-grid" style="margin-top:var(--wp--preset--spacing--40)">
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"layout":{"type":"constrained"},"className":"pp-pricing-card pricing-card"} -->
+      <div class="wp-block-group pp-pricing-card pricing-card" style="border-color:var(--wp--preset--color--border);border-width:1px;border-style:solid;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-plan-name">Starter</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"xl"} -->
+        <p class="has-xl-font-size pp-plan-price">$19 / month</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:list {"className":"pp-plan-list","fontSize":"sm"} -->
+        <ul class="pp-plan-list has-sm-font-size"><li>1 brand setup</li><li>Basic analytics</li><li>Email support</li></ul>
+        <!-- /wp:list -->
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"stretch"}} -->
+        <div class="wp-block-buttons">
+          <!-- wp:button {"className":"pp-button-primary btn primary","width":100} -->
+          <div class="wp-block-button pp-button-primary btn primary">
+            <a class="wp-block-button__link btn primary" href="#contact">Choose Starter</a>
+          </div>
+          <!-- /wp:button -->
+        </div>
+        <!-- /wp:buttons -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"layout":{"type":"constrained"},"className":"pp-pricing-card pricing-card highlight pp-pricing-card-highlight"} -->
+      <div class="wp-block-group pp-pricing-card pricing-card highlight pp-pricing-card-highlight" style="border-color:var(--wp--preset--color--primary);border-width:2px;border-style:solid;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-plan-name">Growth</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"xl"} -->
+        <p class="has-xl-font-size pp-plan-price">$49 / month</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:list {"className":"pp-plan-list","fontSize":"sm"} -->
+        <ul class="pp-plan-list has-sm-font-size"><li>Unlimited kits</li><li>Mode-aware add-ons</li><li>Priority support</li></ul>
+        <!-- /wp:list -->
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"stretch"}} -->
+        <div class="wp-block-buttons">
+          <!-- wp:button {"className":"pp-button-primary btn primary","width":100} -->
+          <div class="wp-block-button pp-button-primary btn primary">
+            <a class="wp-block-button__link btn primary" href="#contact">Choose Growth</a>
+          </div>
+          <!-- /wp:button -->
+        </div>
+        <!-- /wp:buttons -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"layout":{"type":"constrained"},"className":"pp-pricing-card pricing-card"} -->
+      <div class="wp-block-group pp-pricing-card pricing-card" style="border-color:var(--wp--preset--color--border);border-width:1px;border-style:solid;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-plan-name">Pro</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"xl"} -->
+        <p class="has-xl-font-size pp-plan-price">$99 / month</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:list {"className":"pp-plan-list","fontSize":"sm"} -->
+        <ul class="pp-plan-list has-sm-font-size"><li>Dedicated strategist</li><li>Custom exports</li><li>Training &amp; SLA</li></ul>
+        <!-- /wp:list -->
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"stretch"}} -->
+        <div class="wp-block-buttons">
+          <!-- wp:button {"className":"pp-button-primary btn primary","width":100} -->
+          <div class="wp-block-button pp-button-primary btn primary">
+            <a class="wp-block-button__link btn primary" href="#contact">Choose Pro</a>
+          </div>
+          <!-- /wp:button -->
+        </div>
+        <!-- /wp:buttons -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern blog-teasers"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern blog-teasers" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
+  <h2 class="wp-block-heading has-text-align-center has-xl-font-size">Latest updates</h2>
+  <!-- /wp:heading -->
+
+  <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"sm","className":"section-subhead"} -->
+  <p class="has-text-align-center has-muted-color has-sm-font-size section-subhead">Use this space to share product launches, playbooks, or insights.</p>
+  <!-- /wp:paragraph -->
+
+  <!-- wp:columns {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}},"className":"blog-grid"} -->
+  <div class="wp-block-columns blog-grid" style="margin-top:var(--wp--preset--spacing--40)">
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Playbook</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">Aldo's Pizza release notes</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Share a concise summary of your latest platform update or feature drop.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Case study</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">How teams ship faster</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Highlight a customer win, metric, or testimonial from recent work.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Announcement</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">What’s next for Aldo's Pizza</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Tease upcoming launches, events, or community projects to keep people excited.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"backgroundColor":"soft-bg","layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern cta-contact"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern cta-contact has-soft-bg-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"className":"cta-contact-grid"} -->
+  <div class="wp-block-columns cta-contact-grid">
+    <!-- wp:column -->
+    <div class="wp-block-column cta-contact__copy">
+      <!-- wp:heading {"level":2,"fontSize":"xl"} -->
+      <h2 class="wp-block-heading has-xl-font-size pp-contact-heading">Ready to work with Aldo's Pizza?</h2>
+      <!-- /wp:heading -->
+
+      <!-- wp:paragraph {"fontSize":"sm"} -->
+      <p class="has-sm-font-size pp-contact-body">Share a bit about your services and the neighborhoods you cover. We’ll tailor the kit around it. Reach us at hello@aldo-s-pizza.com.</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:list {"fontSize":"sm"} -->
+      <ul class="has-sm-font-size"><li><strong>Email:</strong> <span class="pp-contact-email">hello@aldo-s-pizza.com</span></li></ul>
+      <!-- /wp:list -->
+    </div>
+    <!-- /wp:column -->
+
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"border":{"width":"1px","style":"dashed","color":"var:preset|color|border"},"spacing":{"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"background":{"color":"var:preset|color|background"}},"layout":{"type":"constrained"},"className":"pp-cta-card cta-contact__card"} -->
+      <div class="wp-block-group pp-cta-card cta-contact__card has-background" style="background-color:var(--wp--preset--color--background);border-color:var(--wp--preset--color--border);border-style:dashed;border-width:1px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size">Request a callback</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>1</wp:post_id>
+    <wp:post_date>2025-11-23 19:28:35</wp:post_date>
+    <wp:post_date_gmt>2025-11-23 19:28:35</wp:post_date_gmt>
+    <wp:comment_status>closed</wp:comment_status>
+    <wp:ping_status>closed</wp:ping_status>
+    <wp:post_name>home</wp:post_name>
+    <wp:status>publish</wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type>page</wp:post_type>
+    <wp:post_password></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>About</title>
+    <link>https://presspilot.local/aldo-s-pizza/about</link>
+    <pubDate>Sun, 23 Nov 2025 19:29:35 GMT</pubDate>
+    <dc:creator><![CDATA[presspilot]]></dc:creator>
+    <guid isPermaLink="false">https://presspilot.local/aldo-s-pizza/?page_id=2</guid>
+    <description></description>
+    <content:encoded><![CDATA[<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|50","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern features-grid"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern features-grid" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
+  <h2 class="wp-block-heading has-text-align-center has-xl-font-size">About Aldo's Pizza</h2>
+  <!-- /wp:heading -->
+
+  <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40","margin":{"top":"var:preset|spacing|40"}}},"className":"feature-grid"} -->
+  <div class="wp-block-columns feature-grid" style="margin-top:var(--wp--preset--spacing--40)">
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-card feature-card"} -->
+      <div class="wp-block-group has-soft-bg-background-color pp-card feature-card has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-feature-title">📍 Local-first layout</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-feature-body">Show service areas, hours, and Google-friendly copy blocks.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-card feature-card"} -->
+      <div class="wp-block-group has-soft-bg-background-color pp-card feature-card has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-feature-title">📅 Booking friendly</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-feature-body">Highlight phone, booking links, or walk-in details with dedicated CTAs.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-card feature-card"} -->
+      <div class="wp-block-group has-soft-bg-background-color pp-card feature-card has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-feature-title">🧾 Service menus</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-feature-body">Prebuilt patterns for pricing tables, testimonials, and FAQs.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-card feature-card"} -->
+      <div class="wp-block-group has-soft-bg-background-color pp-card feature-card has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-feature-title">🤝 Trust-building sections</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-feature-body">Drop in reviews, certifications, and community highlights.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern blog-teasers"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern blog-teasers" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
+  <h2 class="wp-block-heading has-text-align-center has-xl-font-size">Latest updates</h2>
+  <!-- /wp:heading -->
+
+  <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"sm","className":"section-subhead"} -->
+  <p class="has-text-align-center has-muted-color has-sm-font-size section-subhead">Use this space to share product launches, playbooks, or insights.</p>
+  <!-- /wp:paragraph -->
+
+  <!-- wp:columns {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}},"className":"blog-grid"} -->
+  <div class="wp-block-columns blog-grid" style="margin-top:var(--wp--preset--spacing--40)">
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Playbook</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">Aldo's Pizza release notes</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Share a concise summary of your latest platform update or feature drop.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Case study</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">How teams ship faster</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Highlight a customer win, metric, or testimonial from recent work.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Announcement</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">What’s next for Aldo's Pizza</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Tease upcoming launches, events, or community projects to keep people excited.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"backgroundColor":"soft-bg","layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern cta-contact"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern cta-contact has-soft-bg-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"className":"cta-contact-grid"} -->
+  <div class="wp-block-columns cta-contact-grid">
+    <!-- wp:column -->
+    <div class="wp-block-column cta-contact__copy">
+      <!-- wp:heading {"level":2,"fontSize":"xl"} -->
+      <h2 class="wp-block-heading has-xl-font-size pp-contact-heading">Ready to work with Aldo's Pizza?</h2>
+      <!-- /wp:heading -->
+
+      <!-- wp:paragraph {"fontSize":"sm"} -->
+      <p class="has-sm-font-size pp-contact-body">Share a bit about your services and the neighborhoods you cover. We’ll tailor the kit around it. Reach us at hello@aldo-s-pizza.com.</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:list {"fontSize":"sm"} -->
+      <ul class="has-sm-font-size"><li><strong>Email:</strong> <span class="pp-contact-email">hello@aldo-s-pizza.com</span></li></ul>
+      <!-- /wp:list -->
+    </div>
+    <!-- /wp:column -->
+
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"border":{"width":"1px","style":"dashed","color":"var:preset|color|border"},"spacing":{"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"background":{"color":"var:preset|color|background"}},"layout":{"type":"constrained"},"className":"pp-cta-card cta-contact__card"} -->
+      <div class="wp-block-group pp-cta-card cta-contact__card has-background" style="background-color:var(--wp--preset--color--background);border-color:var(--wp--preset--color--border);border-style:dashed;border-width:1px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size">Request a callback</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>2</wp:post_id>
+    <wp:post_date>2025-11-23 19:29:35</wp:post_date>
+    <wp:post_date_gmt>2025-11-23 19:29:35</wp:post_date_gmt>
+    <wp:comment_status>closed</wp:comment_status>
+    <wp:ping_status>closed</wp:ping_status>
+    <wp:post_name>about</wp:post_name>
+    <wp:status>publish</wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>1</wp:menu_order>
+    <wp:post_type>page</wp:post_type>
+    <wp:post_password></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Pricing</title>
+    <link>https://presspilot.local/aldo-s-pizza/pricing</link>
+    <pubDate>Sun, 23 Nov 2025 19:30:35 GMT</pubDate>
+    <dc:creator><![CDATA[presspilot]]></dc:creator>
+    <guid isPermaLink="false">https://presspilot.local/aldo-s-pizza/?page_id=3</guid>
+    <description></description>
+    <content:encoded><![CDATA[<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|50","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern pricing-columns"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern pricing-columns" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
+  <h2 class="wp-block-heading has-text-align-center has-xl-font-size">Plans for every restaurant_cafe</h2>
+  <!-- /wp:heading -->
+
+  <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"sm","className":"section-subhead"} -->
+  <p class="has-text-align-center has-muted-color has-sm-font-size section-subhead">Aldo's Pizza can switch tiers any time—kits stay in sync automatically.</p>
+  <!-- /wp:paragraph -->
+
+  <!-- wp:columns {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|40"}},"className":"pricing-grid"} -->
+  <div class="wp-block-columns pricing-grid" style="margin-top:var(--wp--preset--spacing--40)">
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"layout":{"type":"constrained"},"className":"pp-pricing-card pricing-card"} -->
+      <div class="wp-block-group pp-pricing-card pricing-card" style="border-color:var(--wp--preset--color--border);border-width:1px;border-style:solid;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-plan-name">Starter</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"xl"} -->
+        <p class="has-xl-font-size pp-plan-price">$19 / month</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:list {"className":"pp-plan-list","fontSize":"sm"} -->
+        <ul class="pp-plan-list has-sm-font-size"><li>1 brand setup</li><li>Basic analytics</li><li>Email support</li></ul>
+        <!-- /wp:list -->
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"stretch"}} -->
+        <div class="wp-block-buttons">
+          <!-- wp:button {"className":"pp-button-primary btn primary","width":100} -->
+          <div class="wp-block-button pp-button-primary btn primary">
+            <a class="wp-block-button__link btn primary" href="#contact">Choose Starter</a>
+          </div>
+          <!-- /wp:button -->
+        </div>
+        <!-- /wp:buttons -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"layout":{"type":"constrained"},"className":"pp-pricing-card pricing-card highlight pp-pricing-card-highlight"} -->
+      <div class="wp-block-group pp-pricing-card pricing-card highlight pp-pricing-card-highlight" style="border-color:var(--wp--preset--color--primary);border-width:2px;border-style:solid;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-plan-name">Growth</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"xl"} -->
+        <p class="has-xl-font-size pp-plan-price">$49 / month</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:list {"className":"pp-plan-list","fontSize":"sm"} -->
+        <ul class="pp-plan-list has-sm-font-size"><li>Unlimited kits</li><li>Mode-aware add-ons</li><li>Priority support</li></ul>
+        <!-- /wp:list -->
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"stretch"}} -->
+        <div class="wp-block-buttons">
+          <!-- wp:button {"className":"pp-button-primary btn primary","width":100} -->
+          <div class="wp-block-button pp-button-primary btn primary">
+            <a class="wp-block-button__link btn primary" href="#contact">Choose Growth</a>
+          </div>
+          <!-- /wp:button -->
+        </div>
+        <!-- /wp:buttons -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"layout":{"type":"constrained"},"className":"pp-pricing-card pricing-card"} -->
+      <div class="wp-block-group pp-pricing-card pricing-card" style="border-color:var(--wp--preset--color--border);border-width:1px;border-style:solid;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-plan-name">Pro</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"xl"} -->
+        <p class="has-xl-font-size pp-plan-price">$99 / month</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:list {"className":"pp-plan-list","fontSize":"sm"} -->
+        <ul class="pp-plan-list has-sm-font-size"><li>Dedicated strategist</li><li>Custom exports</li><li>Training &amp; SLA</li></ul>
+        <!-- /wp:list -->
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"stretch"}} -->
+        <div class="wp-block-buttons">
+          <!-- wp:button {"className":"pp-button-primary btn primary","width":100} -->
+          <div class="wp-block-button pp-button-primary btn primary">
+            <a class="wp-block-button__link btn primary" href="#contact">Choose Pro</a>
+          </div>
+          <!-- /wp:button -->
+        </div>
+        <!-- /wp:buttons -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"backgroundColor":"soft-bg","layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern cta-contact"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern cta-contact has-soft-bg-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"className":"cta-contact-grid"} -->
+  <div class="wp-block-columns cta-contact-grid">
+    <!-- wp:column -->
+    <div class="wp-block-column cta-contact__copy">
+      <!-- wp:heading {"level":2,"fontSize":"xl"} -->
+      <h2 class="wp-block-heading has-xl-font-size pp-contact-heading">Ready to work with Aldo's Pizza?</h2>
+      <!-- /wp:heading -->
+
+      <!-- wp:paragraph {"fontSize":"sm"} -->
+      <p class="has-sm-font-size pp-contact-body">Share a bit about your services and the neighborhoods you cover. We’ll tailor the kit around it. Reach us at hello@aldo-s-pizza.com.</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:list {"fontSize":"sm"} -->
+      <ul class="has-sm-font-size"><li><strong>Email:</strong> <span class="pp-contact-email">hello@aldo-s-pizza.com</span></li></ul>
+      <!-- /wp:list -->
+    </div>
+    <!-- /wp:column -->
+
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"border":{"width":"1px","style":"dashed","color":"var:preset|color|border"},"spacing":{"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"background":{"color":"var:preset|color|background"}},"layout":{"type":"constrained"},"className":"pp-cta-card cta-contact__card"} -->
+      <div class="wp-block-group pp-cta-card cta-contact__card has-background" style="background-color:var(--wp--preset--color--background);border-color:var(--wp--preset--color--border);border-style:dashed;border-width:1px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size">Request a callback</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>3</wp:post_id>
+    <wp:post_date>2025-11-23 19:30:35</wp:post_date>
+    <wp:post_date_gmt>2025-11-23 19:30:35</wp:post_date_gmt>
+    <wp:comment_status>closed</wp:comment_status>
+    <wp:ping_status>closed</wp:ping_status>
+    <wp:post_name>pricing</wp:post_name>
+    <wp:status>publish</wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>2</wp:menu_order>
+    <wp:post_type>page</wp:post_type>
+    <wp:post_password></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Updates</title>
+    <link>https://presspilot.local/aldo-s-pizza/updates</link>
+    <pubDate>Sun, 23 Nov 2025 19:31:35 GMT</pubDate>
+    <dc:creator><![CDATA[presspilot]]></dc:creator>
+    <guid isPermaLink="false">https://presspilot.local/aldo-s-pizza/?page_id=4</guid>
+    <description></description>
+    <content:encoded><![CDATA[<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern blog-teasers"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern blog-teasers" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
+  <h2 class="wp-block-heading has-text-align-center has-xl-font-size">Latest updates</h2>
+  <!-- /wp:heading -->
+
+  <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"sm","className":"section-subhead"} -->
+  <p class="has-text-align-center has-muted-color has-sm-font-size section-subhead">Use this space to share product launches, playbooks, or insights.</p>
+  <!-- /wp:paragraph -->
+
+  <!-- wp:columns {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}},"className":"blog-grid"} -->
+  <div class="wp-block-columns blog-grid" style="margin-top:var(--wp--preset--spacing--40)">
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Playbook</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">Aldo's Pizza release notes</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Share a concise summary of your latest platform update or feature drop.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Case study</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">How teams ship faster</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Highlight a customer win, metric, or testimonial from recent work.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Announcement</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">What’s next for Aldo's Pizza</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Tease upcoming launches, events, or community projects to keep people excited.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"backgroundColor":"soft-bg","layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern cta-contact"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern cta-contact has-soft-bg-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"className":"cta-contact-grid"} -->
+  <div class="wp-block-columns cta-contact-grid">
+    <!-- wp:column -->
+    <div class="wp-block-column cta-contact__copy">
+      <!-- wp:heading {"level":2,"fontSize":"xl"} -->
+      <h2 class="wp-block-heading has-xl-font-size pp-contact-heading">Ready to work with Aldo's Pizza?</h2>
+      <!-- /wp:heading -->
+
+      <!-- wp:paragraph {"fontSize":"sm"} -->
+      <p class="has-sm-font-size pp-contact-body">Share a bit about your services and the neighborhoods you cover. We’ll tailor the kit around it. Reach us at hello@aldo-s-pizza.com.</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:list {"fontSize":"sm"} -->
+      <ul class="has-sm-font-size"><li><strong>Email:</strong> <span class="pp-contact-email">hello@aldo-s-pizza.com</span></li></ul>
+      <!-- /wp:list -->
+    </div>
+    <!-- /wp:column -->
+
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"border":{"width":"1px","style":"dashed","color":"var:preset|color|border"},"spacing":{"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"background":{"color":"var:preset|color|background"}},"layout":{"type":"constrained"},"className":"pp-cta-card cta-contact__card"} -->
+      <div class="wp-block-group pp-cta-card cta-contact__card has-background" style="background-color:var(--wp--preset--color--background);border-color:var(--wp--preset--color--border);border-style:dashed;border-width:1px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size">Request a callback</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>4</wp:post_id>
+    <wp:post_date>2025-11-23 19:31:35</wp:post_date>
+    <wp:post_date_gmt>2025-11-23 19:31:35</wp:post_date_gmt>
+    <wp:comment_status>closed</wp:comment_status>
+    <wp:ping_status>closed</wp:ping_status>
+    <wp:post_name>updates</wp:post_name>
+    <wp:status>publish</wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>3</wp:menu_order>
+    <wp:post_type>page</wp:post_type>
+    <wp:post_password></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Contact</title>
+    <link>https://presspilot.local/aldo-s-pizza/contact</link>
+    <pubDate>Sun, 23 Nov 2025 19:32:35 GMT</pubDate>
+    <dc:creator><![CDATA[presspilot]]></dc:creator>
+    <guid isPermaLink="false">https://presspilot.local/aldo-s-pizza/?page_id=5</guid>
+    <description></description>
+    <content:encoded><![CDATA[<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"backgroundColor":"soft-bg","layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern cta-contact"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern cta-contact has-soft-bg-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"className":"cta-contact-grid"} -->
+  <div class="wp-block-columns cta-contact-grid">
+    <!-- wp:column -->
+    <div class="wp-block-column cta-contact__copy">
+      <!-- wp:heading {"level":2,"fontSize":"xl"} -->
+      <h2 class="wp-block-heading has-xl-font-size pp-contact-heading">Ready to work with Aldo's Pizza?</h2>
+      <!-- /wp:heading -->
+
+      <!-- wp:paragraph {"fontSize":"sm"} -->
+      <p class="has-sm-font-size pp-contact-body">Share a bit about your services and the neighborhoods you cover. We’ll tailor the kit around it. Reach us at hello@aldo-s-pizza.com.</p>
+      <!-- /wp:paragraph -->
+
+      <!-- wp:list {"fontSize":"sm"} -->
+      <ul class="has-sm-font-size"><li><strong>Email:</strong> <span class="pp-contact-email">hello@aldo-s-pizza.com</span></li></ul>
+      <!-- /wp:list -->
+    </div>
+    <!-- /wp:column -->
+
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"border":{"width":"1px","style":"dashed","color":"var:preset|color|border"},"spacing":{"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"background":{"color":"var:preset|color|background"}},"layout":{"type":"constrained"},"className":"pp-cta-card cta-contact__card"} -->
+      <div class="wp-block-group pp-cta-card cta-contact__card has-background" style="background-color:var(--wp--preset--color--background);border-color:var(--wp--preset--color--border);border-style:dashed;border-width:1px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size">Request a callback</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>5</wp:post_id>
+    <wp:post_date>2025-11-23 19:32:35</wp:post_date>
+    <wp:post_date_gmt>2025-11-23 19:32:35</wp:post_date_gmt>
+    <wp:comment_status>closed</wp:comment_status>
+    <wp:ping_status>closed</wp:ping_status>
+    <wp:post_name>contact</wp:post_name>
+    <wp:status>publish</wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>4</wp:menu_order>
+    <wp:post_type>page</wp:post_type>
+    <wp:post_password></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Blog</title>
+    <link>https://presspilot.local/aldo-s-pizza/blog</link>
+    <pubDate>Sun, 23 Nov 2025 19:33:35 GMT</pubDate>
+    <dc:creator><![CDATA[presspilot]]></dc:creator>
+    <guid isPermaLink="false">https://presspilot.local/aldo-s-pizza/?page_id=6</guid>
+    <description></description>
+    <content:encoded><![CDATA[<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern blog-teasers"} -->
+<div class="wp-block-group presspilot-section presspilot-pattern blog-teasers" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
+  <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
+  <h2 class="wp-block-heading has-text-align-center has-xl-font-size">Latest updates</h2>
+  <!-- /wp:heading -->
+
+  <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"sm","className":"section-subhead"} -->
+  <p class="has-text-align-center has-muted-color has-sm-font-size section-subhead">Use this space to share product launches, playbooks, or insights.</p>
+  <!-- /wp:paragraph -->
+
+  <!-- wp:columns {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}},"className":"blog-grid"} -->
+  <div class="wp-block-columns blog-grid" style="margin-top:var(--wp--preset--spacing--40)">
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Playbook</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">Aldo's Pizza release notes</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Share a concise summary of your latest platform update or feature drop.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Case study</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">How teams ship faster</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Highlight a customer win, metric, or testimonial from recent work.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column -->
+    <div class="wp-block-column">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
+      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
+        <p class="has-muted-color has-xs-font-size">Announcement</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
+        <h3 class="wp-block-heading has-lg-font-size pp-update-title">What’s next for Aldo's Pizza</h3>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"fontSize":"sm"} -->
+        <p class="has-sm-font-size pp-update-body">Tease upcoming launches, events, or community projects to keep people excited.</p>
+        <!-- /wp:paragraph -->
+      </div>
+      <!-- /wp:group -->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>6</wp:post_id>
+    <wp:post_date>2025-11-23 19:33:35</wp:post_date>
+    <wp:post_date_gmt>2025-11-23 19:33:35</wp:post_date_gmt>
+    <wp:comment_status>closed</wp:comment_status>
+    <wp:ping_status>closed</wp:ping_status>
+    <wp:post_name>blog</wp:post_name>
+    <wp:status>publish</wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>5</wp:menu_order>
+    <wp:post_type>page</wp:post_type>
+    <wp:post_password></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+  </channel>
+</rss>

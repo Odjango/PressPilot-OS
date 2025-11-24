@@ -1,0 +1,76 @@
+{
+  "slug": "meedo",
+  "brandName": "Meedo",
+  "businessTypeId": null,
+  "styleVariation": null,
+  "createdAt": "2025-11-23T08:03:49.038Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero",
+            "heading": "Web Solutions, Elevated",
+            "subheading": "Modern digital studio experiences. Launch with confidence. Powered by PressPilot OS.",
+            "body": "Unmatched design, fast delivery. The premium platform for websites that stand apart.",
+            "notes": "Primary CTA: 'Start Your Project'; Secondary CTA: 'See Portfolio'"
+          },
+          {
+            "id": "services",
+            "kind": "feature-list",
+            "heading": "What We Offer",
+            "body": "Custom WordPress sites, SEO optimization, seamless support. Crafted for studios and agencies."
+          },
+          {
+            "id": "cta",
+            "kind": "cta",
+            "heading": "Ready to elevate your brand?",
+            "body": "Get in touch for a free consultation.",
+            "notes": "CTA: 'Contact Us'"
+          }
+        ]
+      },
+      {
+        "slug": "portfolio",
+        "title": "Portfolio",
+        "sections": [
+          {
+            "id": "showcase",
+            "kind": "gallery",
+            "heading": "Selected Projects",
+            "body": "Explore premium sites built with Meedo.",
+            "notes": "Show 3-6 polished projects with thumbnails."
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About",
+        "sections": [
+          {
+            "id": "about-intro",
+            "kind": "about",
+            "heading": "Meet Meedo",
+            "body": "A global web studio delivering standout WordPress solutions, powered by PressPilot OS."
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-form",
+            "kind": "form",
+            "heading": "Let's Connect",
+            "body": "Reach out to discuss your project or get a quote.",
+            "notes": "Include form fields: name, email, message."
+          }
+        ]
+      }
+    ]
+  }
+}
