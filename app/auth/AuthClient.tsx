@@ -32,7 +32,8 @@ export default function AuthClient() {
         throw signInError;
       }
 
-      router.replace("/projects");
+      // Use window.location for a full page reload to ensure server sees the new session
+      window.location.href = "/";
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Unable to complete sign in.";
@@ -56,7 +57,8 @@ export default function AuthClient() {
         throw signUpError;
       }
 
-      router.replace("/projects");
+      // Use window.location for a full page reload to ensure server sees the new session
+      window.location.href = "/";
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Unable to complete sign up.";

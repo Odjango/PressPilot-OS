@@ -9,11 +9,13 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const { user } = await getUserAuthContext();
+  const { user, session } = await getUserAuthContext();
 
-  if (!user?.email) {
+  // If not logged in, redirect to auth
+  if (!user?.email || !session) {
     redirect('/auth');
   }
 
+  // If logged in, redirect to projects
   redirect('/projects');
 }

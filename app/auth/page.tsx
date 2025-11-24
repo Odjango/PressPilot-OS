@@ -7,8 +7,9 @@ import AuthClient from "./AuthClient";
 export default async function AuthPage() {
   const { user, session } = await getUserAuthContext();
 
+  // If already logged in with a valid session, redirect to home (which will go to /projects)
   if (user?.email && session) {
-    redirect("/projects");
+    redirect("/");
   }
 
   return (
