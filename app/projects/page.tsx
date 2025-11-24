@@ -10,9 +10,10 @@ export const dynamic = 'force-dynamic';
 export default async function ProjectsPage() {
   const { user } = await getUserAuthContext();
 
-  if (!user?.email) {
-    redirect('/auth');
-  }
+  // TEMPORARILY DISABLED: Auth redirect for debugging
+  // if (!user?.email) {
+  //   redirect('/auth');
+  // }
 
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase

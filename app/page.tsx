@@ -15,10 +15,11 @@ export const dynamic = 'force-dynamic';
 export default async function HomePage() {
   const { user, session } = await getUserAuthContext();
 
+  // TEMPORARILY DISABLED: Auth redirect for debugging
   // If not logged in, redirect to auth
-  if (!user?.email || !session) {
-    redirect('/auth');
-  }
+  // if (!user?.email || !session) {
+  //   redirect('/auth');
+  // }
 
   // If logged in, show projects page directly
   const supabase = createServerSupabaseClient();
