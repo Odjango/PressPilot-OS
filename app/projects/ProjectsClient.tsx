@@ -76,19 +76,27 @@ export default function ProjectsClient({
   >({ type: 'idle' });
 
   const refreshProjects = useCallback(async () => {
-    if (!userEmail) {
+    setIsLoadingList(true);
+    setListError(null);
+
+    // Get user email from Supabase session if not provided via prop
+    let ownerEmail = userEmail;
+    if (!ownerEmail) {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      ownerEmail = authUser?.email ?? null;
+    }
+
+    if (!ownerEmail) {
+      // If no email, show empty list (RLS will block anyway)
       setProjects([]);
       setIsLoadingList(false);
       return;
     }
 
-    setIsLoadingList(true);
-    setListError(null);
-
     const { data, error } = await supabase
       .from('pp_projects')
       .select('id,owner_email,name,slug,status,created_at')
-      .eq('owner_email', userEmail.toLowerCase())
+      .eq('owner_email', ownerEmail.toLowerCase())
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -124,19 +132,21 @@ export default function ProjectsClient({
 
   const handleCreate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
-    if (!userEmail) {
-      setStatus({ type: 'error', message: 'Please sign in to create projects.' });
-      return;
-    }
 
     setStatus({ type: 'saving', message: 'Creating project…' });
 
     try {
+      // Get user email from Supabase session if not provided via prop
+      let ownerEmail = userEmail;
+      if (!ownerEmail) {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        ownerEmail = authUser?.email ?? null;
+      }
+
       const { data, error } = await supabase
         .from('pp_projects')
         .insert({
-          owner_email: (userEmail ?? '').toLowerCase(),
+          owner_email: ownerEmail ? ownerEmail.toLowerCase() : null,
           name: form.name ?? '',
           slug: (form.slug ?? '').trim() || slugify(form.name),
           status: form.status ?? 'draft',
@@ -157,24 +167,35 @@ export default function ProjectsClient({
       setStatus({ type: 'idle' });
     } catch (error) {
       console.error('[ProjectsClient] createProject error:', error);
-      setStatus({ type: 'error', message: formatProjectError(error) });
+      // Show generic error message - let Supabase RLS handle auth errors
+      setStatus({ 
+        type: 'error', 
+        message: 'Could not create project. Please check your connection or try again.' 
+      });
     }
   };
 
   const handleStatusUpdate = async (projectId: string, statusValue: string) => {
-    if (!userEmail) {
-      setStatus({ type: 'error', message: 'Please sign in to update projects.' });
-      return;
-    }
-
     setStatus({ type: 'saving', message: 'Updating project…' });
 
     try {
+      // Get user email from Supabase session if not provided via prop
+      let ownerEmail = userEmail;
+      if (!ownerEmail) {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        ownerEmail = authUser?.email ?? null;
+      }
+
+      if (!ownerEmail) {
+        // If still no email, let Supabase RLS handle it, but we need an email for the filter
+        throw new Error('Unable to determine user email');
+      }
+
       const { data, error } = await supabase
         .from('pp_projects')
         .update({ status: statusValue })
         .eq('id', projectId)
-        .eq('owner_email', userEmail.toLowerCase())
+        .eq('owner_email', ownerEmail.toLowerCase())
         .select('id,owner_email,name,slug,status,created_at')
         .single();
 
@@ -188,7 +209,10 @@ export default function ProjectsClient({
       setStatus({ type: 'idle' });
     } catch (error) {
       console.error('[ProjectsClient] updateProject error:', error);
-      setStatus({ type: 'error', message: formatProjectError(error) });
+      setStatus({ 
+        type: 'error', 
+        message: 'Could not update project. Please check your connection or try again.' 
+      });
     }
   };
 
