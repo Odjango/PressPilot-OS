@@ -21,23 +21,31 @@ export default async function HomePage() {
   //   redirect('/auth');
   // }
 
-  // If logged in, show projects page directly
-  const supabase = createServerSupabaseClient();
-  const { data, error } = await supabase
-    .from('pp_projects')
-    .select('id,owner_email,name,slug,status,created_at')
-    .eq('owner_email', user.email)
-    .order('created_at', { ascending: false });
-  
-  if (error) {
-    console.error('[HomePage] error loading projects', error);
+  // Safe to render even without user/session
+  let projects: ProjectRecord[] = [];
+  const userEmail = user?.email ?? null;
+
+  if (userEmail) {
+    // If logged in, load projects
+    const supabase = createServerSupabaseClient();
+    const { data, error } = await supabase
+      .from('pp_projects')
+      .select('id,owner_email,name,slug,status,created_at')
+      .eq('owner_email', userEmail)
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('[HomePage] error loading projects', error);
+    } else {
+      projects = (data ?? []) as ProjectRecord[];
+    }
   }
 
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
       <ProjectsClient
-        initialProjects={(data ?? []) as ProjectRecord[]}
-        userEmail={user.email}
+        initialProjects={projects}
+        userEmail={userEmail}
       />
     </section>
   );
