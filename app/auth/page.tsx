@@ -4,10 +4,13 @@ import { getUserAuthContext } from "@/lib/auth";
 
 import AuthClient from "./AuthClient";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AuthPage() {
   const { user, session } = await getUserAuthContext();
 
-  // If already logged in with a valid session, redirect to home (which will go to /projects)
+  // If already logged in with a valid session, redirect to home
+  // This prevents authenticated users from seeing the login form
   if (user?.email && session) {
     redirect("/");
   }

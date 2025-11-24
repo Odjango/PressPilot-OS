@@ -20,7 +20,9 @@ export async function getUserAuthContext(): Promise<UserAuthContext> {
 
   const user = session?.user ?? null;
 
-  if (!user && process.env.NODE_ENV === 'development') {
+  // Dev fallback only in development and only if no session exists
+  // This ensures production always uses real sessions
+  if (!user && !session && process.env.NODE_ENV === 'development') {
     const devEmail = process.env.PRESSPILOT_DEV_EMAIL ?? 'odjango4@gmail.com';
     return {
       user: {
