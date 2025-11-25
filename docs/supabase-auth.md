@@ -29,3 +29,4 @@ All client queries also filter by the same fields to align with RLS.
 - **RLS access errors**: the client surfaces “Unable to load … Please try again”; check the console for `[ProjectsClient]` or `[ProfileClient]` logs describing the Supabase error (usually “permission denied for table …”).
 - **Service role key exposure**: `SUPABASE_SERVICE_ROLE_KEY` must stay server-only. If it’s ever bundled client-side, remove it immediately and rotate the key in Supabase.
 
+

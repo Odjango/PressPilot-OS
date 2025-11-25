@@ -189,3 +189,4 @@ SELECT option_value FROM wp_options WHERE option_name = 'page_on_front';
 -- Should be a page ID (not empty)
 ```
 
+

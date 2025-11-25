@@ -1,0 +1,110 @@
+{
+  "slug": "pixel-sneaks-studio",
+  "brandName": "Pixel Sneaks Studio",
+  "businessTypeId": null,
+  "styleVariation": null,
+  "createdAt": "2025-11-24T14:59:15.920Z",
+  "plan": {
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home",
+        "sections": [
+          {
+            "id": "hero",
+            "kind": "hero",
+            "heading": "Elevate Your Web Presence",
+            "subheading": "Crafted WordPress solutions by Pixel Sneaks Studio.",
+            "body": "Build bold, modern sites with our premium web studio expertise.",
+            "notes": "Modern, inviting hero for a studio service."
+          },
+          {
+            "id": "features",
+            "kind": "features",
+            "heading": "What We Offer",
+            "body": "Custom themes, elite support, lightning-fast delivery & PressPilot OS integration."
+          },
+          {
+            "id": "cta",
+            "kind": "call_to_action",
+            "heading": "Ready to launch?",
+            "body": "Contact our team to jumpstart your next web project.",
+            "notes": "Primary CTA—anchors conversion goal."
+          }
+        ]
+      },
+      {
+        "slug": "about",
+        "title": "About",
+        "sections": [
+          {
+            "id": "studio-story",
+            "kind": "about",
+            "heading": "Meet Pixel Sneaks Studio",
+            "body": "A creative web studio building next-gen WordPress sites for visionaries worldwide."
+          },
+          {
+            "id": "our-philosophy",
+            "kind": "values",
+            "heading": "Our Philosophy",
+            "body": "We blend innovation and reliability, ensuring every launch is seamless and standout."
+          }
+        ]
+      },
+      {
+        "slug": "contact",
+        "title": "Contact",
+        "sections": [
+          {
+            "id": "contact-form",
+            "kind": "contact_form",
+            "heading": "Let's Connect",
+            "body": "Share your vision. Our team will respond within 1 business day."
+          }
+        ]
+      }
+    ]
+  },
+  "tagline": "Pixel Sneaks Studio needs a polished WordPress kit with modern hero copy, clear CTAs, and a tone that matches a premium web studio.",
+  "businessCategoryId": null,
+  "business": {
+    "name": "Pixel Sneaks Studio",
+    "category_id": null
+  },
+  "wpImport": {
+    "front_page_slug": "home",
+    "pages": [
+      {
+        "slug": "home",
+        "title": "Home"
+      },
+      {
+        "slug": "about",
+        "title": "About"
+      },
+      {
+        "slug": "services",
+        "title": "Services"
+      },
+      {
+        "slug": "blog",
+        "title": "Blog"
+      },
+      {
+        "slug": "contact",
+        "title": "Contact"
+      }
+    ],
+    "menu": {
+      "location": "primary",
+      "name": "Main Menu",
+      "items": [
+        "home",
+        "about",
+        "services",
+        "blog",
+        "contact"
+      ]
+    }
+  }
+}

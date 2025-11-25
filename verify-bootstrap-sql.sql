@@ -93,3 +93,4 @@ AND post_name IN ('home', 'menu', 'about', 'services', 'blog', 'contact')
 ORDER BY post_date DESC;
 -- Expected: Recent post_date if pages were just created
 
+

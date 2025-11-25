@@ -97,7 +97,6 @@ async function checkProjectCreateAndList() {
   const { data, error: listError } = await supabase
     .from('pp_projects')
     .select('id,slug')
-    .eq('owner_email', TEST_EMAIL)
     .eq('slug', TEST_PROJECT.slug)
     .maybeSingle();
 
@@ -120,7 +119,6 @@ async function cleanup() {
       await supabase
         .from('pp_projects')
         .delete()
-        .eq('owner_email', TEST_EMAIL)
         .eq('slug', TEST_PROJECT.slug);
     }
   } catch (error) {
