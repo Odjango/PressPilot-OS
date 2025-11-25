@@ -14,6 +14,7 @@ const normalizeStatus = (status?: string | null) => {
 export async function GET(_request: NextRequest) {
   let supabase = createRouteHandlerSupabaseClient();
   let { data: { session } } = await supabase.auth.getSession();
+  let dbClient: any = supabase;
   let debugInfo: any = { method: 'cookie' };
 
   // Fallback: Check Authorization header if cookie session is missing
@@ -24,10 +25,17 @@ export async function GET(_request: NextRequest) {
     debugInfo.hasToken = !!token;
 
     if (token) {
-      // Use a fresh client to avoid cookie issues
+      // Use a fresh client with the auth header set globally
       const cleanClient = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          global: {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        }
       );
       const { data: { user: authUser }, error } = await cleanClient.auth.getUser(token);
 
@@ -35,6 +43,7 @@ export async function GET(_request: NextRequest) {
 
       if (authUser && !error) {
         session = { user: authUser, access_token: token } as any;
+        dbClient = cleanClient;
       }
     }
   }
@@ -51,8 +60,7 @@ export async function GET(_request: NextRequest) {
     );
   }
 
-  const client = createServerSupabaseClient();
-  const { data, error } = await (client as any)
+  const { data, error } = await dbClient
     .from(TABLE_NAME)
     .select('id,owner_email,name,slug,status,created_at')
     .eq('owner_email', user.email)
@@ -71,6 +79,7 @@ export async function GET(_request: NextRequest) {
 export async function POST(request: NextRequest) {
   let supabase = createRouteHandlerSupabaseClient();
   let { data: { session } } = await supabase.auth.getSession();
+  let dbClient: any = supabase;
   let debugInfo: any = { method: 'cookie' };
 
   // Fallback: Check Authorization header if cookie session is missing
@@ -83,7 +92,14 @@ export async function POST(request: NextRequest) {
     if (token) {
       const cleanClient = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          global: {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        }
       );
       const { data: { user: authUser }, error } = await cleanClient.auth.getUser(token);
 
@@ -91,6 +107,7 @@ export async function POST(request: NextRequest) {
 
       if (authUser && !error) {
         session = { user: authUser, access_token: token } as any;
+        dbClient = cleanClient;
       }
     }
   }
@@ -119,8 +136,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const client = createServerSupabaseClient();
-  const { data, error } = await (client as any)
+  const { data, error } = await dbClient
     .from(TABLE_NAME)
     .insert({
       owner_email: user.email,
@@ -152,15 +168,28 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   let supabase = createRouteHandlerSupabaseClient();
   let { data: { session } } = await supabase.auth.getSession();
+  let dbClient: any = supabase;
 
   // Fallback: Check Authorization header if cookie session is missing
   if (!session && request.headers.get('Authorization')) {
     const authHeader = request.headers.get('Authorization');
     const token = authHeader?.replace('Bearer ', '');
     if (token) {
-      const { data: { user: authUser }, error } = await supabase.auth.getUser(token);
+      const cleanClient = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          global: {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        }
+      );
+      const { data: { user: authUser }, error } = await cleanClient.auth.getUser(token);
       if (authUser && !error) {
         session = { user: authUser, access_token: token } as any;
+        dbClient = cleanClient;
       }
     }
   }
@@ -202,8 +231,7 @@ export async function PUT(request: NextRequest) {
     );
   }
 
-  const client = createServerSupabaseClient();
-  const { data, error } = await (client as any)
+  const { data, error } = await dbClient
     .from(TABLE_NAME)
     .update(updates)
     .eq('id', id)
