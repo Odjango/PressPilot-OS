@@ -10,10 +10,9 @@ export const dynamic = 'force-dynamic';
 export default async function ProjectsPage() {
   const { user } = await getUserAuthContext();
 
-  // TEMPORARILY DISABLED: Auth redirect for debugging
-  // if (!user?.email) {
-  //   redirect('/auth');
-  // }
+  if (!user?.email) {
+    redirect('/auth');
+  }
 
   // Safe to render even without user
   let projects: ProjectRecord[] = [];
