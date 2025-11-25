@@ -28,7 +28,7 @@ export function deriveModesFromCategory(category: BusinessCategory) {
 }
 
 export function applyBusinessInputs(payload: PressPilotSaaSInput): PressPilotNormalizedContext {
-  const slug = sanitizeSlug(payload.brand.business_name);
+  const slug = payload.brand.slug || sanitizeSlug(payload.brand.business_name);
   const modes = deriveModesFromCategory(payload.brand.business_category);
   const primaryLanguage: SupportedLanguageCode = payload.language.primary_language;
   const { archetype, navShell } = getSiteNavForCategory(payload.brand.business_category);

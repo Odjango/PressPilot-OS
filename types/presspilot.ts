@@ -42,6 +42,7 @@ export interface PressPilotSaaSInput {
     business_tagline?: string;
     business_category: BusinessCategory;
     region_or_country?: string;
+    slug?: string;
   };
   language: {
     primary_language: SupportedLanguageCode;

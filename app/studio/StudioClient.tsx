@@ -83,8 +83,9 @@ export default function StudioClient({ slug }: Props) {
       businessDescription: brief,
       primaryLanguage: DEFAULT_LANGUAGE,
       businessCategory: DEFAULT_CATEGORY,
+      slug: project?.slug
     };
-  }, [project?.name, brief]);
+  }, [project?.name, project?.slug, brief]);
 
   const handleAssign = useCallback(async () => {
     setAssigning(true);

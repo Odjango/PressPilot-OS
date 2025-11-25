@@ -10,6 +10,7 @@ export interface StudioFormInput {
   businessDescription?: string;
   primaryLanguage?: string;
   businessCategory?: string;
+  slug?: string;
 }
 
 export interface StudioRequestPayload {
@@ -66,7 +67,8 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
       business_name: businessName,
       business_tagline: 'Powered by PressPilot OS',
       business_category: businessCategory,
-      region_or_country: 'Global'
+      region_or_country: 'Global',
+      slug: input?.slug
     },
     language: {
       primary_language: primaryLanguage,
