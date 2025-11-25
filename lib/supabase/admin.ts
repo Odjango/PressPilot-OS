@@ -27,28 +27,41 @@ const supabaseUrl =
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl) {
-  const errorMsg =
-    '[supabase/admin] Missing Supabase URL. Required env vars: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_URL';
-  console.error(errorMsg);
-  throw new Error(errorMsg);
+  console.warn(
+    '[supabase/admin] Missing Supabase URL. Required env vars: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_URL'
+  );
 }
 
 if (!serviceRoleKey) {
-  const errorMsg =
-    '[supabase/admin] Missing SUPABASE_SERVICE_ROLE_KEY. Required for admin client.';
-  console.error(errorMsg);
-  throw new Error(errorMsg);
+  console.warn(
+    '[supabase/admin] Missing SUPABASE_SERVICE_ROLE_KEY. Required for admin client.'
+  );
 }
 
-export const supabaseAdmin = createClient<Database>(
-  supabaseUrl,
-  serviceRoleKey,
-  {
+let adminClient: ReturnType<typeof createClient<Database>>;
+
+if (supabaseUrl && serviceRoleKey) {
+  adminClient = createClient<Database>(supabaseUrl, serviceRoleKey, {
     auth: {
       persistSession: false,
       detectSessionInUrl: false,
       autoRefreshToken: false,
     },
-  },
-);
+  });
+} else {
+  // Mock client for build time or missing env vars
+  console.warn('[supabase/admin] Using mock admin client due to missing env vars');
+  adminClient = {
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          maybeSingle: async () => ({ data: null, error: { message: 'Supabase not configured' } }),
+          single: async () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        }),
+      }),
+    }),
+  } as any;
+}
+
+export const supabaseAdmin = adminClient;
 

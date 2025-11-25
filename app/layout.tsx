@@ -35,6 +35,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </div>
           </header>
           <main className="flex-1">{children}</main>
+          <footer className="py-6 text-center text-xs text-neutral-400">
+            PressPilot OS v1.1 (Stable)
+          </footer>
         </div>
       </body>
     </html>

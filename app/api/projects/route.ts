@@ -72,6 +72,14 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error) {
+    // Handle unique constraint violation (duplicate slug)
+    if (error.code === '23505') {
+      return NextResponse.json(
+        { error: 'A project with this slug already exists. Please choose a different slug.' },
+        { status: 409 },
+      );
+    }
+
     return NextResponse.json(
       { error: `Unable to create project: ${error.message}` },
       { status: 500 },

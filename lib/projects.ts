@@ -34,22 +34,29 @@ export async function getProjectBySlug(
     return { project: null, error: 'Missing slug' };
   }
 
-  const { data, error } = await supabaseAdmin
-    .from('pp_projects')
-    .select('id, slug, name, owner_email, status, created_at')
-    .eq('slug', slug)
-    .maybeSingle();
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('pp_projects')
+      .select('id, slug, name, owner_email, status, created_at')
+      .eq('slug', slug)
+      .maybeSingle();
 
-  if (error) {
-    console.error('[getProjectBySlug] Supabase error', { slug, error });
-    return { project: null, error: error.message };
+    if (error) {
+      console.error('[getProjectBySlug] Supabase error', { slug, error });
+      return { project: null, error: error.message };
+    }
+
+    if (!data) {
+      console.warn('[getProjectBySlug] No project found for slug', { slug });
+      return { project: null, error: null };
+    }
+
+    return { project: data as ProjectRow, error: null };
+  } catch (err) {
+    console.error('[getProjectBySlug] Unexpected error (likely missing env vars)', err);
+    return { project: null, error: 'Internal system error' };
   }
 
-  if (!data) {
-    console.warn('[getProjectBySlug] No project found for slug', { slug });
-    return { project: null, error: null };
-  }
 
-  return { project: data as ProjectRow, error: null };
 }
 

@@ -21,18 +21,22 @@ export default async function ProjectsPage() {
 
   if (userEmail) {
     // If logged in, load projects
+    console.log('[ProjectsPage] fetching projects for', userEmail);
     const supabase = createServerSupabaseClient();
     const { data, error } = await supabase
       .from('pp_projects')
       .select('id,owner_email,name,slug,status,created_at')
       .eq('owner_email', userEmail)
       .order('created_at', { ascending: false });
-    
+
     if (error) {
       console.error('[ProjectsPage] error loading projects', error);
     } else {
+      console.log('[ProjectsPage] loaded projects count:', data?.length);
       projects = (data ?? []) as ProjectRecord[];
     }
+  } else {
+    console.log('[ProjectsPage] no user email found, skipping fetch');
   }
 
   return (

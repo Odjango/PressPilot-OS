@@ -121,7 +121,11 @@ export default function ProjectsClient({
   ) => {
     setForm((prev) => {
       if (field === 'name') {
-        return { ...prev, name: value, slug: prev.slug || slugify(value) };
+        // Only auto-update slug if the user hasn't manually edited it yet
+        // OR if the slug is just a slugified version of the previous name
+        const currentSlugIsDerived = !prev.slug || prev.slug === slugify(prev.name);
+        const newSlug = currentSlugIsDerived ? slugify(value) : prev.slug;
+        return { ...prev, name: value, slug: newSlug };
       }
       if (field === 'slug') {
         return { ...prev, slug: slugify(value) };
@@ -136,27 +140,23 @@ export default function ProjectsClient({
     setStatus({ type: 'saving', message: 'Creating project…' });
 
     try {
-      // Get user email from Supabase session if not provided via prop
-      let ownerEmail = userEmail;
-      if (!ownerEmail) {
-        const { data: { user: authUser } } = await supabase.auth.getUser();
-        ownerEmail = authUser?.email ?? null;
-      }
-
-      const { data, error } = await supabase
-        .from('pp_projects')
-        .insert({
-          owner_email: ownerEmail ? ownerEmail.toLowerCase() : null,
-          name: form.name ?? '',
+      const response = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
           slug: (form.slug ?? '').trim() || slugify(form.name),
           status: form.status ?? 'draft',
-        })
-        .select('id,owner_email,name,slug,status,created_at')
-        .single();
+        }),
+      });
 
-      if (error) {
-        throw error;
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(payload.error || 'Failed to create project');
       }
+
+      const data = payload.project;
 
       setProjects((prev) => (data ? [data, ...prev] : prev));
       setForm({
@@ -167,10 +167,9 @@ export default function ProjectsClient({
       setStatus({ type: 'idle' });
     } catch (error) {
       console.error('[ProjectsClient] createProject error:', error);
-      // Show generic error message - let Supabase RLS handle auth errors
-      setStatus({ 
-        type: 'error', 
-        message: 'Could not create project. Please check your connection or try again.' 
+      setStatus({
+        type: 'error',
+        message: formatProjectError(error)
       });
     }
   };
@@ -179,29 +178,22 @@ export default function ProjectsClient({
     setStatus({ type: 'saving', message: 'Updating project…' });
 
     try {
-      // Get user email from Supabase session if not provided via prop
-      let ownerEmail = userEmail;
-      if (!ownerEmail) {
-        const { data: { user: authUser } } = await supabase.auth.getUser();
-        ownerEmail = authUser?.email ?? null;
+      const response = await fetch('/api/projects', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: projectId,
+          status: statusValue,
+        }),
+      });
+
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(payload.error || 'Failed to update project');
       }
 
-      if (!ownerEmail) {
-        // If still no email, let Supabase RLS handle it, but we need an email for the filter
-        throw new Error('Unable to determine user email');
-      }
-
-      const { data, error } = await supabase
-        .from('pp_projects')
-        .update({ status: statusValue })
-        .eq('id', projectId)
-        .eq('owner_email', ownerEmail.toLowerCase())
-        .select('id,owner_email,name,slug,status,created_at')
-        .single();
-
-      if (error) {
-        throw error;
-      }
+      const data = payload.project;
 
       setProjects((prev) =>
         prev.map((project) => (project.id === projectId && data ? data : project)),
@@ -209,9 +201,9 @@ export default function ProjectsClient({
       setStatus({ type: 'idle' });
     } catch (error) {
       console.error('[ProjectsClient] updateProject error:', error);
-      setStatus({ 
-        type: 'error', 
-        message: 'Could not update project. Please check your connection or try again.' 
+      setStatus({
+        type: 'error',
+        message: 'Could not update project. Please check your connection or try again.'
       });
     }
   };
@@ -345,11 +337,11 @@ export default function ProjectsClient({
         <section className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
           <h3 className="text-lg font-semibold text-neutral-900">New project</h3>
           <p className="mt-1 text-sm text-neutral-500">
-          Projects enforce Supabase policy{' '}
-          <code className="font-mono text-xs">
-            owner_email = auth.jwt()-&gt;&gt; &apos;email&apos;
-          </code>
-          .
+            Projects enforce Supabase policy{' '}
+            <code className="font-mono text-xs">
+              owner_email = auth.jwt()-&gt;&gt; &apos;email&apos;
+            </code>
+            .
           </p>
 
           <form className="mt-6 space-y-5" onSubmit={handleCreate}>

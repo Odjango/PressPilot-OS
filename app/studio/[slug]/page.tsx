@@ -19,6 +19,8 @@ type PageProps = {
   };
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function StudioPage({ params }: PageProps) {
   const slug = params.slug;
 
@@ -28,7 +30,9 @@ export default async function StudioPage({ params }: PageProps) {
   const { project, error } = await getProjectBySlug(slug);
 
   console.log('[StudioPage] getProjectBySlug result', {
+    slug,
     hasProject: !!project,
+    projectId: project?.id,
     error,
   });
 
@@ -42,7 +46,15 @@ export default async function StudioPage({ params }: PageProps) {
     return (
       <section className="mx-auto max-w-4xl px-6 py-12">
         <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
-          Project not found or not accessible.
+          <h3 className="font-semibold mb-2">Project not found</h3>
+          <p>
+            Could not resolve project with slug: <strong>{slug}</strong>
+          </p>
+          {process.env.NODE_ENV === 'development' && error && (
+            <p className="mt-2 text-xs font-mono bg-red-100 p-2 rounded">
+              Debug Error: {error}
+            </p>
+          )}
         </div>
       </section>
     );

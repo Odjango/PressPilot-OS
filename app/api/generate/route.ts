@@ -103,15 +103,15 @@ export async function POST(request: Request) {
 
     const slug = context.brand.slug;
     const kitPlan = await generateKitPlan(context, variation);
-    
+
     // Resolve business copy to get tagline
     const copy = await resolveBusinessCopy(context, variation, validatedBusinessTypeId);
-    
+
     // Build wpImport from business category or fallback
     let wpImport = null;
     const businessCategoryId = body.businessCategoryId ?? null;
     const category = businessCategoryId ? getBusinessCategoryById(businessCategoryId as BusinessCategoryId) : null;
-    
+
     if (category && category.defaultPages && category.defaultPages.length > 0) {
       // Convert menu labels to slugs: lowercase, replace spaces with hyphens
       const menuSlugs = category.defaultMenu.map(label => {
@@ -119,7 +119,7 @@ export async function POST(request: Request) {
         // Special cases: Menu -> menu, Shop -> shop (already handled by lowercase)
         return slug;
       });
-      
+
       wpImport = {
         front_page_slug: 'home',
         pages: category.defaultPages.map(p => ({
@@ -171,8 +171,15 @@ export async function POST(request: Request) {
         businessTypeId: validatedBusinessTypeId,
         styleVariation: appliedStyleVariation,
         kitSummary
+      }).catch(err => {
+        console.error('[api/generate] buildWordPressTheme failed', err);
+        throw new Error(`Theme generation failed: ${err.message}`);
       }),
       buildStaticSite(context, variation, { businessTypeId: validatedBusinessTypeId, kitSummary })
+        .catch(err => {
+          console.error('[api/generate] buildStaticSite failed', err);
+          throw new Error(`Static site generation failed: ${err.message}`);
+        })
     ]);
 
     console.log(
@@ -195,8 +202,12 @@ export async function POST(request: Request) {
       navShell: context.navShell
     });
   } catch (error) {
-    console.error('[api/generate] export failed', error);
-    return NextResponse.json({ error: 'Failed to generate exports' }, { status: 500 });
+    console.error('[api/generate] FATAL ERROR:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error during generation';
+    return NextResponse.json({
+      error: 'Failed to generate exports',
+      details: errorMessage
+    }, { status: 500 });
   }
 }
 

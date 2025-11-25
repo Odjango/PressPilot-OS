@@ -3,6 +3,11 @@
 import { useCallback, useMemo, useState } from "react";
 import type { PressPilotVariationSet, VariationId } from "@/types/presspilot";
 import type { StudioFormInput } from "@/lib/presspilot/studioAdapter";
+import {
+  BUSINESS_CATEGORIES,
+  type BusinessCategoryId,
+  getBusinessCategoryById,
+} from '@/app/mvp-demo/businessCategories';
 import VariationCard from "./VariationCard";
 
 type StudioProject = {
@@ -43,6 +48,8 @@ export default function StudioClient({ project }: Props) {
   );
 
   const [brief, setBrief] = useState(defaultBrief);
+  const [selectedBusinessCategoryId, setSelectedBusinessCategoryId] =
+    useState<BusinessCategoryId | null>('local_service');
   const [assigning, setAssigning] = useState(false);
   const [assignError, setAssignError] = useState<string | null>(null);
   const [variations, setVariations] = useState<VariationResponse | null>(null);
@@ -101,7 +108,7 @@ export default function StudioClient({ project }: Props) {
       if (!response.ok) {
         throw new Error(
           (payload as { error?: string })?.error ??
-            "Unable to request variations.",
+          "Unable to request variations.",
         );
       }
 
@@ -125,6 +132,15 @@ export default function StudioClient({ project }: Props) {
     setArtifacts(null);
 
     try {
+      const category = getBusinessCategoryById(selectedBusinessCategoryId);
+      const wpImportPreset = category
+        ? {
+          menu: category.defaultMenu,
+          pages: category.defaultPages,
+          frontPageSlug: 'home' as const,
+        }
+        : null;
+
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -132,6 +148,8 @@ export default function StudioClient({ project }: Props) {
           variationId: selectedVariation.id,
           businessTypeId: variations.businessTypeId,
           styleVariation: variations.styleVariation,
+          businessCategoryId: selectedBusinessCategoryId,
+          wpImportPreset,
           input: studioInput(),
         }),
       });
@@ -140,10 +158,10 @@ export default function StudioClient({ project }: Props) {
         | Record<string, unknown>;
 
       if (!response.ok) {
-        throw new Error(
-          (payload as { error?: string })?.error ??
-            "Unable to generate kit.",
-        );
+        const errorPayload = payload as { error?: string; details?: string };
+        const errorMessage = errorPayload.error ?? "Unable to generate kit.";
+        const errorDetails = errorPayload.details ? ` (${errorPayload.details})` : "";
+        throw new Error(errorMessage + errorDetails);
       }
 
       setArtifacts(payload as ArtifactResponse);
@@ -189,6 +207,37 @@ export default function StudioClient({ project }: Props) {
               {project.slug}
             </code>
           </p>
+        </div>
+
+        <div className="mt-6 space-y-3">
+          <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            Business Category
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {BUSINESS_CATEGORIES.map((cat) => {
+              const selected = cat.id === selectedBusinessCategoryId;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setSelectedBusinessCategoryId(cat.id)}
+                  className={[
+                    'text-left rounded-xl border px-3 py-3 transition',
+                    selected
+                      ? 'border-emerald-400 bg-emerald-50 shadow-sm'
+                      : 'border-neutral-200 hover:border-neutral-400 hover:bg-neutral-50',
+                  ].join(' ')}
+                >
+                  <div className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                    {cat.shortLabel}
+                  </div>
+                  <div className="mt-1 text-sm font-medium text-neutral-900">
+                    {cat.label}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="mt-6 space-y-3">
@@ -357,11 +406,10 @@ export default function StudioClient({ project }: Props) {
             {heroCtas.slice(0, 2).map((cta, index) => (
               <span
                 key={`${cta.label}-${index}`}
-                className={`inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold ${
-                  index === 0
-                    ? "bg-black text-white"
-                    : "border border-neutral-300 text-neutral-700"
-                }`}
+                className={`inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold ${index === 0
+                  ? "bg-black text-white"
+                  : "border border-neutral-300 text-neutral-700"
+                  }`}
               >
                 {cta.label}
               </span>
