@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
 import { getUserAuthContext } from '@/lib/auth';
 import { createServerSupabaseClient, createRouteHandlerSupabaseClient } from '@/lib/supabase-server';
@@ -13,15 +14,26 @@ const normalizeStatus = (status?: string | null) => {
 export async function GET(_request: NextRequest) {
   let supabase = createRouteHandlerSupabaseClient();
   let { data: { session } } = await supabase.auth.getSession();
+  let debugInfo: any = { method: 'cookie' };
 
   // Fallback: Check Authorization header if cookie session is missing
   if (!session && _request.headers.get('Authorization')) {
+    debugInfo.method = 'header';
     const authHeader = _request.headers.get('Authorization');
     const token = authHeader?.replace('Bearer ', '');
+    debugInfo.hasToken = !!token;
+
     if (token) {
-      const { data: { user: authUser }, error } = await supabase.auth.getUser(token);
+      // Use a fresh client to avoid cookie issues
+      const cleanClient = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      const { data: { user: authUser }, error } = await cleanClient.auth.getUser(token);
+
+      if (error) debugInfo.authError = error.message;
+
       if (authUser && !error) {
-        // Manually construct a session-like object or just use the user
         session = { user: authUser, access_token: token } as any;
       }
     }
@@ -29,15 +41,12 @@ export async function GET(_request: NextRequest) {
 
   const user = session?.user ?? null;
 
-  console.log('[API] GET /projects - Auth Check:', {
-    hasUser: !!user,
-    userEmail: user?.email,
-    hasSession: !!session,
-  });
-
   if (!user?.email) {
     return NextResponse.json(
-      { error: 'Unauthorized: missing Supabase session' },
+      {
+        error: `Unauthorized: missing Supabase session. Debug: ${JSON.stringify(debugInfo)}`,
+        debug: debugInfo
+      },
       { status: 401 },
     );
   }
@@ -60,11 +69,40 @@ export async function GET(_request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const { user } = await getUserAuthContext();
+  let supabase = createRouteHandlerSupabaseClient();
+  let { data: { session } } = await supabase.auth.getSession();
+  let debugInfo: any = { method: 'cookie' };
+
+  // Fallback: Check Authorization header if cookie session is missing
+  if (!session && request.headers.get('Authorization')) {
+    debugInfo.method = 'header';
+    const authHeader = request.headers.get('Authorization');
+    const token = authHeader?.replace('Bearer ', '');
+    debugInfo.hasToken = !!token;
+
+    if (token) {
+      const cleanClient = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      const { data: { user: authUser }, error } = await cleanClient.auth.getUser(token);
+
+      if (error) debugInfo.authError = error.message;
+
+      if (authUser && !error) {
+        session = { user: authUser, access_token: token } as any;
+      }
+    }
+  }
+
+  const user = session?.user ?? null;
 
   if (!user?.email) {
     return NextResponse.json(
-      { error: 'Unauthorized: missing Supabase session' },
+      {
+        error: `Unauthorized: missing Supabase session. Debug: ${JSON.stringify(debugInfo)}`,
+        debug: debugInfo
+      },
       { status: 401 },
     );
   }
