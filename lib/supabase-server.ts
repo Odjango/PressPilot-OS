@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createServerComponentClient, createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { createClient } from '@supabase/supabase-js';
 
 import type { Database } from '@/types/supabase';
@@ -10,6 +10,13 @@ const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 export function createServerSupabaseClient() {
   const cookieStore = cookies();
   return createServerComponentClient<Database>({
+    cookies: () => cookieStore,
+  });
+}
+
+export function createRouteHandlerSupabaseClient() {
+  const cookieStore = cookies();
+  return createRouteHandlerClient<Database>({
     cookies: () => cookieStore,
   });
 }

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { getUserAuthContext } from '@/lib/auth';
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { createServerSupabaseClient, createRouteHandlerSupabaseClient } from '@/lib/supabase-server';
 
 const TABLE_NAME = 'pp_projects';
 
@@ -11,13 +11,14 @@ const normalizeStatus = (status?: string | null) => {
 };
 
 export async function GET(_request: NextRequest) {
-  const { user, session } = await getUserAuthContext();
+  const supabase = createRouteHandlerSupabaseClient();
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user ?? null;
 
-  console.log('[API] POST /projects - Auth Check:', {
+  console.log('[API] GET /projects - Auth Check:', {
     hasUser: !!user,
     userEmail: user?.email,
     hasSession: !!session,
-    cookies: _request.cookies.getAll().map(c => c.name),
   });
 
   if (!user?.email) {
@@ -97,7 +98,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const { user } = await getUserAuthContext();
+  const supabase = createRouteHandlerSupabaseClient();
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user ?? null;
 
   if (!user?.email) {
     return NextResponse.json(
