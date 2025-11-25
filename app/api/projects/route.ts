@@ -11,7 +11,14 @@ const normalizeStatus = (status?: string | null) => {
 };
 
 export async function GET(_request: NextRequest) {
-  const { user } = await getUserAuthContext();
+  const { user, session } = await getUserAuthContext();
+
+  console.log('[API] POST /projects - Auth Check:', {
+    hasUser: !!user,
+    userEmail: user?.email,
+    hasSession: !!session,
+    cookies: _request.cookies.getAll().map(c => c.name),
+  });
 
   if (!user?.email) {
     return NextResponse.json(
