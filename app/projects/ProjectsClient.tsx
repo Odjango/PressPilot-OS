@@ -140,9 +140,19 @@ export default function ProjectsClient({
     setStatus({ type: 'saving', message: 'Creating project…' });
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const accessToken = session?.access_token;
+
+      if (!accessToken) {
+        throw new Error('No active session found. Please log in again.');
+      }
+
       const response = await fetch('/api/projects', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
         body: JSON.stringify({
           name: form.name,
           slug: (form.slug ?? '').trim() || slugify(form.name),
@@ -178,9 +188,19 @@ export default function ProjectsClient({
     setStatus({ type: 'saving', message: 'Updating project…' });
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const accessToken = session?.access_token;
+
+      if (!accessToken) {
+        throw new Error('No active session found. Please log in again.');
+      }
+
       const response = await fetch('/api/projects', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
         body: JSON.stringify({
           id: projectId,
           status: statusValue,

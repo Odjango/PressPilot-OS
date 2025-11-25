@@ -11,8 +11,22 @@ const normalizeStatus = (status?: string | null) => {
 };
 
 export async function GET(_request: NextRequest) {
-  const supabase = createRouteHandlerSupabaseClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  let supabase = createRouteHandlerSupabaseClient();
+  let { data: { session } } = await supabase.auth.getSession();
+
+  // Fallback: Check Authorization header if cookie session is missing
+  if (!session && _request.headers.get('Authorization')) {
+    const authHeader = _request.headers.get('Authorization');
+    const token = authHeader?.replace('Bearer ', '');
+    if (token) {
+      const { data: { user: authUser }, error } = await supabase.auth.getUser(token);
+      if (authUser && !error) {
+        // Manually construct a session-like object or just use the user
+        session = { user: authUser, access_token: token } as any;
+      }
+    }
+  }
+
   const user = session?.user ?? null;
 
   console.log('[API] GET /projects - Auth Check:', {
@@ -98,8 +112,21 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const supabase = createRouteHandlerSupabaseClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  let supabase = createRouteHandlerSupabaseClient();
+  let { data: { session } } = await supabase.auth.getSession();
+
+  // Fallback: Check Authorization header if cookie session is missing
+  if (!session && request.headers.get('Authorization')) {
+    const authHeader = request.headers.get('Authorization');
+    const token = authHeader?.replace('Bearer ', '');
+    if (token) {
+      const { data: { user: authUser }, error } = await supabase.auth.getUser(token);
+      if (authUser && !error) {
+        session = { user: authUser, access_token: token } as any;
+      }
+    }
+  }
+
   const user = session?.user ?? null;
 
   if (!user?.email) {
