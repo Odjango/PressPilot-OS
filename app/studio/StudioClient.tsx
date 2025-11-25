@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 import type { PressPilotVariationSet, VariationId } from "@/types/presspilot";
 import type { StudioFormInput } from "@/lib/presspilot/studioAdapter";
 import {
@@ -34,20 +36,19 @@ type ArtifactResponse = {
 };
 
 type Props = {
-  project: StudioProject;
+  slug: string;
 };
 
 const DEFAULT_LANGUAGE = "en";
 const DEFAULT_CATEGORY = "service";
 
-export default function StudioClient({ project }: Props) {
-  const defaultBrief = useMemo(
-    () =>
-      `${project.name} needs a polished WordPress kit with modern hero copy, clear CTAs, and a tone that matches a premium web studio.`,
-    [project.name],
-  );
+export default function StudioClient({ slug }: Props) {
+  const router = useRouter();
+  const [project, setProject] = useState<StudioProject | null>(null);
+  const [loadingProject, setLoadingProject] = useState(true);
+  const [projectError, setProjectError] = useState<string | null>(null);
 
-  const [brief, setBrief] = useState(defaultBrief);
+  const [brief, setBrief] = useState("");
   const [selectedBusinessCategoryId, setSelectedBusinessCategoryId] =
     useState<BusinessCategoryId | null>('local_service');
   const [assigning, setAssigning] = useState(false);
@@ -60,6 +61,80 @@ export default function StudioClient({ project }: Props) {
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [artifacts, setArtifacts] = useState<ArtifactResponse | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadProject() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          // If no session, redirect to auth (client-side check)
+          router.replace('/auth');
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from('pp_projects')
+          .select('id,owner_email,name,slug,status,created_at')
+          .eq('slug', slug)
+          .maybeSingle();
+
+        if (!mounted) return;
+
+        if (error) throw error;
+        if (!data) throw new Error('Project not found');
+
+        setProject(data as StudioProject);
+
+        // Set default brief based on loaded project
+        setBrief(
+          `${data.name} needs a polished WordPress kit with modern hero copy, clear CTAs, and a tone that matches a premium web studio.`
+        );
+      } catch (err) {
+        console.error('[StudioClient] loadProject error', err);
+        if (mounted) {
+          setProjectError('Unable to load project. It may not exist or you do not have permission.');
+        }
+      } finally {
+        if (mounted) setLoadingProject(false);
+      }
+    }
+
+    loadProject();
+
+    return () => {
+      mounted = false;
+    };
+  }, [slug, router]);
+
+  if (loadingProject) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <div className="text-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-neutral-200 border-t-black mx-auto mb-4"></div>
+          <p className="text-sm text-neutral-500">Loading studio...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (projectError || !project) {
+    return (
+      <div className="mx-auto max-w-2xl px-6 py-12">
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
+          <h3 className="text-lg font-semibold text-red-800 mb-2">Access Error</h3>
+          <p className="text-sm text-red-600 mb-6">{projectError ?? 'Project not found'}</p>
+          <button
+            onClick={() => router.push('/projects')}
+            className="inline-flex items-center rounded-full bg-white border border-red-200 px-6 py-2 text-sm font-semibold text-red-700 hover:bg-red-50 transition"
+          >
+            Return to Projects
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const variationList = useMemo(
     () => variations?.variationSet.variations ?? [],

@@ -15,8 +15,9 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/', req.url));
     }
 
-    // If user is not signed in and the current path is /projects or /studio, redirect to /auth
-    if (!session && (req.nextUrl.pathname.startsWith('/projects') || req.nextUrl.pathname.startsWith('/studio'))) {
+    // If user is not signed in and the current path is /projects, redirect to /auth
+    // Note: /studio is now allowed to proceed so the client can handle auth/fetching
+    if (!session && req.nextUrl.pathname.startsWith('/projects')) {
         return NextResponse.redirect(new URL('/auth', req.url));
     }
 
