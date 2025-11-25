@@ -153,12 +153,12 @@ export default function StudioClient({ slug }: Props) {
 
   const studioInput = useCallback((): StudioFormInput => {
     return {
-      businessName: project.name,
+      businessName: project?.name ?? '',
       businessDescription: brief,
       primaryLanguage: DEFAULT_LANGUAGE,
       businessCategory: DEFAULT_CATEGORY,
     };
-  }, [project.name, brief]);
+  }, [project?.name, brief]);
 
   const handleAssign = useCallback(async () => {
     setAssigning(true);
