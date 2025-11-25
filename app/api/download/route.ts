@@ -8,7 +8,7 @@ type DownloadKind = 'theme' | 'static';
 
 export const runtime = 'nodejs';
 
-const BUILD_ROOT = path.join(process.cwd(), 'build');
+const BUILD_ROOT = path.join('/tmp', 'presspilot-build');
 const KIND_TO_FOLDER: Record<DownloadKind, string> = {
   theme: path.join(BUILD_ROOT, 'themes'),
   static: path.join(BUILD_ROOT, 'static')

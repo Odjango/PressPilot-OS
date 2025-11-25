@@ -19,7 +19,7 @@ export interface StaticBuildResult {
   staticZipPath: string;
 }
 
-const BUILD_ROOT = path.join(process.cwd(), 'build');
+const BUILD_ROOT = path.join('/tmp', 'presspilot-build');
 const STATIC_ROOT = path.join(BUILD_ROOT, 'static');
 
 export async function buildStaticSite(
@@ -69,8 +69,8 @@ function buildStyles(variation: PressPilotVariationManifest) {
     variation.tokens.corner_style === 'sharp'
       ? '8px'
       : variation.tokens.corner_style === 'rounded'
-      ? '28px'
-      : '16px';
+        ? '28px'
+        : '16px';
   return `:root {
   --presspilot-bg: #f5f5f7;
   --presspilot-soft: #ffffff;

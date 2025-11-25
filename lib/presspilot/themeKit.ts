@@ -13,7 +13,7 @@ export interface ThemeBuildResult {
   themeZipPath: string;
 }
 
-const BUILD_ROOT = path.join(process.cwd(), 'build');
+const BUILD_ROOT = path.join('/tmp', 'presspilot-build');
 const THEMES_ROOT = path.join(BUILD_ROOT, 'themes');
 const FOUNDATION_THEME_SLUG = 'presspilot-golden-foundation';
 // Source theme lives in themes/ at repo root, not in build/
