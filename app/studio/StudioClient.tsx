@@ -11,6 +11,9 @@ import {
   getBusinessCategoryById,
 } from '@/app/mvp-demo/businessCategories';
 import VariationCard from "./VariationCard";
+import ColorPalettePreview from "./components/ColorPalettePreview";
+import FontStylePreview from "./components/FontStylePreview";
+import { PALETTES } from "@/lib/theme/palettes";
 
 type StudioProject = {
   id: string;
@@ -58,6 +61,11 @@ export default function StudioClient({ slug }: Props) {
     VariationId | null
   >(null);
 
+  // Customization State
+  const [customHeroTitle, setCustomHeroTitle] = useState<string>("");
+  const [customPaletteId, setCustomPaletteId] = useState<string | null>(null);
+  const [customFontPairId, setCustomFontPairId] = useState<string | null>(null);
+
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [artifacts, setArtifacts] = useState<ArtifactResponse | null>(null);
@@ -77,15 +85,27 @@ export default function StudioClient({ slug }: Props) {
     );
   }, [variationList, selectedVariationId]);
 
+  // Sync customization state when variation changes
+  useEffect(() => {
+    if (selectedVariation) {
+      setCustomHeroTitle(selectedVariation.preview.label);
+      setCustomPaletteId(selectedVariation.tokens.palette_id);
+      setCustomFontPairId(selectedVariation.tokens.font_pair_id);
+    }
+  }, [selectedVariation]);
+
   const studioInput = useCallback((): StudioFormInput => {
     return {
       businessName: project?.name ?? '',
       businessDescription: brief,
       primaryLanguage: DEFAULT_LANGUAGE,
       businessCategory: DEFAULT_CATEGORY,
-      slug: project?.slug
+      slug: project?.slug,
+      heroTitle: customHeroTitle,
+      paletteId: customPaletteId ?? undefined,
+      fontPairId: customFontPairId ?? undefined
     };
-  }, [project?.name, project?.slug, brief]);
+  }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId]);
 
   const handleAssign = useCallback(async () => {
     setAssigning(true);
@@ -417,40 +437,48 @@ export default function StudioClient({ slug }: Props) {
           </span>
         </div>
         {styleTokens ? (
-          <dl className="mt-4 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-xl border border-neutral-100 bg-neutral-50/75 p-4">
-              <dt className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                Palette
-              </dt>
-              <dd className="mt-2 font-semibold text-neutral-900">
-                {styleTokens.palette_id}
-              </dd>
+          <div className="mt-4 grid gap-8 lg:grid-cols-2">
+            {/* Palette Selector */}
+            <div>
+              <h4 className="text-sm font-semibold text-neutral-900 mb-3">Color Palette</h4>
+              <div className="grid grid-cols-1 gap-3">
+                {PALETTES.map((palette) => (
+                  <button
+                    key={palette.id}
+                    onClick={() => setCustomPaletteId(palette.id)}
+                    className={`flex items-center justify-between rounded-xl border p-3 transition ${customPaletteId === palette.id
+                      ? "border-emerald-400 bg-emerald-50 ring-1 ring-emerald-400"
+                      : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50"
+                      }`}
+                  >
+                    <span className="text-sm font-medium text-neutral-700">{palette.label}</span>
+                    <ColorPalettePreview paletteId={palette.id} />
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="rounded-xl border border-neutral-100 bg-neutral-50/75 p-4">
-              <dt className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                Font pairing
-              </dt>
-              <dd className="mt-2 font-semibold text-neutral-900">
-                {styleTokens.font_pair_id}
-              </dd>
+
+            {/* Font Preview */}
+            <div>
+              <h4 className="text-sm font-semibold text-neutral-900 mb-3">Typography</h4>
+              <FontStylePreview fontPairId={customFontPairId || 'system-sans'} />
+
+              <div className="mt-4">
+                <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                  Font Pairing
+                </label>
+                <select
+                  value={customFontPairId || ''}
+                  onChange={(e) => setCustomFontPairId(e.target.value)}
+                  className="mt-1 block w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-black focus:outline-none"
+                >
+                  <option value="system-sans">System Sans (Clean & Modern)</option>
+                  <option value="serif-display">Serif Display (Elegant & Classic)</option>
+                  <option value="system-mono">System Mono (Tech & Code)</option>
+                </select>
+              </div>
             </div>
-            <div className="rounded-xl border border-neutral-100 bg-neutral-50/75 p-4">
-              <dt className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                Layout density
-              </dt>
-              <dd className="mt-2 font-semibold text-neutral-900">
-                {styleTokens.layout_density}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-neutral-100 bg-neutral-50/75 p-4">
-              <dt className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                Corner style
-              </dt>
-              <dd className="mt-2 font-semibold text-neutral-900">
-                {styleTokens.corner_style}
-              </dd>
-            </div>
-          </dl>
+          </div>
         ) : (
           <p className="mt-4 text-sm text-neutral-500">
             Run “Assign to AI” to preview palette, fonts, and density for this
@@ -470,12 +498,26 @@ export default function StudioClient({ slug }: Props) {
             </span>
           ) : null}
         </div>
+
+        <div className="mt-4 mb-6">
+          <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            Hero Title
+          </label>
+          <input
+            type="text"
+            value={customHeroTitle}
+            onChange={(e) => setCustomHeroTitle(e.target.value)}
+            className="mt-1 block w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-black focus:outline-none"
+            placeholder="Enter a catchy headline..."
+          />
+        </div>
+
         <div className="mt-4 rounded-2xl border border-neutral-100 bg-gradient-to-b from-neutral-50 to-white p-6 shadow-inner">
           <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-            Headline
+            Preview
           </p>
           <h4 className="mt-2 text-2xl font-semibold text-neutral-900">
-            {heroTitle}
+            {customHeroTitle || project.name}
           </h4>
           <p className="mt-3 text-sm text-neutral-600">{heroSubtitle}</p>
           <div className="mt-6 flex flex-wrap gap-3">

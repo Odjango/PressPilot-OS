@@ -11,6 +11,9 @@ export interface StudioFormInput {
   primaryLanguage?: string;
   businessCategory?: string;
   slug?: string;
+  heroTitle?: string;
+  paletteId?: string;
+  fontPairId?: string;
 }
 
 export interface StudioRequestPayload {
@@ -65,7 +68,7 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
   const base: PressPilotSaaSInput = {
     brand: {
       business_name: businessName,
-      business_tagline: 'Powered by PressPilot OS',
+      business_tagline: input?.heroTitle?.trim() || 'Powered by PressPilot OS',
       business_category: businessCategory,
       region_or_country: 'Global',
       slug: input?.slug
@@ -87,8 +90,8 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
       image_keywords: ['brand', 'web design']
     },
     visualControls: {
-      palette_id: 'pp-default',
-      font_pair_id: 'pp-fontpair-01',
+      palette_id: input?.paletteId || 'pp-default',
+      font_pair_id: input?.fontPairId || 'pp-fontpair-01',
       layout_density: 'balanced',
       corner_style: 'rounded',
       primary_ctas: [
