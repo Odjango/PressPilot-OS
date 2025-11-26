@@ -95,6 +95,25 @@ function buildStyles(variation: PressPilotVariationManifest) {
     headingFont = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
   }
 
+  // Sync with theme.json spacing
+  const spacing = {
+    20: '0.75rem',
+    30: '1.25rem',
+    40: '1.75rem',
+    50: '2.5rem',
+    60: '3.5rem'
+  };
+
+  // Sync with theme.json typography
+  const fontSizes = {
+    xs: 'clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)',
+    sm: 'clamp(0.875rem, 0.8rem + 0.375vw, 1rem)',
+    base: 'clamp(1rem, 0.95rem + 0.25vw, 1.125rem)',
+    lg: 'clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem)',
+    xl: 'clamp(1.75rem, 1.5rem + 1.25vw, 2.25rem)',
+    xxl: 'clamp(2.5rem, 2.1rem + 2vw, 3.5rem)'
+  };
+
   return `:root {
   --presspilot-bg: ${bg};
   --presspilot-soft: ${soft};
@@ -107,6 +126,21 @@ function buildStyles(variation: PressPilotVariationManifest) {
   --presspilot-max-width: 1100px;
   --presspilot-font-heading: ${headingFont};
   --presspilot-font-body: ${bodyFont};
+
+  /* Spacing */
+  --spacing-20: ${spacing[20]};
+  --spacing-30: ${spacing[30]};
+  --spacing-40: ${spacing[40]};
+  --spacing-50: ${spacing[50]};
+  --spacing-60: ${spacing[60]};
+
+  /* Typography */
+  --font-xs: ${fontSizes.xs};
+  --font-sm: ${fontSizes.sm};
+  --font-base: ${fontSizes.base};
+  --font-lg: ${fontSizes.lg};
+  --font-xl: ${fontSizes.xl};
+  --font-xxl: ${fontSizes.xxl};
 }
 
 * {
@@ -118,10 +152,16 @@ body {
   font-family: var(--presspilot-font-body);
   background: var(--presspilot-bg);
   color: var(--presspilot-foreground);
+  font-size: var(--font-base);
+  line-height: 1.6;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--presspilot-font-heading);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 0.75em;
+  color: var(--presspilot-foreground);
 }
 
 a {
@@ -171,7 +211,7 @@ main {
 .presspilot-section {
   max-width: var(--presspilot-max-width);
   margin: 0 auto;
-  padding: 4rem 1.5rem;
+  padding: var(--spacing-60) var(--spacing-40);
 }
 
 .presspilot-section + .presspilot-section {
@@ -184,22 +224,25 @@ main {
   max-width: 640px;
   text-align: center;
   line-height: 1.6;
+  font-size: var(--font-sm);
 }
 
 .hero-basic {
   text-align: center;
+  padding-top: var(--spacing-60);
+  padding-bottom: var(--spacing-60);
 }
 
 .hero-basic .hero-eyebrow {
   color: var(--presspilot-muted);
-  font-size: 0.85rem;
+  font-size: var(--font-xs);
   text-transform: uppercase;
   letter-spacing: 0.2em;
   margin-bottom: 1rem;
 }
 
 .hero-basic .hero-title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: var(--font-xxl);
   margin: 0 0 1rem;
 }
 
@@ -208,6 +251,7 @@ main {
   max-width: 720px;
   color: var(--presspilot-muted);
   line-height: 1.6;
+  font-size: var(--font-lg);
 }
 
 .hero-basic .hero-ctas {
@@ -221,11 +265,12 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--presspilot-radius);
+  border-radius: 999px;
   font-weight: 600;
-  padding: 0.9rem 1.75rem;
+  padding: 0.7rem 1.4rem;
   border: 1px solid transparent;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+  font-size: var(--font-base);
 }
 
 .btn.primary {
@@ -249,28 +294,40 @@ main {
 .features-grid .feature-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  gap: var(--spacing-40);
+  margin-top: var(--spacing-40);
 }
 
 .features-grid .feature-card {
   background: var(--presspilot-soft);
   border: 1px solid var(--presspilot-border);
   border-radius: var(--presspilot-radius);
-  padding: 1.5rem;
+  padding: var(--spacing-30);
+}
+
+.features-grid .feature-card h3 {
+  font-size: var(--font-lg);
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.features-grid .feature-card p {
+  font-size: var(--font-sm);
+  margin: 0;
+  color: var(--presspilot-muted);
 }
 
 .pricing-columns .pricing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2.5rem;
+  gap: var(--spacing-40);
+  margin-top: var(--spacing-40);
 }
 
 .pricing-card {
   border: 1px solid var(--presspilot-border);
   border-radius: var(--presspilot-radius);
-  padding: 2rem;
+  padding: var(--spacing-40);
   background: var(--presspilot-soft);
   display: flex;
   flex-direction: column;
@@ -280,62 +337,85 @@ main {
 .pricing-card.highlight {
   border-color: var(--presspilot-primary);
   box-shadow: 0 25px 60px rgba(37, 99, 235, 0.15);
+  border-width: 2px;
 }
 
 .pricing-card .price {
-  font-size: 1.5rem;
+  font-size: var(--font-xl);
   margin: 0;
+  font-weight: 700;
 }
 
 .pricing-card ul {
   padding-left: 1.2rem;
   margin: 0;
   color: var(--presspilot-muted);
+  font-size: var(--font-sm);
 }
 
 .blog-teasers .blog-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.25rem;
-  margin-top: 2rem;
+  gap: var(--spacing-30);
+  margin-top: var(--spacing-40);
 }
 
 .blog-card {
   border: 1px solid var(--presspilot-border);
   border-radius: var(--presspilot-radius);
-  padding: 1.5rem;
+  padding: var(--spacing-30);
   background: var(--presspilot-soft);
+}
+
+.blog-card h3 {
+  font-size: var(--font-lg);
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-card p {
+  font-size: var(--font-sm);
+  margin: 0;
+  color: var(--presspilot-muted);
 }
 
 .blog-card small {
   display: block;
   color: var(--presspilot-muted);
   margin-bottom: 0.5rem;
+  font-size: var(--font-xs);
 }
 
 .cta-contact {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2rem;
+  gap: var(--spacing-40);
   background: var(--presspilot-soft);
   border-radius: var(--presspilot-radius);
   border: 1px solid var(--presspilot-border);
+  padding: var(--spacing-60) var(--spacing-40);
 }
 
 .cta-contact__copy h2 {
   margin-top: 0;
+  font-size: var(--font-xl);
+}
+
+.cta-contact__copy p {
+  font-size: var(--font-sm);
 }
 
 .cta-contact__copy ul {
   list-style: none;
   padding: 0;
   margin: 1rem 0 0;
+  font-size: var(--font-sm);
 }
 
 .cta-contact__card {
   border: 1px dashed var(--presspilot-border);
   border-radius: var(--presspilot-radius);
-  padding: 1.5rem;
+  padding: var(--spacing-40);
   background: var(--presspilot-bg);
 }
 
@@ -344,6 +424,7 @@ footer {
   padding: 2rem 1.5rem;
   text-align: center;
   color: var(--presspilot-muted);
+  font-size: var(--font-sm);
 }
 `;
 }
@@ -364,7 +445,17 @@ function buildHtml(
   // Note: BusinessCategory from types/presspilot.ts may not match BusinessCategoryId from businessCategories.ts
   // We cast it and handle the case where it doesn't exist
   const businessCategory = getBusinessCategoryById(context.brand.category as any);
-  const menuItems = businessCategory?.defaultMenu || ['Home', 'About', 'Blog', 'Contact'];
+  const menuItems = [...(businessCategory?.defaultMenu || ['Home', 'About', 'Blog', 'Contact'])];
+
+  // Ensure 'Menu' is in the nav if it's a restaurant
+  if (isRestaurant && !menuItems.some(item => item.toLowerCase() === 'menu')) {
+    const homeIndex = menuItems.findIndex(item => item.toLowerCase() === 'home');
+    if (homeIndex !== -1) {
+      menuItems.splice(homeIndex + 1, 0, 'Menu');
+    } else {
+      menuItems.push('Menu');
+    }
+  }
 
   // Map menu labels to section IDs (lowercase slugs)
   const navLinks = menuItems
