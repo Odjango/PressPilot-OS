@@ -46,14 +46,16 @@ export function buildWpImportXmlFromKit({ kit, copy }: BuildParams): string {
   let menuXml = '';
   let menuItemsXml = '';
 
-  if (kit.wpImport?.menu) {
-    const menuName = kit.wpImport.menu.name;
+  // Use the same menu items as static site (fallback to default list if missing)
+  const menuItems = kit.wpImport?.menu?.items || ['home', 'about', 'services', 'blog', 'contact'];
+
+  if (menuItems.length > 0) {
+    const menuName = kit.wpImport?.menu?.name || 'Main Menu';
     const menuSlug = menuName.toLowerCase().replace(/\s+/g, '-');
     const menuId = pages.length + 1; // Menu term ID (arbitrary but unique)
 
     menuXml = buildMenuTermXml({ name: menuName, slug: menuSlug, id: menuId });
 
-    const menuItems = kit.wpImport.menu.items || [];
     menuItemsXml = menuItems
       .map((itemSlug, index) => {
         const targetPageId = pageIdMap.get(itemSlug);
@@ -130,7 +132,8 @@ function buildPages({
     { slug: 'pricing', title: 'Pricing', content: joinSections([sections.pricing, sections.contact]) },
     { slug: 'updates', title: 'Updates', content: joinSections([sections.updates, sections.contact]) },
     { slug: 'contact', title: 'Contact', content: sections.contact },
-    { slug: 'blog', title: 'Blog', content: sections.updates }
+    { slug: 'blog', title: 'Blog', content: sections.updates },
+    { slug: 'services', title: 'Services', content: joinSections([sections.features, sections.pricing, sections.contact]) }
   ];
 
   if (isEcommerce) {

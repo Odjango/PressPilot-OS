@@ -64,6 +64,8 @@ export async function buildStaticSite(
   return { staticDir: siteDir, staticZipPath };
 }
 
+import { getPaletteById } from '@/lib/theme/palettes';
+
 function buildStyles(variation: PressPilotVariationManifest) {
   const borderRadius =
     variation.tokens.corner_style === 'sharp'
@@ -71,16 +73,40 @@ function buildStyles(variation: PressPilotVariationManifest) {
       : variation.tokens.corner_style === 'rounded'
         ? '28px'
         : '16px';
+
+  const palette = getPaletteById(variation.tokens.palette_id);
+  const getColor = (slug: string, fallback: string) =>
+    palette?.colors.find(c => c.slug === slug)?.color || fallback;
+
+  const bg = getColor('background', '#f5f5f7');
+  const soft = getColor('soft-bg', '#ffffff');
+  const foreground = getColor('foreground', '#111827');
+  const muted = getColor('muted', '#6b7280');
+  const border = getColor('border', '#e5e7eb');
+  const primary = getColor('primary', '#2563eb');
+  const accent = getColor('accent', '#14b8a6');
+
+  let headingFont = '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif';
+  let bodyFont = '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif';
+
+  if (variation.tokens.font_pair_id === 'serif-display') {
+    headingFont = '"Playfair Display", "Times New Roman", serif';
+  } else if (variation.tokens.font_pair_id === 'system-mono') {
+    headingFont = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+  }
+
   return `:root {
-  --presspilot-bg: #f5f5f7;
-  --presspilot-soft: #ffffff;
-  --presspilot-foreground: #111827;
-  --presspilot-muted: #6b7280;
-  --presspilot-border: #e5e7eb;
-  --presspilot-primary: #2563eb;
-  --presspilot-accent: #14b8a6;
+  --presspilot-bg: ${bg};
+  --presspilot-soft: ${soft};
+  --presspilot-foreground: ${foreground};
+  --presspilot-muted: ${muted};
+  --presspilot-border: ${border};
+  --presspilot-primary: ${primary};
+  --presspilot-accent: ${accent};
   --presspilot-radius: ${borderRadius};
   --presspilot-max-width: 1100px;
+  --presspilot-font-heading: ${headingFont};
+  --presspilot-font-body: ${bodyFont};
 }
 
 * {
@@ -89,9 +115,13 @@ function buildStyles(variation: PressPilotVariationManifest) {
 
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--presspilot-font-body);
   background: var(--presspilot-bg);
   color: var(--presspilot-foreground);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--presspilot-font-heading);
 }
 
 a {
