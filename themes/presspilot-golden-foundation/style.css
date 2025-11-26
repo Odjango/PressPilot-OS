@@ -46,12 +46,17 @@ body,
   z-index: 10;
 }
 
-.presspilot-header-nav a {
+.presspilot-header-nav .wp-block-navigation-item__content {
   color: var(--presspilot-muted);
   font-weight: 500;
+  text-decoration: none;
 }
 
-.presspilot-header-nav a:hover {
+.presspilot-header-nav .wp-block-navigation-item__content:hover {
+  color: var(--presspilot-foreground);
+}
+
+.presspilot-header-nav .current-menu-item .wp-block-navigation-item__content {
   color: var(--presspilot-foreground);
 }
 

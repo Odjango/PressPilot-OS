@@ -432,7 +432,7 @@ footer {
 function buildHtml(
   context: PressPilotNormalizedContext,
   copy: PressPilotBusinessCopy,
-  options?: { businessTypeId?: string | null }
+  options?: { businessTypeId?: string | null; kitSummary?: KitSummary | null }
 ) {
   const isEcommerce = options?.businessTypeId === 'ecommerce_store' ||
     options?.businessTypeId?.toLowerCase().includes('ecom') ||
@@ -445,15 +445,24 @@ function buildHtml(
   // Note: BusinessCategory from types/presspilot.ts may not match BusinessCategoryId from businessCategories.ts
   // We cast it and handle the case where it doesn't exist
   const businessCategory = getBusinessCategoryById(context.brand.category as any);
-  const menuItems = [...(businessCategory?.defaultMenu || ['Home', 'About', 'Blog', 'Contact'])];
 
-  // Ensure 'Menu' is in the nav if it's a restaurant
-  if (isRestaurant && !menuItems.some(item => item.toLowerCase() === 'menu')) {
-    const homeIndex = menuItems.findIndex(item => item.toLowerCase() === 'home');
-    if (homeIndex !== -1) {
-      menuItems.splice(homeIndex + 1, 0, 'Menu');
-    } else {
-      menuItems.push('Menu');
+  // Use kitSummary menu items if available (source of truth), otherwise fallback to business category defaults
+  let menuItems: string[] = [];
+  if (options?.kitSummary?.wpImport?.menu?.items) {
+    menuItems = [...options.kitSummary.wpImport.menu.items];
+    // Capitalize items for display
+    menuItems = menuItems.map(item => item.charAt(0).toUpperCase() + item.slice(1));
+  } else {
+    menuItems = [...(businessCategory?.defaultMenu || ['Home', 'About', 'Blog', 'Contact'])];
+
+    // Ensure 'Menu' is in the nav if it's a restaurant (only for fallback path)
+    if (isRestaurant && !menuItems.some(item => item.toLowerCase() === 'menu')) {
+      const homeIndex = menuItems.findIndex(item => item.toLowerCase() === 'home');
+      if (homeIndex !== -1) {
+        menuItems.splice(homeIndex + 1, 0, 'Menu');
+      } else {
+        menuItems.push('Menu');
+      }
     }
   }
 
