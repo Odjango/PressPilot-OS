@@ -167,7 +167,7 @@
           "blockGap": true
         },
         "typography": {
-          "fontSize": true
+          "customFontSize": true
         }
       }
     }
