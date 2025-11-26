@@ -6,15 +6,51 @@
       "defaultPalette": false,
       "defaultGradients": false,
       "palette": [
-        { "slug": "background", "color": "#f5f5f7", "name": "Background" },
-        { "slug": "soft-bg", "color": "#ffffff", "name": "Soft background" },
-        { "slug": "foreground", "color": "#111827", "name": "Foreground" },
-        { "slug": "muted", "color": "#6b7280", "name": "Muted" },
-        { "slug": "border", "color": "#e5e7eb", "name": "Border" },
-        { "slug": "primary", "color": "#2563eb", "name": "Primary" },
-        { "slug": "accent", "color": "#14b8a6", "name": "Accent" },
-        { "slug": "warning", "color": "#f97316", "name": "Warning" },
-        { "slug": "success", "color": "#22c55e", "name": "Success" }
+        {
+          "slug": "background",
+          "color": "#f5f5f7",
+          "name": "Background"
+        },
+        {
+          "slug": "soft-bg",
+          "color": "#ffffff",
+          "name": "Soft background"
+        },
+        {
+          "slug": "foreground",
+          "color": "#111827",
+          "name": "Foreground"
+        },
+        {
+          "slug": "muted",
+          "color": "#6b7280",
+          "name": "Muted"
+        },
+        {
+          "slug": "border",
+          "color": "#e5e7eb",
+          "name": "Border"
+        },
+        {
+          "slug": "primary",
+          "color": "#2563eb",
+          "name": "Primary"
+        },
+        {
+          "slug": "accent",
+          "color": "#14b8a6",
+          "name": "Accent"
+        },
+        {
+          "slug": "warning",
+          "color": "#f97316",
+          "name": "Warning"
+        },
+        {
+          "slug": "success",
+          "color": "#22c55e",
+          "name": "Success"
+        }
       ]
     },
     "layout": {
@@ -25,13 +61,40 @@
       "padding": true,
       "margin": true,
       "blockGap": true,
-      "units": [ "px", "rem", "em", "vh", "vw", "%" ],
+      "units": [
+        "px",
+        "rem",
+        "em",
+        "vh",
+        "vw",
+        "%"
+      ],
       "spacingSizes": [
-        { "slug": "20", "size": "0.75rem", "name": "20" },
-        { "slug": "30", "size": "1.25rem", "name": "30" },
-        { "slug": "40", "size": "1.75rem", "name": "40" },
-        { "slug": "50", "size": "2.5rem", "name": "50" },
-        { "slug": "60", "size": "3.5rem", "name": "60" }
+        {
+          "slug": "20",
+          "size": "0.75rem",
+          "name": "20"
+        },
+        {
+          "slug": "30",
+          "size": "1.25rem",
+          "name": "30"
+        },
+        {
+          "slug": "40",
+          "size": "1.75rem",
+          "name": "40"
+        },
+        {
+          "slug": "50",
+          "size": "2.5rem",
+          "name": "50"
+        },
+        {
+          "slug": "60",
+          "size": "3.5rem",
+          "name": "60"
+        }
       ]
     },
     "typography": {
@@ -54,12 +117,36 @@
         }
       ],
       "fontSizes": [
-        { "slug": "xs", "size": "0.85rem", "name": "XS" },
-        { "slug": "sm", "size": "0.95rem", "name": "Small" },
-        { "slug": "base", "size": "1rem", "name": "Base" },
-        { "slug": "lg", "size": "1.25rem", "name": "Large" },
-        { "slug": "xl", "size": "1.5rem", "name": "XL" },
-        { "slug": "xxl", "size": "2.25rem", "name": "Display" }
+        {
+          "slug": "xs",
+          "size": "clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)",
+          "name": "XS"
+        },
+        {
+          "slug": "sm",
+          "size": "clamp(0.875rem, 0.8rem + 0.375vw, 1rem)",
+          "name": "Small"
+        },
+        {
+          "slug": "base",
+          "size": "clamp(1rem, 0.95rem + 0.25vw, 1.125rem)",
+          "name": "Base"
+        },
+        {
+          "slug": "lg",
+          "size": "clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem)",
+          "name": "Large"
+        },
+        {
+          "slug": "xl",
+          "size": "clamp(1.75rem, 1.5rem + 1.25vw, 2.25rem)",
+          "name": "XL"
+        },
+        {
+          "slug": "xxl",
+          "size": "clamp(2.5rem, 2.1rem + 2vw, 3.5rem)",
+          "name": "Display"
+        }
       ]
     },
     "blocks": {
