@@ -32,9 +32,49 @@ export function buildWpImportXmlFromKit({ kit, copy }: BuildParams): string {
   const sections = buildSections(copy, brandName);
   const pages = buildPages({ sections, brandName, isEcommerce, isRestaurant, hero: copy.hero });
 
+  // Create a map of slug -> postId for menu linking
+  const pageIdMap = new Map<string, number>();
+  pages.forEach((page, index) => {
+    pageIdMap.set(page.slug, index + 1);
+  });
+
   const itemsXml = pages
     .map((page, index) => buildItemXml({ page, index, baseUrl, createdAt: now }))
     .join('\n');
+
+  // Build Menu XML if defined in kit
+  let menuXml = '';
+  let menuItemsXml = '';
+
+  if (kit.wpImport?.menu) {
+    const menuName = kit.wpImport.menu.name;
+    const menuSlug = menuName.toLowerCase().replace(/\s+/g, '-');
+    const menuId = pages.length + 1; // Menu term ID (arbitrary but unique)
+
+    menuXml = buildMenuTermXml({ name: menuName, slug: menuSlug, id: menuId });
+
+    const menuItems = kit.wpImport.menu.items || [];
+    menuItemsXml = menuItems
+      .map((itemSlug, index) => {
+        const targetPageId = pageIdMap.get(itemSlug);
+        // Skip if we can't find the page (unless we want to support custom links later)
+        if (!targetPageId) return '';
+
+        // Post ID for the menu item itself (must be unique, start after pages)
+        const menuItemId = pages.length + 100 + index;
+
+        return buildMenuItemXml({
+          menuSlug,
+          menuItemId,
+          order: index + 1,
+          title: itemSlug.charAt(0).toUpperCase() + itemSlug.slice(1), // Fallback title
+          url: `${baseUrl}/${itemSlug}`,
+          objectId: targetPageId,
+          createdAt: now
+        });
+      })
+      .join('\n');
+  }
 
   const channelXml = `
   <title>${escapeXml(brandName)}</title>
@@ -54,7 +94,9 @@ export function buildWpImportXmlFromKit({ kit, copy }: BuildParams): string {
     <wp:author_first_name><![CDATA[PressPilot]]></wp:author_first_name>
     <wp:author_last_name><![CDATA[Importer]]></wp:author_last_name>
   </wp:author>
-${itemsXml}`;
+${itemsXml}
+${menuXml}
+${menuItemsXml}`;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"
@@ -509,5 +551,94 @@ function formatWpDate(date: Date): string {
   const minutes = String(date.getUTCMinutes()).padStart(2, '0');
   const seconds = String(date.getUTCSeconds()).padStart(2, '0');
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+function buildMenuTermXml({ name, slug, id }: { name: string; slug: string; id: number }): string {
+  return `
+  <wp:term>
+    <wp:term_id>${id}</wp:term_id>
+    <wp:term_taxonomy>nav_menu</wp:term_taxonomy>
+    <wp:term_slug><![CDATA[${escapeXml(slug)}]]></wp:term_slug>
+    <wp:term_parent></wp:term_parent>
+    <wp:term_name><![CDATA[${escapeXml(name)}]]></wp:term_name>
+  </wp:term>`;
+}
+
+function buildMenuItemXml({
+  menuSlug,
+  menuItemId,
+  order,
+  title,
+  url,
+  objectId,
+  createdAt
+}: {
+  menuSlug: string;
+  menuItemId: number;
+  order: number;
+  title: string;
+  url: string;
+  objectId: number;
+  createdAt: Date;
+}): string {
+  const date = new Date(createdAt.getTime() + order * 1000); // Stagger times slightly
+  const formattedDate = formatWpDate(date);
+
+  return `
+  <item>
+    <title>${escapeXml(title)}</title>
+    <link>${escapeXml(url)}</link>
+    <pubDate>${date.toUTCString()}</pubDate>
+    <dc:creator><![CDATA[${AUTHOR_LOGIN}]]></dc:creator>
+    <guid isPermaLink="false">${escapeXml(url)}</guid>
+    <description></description>
+    <content:encoded><![CDATA[]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>${menuItemId}</wp:post_id>
+    <wp:post_date>${formattedDate}</wp:post_date>
+    <wp:post_date_gmt>${formattedDate}</wp:post_date_gmt>
+    <wp:comment_status>closed</wp:comment_status>
+    <wp:ping_status>closed</wp:ping_status>
+    <wp:post_name>${escapeXml(`menu-item-${menuItemId}`)}</wp:post_name>
+    <wp:status>publish</wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>${order}</wp:menu_order>
+    <wp:post_type>nav_menu_item</wp:post_type>
+    <wp:post_password></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <category domain="nav_menu" nicename="${escapeXml(menuSlug)}"><![CDATA[${escapeXml(menuSlug)}]]></category>
+    <wp:postmeta>
+      <wp:meta_key>_menu_item_type</wp:meta_key>
+      <wp:meta_value><![CDATA[post_type]]></wp:meta_value>
+    </wp:postmeta>
+    <wp:postmeta>
+      <wp:meta_key>_menu_item_menu_item_parent</wp:meta_key>
+      <wp:meta_value><![CDATA[0]]></wp:meta_value>
+    </wp:postmeta>
+    <wp:postmeta>
+      <wp:meta_key>_menu_item_object_id</wp:meta_key>
+      <wp:meta_value><![CDATA[${objectId}]]></wp:meta_value>
+    </wp:postmeta>
+    <wp:postmeta>
+      <wp:meta_key>_menu_item_object</wp:meta_key>
+      <wp:meta_value><![CDATA[page]]></wp:meta_value>
+    </wp:postmeta>
+    <wp:postmeta>
+      <wp:meta_key>_menu_item_target</wp:meta_key>
+      <wp:meta_value><![CDATA[]]></wp:meta_value>
+    </wp:postmeta>
+    <wp:postmeta>
+      <wp:meta_key>_menu_item_classes</wp:meta_key>
+      <wp:meta_value><![CDATA[a:1:{i:0;s:0:"";}]]></wp:meta_value>
+    </wp:postmeta>
+    <wp:postmeta>
+      <wp:meta_key>_menu_item_xfn</wp:meta_key>
+      <wp:meta_value><![CDATA[]]></wp:meta_value>
+    </wp:postmeta>
+    <wp:postmeta>
+      <wp:meta_key>_menu_item_url</wp:meta_key>
+      <wp:meta_value><![CDATA[]]></wp:meta_value>
+    </wp:postmeta>
+  </item>`;
 }
 
