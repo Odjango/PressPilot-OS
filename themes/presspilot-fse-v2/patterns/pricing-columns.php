@@ -21,9 +21,9 @@
   <div class="wp-block-columns" style="margin-top:var(--wp--preset--spacing--40)">
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"},"shadow":"var:preset|shadow|card"},"layout":{"type":"constrained"},"className":"{{PRICING_1_CARD_CLASS}}"} -->
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"28px"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"},"shadow":"var:preset|shadow|card"},"layout":{"type":"constrained"},"className":"{{PRICING_1_CARD_CLASS}}"} -->
       <div class="wp-block-group {{PRICING_1_CARD_CLASS}}"
-        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40);box-shadow:var(--wp--preset--shadow--card)">
+        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:28px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40);box-shadow:var(--wp--preset--shadow--card)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
         <h3 class="wp-block-heading has-lg-font-size">{{PRICING_1_NAME}}</h3>
         <!-- /wp:heading -->
@@ -49,9 +49,9 @@
 
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"2px","style":"solid","color":"var:preset|color|primary"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"},"shadow":"var:preset|shadow|primary-glow"},"layout":{"type":"constrained"},"className":"{{PRICING_2_CARD_CLASS}}"} -->
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"2px","style":"solid","color":"var:preset|color|primary","radius":"28px"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"},"shadow":"var:preset|shadow|primary-glow"},"layout":{"type":"constrained"},"className":"{{PRICING_2_CARD_CLASS}}"} -->
       <div class="wp-block-group {{PRICING_2_CARD_CLASS}}"
-        style="border-color:var(--wp--preset--color--primary);border-style:solid;border-width:2px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40);box-shadow:var(--wp--preset--shadow--primary-glow)">
+        style="border-color:var(--wp--preset--color--primary);border-style:solid;border-width:2px;border-radius:28px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40);box-shadow:var(--wp--preset--shadow--primary-glow)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
         <h3 class="wp-block-heading has-lg-font-size">{{PRICING_2_NAME}}</h3>
         <!-- /wp:heading -->
@@ -77,9 +77,9 @@
 
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"},"shadow":"var:preset|shadow|card"},"layout":{"type":"constrained"},"className":"{{PRICING_3_CARD_CLASS}}"} -->
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"28px"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"},"shadow":"var:preset|shadow|card"},"layout":{"type":"constrained"},"className":"{{PRICING_3_CARD_CLASS}}"} -->
       <div class="wp-block-group {{PRICING_3_CARD_CLASS}}"
-        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40);box-shadow:var(--wp--preset--shadow--card)">
+        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:28px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40);box-shadow:var(--wp--preset--shadow--card)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
         <h3 class="wp-block-heading has-lg-font-size">{{PRICING_3_NAME}}</h3>
         <!-- /wp:heading -->

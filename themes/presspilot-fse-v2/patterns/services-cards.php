@@ -7,7 +7,8 @@
  */
 ?>
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|50","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-pattern services-cards"} -->
-<div class="wp-block-group presspilot-pattern services-cards" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--40)">
+<div class="wp-block-group presspilot-pattern services-cards"
+  style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--40)">
   <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
   <h2 class="wp-block-heading has-text-align-center has-xl-font-size">Services we deliver</h2>
   <!-- /wp:heading -->
@@ -16,8 +17,9 @@
   <div class="wp-block-columns" style="margin-top:var(--wp--preset--spacing--40)">
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg"} -->
-      <div class="wp-block-group has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"28px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}} -->
+      <div class="wp-block-group"
+        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:28px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
         <h3 class="wp-block-heading has-lg-font-size">Strategy & Research</h3>
         <!-- /wp:heading -->
@@ -31,8 +33,9 @@
 
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg"} -->
-      <div class="wp-block-group has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"28px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}} -->
+      <div class="wp-block-group"
+        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:28px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
         <h3 class="wp-block-heading has-lg-font-size">Design Systems</h3>
         <!-- /wp:heading -->
@@ -46,8 +49,9 @@
 
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg"} -->
-      <div class="wp-block-group has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"28px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}} -->
+      <div class="wp-block-group"
+        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:28px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
         <h3 class="wp-block-heading has-lg-font-size">Launch & Support</h3>
         <!-- /wp:heading -->
@@ -62,4 +66,3 @@
   <!-- /wp:columns -->
 </div>
 <!-- /wp:group -->
-
