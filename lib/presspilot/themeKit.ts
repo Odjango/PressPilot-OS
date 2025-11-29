@@ -15,7 +15,7 @@ export interface ThemeBuildResult {
 
 const BUILD_ROOT = path.join('/tmp', 'presspilot-build');
 const THEMES_ROOT = path.join(BUILD_ROOT, 'themes');
-const FOUNDATION_THEME_SLUG = 'presspilot-golden-foundation';
+const FOUNDATION_THEME_SLUG = 'presspilot-fse-v2';
 // Source theme lives in themes/ at repo root, not in build/
 const FOUNDATION_THEME_DIR = path.join(process.cwd(), 'themes', FOUNDATION_THEME_SLUG);
 
@@ -57,6 +57,7 @@ export async function buildWordPressTheme(
     console.log('[WPImport] wrote theme demo XML:', importerPath);
   }
   await writeThemeStyleHeader(themeDir, context, variation, kit.version);
+  await injectThemeConfig(themeDir, options?.businessTypeId);
 
   const themeZipPath = path.join(THEMES_ROOT, `${context.brand.slug}.zip`);
   const zip = new AdmZip();
@@ -65,6 +66,32 @@ export async function buildWordPressTheme(
   console.log('[themeKit] wrote theme zip:', themeZipPath);
 
   return { themeDir, themeZipPath };
+}
+
+async function injectThemeConfig(themeDir: string, businessTypeId?: string | null) {
+  const functionsPath = path.join(themeDir, 'functions.php');
+  let content = await fs.readFile(functionsPath, 'utf8');
+
+  let themeType = 'universal';
+  let enableWoo = false;
+
+  if (businessTypeId === 'restaurant_cafe') {
+    themeType = 'restaurant';
+  } else if (businessTypeId === 'ecommerce_store') {
+    themeType = 'ecommerce';
+    enableWoo = true;
+  }
+
+  content = content.replace(
+    "define('PP_THEME_TYPE', 'universal');",
+    `define('PP_THEME_TYPE', '${themeType}');`
+  );
+  content = content.replace(
+    "define('PP_ENABLE_WOOCOMMERCE', false);",
+    `define('PP_ENABLE_WOOCOMMERCE', ${enableWoo});`
+  );
+
+  await fs.writeFile(functionsPath, content, 'utf8');
 }
 
 async function ensureFoundationThemeExists() {

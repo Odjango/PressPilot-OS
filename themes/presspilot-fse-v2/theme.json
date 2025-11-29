@@ -1,0 +1,86 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/theme.json",
+    "version": 2,
+    "settings": {
+        "appearanceTools": true,
+        "layout": {
+            "contentSize": "1200px",
+            "wideSize": "1600px"
+        },
+        "typography": {
+            "fontFamilies": [
+                {
+                    "slug": "system-sans",
+                    "name": "System Sans",
+                    "fontFamily": "-apple-system,BlinkMacSystemFont,system-ui,sans-serif"
+                }
+            ]
+        },
+        "color": {
+            "palette": [
+                {
+                    "slug": "brand",
+                    "name": "Brand Blue",
+                    "color": "#0057ff"
+                },
+                {
+                    "slug": "dark",
+                    "name": "Dark",
+                    "color": "#111111"
+                },
+                {
+                    "slug": "light",
+                    "name": "Light",
+                    "color": "#ffffff"
+                }
+            ]
+        },
+        "customTemplates": [
+            {
+                "name": "template-full-width",
+                "title": "Full Width Page",
+                "postTypes": [
+                    "page"
+                ]
+            }
+        ],
+        "templateParts": [
+            {
+                "name": "header",
+                "title": "Site Header",
+                "area": "header"
+            },
+            {
+                "name": "footer",
+                "title": "Site Footer",
+                "area": "footer"
+            }
+        ]
+    },
+    "styles": {
+        "color": {
+            "background": "var(--wp--preset--color--light)",
+            "text": "var(--wp--preset--color--dark)"
+        },
+        "typography": {
+            "fontFamily": "var(--wp--preset--font-family--system-sans)"
+        },
+        "blocks": {
+            "core/navigation": {
+                "elements": {
+                    "link": {
+                        "color": {
+                            "text": "var(--wp--preset--color--brand)"
+                        }
+                    }
+                }
+            },
+            "core/button": {
+                "color": {
+                    "background": "var(--wp--preset--color--brand)",
+                    "text": "var(--wp--preset--color--light)"
+                }
+            }
+        }
+    }
+}
