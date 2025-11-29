@@ -180,6 +180,7 @@ function presspilot_fse_v2_content_setup()
 
     // 5. CREATE: Navigation Menu (FSE)
     if (!empty($created_pages)) {
+        error_log('PressPilot: Pages created, starting navigation setup.');
         // A. FSE Navigation Post
         $nav_content = '';
         foreach ($created_pages as $slug => $id) {
@@ -197,13 +198,19 @@ function presspilot_fse_v2_content_setup()
             'post_name' => 'primary-navigation',
             'post_author' => $author_id
         );
-        wp_insert_post($nav_post_data);
+        $nav_id = wp_insert_post($nav_post_data);
+        if (is_wp_error($nav_id)) {
+            error_log('PressPilot: FSE Navigation creation failed: ' . $nav_id->get_error_message());
+        } else {
+            error_log('PressPilot: FSE Navigation created with ID: ' . $nav_id);
+        }
 
         // B. Classic Menu
         $menu_name = 'Primary Menu';
         $menu_id = wp_create_nav_menu($menu_name);
 
         if (!is_wp_error($menu_id)) {
+            error_log('PressPilot: Classic Menu created with ID: ' . $menu_id);
             foreach ($created_pages as $slug => $id) {
                 $title = ucfirst($slug);
                 wp_update_nav_menu_item($menu_id, 0, array(
@@ -214,11 +221,20 @@ function presspilot_fse_v2_content_setup()
                     'menu-item-type' => 'post_type',
                 ));
             }
+
+            // Assign to location if possible (FSE doesn't use locations standardly, but good for hybrid)
+            $locations = get_theme_mod('nav_menu_locations');
+            $locations['primary'] = $menu_id;
+            set_theme_mod('nav_menu_locations', $locations);
+        } else {
+            error_log('PressPilot: Classic Menu creation failed: ' . $menu_id->get_error_message());
         }
+    } else {
+        error_log('PressPilot: No pages created, skipping navigation setup.');
     }
 
     // Update the stored version
-    update_option('presspilot_fse_v2_version', '2.4.0');
+    update_option('presspilot_fse_v2_version', '2.5.0');
 }
 
 /**
@@ -226,7 +242,7 @@ function presspilot_fse_v2_content_setup()
  */
 function presspilot_fse_v2_version_check()
 {
-    $current_version = '2.4.0';
+    $current_version = '2.5.0';
     $installed_version = get_option('presspilot_fse_v2_version');
 
     if ($installed_version !== $current_version) {
