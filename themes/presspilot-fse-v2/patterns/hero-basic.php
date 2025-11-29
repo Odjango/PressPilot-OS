@@ -6,31 +6,32 @@
  * Description: Modular hero section with badges, headline, and dual CTAs.
  */
 ?>
-<!-- wp:group {"align":"full","backgroundColor":"soft-bg","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern hero-basic"} -->
-<div
-  class="wp-block-group alignfull presspilot-section presspilot-pattern hero-basic has-soft-bg-background-color has-background">
+<!-- wp:group {"align":"full","backgroundColor":"soft-bg","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"}} -->
+<div class="wp-block-group alignfull has-soft-bg-background-color has-background"
+  style="padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
   <!-- wp:group {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|20"}}} -->
   <div class="wp-block-group">
-    <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"xs","className":"hero-eyebrow"} -->
-    <p class="has-text-align-center has-muted-color has-xs-font-size hero-eyebrow">Built with PressPilot Golden
-      Foundation</p>
+    <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"xs","style":{"typography":{"textTransform":"uppercase","letterSpacing":"0.2em"}}} -->
+    <p class="has-text-align-center has-muted-color has-xs-font-size"
+      style="text-transform:uppercase;letter-spacing:0.2em">Built with PressPilot Golden Foundation</p>
     <!-- /wp:paragraph -->
   </div>
   <!-- /wp:group -->
 
-  <!-- wp:heading {"textAlign":"center","level":1,"fontSize":"xxl","className":"hero-title"} -->
-  <h1 class="wp-block-heading has-text-align-center has-xxl-font-size pp-hero-headline hero-title">{{HERO_TITLE}}</h1>
+  <!-- wp:heading {"textAlign":"center","level":1,"fontSize":"xxl","style":{"spacing":{"margin":{"bottom":"1rem"}}}} -->
+  <h1 class="wp-block-heading has-text-align-center has-xxl-font-size" style="margin-bottom:1rem">{{HERO_TITLE}}</h1>
   <!-- /wp:heading -->
 
-  <!-- wp:paragraph {"align":"center","fontSize":"lg","className":"hero-subtitle"} -->
-  <p class="has-text-align-center has-lg-font-size pp-hero-subheadline hero-subtitle">{{HERO_SUBTITLE}}</p>
+  <!-- wp:paragraph {"align":"center","fontSize":"lg","style":{"spacing":{"margin":{"bottom":"2rem"}}}} -->
+  <p class="has-text-align-center has-lg-font-size" style="margin-bottom:2rem">{{HERO_SUBTITLE}}</p>
   <!-- /wp:paragraph -->
 
   <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}}} -->
   <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
-    <!-- wp:button {"backgroundColor":"primary","textColor":"soft-bg"} -->
+    <!-- wp:button {"backgroundColor":"primary","textColor":"soft-bg","style":{"shadow":"var:preset|shadow|primary-glow"}} -->
     <div class="wp-block-button"><a
         class="wp-block-button__link has-soft-bg-color has-primary-background-color has-text-color has-background wp-element-button"
+        style="box-shadow:var(--wp--preset--shadow--primary-glow)"
         href="{{HERO_PRIMARY_CTA_URL}}">{{HERO_PRIMARY_CTA}}</a></div>
     <!-- /wp:button -->
 

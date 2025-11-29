@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * The generator will update these values based on user input.
  * ==========================================
  */
-define('PP_THEME_TYPE', 'universal'); // Options: 'restaurant', 'ecommerce', 'universal'
+define('PP_THEME_TYPE', 'restaurant'); // Options: 'restaurant', 'ecommerce', 'universal'
 define('PP_ENABLE_WOOCOMMERCE', false); // Set to true for E-commerce
 define('PP_SITE_TITLE', 'PressPilot Site'); // Generator will replace this
 
@@ -192,7 +192,7 @@ function presspilot_fse_v2_content_setup()
 
         $nav_post_data = array(
             'post_title' => 'Primary Navigation',
-            'post_content' => '<!-- wp:navigation -->' . $nav_content . '<!-- /wp:navigation -->',
+            'post_content' => $nav_content,
             'post_status' => 'publish',
             'post_type' => 'wp_navigation',
             'post_name' => 'primary-navigation',
@@ -234,7 +234,7 @@ function presspilot_fse_v2_content_setup()
     }
 
     // Update the stored version
-    update_option('presspilot_fse_v2_version', '2.5.0');
+    update_option('presspilot_fse_v2_version', '2.5.1');
 }
 
 /**
@@ -242,7 +242,7 @@ function presspilot_fse_v2_content_setup()
  */
 function presspilot_fse_v2_version_check()
 {
-    $current_version = '2.5.0';
+    $current_version = '2.5.1';
     $installed_version = get_option('presspilot_fse_v2_version');
 
     if ($installed_version !== $current_version) {
