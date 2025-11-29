@@ -135,7 +135,8 @@ function presspilot_fse_v2_content_setup()
                 $page_content_template = '<!-- wp:pattern {"slug":"presspilot/hero-basic"} /-->
                 <!-- wp:pattern {"slug":"presspilot/features-grid"} /-->
                 <!-- wp:pattern {"slug":"presspilot/pricing-columns"} /-->
-                <!-- wp:pattern {"slug":"presspilot/cta-contact"} /-->';
+                <!-- wp:pattern {"slug":"presspilot/cta-contact"} /-->
+                <!-- wp:paragraph --><p>DEBUG: Content Injection Test</p><!-- /wp:paragraph -->';
             } elseif ($page_slug === 'about') {
                 $page_content_template = '<!-- wp:pattern {"slug":"presspilot/hero-basic"} /-->
                 <!-- wp:pattern {"slug":"presspilot/stats-row"} /-->
