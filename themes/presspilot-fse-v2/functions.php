@@ -218,7 +218,7 @@ function presspilot_fse_v2_content_setup()
     }
 
     // Update the stored version
-    update_option('presspilot_fse_v2_version', '2.3.0');
+    update_option('presspilot_fse_v2_version', '2.4.0');
 }
 
 /**
@@ -226,7 +226,7 @@ function presspilot_fse_v2_content_setup()
  */
 function presspilot_fse_v2_version_check()
 {
-    $current_version = '2.3.0';
+    $current_version = '2.4.0';
     $installed_version = get_option('presspilot_fse_v2_version');
 
     if ($installed_version !== $current_version) {
