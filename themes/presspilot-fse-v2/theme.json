@@ -185,6 +185,11 @@
           "name": "Primary Glow",
           "slug": "primary-glow",
           "shadow": "0 20px 40px rgba(37, 99, 235, 0.25)"
+        },
+        {
+          "name": "Highlight",
+          "slug": "highlight",
+          "shadow": "0 25px 60px rgba(37, 99, 235, 0.15)"
         }
       ]
     },

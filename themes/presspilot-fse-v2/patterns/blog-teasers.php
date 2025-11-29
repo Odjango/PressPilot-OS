@@ -18,11 +18,12 @@
   <!-- /wp:paragraph -->
 
   <!-- wp:columns {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}}} -->
-  <div class="wp-block-columns" style="margin-top:var(--wp--preset--spacing--40)">
+  <div class="wp-block-columns is-layout-flex"
+    style="margin-top:var(--wp--preset--spacing--40);gap:var(--wp--preset--spacing--30)">
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
-      <div class="wp-block-group has-soft-bg-background-color has-background"
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"}} -->
+      <div class="wp-block-group"
         style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
         <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
         <p class="has-muted-color has-xs-font-size">{{UPDATE_1_EYEBROW}}</p>
@@ -40,8 +41,8 @@
 
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
-      <div class="wp-block-group has-soft-bg-background-color has-background"
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"}} -->
+      <div class="wp-block-group"
         style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
         <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
         <p class="has-muted-color has-xs-font-size">{{UPDATE_2_EYEBROW}}</p>
@@ -59,8 +60,8 @@
 
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
-      <div class="wp-block-group has-soft-bg-background-color has-background"
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"}} -->
+      <div class="wp-block-group"
         style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
         <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
         <p class="has-muted-color has-xs-font-size">{{UPDATE_3_EYEBROW}}</p>
