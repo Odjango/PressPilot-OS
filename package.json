@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "demo-kits": "npm run build && tsx scripts/demo-kits.ts",
-    "verify-supabase": "tsx scripts/verify-supabase.ts"
+    "verify-supabase": "tsx scripts/verify-supabase.ts",
+    "build-wp-theme": "tsx scripts/buildWpTheme.ts"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.10.0",

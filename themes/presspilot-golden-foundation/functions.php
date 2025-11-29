@@ -7,16 +7,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Register menu locations (ensure "primary" exists)
-function presspilot_register_menus()
-{
-    register_nav_menus(
-        array(
-            'primary' => __('Primary menu', 'presspilot'),
-        )
-    );
-}
-add_action('after_setup_theme', 'presspilot_register_menus');
+
 
 // Load activation bootstrap module
 require_once get_stylesheet_directory() . '/inc/presspilot-activate.php';
@@ -86,41 +77,7 @@ if (!function_exists('presspilot_apply_brand_identity')) {
 }
 
 
-function presspilot_setup_fse_navigation()
-{
-    // Check if the menu already exists to ensure idempotency.
-    $existing_nav = get_posts(array(
-        'post_type' => 'wp_navigation',
-        'title' => 'Main Menu',
-        'fields' => 'ids',
-        'numberposts' => 1,
-    ));
 
-    if (!empty($existing_nav)) {
-        return $existing_nav[0]; // Return existing ID
-    }
-
-    // Define the content for the navigation post.
-    // Using page-list as a default dynamic menu
-    $nav_content = '<!-- wp:page-list /-->';
-
-    // Insert the post.
-    $nav_post_id = wp_insert_post(array(
-        'import_id' => 1000, // Force ID to match header template
-        'post_title' => 'Main Menu',
-        'post_name' => 'main-menu-fse-nav',
-        'post_content' => $nav_content,
-        'post_status' => 'publish',
-        'post_type' => 'wp_navigation',
-    ), true);
-
-    if (!is_wp_error($nav_post_id)) {
-        return $nav_post_id;
-    }
-
-    return false;
-}
-add_action('after_switch_theme', 'presspilot_setup_fse_navigation');
 
 /**
  * Universal function to create required pages on theme activation.

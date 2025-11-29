@@ -7,7 +7,7 @@
  */
 ?>
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|50","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"}} -->
-<div class="wp-block-group"
+<div class="wp-block-group is-layout-constrained"
   style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--40)">
   <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
   <h2 class="wp-block-heading has-text-align-center has-xl-font-size">{{PRICING_HEADING}}</h2>
