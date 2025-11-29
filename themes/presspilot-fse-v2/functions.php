@@ -124,18 +124,34 @@ function presspilot_fse_v2_content_setup()
                 $page_content_template = '<!-- wp:shortcode -->[woocommerce_my_account]<!-- /wp:shortcode -->';
             }
         } else {
-            // Standard content for other pages
-            $page_content_template = '<!-- wp:heading -->
-            <h2 class="wp-block-heading">' . $page_title . ' Page Content</h2>
-            <!-- /wp:heading -->
-            <!-- wp:paragraph -->
-            <p>This is the initial content for the ' . $page_title . ' page. You can customize this layout in the Editor.</p>
-            <!-- /wp:paragraph -->
-            <!-- wp:cover {"overlayColor":"brand","dimRatio":50,"minHeight":300,"minHeightUnit":"px","align":"full"} -->
-            <div class="wp-block-cover alignfull" style="min-height:300px"><span aria-hidden="true" class="wp-block-cover__background has-brand-background-color has-background-dim"></span><div class="wp-block-cover__inner-container"><!-- wp:paragraph {"align":"center","placeholder":"Write title...","fontSize":"large"} -->
-            <p class="has-text-align-center has-large-font-size">Welcome to ' . $page_title . '</p>
-            <!-- /wp:paragraph --></div></div>
-            <!-- /wp:cover -->';
+            // Use Patterns for Standard Pages
+            if ($page_slug === 'home') {
+                $page_content_template = '<!-- wp:pattern {"slug":"presspilot/hero-basic"} /-->
+                <!-- wp:pattern {"slug":"presspilot/features-grid"} /-->
+                <!-- wp:pattern {"slug":"presspilot/pricing-columns"} /-->
+                <!-- wp:pattern {"slug":"presspilot/cta-contact"} /-->';
+            } elseif ($page_slug === 'about') {
+                $page_content_template = '<!-- wp:pattern {"slug":"presspilot/hero-basic"} /-->
+                <!-- wp:pattern {"slug":"presspilot/stats-row"} /-->
+                <!-- wp:pattern {"slug":"presspilot/cta-large"} /-->';
+            } elseif ($page_slug === 'services') {
+                $page_content_template = '<!-- wp:pattern {"slug":"presspilot/hero-basic"} /-->
+                <!-- wp:pattern {"slug":"presspilot/services-cards"} /-->
+                <!-- wp:pattern {"slug":"presspilot/cta-contact"} /-->';
+            } elseif ($page_slug === 'contact') {
+                $page_content_template = '<!-- wp:pattern {"slug":"presspilot/cta-contact"} /-->
+                <!-- wp:pattern {"slug":"presspilot/faq-basic"} /-->';
+            } elseif ($page_slug === 'menu') {
+                $page_content_template = '<!-- wp:heading {"textAlign":"center"} -->
+                <h2 class="wp-block-heading has-text-align-center">Our Menu</h2>
+                <!-- /wp:heading -->
+                <!-- wp:paragraph {"align":"center"} -->
+                <p class="has-text-align-center">Delicious items coming soon.</p>
+                <!-- /wp:paragraph -->';
+            } else {
+                // Default fallback
+                $page_content_template = '<!-- wp:pattern {"slug":"presspilot/hero-basic"} /-->';
+            }
         }
 
         $page_data = array(
@@ -201,7 +217,7 @@ function presspilot_fse_v2_content_setup()
     }
 
     // Update the stored version
-    update_option('presspilot_fse_v2_version', '2.1.0');
+    update_option('presspilot_fse_v2_version', '2.2.0');
 }
 
 /**
@@ -209,7 +225,7 @@ function presspilot_fse_v2_content_setup()
  */
 function presspilot_fse_v2_version_check()
 {
-    $current_version = '2.1.0';
+    $current_version = '2.2.0';
     $installed_version = get_option('presspilot_fse_v2_version');
 
     if ($installed_version !== $current_version) {
