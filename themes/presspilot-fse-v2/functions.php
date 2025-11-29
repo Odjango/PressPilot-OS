@@ -75,7 +75,8 @@ function presspilot_fse_v2_content_setup()
     }
 
     // 3. UPDATE: Site Title
-    update_option('blogname', PP_SITE_TITLE);
+    $formatted_title = ucwords(str_replace(array('-', '_'), ' ', PP_SITE_TITLE));
+    update_option('blogname', $formatted_title);
 
     // 4. PAVE: Create required pages
 
@@ -89,16 +90,20 @@ function presspilot_fse_v2_content_setup()
     // Base Pages
     $pages_to_create = array(
         'Home' => 'home',
-        'About' => 'about',
-        'Services' => 'services',
-        'Blog' => 'blog',
-        'Contact' => 'contact'
     );
 
     // Conditional Pages based on Theme Type
     if (PP_THEME_TYPE === 'restaurant') {
         $pages_to_create['Menu'] = 'menu';
     }
+
+    // Add remaining base pages
+    $pages_to_create = array_merge($pages_to_create, array(
+        'About' => 'about',
+        'Services' => 'services',
+        'Blog' => 'blog',
+        'Contact' => 'contact'
+    ));
 
     // Conditional Pages for WooCommerce
     if (PP_ENABLE_WOOCOMMERCE) {

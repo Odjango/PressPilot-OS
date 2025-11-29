@@ -285,7 +285,7 @@
           "fontWeight": "500"
         },
         "spacing": {
-          "blockGap": "1.75rem"
+          "blockGap": "2rem"
         }
       },
       "core/group": {
