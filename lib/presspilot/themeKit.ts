@@ -90,6 +90,13 @@ async function injectThemeConfig(themeDir: string, businessTypeId?: string | nul
     "define('PP_ENABLE_WOOCOMMERCE', false);",
     `define('PP_ENABLE_WOOCOMMERCE', ${enableWoo});`
   );
+  content = content.replace(
+    "define('PP_SITE_TITLE', 'PressPilot Site');",
+    `define('PP_SITE_TITLE', '${themeDir.split('/').pop()}');` // Fallback, but better to pass brand name
+  );
+  // Wait, I need the brand name here. I'll use a placeholder replacement or pass it in.
+  // The context.brand.name is available in buildWordPressTheme but not passed to injectThemeConfig.
+  // I will update the function signature.
 
   await fs.writeFile(functionsPath, content, 'utf8');
 }

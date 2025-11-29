@@ -17,6 +17,7 @@ if (!defined('ABSPATH')) {
  */
 define('PP_THEME_TYPE', 'universal'); // Options: 'restaurant', 'ecommerce', 'universal'
 define('PP_ENABLE_WOOCOMMERCE', false); // Set to true for E-commerce
+define('PP_SITE_TITLE', 'PressPilot Site'); // Generator will replace this
 
 /**
  * Theme Configuration (Runs on every request)
@@ -74,7 +75,7 @@ function presspilot_fse_v2_content_setup()
     }
 
     // 3. UPDATE: Site Title
-    update_option('blogname', 'PressPilot Site');
+    update_option('blogname', PP_SITE_TITLE);
 
     // 4. PAVE: Create required pages
 
@@ -190,7 +191,7 @@ function presspilot_fse_v2_content_setup()
 
         $nav_post_data = array(
             'post_title' => 'Primary Navigation',
-            'post_content' => '<!-- wp:navigation {"ref":null} -->' . $nav_content . '<!-- /wp:navigation -->',
+            'post_content' => '<!-- wp:navigation -->' . $nav_content . '<!-- /wp:navigation -->',
             'post_status' => 'publish',
             'post_type' => 'wp_navigation',
             'post_name' => 'primary-navigation',
@@ -217,7 +218,7 @@ function presspilot_fse_v2_content_setup()
     }
 
     // Update the stored version
-    update_option('presspilot_fse_v2_version', '2.2.0');
+    update_option('presspilot_fse_v2_version', '2.3.0');
 }
 
 /**
@@ -225,7 +226,7 @@ function presspilot_fse_v2_content_setup()
  */
 function presspilot_fse_v2_version_check()
 {
-    $current_version = '2.2.0';
+    $current_version = '2.3.0';
     $installed_version = get_option('presspilot_fse_v2_version');
 
     if ($installed_version !== $current_version) {
