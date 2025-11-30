@@ -33,7 +33,7 @@
         <!-- wp:list {"fontSize":"sm"} -->
         <ul class="has-sm-font-size">{{PRICING_1_FEATURES}}</ul>
         <!-- /wp:list -->
-        <!-- wp:buttons -->
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"stretch"}} -->
         <div class="wp-block-buttons is-layout-flex is-content-justification-stretch">
           <!-- wp:button {"width":100,"backgroundColor":"primary","textColor":"soft-bg","style":{"shadow":"var:preset|shadow|primary-glow"}} -->
           <div class="wp-block-button has-custom-width wp-block-button__width-100"><a
@@ -61,7 +61,7 @@
         <!-- wp:list {"fontSize":"sm"} -->
         <ul class="has-sm-font-size">{{PRICING_2_FEATURES}}</ul>
         <!-- /wp:list -->
-        <!-- wp:buttons -->
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"stretch"}} -->
         <div class="wp-block-buttons is-layout-flex is-content-justification-stretch">
           <!-- wp:button {"width":100,"backgroundColor":"primary","textColor":"soft-bg","style":{"shadow":"var:preset|shadow|primary-glow"}} -->
           <div class="wp-block-button has-custom-width wp-block-button__width-100"><a
@@ -89,7 +89,7 @@
         <!-- wp:list {"fontSize":"sm"} -->
         <ul class="has-sm-font-size">{{PRICING_3_FEATURES}}</ul>
         <!-- /wp:list -->
-        <!-- wp:buttons -->
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"stretch"}} -->
         <div class="wp-block-buttons is-layout-flex is-content-justification-stretch">
           <!-- wp:button {"width":100,"backgroundColor":"primary","textColor":"soft-bg","style":{"shadow":"var:preset|shadow|primary-glow"}} -->
           <div class="wp-block-button has-custom-width wp-block-button__width-100"><a

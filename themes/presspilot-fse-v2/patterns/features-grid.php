@@ -17,7 +17,7 @@
   <div class="wp-block-columns" style="margin-top:var(--wp--preset--spacing--60);gap:var(--wp--preset--spacing--40)">
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"12px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"12px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"layout":{"type":"constrained"},"backgroundColor":"soft-bg"} -->
       <div class="wp-block-group has-soft-bg-background-color has-background"
         style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:12px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
@@ -33,7 +33,7 @@
 
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"12px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"12px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"layout":{"type":"constrained"},"backgroundColor":"soft-bg"} -->
       <div class="wp-block-group has-soft-bg-background-color has-background"
         style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:12px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
@@ -49,7 +49,7 @@
 
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"12px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"12px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"layout":{"type":"constrained"},"backgroundColor":"soft-bg"} -->
       <div class="wp-block-group has-soft-bg-background-color has-background"
         style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:12px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
