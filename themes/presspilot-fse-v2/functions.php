@@ -64,6 +64,27 @@ function presspilot_fse_v2_content_setup()
         }
     }
 
+    // NUKE: Delete customized templates (db-saved) to force file-based templates
+    $custom_templates = get_posts(array(
+        'post_type' => 'wp_template',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'wp_theme',
+                'field' => 'name',
+                'terms' => get_stylesheet(), // Current theme
+            ),
+        ),
+    ));
+    foreach ($custom_templates as $template) {
+        // Only delete core templates that might be blocking us
+        if (in_array($template->post_name, ['front-page', 'home', 'index'])) {
+            wp_delete_post($template->ID, true);
+            error_log('PressPilot: Deleted custom template: ' . $template->post_name);
+        }
+    }
+
     // Also delete FSE navigation posts
     $all_nav_posts = get_posts(array(
         'post_type' => 'wp_navigation',
