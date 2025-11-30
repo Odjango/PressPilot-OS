@@ -10,7 +10,7 @@
 <div class="wp-block-group is-layout-constrained"
   style="padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
   <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}}} -->
-  <div class="wp-block-columns is-layout-flex" style="gap:var(--wp--preset--spacing--40)">
+  <div class="wp-block-columns" style="gap:var(--wp--preset--spacing--40)">
     <!-- wp:column -->
     <div class="wp-block-column">
       <!-- wp:heading {"level":2,"fontSize":"xl"} -->

@@ -13,16 +13,15 @@
   <h2 class="wp-block-heading has-text-align-center has-xl-font-size">{{FEATURE_SECTION_HEADING}}</h2>
   <!-- /wp:heading -->
 
-  <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40","margin":{"top":"var:preset|spacing|40"}}}} -->
-  <div class="wp-block-columns is-layout-flex"
-    style="margin-top:var(--wp--preset--spacing--40);gap:var(--wp--preset--spacing--40)">
+  <!-- wp:columns {"style":{"spacing":{"margin":{"top":"var:preset|spacing|60"},"blockGap":"var:preset|spacing|40"}}} -->
+  <div class="wp-block-columns" style="margin-top:var(--wp--preset--spacing--60);gap:var(--wp--preset--spacing--40)">
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"28px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"12px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
       <div class="wp-block-group has-soft-bg-background-color has-background"
-        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:28px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
+        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:12px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
-        <h3 class="wp-block-heading has-lg-font-size">{{FEATURE_1_ICON}} {{FEATURE_1_TITLE}}</h3>
+        <h3 class="wp-block-heading has-lg-font-size">{{FEATURE_1_TITLE}}</h3>
         <!-- /wp:heading -->
         <!-- wp:paragraph {"fontSize":"sm"} -->
         <p class="has-sm-font-size">{{FEATURE_1_DESC}}</p>
@@ -34,11 +33,11 @@
 
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"28px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"12px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
       <div class="wp-block-group has-soft-bg-background-color has-background"
-        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:28px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
+        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:12px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
-        <h3 class="wp-block-heading has-lg-font-size">{{FEATURE_2_ICON}} {{FEATURE_2_TITLE}}</h3>
+        <h3 class="wp-block-heading has-lg-font-size">{{FEATURE_2_TITLE}}</h3>
         <!-- /wp:heading -->
         <!-- wp:paragraph {"fontSize":"sm"} -->
         <p class="has-sm-font-size">{{FEATURE_2_DESC}}</p>
@@ -50,11 +49,11 @@
 
     <!-- wp:column -->
     <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"28px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
+      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border","radius":"12px"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"},"shadow":"var:preset|shadow|card"},"backgroundColor":"soft-bg"} -->
       <div class="wp-block-group has-soft-bg-background-color has-background"
-        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:28px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
+        style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;border-radius:12px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);box-shadow:var(--wp--preset--shadow--card)">
         <!-- wp:heading {"level":3,"fontSize":"lg"} -->
-        <h3 class="wp-block-heading has-lg-font-size">{{FEATURE_3_ICON}} {{FEATURE_3_TITLE}}</h3>
+        <h3 class="wp-block-heading has-lg-font-size">{{FEATURE_3_TITLE}}</h3>
         <!-- /wp:heading -->
         <!-- wp:paragraph {"fontSize":"sm"} -->
         <p class="has-sm-font-size">{{FEATURE_3_DESC}}</p>
