@@ -1,0 +1,141 @@
+
+This structure integrates all FSE best practices we confirmed:
+
+Pure PHP for Content: functions.php handles only page creation and site settings.
+
+Pure HTML Blocks for Layout: All templates use stable block markup, eliminating recovery errors.
+
+Correct Menu Order: The navigation is hardcoded in the header for universal consistency across all generated themes.
+
+Below are the contents for a theme named presspilot-gold-test. You can assemble these files into a folder named presspilot-gold-test and compress it into a .zip to test.
+
+1. style.css (Root of Theme)
+This minimal file declares the theme is an FSE (block) theme.
+
+CSS
+/*
+Theme Name: PressPilot Gold Test
+Theme URI: https://presspilot.com/
+Author: PressPilot
+Author URI: https://presspilot.com/
+Description: A stable, FSE-compliant test theme that provisions content on activation.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.4
+Requires PHP: 7.4
+Text Domain: presspilot
+Tags: block-theme, full-site-editing, custom-pages
+*/
+2. theme.json (Root of Theme)
+This file enables all necessary FSE features and global styling tools.
+
+JSON
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 2,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "800px",
+      "wideSize": "1200px"
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "system-sans",
+          "name": "System Sans",
+          "fontFamily": "-apple-system,BlinkMacSystemFont,system-ui,sans-serif"
+        }
+      ]
+    }
+  },
+  "customTemplates": [
+    {
+      "name": "template-full-width",
+      "title": "Full Width",
+      "postTypes": [
+        "page"
+      ]
+    }
+  ]
+}
+3. functions.php (Root of Theme)
+This is the cleanest version of your PHP code. It contains ONLY the page creation logic (presspilot_create_required_pages) and is completely free of the conflicting menu functions.
+
+PHP
+<?php
+/**
+ * PressPilot Gold Test helpers.
+ */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+/**
+ * Universal function to create required pages on theme activation.
+ */
+function presspilot_create_required_pages()
+{
+    // Universal set of pages to create: [ 'Page Title' => 'page-slug' ]
+    $pages_to_create = array(
+        'Home' => 'home',
+        'Menu' => 'menu',
+        'About' => 'about',
+        'Services' => 'services',
+        'Blog' => 'blog',
+        'Contact' => 'contact'
+    );
+
+    foreach ($pages_to_create as $page_title => $page_slug) {
+        // Check if the page already exists (by slug)
+        if (!get_page_by_path($page_slug)) {
+            $page_data = array(
+                'post_type' => 'page',
+                'post_title' => $page_title,
+                'post_name' => $page_slug,
+                'post_content' => 'This is the ' . $page_title . ' page. Edit this content via Pages > ' . $page_title,
+                'post_status' => 'publish',
+                'post_author' => 1
+            );
+            wp_insert_post($page_data);
+        }
+    }
+
+    // Set 'Home' as the static front page and 'Blog' as the posts page.
+    $home_page = get_page_by_path('home');
+    $blog_page = get_page_by_path('blog');
+
+    if ($home_page) {
+        update_option('page_on_front', $home_page->ID);
+        update_option('show_on_front', 'page');
+    }
+    if ($blog_page) {
+        update_option('page_for_posts', $blog_page->ID);
+    }
+}
+// Hook runs when ANY PressPilot theme is activated.
+add_action('after_switch_theme', 'presspilot_create_required_pages');
+
+// Note: Removed the presspilot_register_menus and presspilot_setup_fse_navigation functions.
+4. templates/front-page.html (Template Directory)
+This minimal, clean markup is the definitive fix for the "Attempt Recovery" errors, as it loads only stable template parts and the page content block.
+
+HTML
+<main class="wp-block-group">
+</main>
+5. parts/header.html (Parts Directory)
+This file defines the correct and universal menu order using hardcoded links, which is the architectural choice we settled on to ensure consistency.
+
+HTML
+<div class="wp-block-group">
+    <ul class="wp-block-navigation__container">
+        </ul>
+    </div>
+6. parts/footer.html (Parts Directory)
+A simple footer part.
+
+HTML
+<div class="wp-block-group">
+    <p class="has-text-align-center">© <?php echo date('Y'); ?> PressPilot Gold Theme. All rights reserved.</p>
+    </div>

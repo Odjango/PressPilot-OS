@@ -1,0 +1,134 @@
+Here is a compact, “good enough” theme.json you can drop into a block (FSE) theme that:
+
+- Enables the Site Editor (FSE)
+- Gives you global styles
+- Registers template parts (header/footer)
+- Makes page templates and navigation/menu blocks work nicely
+
+This is not “perfect” in the abstract, but it matches what current FSE block themes use and will trigger the right FSE behavior.
+
+```jsonc
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 2,
+
+  "settings": {
+    "appearanceTools": true,
+    "color": {
+      "palette": [
+        { "slug": "brand", "name": "Brand Blue", "color": "#0057ff" },
+        { "slug": "dark", "name": "Dark", "color": "#111111" },
+        { "slug": "light", "name": "Light", "color": "#ffffff" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "system-sans",
+          "name": "System Sans",
+          "fontFamily": "-apple-system,BlinkMacSystemFont,system-ui,sans-serif"
+        }
+      ],
+      "fontSizes": [
+        { "slug": "small", "name": "Small", "size": "0.875rem" },
+        { "slug": "normal", "name": "Normal", "size": "1rem" },
+        { "slug": "large", "name": "Large", "size": "1.5rem" }
+      ]
+    },
+    "spacing": {
+      "units": ["px", "rem", "em", "%"],
+      "spacingScale": {
+        "steps": 6,
+        "mediumStep": "1rem"
+      }
+    },
+    "layout": {
+      "contentSize": "720px",
+      "wideSize": "1200px"
+    },
+    "customTemplates": [
+      {
+        "name": "landing-no-header",
+        "title": "Landing – No Header",
+        "postTypes": ["page"]
+      }
+    ],
+    "templateParts": [
+      {
+        "name": "header",
+        "title": "Site Header",
+        "area": "header"
+      },
+      {
+        "name": "footer",
+        "title": "Site Footer",
+        "area": "footer"
+      }
+    ]
+  },
+
+  "styles": {
+    "color": {
+      "background": "#ffffff",
+      "text": "#111111"
+    },
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--system-sans)",
+      "lineHeight": "1.6"
+    },
+    "blocks": {
+      "core/navigation": {
+        "elements": {
+          "link": {
+            "color": {
+              "text": "var(--wp--preset--color--brand)"
+            }
+          }
+        }
+      },
+      "core/button": {
+        "color": {
+          "background": "var(--wp--preset--color--brand)",
+          "text": "var(--wp--preset--color--light)"
+        }
+      }
+    }
+  }
+}
+```
+
+How this triggers FSE behavior:
+
+- A theme is recognized as an FSE/block theme when:
+  - It has theme.json like above at the theme root, and
+  - It has block templates in /templates (e.g. index.html, page.html) and template parts in /parts (e.g. header.html, footer.html).[3][5]
+- customTemplates makes a new template choice available when you create or edit PAGES in the editor (Template dropdown).[3]
+- templateParts ensures header and footer template parts show up in the Site Editor’s template parts list and can be used inside templates, which is where you typically drop your Navigation block (menus).[1][5]
+
+Minimum file structure you should pair with this for a working “from scratch” FSE theme:
+
+- style.css (with a standard theme header comment)
+- theme.json (like above)
+- /templates
+  - index.html (your main template, use core blocks: header template part, content, footer template part)
+  - page.html (optional but recommended)
+- /parts
+  - header.html (place core/site-title + core/navigation blocks)
+  - footer.html
+
+Once this is in place and the theme is activated:
+
+- The Site Editor appears under Appearance → Editor.
+- Creating/editing pages uses the page.html template and lets you change templates and patterns.
+- Menus are managed via Navigation blocks placed in header.html and edited through the Site Editor, not the old Menus screen.[4][6]
+
+[1](https://www.advancedcustomfields.com/blog/wordpress-theme-json/)
+[2](https://www.codeable.io/blog/advance-wordpress-fse-with-json/)
+[3](https://verpex.com/blog/wordpress-hosting/what-is-theme-json-file-in-wordpress-and-how-to-use-it)
+[4](https://kinsta.com/blog/theme-json/)
+[5](https://developer.wordpress.org/block-editor/how-to-guides/themes/global-settings-and-styles/)
+[6](https://fullsiteediting.com/lessons/global-styles/)
+[7](https://jetpack.com/resources/wordpress-theme-json/)
+[8](https://www.youtube.com/watch?v=UMpIzQgFWos)
+[9](https://wpturbo.dev/generators/theme-json/)
+[10](https://www.seo-guider.com/oppdateringer/configuring-theme-design-with-theme-json/)

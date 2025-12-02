@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/theme.json",
+    "version": 2,
+    "settings": {
+        "appearanceTools": true,
+        "color": {
+            "palette": [
+                {
+                    "slug": "base",
+                    "color": "#ffffff",
+                    "name": "Base"
+                },
+                {
+                    "slug": "contrast",
+                    "color": "#111111",
+                    "name": "Contrast"
+                },
+                {
+                    "slug": "primary",
+                    "color": "#9D8140",
+                    "name": "Primary"
+                },
+                {
+                    "slug": "secondary",
+                    "color": "#2C3E50",
+                    "name": "Secondary"
+                }
+            ]
+        },
+        "layout": {
+            "contentSize": "800px",
+            "wideSize": "1200px"
+        },
+        "typography": {
+            "fontFamilies": [
+                {
+                    "slug": "system-sans",
+                    "name": "System Sans",
+                    "fontFamily": "-apple-system,BlinkMacSystemFont,system-ui,sans-serif"
+                }
+            ]
+        }
+    },
+    "customTemplates": [
+        {
+            "name": "template-full-width",
+            "title": "Full Width",
+            "postTypes": [
+                "page"
+            ]
+        }
+    ]
+}
