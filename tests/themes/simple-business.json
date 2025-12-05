@@ -1,0 +1,45 @@
+{
+    "slug": "presspilot-simple-business-v1-2",
+    "siteTitle": "Brightline Consulting",
+    "siteTagline": "Practical strategy for growing businesses",
+    "siteType": "business",
+    "language": "en",
+    "pages": [
+        {
+            "title": "Home",
+            "slug": "home",
+            "template": "front",
+            "layout": "hero+features+cta",
+            "priority": 1
+        },
+        {
+            "title": "Services",
+            "slug": "services",
+            "template": "page",
+            "layout": "service-list+cta"
+        },
+        {
+            "title": "Contact",
+            "slug": "contact",
+            "template": "page",
+            "layout": "contact-form"
+        }
+    ],
+    "blog": {
+        "enabled": false
+    },
+    "designPreset": "business-clean",
+    "notes": [
+        "Minimal simple site to test header/nav behavior with few pages.",
+        "Must still use Canonical Header Pattern V1.2 with Page List navigation."
+    ],
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#0055ff",
+        "background": "#f4f4f4"
+    },
+    "theme_name": "Brightline Consulting",
+    "theme_slug": "presspilot-simple-business-v1-2",
+    "site_title": "Brightline Consulting",
+    "destructive_mode": true
+}

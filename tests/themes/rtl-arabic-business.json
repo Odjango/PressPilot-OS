@@ -1,0 +1,48 @@
+{
+    "slug": "presspilot-rtl-arabic-business-v1-2",
+    "siteTitle": "شركة النور للاستشارات",
+    "siteTagline": "استراتيجيات عملية لنمو الأعمال",
+    "siteType": "business",
+    "language": "ar",
+    "pages": [
+        {
+            "title": "الرئيسية",
+            "slug": "home",
+            "template": "front",
+            "layout": "hero+features+cta",
+            "priority": 1,
+            "content": "محتوى الصفحة الرئيسية"
+        },
+        {
+            "title": "خدماتنا",
+            "slug": "services",
+            "template": "page",
+            "layout": "service-list+cta",
+            "content": "محتوى صفحة الخدمات"
+        },
+        {
+            "title": "اتصل بنا",
+            "slug": "contact",
+            "template": "page",
+            "layout": "contact-form",
+            "content": "محتوى صفحة الاتصال"
+        }
+    ],
+    "blog": {
+        "enabled": false
+    },
+    "designPreset": "business-clean",
+    "notes": [
+        "RTL test scenario.",
+        "Ensures theme handles Arabic content and RTL layout correctly."
+    ],
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#0055ff",
+        "background": "#f4f4f4"
+    },
+    "theme_name": "شركة النور للاستشارات",
+    "theme_slug": "presspilot-rtl-arabic-business-v1-2",
+    "site_title": "شركة النور للاستشارات",
+    "destructive_mode": true
+}

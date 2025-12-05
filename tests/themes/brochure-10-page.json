@@ -1,0 +1,97 @@
+{
+    "slug": "presspilot-brochure-10-page-v1-2",
+    "siteTitle": "Aurora Studios",
+    "siteTagline": "Creative design for modern brands",
+    "siteType": "brochure",
+    "language": "en",
+    "pages": [
+        {
+            "title": "Home",
+            "slug": "home",
+            "template": "front",
+            "layout": "hero+services+cta",
+            "content": "Home Content"
+        },
+        {
+            "title": "About",
+            "slug": "about",
+            "template": "page",
+            "layout": "story+team",
+            "content": "About Content"
+        },
+        {
+            "title": "Services",
+            "slug": "services",
+            "template": "page",
+            "layout": "service-grid+cta",
+            "content": "Services Content"
+        },
+        {
+            "title": "Portfolio",
+            "slug": "portfolio",
+            "template": "page",
+            "layout": "gallery-grid",
+            "content": "Portfolio Content"
+        },
+        {
+            "title": "Case Studies",
+            "slug": "case-studies",
+            "template": "page",
+            "layout": "posts-list",
+            "content": "Case Studies Content"
+        },
+        {
+            "title": "Pricing",
+            "slug": "pricing",
+            "template": "page",
+            "layout": "pricing-table+faq",
+            "content": "Pricing Content"
+        },
+        {
+            "title": "FAQ",
+            "slug": "faq",
+            "template": "page",
+            "layout": "faq-accordion",
+            "content": "FAQ Content"
+        },
+        {
+            "title": "Blog",
+            "slug": "blog",
+            "template": "index",
+            "layout": "blog-index",
+            "content": "Blog Content"
+        },
+        {
+            "title": "Contact",
+            "slug": "contact",
+            "template": "page",
+            "layout": "contact-form+details",
+            "content": "Contact Content"
+        },
+        {
+            "title": "Privacy Policy",
+            "slug": "privacy-policy",
+            "template": "page",
+            "layout": "legal",
+            "content": "Privacy Policy Content"
+        }
+    ],
+    "blog": {
+        "enabled": true,
+        "postsCount": 4
+    },
+    "designPreset": "creative-agency",
+    "notes": [
+        "Larger navigation surface: many pages, tests Page List robustness.",
+        "This is where old nav/menu patterns usually broke; Golden V1.2 should survive this."
+    ],
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#ff00aa",
+        "background": "#1a1a1a"
+    },
+    "theme_name": "Aurora Studios",
+    "theme_slug": "presspilot-brochure-10-page-v1-2",
+    "site_title": "Aurora Studios",
+    "destructive_mode": true
+}

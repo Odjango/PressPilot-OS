@@ -1,0 +1,61 @@
+{
+    "slug": "presspilot-blog-magazine-v1-2",
+    "siteTitle": "Insight Weekly",
+    "siteTagline": "Stories that matter",
+    "siteType": "blog-magazine",
+    "language": "en",
+    "pages": [
+        {
+            "title": "Home",
+            "slug": "home",
+            "template": "front",
+            "layout": "featured-posts+latest-grid",
+            "content": "Home Content"
+        },
+        {
+            "title": "Blog",
+            "slug": "blog",
+            "template": "index",
+            "layout": "blog-index",
+            "content": "Blog Content"
+        },
+        {
+            "title": "About",
+            "slug": "about",
+            "template": "page",
+            "layout": "story",
+            "content": "About Content"
+        },
+        {
+            "title": "Contact",
+            "slug": "contact",
+            "template": "page",
+            "layout": "contact-form",
+            "content": "Contact Content"
+        }
+    ],
+    "blog": {
+        "enabled": true,
+        "categories": [
+            "News",
+            "Opinion",
+            "Guides",
+            "Reviews"
+        ],
+        "postsPerCategory": 3
+    },
+    "designPreset": "editorial",
+    "notes": [
+        "Focus on archive, index, and single templates behavior.",
+        "Ensures header + Page List behaves correctly in a content-heavy layout."
+    ],
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#009900",
+        "background": "#f9f9f9"
+    },
+    "theme_name": "Insight Weekly",
+    "theme_slug": "presspilot-blog-magazine-v1-2",
+    "site_title": "Insight Weekly",
+    "destructive_mode": true
+}
