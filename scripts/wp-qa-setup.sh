@@ -59,6 +59,9 @@ echo "🎨 Installing Golden Demo Theme..."
 # Theme file path inside the container (mapped volume)
 THEME_ZIP="/dist/presspilot-golden-demo-v1-2.zip"
 
+echo "🧹 Cleaning previous theme installation..."
+run_cmd rm -rf /var/www/html/wp-content/themes/presspilot-golden-demo-v1-2
+
 if run_wp theme is-installed presspilot-golden-demo-v1-2; then
     echo "   Theme already installed, reactivating..."
     run_wp theme activate presspilot-golden-demo-v1-2
