@@ -200,16 +200,45 @@ if (exists(themeJsonPath)) {
             }
         }
 
-        if (!layoutStyles) {
-            logWarn('theme.json missing styles.layout. Front-end layout may not match editor.');
-            warnCount++;
+        // Contract V1.3 Checks
+        // Spacing
+        if (themeJson.settings?.spacing?.spacingScale) {
+            logOK('settings.spacing.spacingScale is defined.');
         } else {
-            if (!layoutStyles.contentSize || !layoutStyles.wideSize) {
-                logWarn('styles.layout should define both contentSize and wideSize.');
-                warnCount++;
+            logWarn('settings.spacing.spacingScale is missing (Golden V1.3 Contract).');
+            warnCount++;
+        }
+
+        // Border Radius
+        if (themeJson.settings?.border?.radius && Array.isArray(themeJson.settings.border.radius)) {
+            logOK('settings.border.radius presets are defined.');
+        } else {
+            logWarn('settings.border.radius presets are missing (Golden V1.3 Contract).');
+            warnCount++;
+        }
+
+        // Palette
+        if (themeJson.settings?.color?.palette && Array.isArray(themeJson.settings.color.palette)) {
+            const slugs = themeJson.settings.color.palette.map(p => p.slug);
+            const required = ['background', 'foreground', 'primary'];
+            const missing = required.filter(s => !slugs.includes(s));
+            if (missing.length > 0) {
+                logError(`Missing required palette colors: ${missing.join(', ')}`);
+                errorCount++;
             } else {
-                logOK('styles.layout defines contentSize and wideSize.');
+                logOK('Required palette colors (bg, fg, primary) are present.');
             }
+        } else {
+            logError('settings.color.palette is missing or invalid.');
+            errorCount++;
+        }
+
+        // Button Styles
+        if (themeJson.styles?.blocks?.['core/button']) {
+            logOK('styles.elements.button (core/button) is defined.');
+        } else {
+            logWarn('styles.elements.button (core/button) is missing (Golden V1.3 Contract).');
+            warnCount++;
         }
     }
 }
