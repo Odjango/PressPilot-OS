@@ -1,0 +1,34 @@
+{
+    "slug": "presspilot-golden-demo-v1-2",
+    "theme_name": "Golden Demo V1.2",
+    "theme_slug": "presspilot-golden-demo-v1-2",
+    "site_title": "Golden Demo",
+    "destructive_mode": true,
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Welcome to the Golden Demo V1.2 site."
+        },
+        {
+            "slug": "about",
+            "title": "About Us",
+            "content": "This is a demo of the Golden V1.2 theme generator."
+        },
+        {
+            "slug": "services",
+            "title": "Services",
+            "content": "We offer theme generation services."
+        },
+        {
+            "slug": "contact",
+            "title": "Contact",
+            "content": "Get in touch with us."
+        }
+    ],
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#2563eb",
+        "background": "#ffffff"
+    }
+}

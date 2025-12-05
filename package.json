@@ -12,7 +12,8 @@
     "build-wp-theme": "tsx scripts/buildWpTheme.ts",
     "theme:build": "npx tsx scripts/validateGenerator.ts && npx tsx scripts/buildWpTheme.ts",
     "validate-theme": "node validator/presspilot-validator.js",
-    "test:themes": "node scripts/generate-and-validate-test-themes.js"
+    "test:themes": "node scripts/generate-and-validate-test-themes.js",
+    "build:golden-demo": "npx tsx scripts/buildWpTheme.ts --config tests/themes/golden-demo.json --out-dir dist/presspilot-golden-demo-v1-2"
   },
   "bin": {
     "presspilot-validate": "validator/presspilot-validator.js"
