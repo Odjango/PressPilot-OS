@@ -153,3 +153,25 @@ Patterns and templates must still look reasonable if images are missing:
 -   No custom HTML blocks for layout.
 -   No extra nested Groups beyond the required Outer/Inner structure.
 
+## 8. Canonical Template Set V1.0 (Golden V1.2)
+**Rule**: The theme must provide, at minimum, these templates:
+-   `templates/index.html`
+-   `templates/page.html`
+-   `templates/single.html`
+-   `templates/archive.html`
+-   `templates/search.html`
+-   `templates/404.html`
+
+**Structure**:
+-   **Header**: Include Canonical Header Pattern V1.2 via `template-part` (`slug: "header"`).
+-   **Footer**: Include Canonical Footer Pattern V1.0 via `template-part` (`slug: "footer"`).
+-   **Main Content**:
+    -   Outer `core/group` with `tagName: "main"`.
+    -   Inner `core/group` with constrained/wide layout.
+
+**Prohibitions**:
+-   No overlay menus.
+-   No `core/html` blocks for structure.
+-   No wrapping header/footer inside extra layout blocks.
+
+

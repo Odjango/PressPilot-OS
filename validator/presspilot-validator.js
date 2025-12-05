@@ -214,11 +214,49 @@ if (exists(themeJsonPath)) {
     }
 }
 
-// 3. Templates & templateParts consistency
+// 3. Templates & Template Parts Consistency
 logHeader('3. Templates & Template Parts Consistency');
 
 const templatesDir = path.join(themePath, 'templates');
 const partsDir = path.join(themePath, 'parts');
+
+if (!exists(templatesDir)) {
+    logError('templates/ directory is missing.');
+    errorCount++;
+} else {
+    logOK('Found required directory: templates/');
+    const files = fs.readdirSync(templatesDir);
+    logOK(`Found ${files.length} template file(s) in templates/: ${files.join(', ')}`);
+
+    const expectedTemplates = ['index.html', 'page.html', 'single.html', 'archive.html', 'search.html', '404.html'];
+
+    expectedTemplates.forEach(tpl => {
+        if (!files.includes(tpl)) {
+            logError(`Missing required template: ${tpl}`);
+            errorCount++;
+        }
+    });
+}
+
+if (exists(partsDir)) {
+    logOK('Found required directory: parts/');
+    const files = fs.readdirSync(partsDir);
+    logOK(`Found ${files.length} template part file(s) in parts/: ${files.join(', ')}`);
+} else {
+    logError('parts/ directory is missing.');
+    errorCount++;
+}
+
+// Check consistency (files vs expected)
+['index', 'page', 'front-page', 'single', 'archive', 'search', '404'].forEach(slug => {
+    if (exists(path.join(templatesDir, slug + '.html'))) {
+        logOK(`Template "${slug}" has matching file in templates/.`);
+    } else if (['index', 'page', 'single', 'archive', 'search', '404'].includes(slug)) {
+        // Only error for required templates
+        logError(`Template "${slug}" is missing in templates/.`);
+        errorCount++;
+    }
+});
 
 const templateFiles = exists(templatesDir)
     ? listFiles(templatesDir, '.html')
