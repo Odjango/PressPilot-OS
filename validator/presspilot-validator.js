@@ -330,6 +330,58 @@ if (exists(headerPath)) {
     errorCount++;
 }
 
+// 4b. Footer validation
+logHeader('4b. Footer Validation');
+const footerPath = path.join(partsDir, 'footer.html');
+if (exists(footerPath)) {
+    logOK('parts/footer.html exists.');
+    const footerContent = readText(footerPath) || '';
+
+    // Check root block
+    if (!footerContent.includes('<!-- wp:group {"tagName":"footer"')) {
+        logError('parts/footer.html root block is not a Group with tagName:"footer".');
+        errorCount++;
+    } else {
+        logOK('parts/footer.html root block is correct.');
+    }
+
+    // Check for columns
+    if (!footerContent.includes('<!-- wp:columns')) {
+        logError('parts/footer.html does not contain a Columns block.');
+        errorCount++;
+    } else {
+        logOK('parts/footer.html contains Columns block.');
+    }
+
+    // Check for site title
+    if (!footerContent.includes('<!-- wp:site-title')) {
+        logError('parts/footer.html does not contain a Site Title block.');
+        errorCount++;
+    } else {
+        logOK('parts/footer.html contains Site Title block.');
+    }
+
+    // Check for copyright paragraph (loose check for now, just looking for a paragraph)
+    if (!footerContent.includes('<!-- wp:paragraph')) {
+        logWarn('parts/footer.html does not contain a Paragraph block (expected for copyright).');
+        warnCount++;
+    } else {
+        logOK('parts/footer.html contains Paragraph block.');
+    }
+
+    // Check for page-list (recommended)
+    if (!footerContent.includes('<!-- wp:page-list')) {
+        logWarn('parts/footer.html does not contain a Page List block. Recommended for navigation.');
+        warnCount++;
+    } else {
+        logOK('parts/footer.html contains Page List block.');
+    }
+
+} else {
+    logError('parts/footer.html is missing.');
+    errorCount++;
+}
+
 // 5. Patterns validation (optional but recommended)
 logHeader('5. Patterns Validation');
 

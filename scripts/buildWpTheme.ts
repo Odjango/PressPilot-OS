@@ -15,6 +15,7 @@ interface ThemeGeneratorConfig {
     site_title: string;
     destructive_mode: boolean;
     pages: Array<{ slug: string; title: string; content: string }>;
+    copyrightText?: string;
     colors: {
         base: string;
         accent: string;
@@ -285,7 +286,16 @@ function copyParts() {
     if (fs.existsSync(src)) {
         const files = fs.readdirSync(src);
         for (const file of files) {
-            fs.copyFileSync(path.join(src, file), path.join(dest, file));
+            let content = fs.readFileSync(path.join(src, file), "utf8");
+
+            if (file === 'footer.html') {
+                const year = new Date().getFullYear();
+                const defaultCopyright = `© ${year} ${site_title}. All rights reserved.`;
+                const copyright = CONFIG.copyrightText || defaultCopyright;
+                content = content.replace('{{COPYRIGHT_TEXT}}', copyright);
+            }
+
+            fs.writeFileSync(path.join(dest, file), content);
         }
     }
 }
