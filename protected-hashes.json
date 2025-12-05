@@ -1,5 +1,6 @@
 {
-    "docs/presspilot-theme-generator.md": "423da611ebc5204baa528d145f686b2e507eaae36f65235962b2f16db28a0be4",
-    "ANTIGRAVITY_RUNTIME_RULES.md": "b418346808191bd06ca4c88ed404d5fd81b44707e2410af353ee4fa2f979032e",
-    "scripts/buildWpTheme.ts": "6a35d4afd0a7637cf1f300779ac3c21c461a03ebeab5f930e46ed260ae79d114"
+    "docs/presspilot-theme-generator.md": "3b867954275d0972f310a6e0e67d9abae4c9dcc487f2ddd51fe9381370a6464e",
+    "ANTIGRAVITY_RUNTIME_RULES.md": "3318b289e90aa5f4e6fb1e7f5476e1e8ce16c83cbbb5e412678d812d7ad12ff6",
+    "scripts/buildWpTheme.ts": "43e81b2cef1b572c7a0b13177609a311607f5667c57f8ba5d40e9777ec0b2836",
+    "scripts/validateGenerator.ts": "8a0687b18a0a78e36607ab707667aec647ba3eb6ed6312f57cc0cfd33d84cae4"
 }

@@ -1,4 +1,4 @@
-# ANTIGRAVITY RUNTIME RULES
+# ANTIGRAVITY RUNTIME RULES (Version 1.1)
 These rules govern all runtime behavior of the PressPilot Theme Generator
 and apply to any agent, script, or component that uses or modifies the
 theme generation system.
@@ -41,7 +41,7 @@ No alterations are allowed unless:
 
 ## 3. BUSINESS NAME IS SINGLE SOURCE OF TRUTH
 All theme output must derive the site name, hero text, labels, and titles
-from BUSINESS_NAME.
+from the CONFIG object (e.g., `config.business_name`).
 
 Any detection of stale text (e.g., “BeeBoo”, “Onion”, “MooZoo”, etc.) is
 considered a validation failure.
@@ -63,13 +63,13 @@ Patterns must:
 
 ---
 
-## 5. DEMO CONTENT RESET LOGIC
+## 5. DEMO CONTENT & NAVIGATION LOGIC (V1.1)
 When activating a generated theme:
-- Delete all existing Pages created by any previous PressPilot imports
-- Delete all Menus created by previous runs
-- Recreate canonical pages
-- Recreate navigation menu
-- Wire menu to header navigation block
+- **Destructive Mode:** If enabled, trash ALL existing pages and `wp_navigation` posts.
+- **Content:** Create pages defined in the config.
+- **Navigation:**
+    - Create a `wp_navigation` post for the Site Editor.
+    - **Header:** Use `wp:page-list` inside `wp:navigation` in `header.html` to ensure safe, automatic menu generation without ID dependencies.
 
 This logic must remain intact.
 
@@ -128,3 +128,43 @@ Agents must operate as deterministic build systems, not creative models.
 
 This file, the Master Directive, and the Personality Lock form a
 non-negotiable governance layer for all future development.
+
+---
+
+## 11. GENERATOR GUARDRAILS (V1.1)
+11. **NO DUPLICATED FILE WRITES**:
+    - You must NEVER call `fs.writeFileSync` more than once for the same file path within a single function scope.
+    - You must NEVER leave stray template literal backticks (`) at the end of generator functions.
+    - This rule is enforced by `scripts/validateGenerator.ts` which parses the AST.
+- **Enforcement:** The script `scripts/validateGenerator.ts` MUST be run and pass before any build or commit of the generator.
+- **Failure:** If validation fails, the change MUST be rejected.
+
+---
+
+## 12. NAV/HEADER CONTRACT (V1.1)
+12. **Nav/Header Contract (V1.1)**:
+    - On activation, the generator must create a `wp_navigation` entity ordered by `config.pages`.
+    - It must wire `header.html` to this entity via a navigation block with a `ref` ID.
+    - `page-list` is allowed only as a fallback if navigation creation fails.
+
+---
+
+## 13. IMAGE & ASSET SAFETY (V1.1)
+
+The generator may not emit fragile or external image references.
+
+- All design images must live under `assets/images/` inside the generated theme.
+- Templates and patterns must not contain:
+  - External image domains (`http://` or `https://` pointing outside the theme).
+  - Hard-coded `/wp-content/uploads/...` URLs.
+  - Attachment IDs (`"id": 123`) that assume Media Library items from another site.
+
+For V1.1:
+
+- Hero and layout patterns must render correctly with no image selected.
+- If a hero image is needed, it must be:
+  - A theme asset referenced via CSS, or
+  - A user-selected image in the editor (no baked-in external URL).
+
+Any detection of external image URLs or foreign upload paths in generated templates/patterns
+must be treated as a validation failure and stop the build.

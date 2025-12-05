@@ -20,14 +20,21 @@ type YTSummaryResult = {
   };
   summary: {
     executiveSummary: string;
-    keyTakeaways: string[];
+    coreInsights: string[];
     actionableInsights: string[];
+    risks?: string[];
+    narrative: string;
+    snapshotConclusion: string;
+
+    // Legacy/Internal fields
+    keyTakeaways?: string[];
     outline?: { timestamp?: string; heading: string; details?: string }[];
     articleVersion?: string;
     language: string;
   };
   extras?: {
     arabicSummary?: string;
+    quality?: "standard" | "premium";
   };
 };
 
@@ -36,9 +43,11 @@ export default function VideoSummaryPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
   const [result, setResult] = useState<YTSummaryResult | null>(null);
+  const [quality, setQuality] = useState<"standard" | "premium">("standard");
 
   const [manualTranscript, setManualTranscript] = useState("");
   const [manualLoading, setManualLoading] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied">("idle");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -54,6 +63,7 @@ export default function VideoSummaryPage() {
         body: JSON.stringify({
           url,
           options: {
+            quality,
             includeArticle: true,
             includeArabic: false,
           },
@@ -90,6 +100,7 @@ export default function VideoSummaryPage() {
           url,
           manualTranscript,
           options: {
+            quality,
             includeArticle: true,
             includeArabic: false,
           },
@@ -112,6 +123,63 @@ export default function VideoSummaryPage() {
       setManualLoading(false);
     }
   }
+
+  const handleCopy = async () => {
+    if (!result) return;
+
+    const s = result.summary;
+    const lines: string[] = [];
+
+    lines.push("EXECUTIVE SUMMARY");
+    lines.push("-----------------");
+    lines.push(s.executiveSummary);
+    lines.push("");
+
+    if (s.coreInsights && s.coreInsights.length > 0) {
+      lines.push("CORE INSIGHTS");
+      lines.push("-------------");
+      s.coreInsights.forEach(i => lines.push(`- ${i}`));
+      lines.push("");
+    }
+
+    if (s.actionableInsights && s.actionableInsights.length > 0) {
+      lines.push("ACTIONABLES");
+      lines.push("-----------");
+      s.actionableInsights.forEach(i => lines.push(`- ${i}`));
+      lines.push("");
+    }
+
+    if (s.risks && s.risks.length > 0) {
+      lines.push("RISKS / GOTCHAS");
+      lines.push("---------------");
+      s.risks.forEach(i => lines.push(`- ${i}`));
+      lines.push("");
+    }
+
+    if (s.narrative) {
+      lines.push("NARRATIVE");
+      lines.push("---------");
+      lines.push(s.narrative);
+      lines.push("");
+    }
+
+    if (s.snapshotConclusion) {
+      lines.push("SNAPSHOT CONCLUSION");
+      lines.push("-------------------");
+      lines.push(s.snapshotConclusion);
+      lines.push("");
+    }
+
+    const text = lines.join("\n");
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyStatus("copied");
+      setTimeout(() => setCopyStatus("idle"), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-neutral-950 text-gray-100 py-10 px-4">
@@ -139,6 +207,34 @@ export default function VideoSummaryPage() {
             />
           </div>
 
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-300">Quality</label>
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="quality"
+                  value="standard"
+                  checked={quality === "standard"}
+                  onChange={() => setQuality("standard")}
+                  className="text-neutral-500 focus:ring-neutral-500 bg-neutral-900 border-neutral-700"
+                />
+                <span className="text-sm text-gray-300">Standard (Fast, Cheaper)</span>
+              </label>
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="quality"
+                  value="premium"
+                  checked={quality === "premium"}
+                  onChange={() => setQuality("premium")}
+                  className="text-neutral-500 focus:ring-neutral-500 bg-neutral-900 border-neutral-700"
+                />
+                <span className="text-sm text-gray-300">Premium (Deep Analysis)</span>
+              </label>
+            </div>
+          </div>
+
           <button
             type="submit"
             disabled={loading || manualLoading}
@@ -154,11 +250,19 @@ export default function VideoSummaryPage() {
               <strong>{error.code}:</strong> {error.message}
             </div>
 
-            {error.code === "TRANSCRIPT_SERVICE_ERROR" && (
+            {error.code === "NO_TRANSCRIPT_AVAILABLE" && (
+              <div className="border border-neutral-800 rounded-md p-4 space-y-2 bg-neutral-900">
+                <p className="text-sm text-yellow-400">
+                  This video has no accessible captions. Please try another video or paste the transcript manually below.
+                </p>
+              </div>
+            )}
+
+            {(error.code === "TRANSCRIPT_SERVICE_ERROR" || error.code === "NO_TRANSCRIPT_AVAILABLE") && (
               <div className="border border-neutral-800 rounded-md p-4 space-y-3 bg-neutral-900">
                 <h3 className="text-sm font-semibold text-gray-200">Manual Transcript Fallback</h3>
                 <p className="text-sm text-gray-400">
-                  Captions appear to exist, but automatic transcript fetch failed. You can paste the transcript manually below and still get a full summary.
+                  If you have the transcript text, paste it here to generate the summary.
                 </p>
                 <textarea
                   className="w-full border border-neutral-700 rounded-md px-3 py-2 text-sm h-48 font-mono bg-neutral-950 text-gray-100 placeholder:text-neutral-600 focus:ring-1 focus:ring-neutral-500 focus:border-neutral-500 outline-none transition-colors"
@@ -181,22 +285,31 @@ export default function VideoSummaryPage() {
 
         {result && (
           <section className="space-y-6">
+            {/* Executive Summary */}
             <div className="border border-neutral-800 rounded-md p-4 space-y-2 bg-neutral-900">
-              <h2 className="text-lg font-semibold text-gray-100">Executive Summary</h2>
-              <p className="text-sm text-gray-300 whitespace-pre-line">{result.summary.executiveSummary}</p>
+              <div className="flex justify-between items-start">
+                <h2 className="text-lg font-semibold text-gray-100">Executive Summary</h2>
+                {result.extras?.quality && (
+                  <span className="text-xs px-2 py-1 rounded-full bg-neutral-800 text-neutral-400 uppercase tracking-wider">
+                    {result.extras.quality}
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-gray-300 whitespace-pre-line leading-relaxed">{result.summary.executiveSummary}</p>
             </div>
 
+            {/* Core Insights & Actionables */}
             <div className="grid md:grid-cols-2 gap-4">
               <div className="border border-neutral-800 rounded-md p-4 space-y-2 bg-neutral-900">
-                <h3 className="text-md font-semibold text-gray-100">Key Takeaways</h3>
+                <h3 className="text-md font-semibold text-gray-100">Core Insights</h3>
                 <ul className="text-sm text-gray-300 list-disc pl-4 space-y-1">
-                  {result.summary.keyTakeaways?.map((item, i) => (
+                  {(result.summary.coreInsights || result.summary.keyTakeaways)?.map((item, i) => (
                     <li key={i}>{item}</li>
                   ))}
                 </ul>
               </div>
               <div className="border border-neutral-800 rounded-md p-4 space-y-2 bg-neutral-900">
-                <h3 className="text-md font-semibold text-gray-100">Actionable Insights</h3>
+                <h3 className="text-md font-semibold text-gray-100">Actionables</h3>
                 <ul className="text-sm text-gray-300 list-disc pl-4 space-y-1">
                   {result.summary.actionableInsights?.map((item, i) => (
                     <li key={i}>{item}</li>
@@ -205,34 +318,44 @@ export default function VideoSummaryPage() {
               </div>
             </div>
 
-            {result.summary.outline && result.summary.outline.length > 0 && (
+            {/* Risks (Optional) */}
+            {result.summary.risks && result.summary.risks.length > 0 && (
               <div className="border border-neutral-800 rounded-md p-4 space-y-2 bg-neutral-900">
-                <h3 className="text-md font-semibold text-gray-100">Outline</h3>
-                <ul className="text-sm text-gray-300 space-y-1">
-                  {result.summary.outline.map((item, i) => (
-                    <li key={i}>
-                      {item.timestamp && <span className="font-mono mr-2 text-neutral-500">{item.timestamp}</span>}
-                      <strong className="text-gray-200">{item.heading}</strong>
-                      {item.details && <span className="text-gray-400">{": "}{item.details}</span>}
-                    </li>
+                <h3 className="text-md font-semibold text-gray-100">Risks / Gotchas</h3>
+                <ul className="text-sm text-gray-300 list-disc pl-4 space-y-1">
+                  {result.summary.risks.map((item, i) => (
+                    <li key={i}>{item}</li>
                   ))}
                 </ul>
               </div>
             )}
 
-            {result.summary.articleVersion && result.summary.articleVersion.trim().length > 0 && (
+            {/* Narrative */}
+            {result.summary.narrative && (
               <div className="border border-neutral-800 rounded-md p-4 space-y-2 bg-neutral-900">
-                <h3 className="text-md font-semibold text-gray-100">Article Version</h3>
-                <p className="text-sm text-gray-300 whitespace-pre-line">{result.summary.articleVersion}</p>
+                <h3 className="text-md font-semibold text-gray-100">Narrative</h3>
+                <p className="text-sm text-gray-300 whitespace-pre-line leading-relaxed">{result.summary.narrative}</p>
               </div>
             )}
 
-            {result.extras?.arabicSummary && (
+            {/* Snapshot Conclusion */}
+            {result.summary.snapshotConclusion && (
               <div className="border border-neutral-800 rounded-md p-4 space-y-2 bg-neutral-900">
-                <h3 className="text-md font-semibold text-gray-100">Arabic Summary</h3>
-                <p className="text-sm text-gray-300 whitespace-pre-line">{result.extras.arabicSummary}</p>
+                <h3 className="text-md font-semibold text-gray-100">Snapshot Conclusion</h3>
+                <p className="text-sm text-gray-300 italic">{result.summary.snapshotConclusion}</p>
               </div>
             )}
+
+            {/* Copy Button */}
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={handleCopy}
+                className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md border border-neutral-700 bg-neutral-800 text-white hover:bg-neutral-700 transition-colors"
+              >
+                {copyStatus === "copied" ? "Copied!" : "Copy Summary"}
+              </button>
+            </div>
+
           </section>
         )}
       </div>

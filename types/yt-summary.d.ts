@@ -8,13 +8,20 @@ export type YTSummaryResult = {
   };
   summary: {
     executiveSummary: string;
-    keyTakeaways: string[];
+    coreInsights: string[]; // Renamed from keyTakeaways
     actionableInsights: string[];
-    outline?: { timestamp?: string; heading: string; details?: string }[];
+    risks?: string[]; // New optional section
+    narrative: string; // New section
+    snapshotConclusion: string; // New section
+
+    // Legacy/Internal fields
+    keyTakeaways?: string[]; // Keep optional for backward compat if needed, or remove if we migrate fully
+    outline?: { timestamp?: string; heading: string; details?: string }[]; // Keeping outline as it might be useful, though not in strict spec
     articleVersion?: string;
     language: "en" | "ar" | string;
   };
   extras?: {
     arabicSummary?: string;
+    quality?: "standard" | "premium";
   };
 };

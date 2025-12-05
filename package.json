@@ -12,8 +12,11 @@
     "build-wp-theme": "tsx scripts/buildWpTheme.ts",
     "theme:build": "npx tsx scripts/validateGenerator.ts && npx tsx scripts/buildWpTheme.ts",
     "validate-theme": "node validator/presspilot-validator.js",
-    "test:themes": "node scripts/generate-and-validate-test-themes.js",
-    "build:golden-demo": "npx tsx scripts/buildWpTheme.ts --config tests/themes/golden-demo.json --out-dir dist/presspilot-golden-demo-v1-2"
+    "test:themes": "npm run lint:blocks && node scripts/generate-and-validate-test-themes.js",
+    "build:golden-demo": "npx tsx scripts/buildWpTheme.ts --config tests/themes/golden-demo.json --out-dir dist/presspilot-golden-demo-v1-2",
+    "lint:blocks": "node scripts/lint-block-json.js",
+    "wp:qa:up": "npm run build:golden-demo && bash scripts/wp-qa-setup.sh",
+    "wp:qa:down": "bash scripts/wp-qa-down.sh"
   },
   "bin": {
     "presspilot-validate": "validator/presspilot-validator.js"

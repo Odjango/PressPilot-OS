@@ -1,0 +1,105 @@
+{
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "760px",
+      "wideSize": "1200px"
+    },
+    "spacing": {
+      "units": [
+        "px",
+        "em",
+        "rem"
+      ],
+      "spacingScale": {
+        "steps": [
+          4,
+          8,
+          12,
+          16,
+          24,
+          32,
+          48,
+          64
+        ]
+      }
+    },
+    "typography": {
+      "fontSizes": [
+        {
+          "slug": "small",
+          "size": "14px"
+        },
+        {
+          "slug": "body",
+          "size": "16px"
+        },
+        {
+          "slug": "medium",
+          "size": "20px"
+        },
+        {
+          "slug": "large",
+          "size": "28px"
+        },
+        {
+          "slug": "x-large",
+          "size": "42px"
+        }
+      ],
+      "fontWeight": true,
+      "lineHeight": true
+    },
+    "color": {
+      "palette": [
+        {
+          "slug": "base",
+          "color": "#ffffff",
+          "name": "Base"
+        },
+        {
+          "slug": "accent",
+          "color": "#ff0000",
+          "name": "Accent"
+        },
+        {
+          "slug": "background",
+          "color": "#f0f0f0",
+          "name": "Background"
+        },
+        {
+          "slug": "primary",
+          "color": "#32429B"
+        },
+        {
+          "slug": "black",
+          "color": "#000000"
+        },
+        {
+          "slug": "white",
+          "color": "#FFFFFF"
+        }
+      ]
+    },
+    "blocks": {
+      "core/button": {
+        "typography": {
+          "fontSize": "16px",
+          "fontWeight": "600"
+        },
+        "border": {
+          "radius": "6px"
+        },
+        "spacing": {
+          "padding": {
+            "top": "12px",
+            "bottom": "12px",
+            "left": "20px",
+            "right": "20px"
+          }
+        }
+      }
+    }
+  }
+}

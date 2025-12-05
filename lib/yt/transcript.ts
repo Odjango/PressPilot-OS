@@ -4,17 +4,14 @@
 export type TranscriptResult =
   | {
     ok: true;
-    transcript: string;
-    meta?: {
-      title?: string;
-      channelName?: string;
-      durationSeconds?: number | null;
-    };
+    transcriptText: string;
+    languageCode: string;
+    meta?: any; // Keep for backward compatibility if needed internally
   }
   | {
     ok: false;
-    errorCode: string;
-    errorMessage: string;
+    errorCode: "NO_TRANSCRIPT_AVAILABLE" | "TRANSCRIPT_SERVICE_ERROR";
+    message: string;
   };
 
 /**
@@ -53,7 +50,8 @@ export async function getTranscript(videoId: string): Promise<TranscriptResult> 
           if (data.transcript) {
             return {
               ok: true,
-              transcript: data.transcript,
+              transcriptText: data.transcript,
+              languageCode: data.language || "en",
               meta: data.meta,
             };
           }
@@ -77,7 +75,7 @@ export async function getTranscript(videoId: string): Promise<TranscriptResult> 
       return {
         ok: false,
         errorCode: "TRANSCRIPT_SERVICE_ERROR",
-        errorMessage: `Failed to fetch watch page: ${watchPageRes.status} ${watchPageRes.statusText}`,
+        message: `Failed to fetch watch page: ${watchPageRes.status} ${watchPageRes.statusText}`,
       };
     }
 
@@ -86,13 +84,10 @@ export async function getTranscript(videoId: string): Promise<TranscriptResult> 
     // Extract ytInitialPlayerResponse
     const playerResponseMatch = html.match(/ytInitialPlayerResponse\s*=\s*({.+?});/);
     if (!playerResponseMatch) {
-      // Fallback: sometimes it's inside ytInitialData or just different structure.
-      // But usually for captions, playerResponse is key.
-      // If we can't find it, we can't get captions this way.
       return {
         ok: false,
         errorCode: "TRANSCRIPT_SERVICE_ERROR",
-        errorMessage: "Failed to parse player response from YouTube page.",
+        message: "Failed to parse player response from YouTube page.",
       };
     }
 
@@ -103,7 +98,7 @@ export async function getTranscript(videoId: string): Promise<TranscriptResult> 
       return {
         ok: false,
         errorCode: "TRANSCRIPT_SERVICE_ERROR",
-        errorMessage: "Failed to parse JSON player response.",
+        message: "Failed to parse JSON player response.",
       };
     }
 
@@ -173,8 +168,6 @@ export async function getTranscript(videoId: string): Promise<TranscriptResult> 
             if (innerTubeRes.ok) {
               const innerTubeData = await innerTubeRes.json();
               // Parse InnerTube response
-              // actions -> updateEngagementPanelAction -> content -> transcriptRenderer -> content -> transcriptSearchPanelRenderer -> body -> transcriptSegmentListRenderer -> initialSegments
-
               const actions = innerTubeData?.actions;
               if (actions) {
                 let segments: any[] = [];
@@ -198,7 +191,8 @@ export async function getTranscript(videoId: string): Promise<TranscriptResult> 
                   console.log(`[getTranscript] Successfully parsed InnerTube transcript. Length: ${fullText.length}`);
                   return {
                     ok: true,
-                    transcript: fullText,
+                    transcriptText: fullText,
+                    languageCode: "en", // InnerTube usually returns what we asked for (en)
                     meta: {
                       title: playerResponse?.videoDetails?.title,
                       channelName: playerResponse?.videoDetails?.author,
@@ -224,7 +218,7 @@ export async function getTranscript(videoId: string): Promise<TranscriptResult> 
       return {
         ok: false,
         errorCode: "NO_TRANSCRIPT_AVAILABLE",
-        errorMessage: "No captionTracks found in player response.",
+        message: "No captionTracks found in player response.",
       };
     }
 
@@ -303,7 +297,7 @@ export async function getTranscript(videoId: string): Promise<TranscriptResult> 
       return {
         ok: false,
         errorCode: "TRANSCRIPT_SERVICE_ERROR",
-        errorMessage: "Failed to fetch any valid transcript track.",
+        message: "Failed to fetch any valid transcript track.",
       };
     }
 
@@ -311,7 +305,8 @@ export async function getTranscript(videoId: string): Promise<TranscriptResult> 
 
     return {
       ok: true,
-      transcript: finalTranscript,
+      transcriptText: finalTranscript,
+      languageCode: usedTrack.languageCode || "en",
       meta: {
         title: playerResponse?.videoDetails?.title,
         channelName: playerResponse?.videoDetails?.author,
@@ -324,7 +319,7 @@ export async function getTranscript(videoId: string): Promise<TranscriptResult> 
     return {
       ok: false,
       errorCode: "TRANSCRIPT_SERVICE_ERROR",
-      errorMessage: "Unexpected error: " + (error.message || ""),
+      message: "Unexpected error: " + (error.message || ""),
     };
   }
 }

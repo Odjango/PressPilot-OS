@@ -1,4 +1,4 @@
-# PressPilot Theme Generator Master Directive
+# PressPilot Theme Generator Master Directive (Version 1.1)
 
 **ANTIGRAVITY — PRESSPILOT THEME GENERATOR MASTER DIRECTIVE**
 (Use this EXACT text when prompting.)
@@ -29,7 +29,7 @@ They define the PressPilot generator’s behavior and must remain intact unless 
 - You must keep `validateH1Count()`.
 
 ### Business Name Rule
-- `BUSINESS_NAME` is the single source of truth.
+- `BUSINESS_NAME` (derived from Config) is the single source of truth.
 - ALL patterns, templates, demo content, and PHP files must pull from it.
 - You must keep validation that scans for stale names such as “BeeBoo”, “Onion”, “CooCoo”, etc.
 
@@ -44,10 +44,12 @@ They define the PressPilot generator’s behavior and must remain intact unless 
     - `/assets/images/hero-placeholder-page.jpg`
 - You must preserve placeholder asset validation.
 
-### Demo Content Nuking
-- On theme activation, delete all existing WP pages and menus.
-- Then recreate: Home, About, Services, Menu, Contact, Blog nav.
-- This behavior must never be removed or altered without explicit instruction.
+### Demo Content & Destructive Mode (V1.1)
+- **Destructive Mode:** If enabled in config, trash ALL existing pages and `wp_navigation` posts.
+- **Content Generation:** Create pages based on the incoming config list.
+- **Navigation:**
+    - ALWAYS create a `wp_navigation` post titled "Main Navigation (AI)" containing links to the created pages.
+    - **Header Wiring:** `parts/header.html` MUST use `wp:navigation` with an inner `wp:page-list` block as the safe default. It must NOT assume a specific navigation entity ID.
 
 ### Do Not Modify Golden Spec Rules
 - The Golden Spec defines all allowed layout behaviors.

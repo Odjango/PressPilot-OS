@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  wpqa-db:
+    image: mariadb:10.11
+    container_name: wpqa-db
+    environment:
+      MYSQL_DATABASE: wpqa
+      MYSQL_USER: wpqa
+      MYSQL_PASSWORD: wpqa
+      MYSQL_ROOT_PASSWORD: wpqaroot
+    volumes:
+      - wpqa-db-data:/var/lib/mysql
+    networks:
+      - wpqa-network
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  wpqa-wordpress:
+    image: wordpress:6.6-php8.2-apache
+    container_name: wpqa-wordpress
+    depends_on:
+      wpqa-db:
+        condition: service_healthy
+    ports:
+      - "8089:80"
+    environment:
+      WORDPRESS_DB_HOST: wpqa-db:3306
+      WORDPRESS_DB_USER: wpqa
+      WORDPRESS_DB_PASSWORD: wpqa
+      WORDPRESS_DB_NAME: wpqa
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', 'http://localhost:8089');
+        define('WP_SITEURL', 'http://localhost:8089');
+    volumes:
+      - wpqa-content:/var/www/html
+    networks:
+      - wpqa-network
+
+  wpqa-cli:
+    image: wordpress:cli
+    container_name: wpqa-cli
+    depends_on:
+      wpqa-db:
+        condition: service_healthy
+      wpqa-wordpress:
+        condition: service_started
+    environment:
+      WORDPRESS_DB_HOST: wpqa-db:3306
+      WORDPRESS_DB_USER: wpqa
+      WORDPRESS_DB_PASSWORD: wpqa
+      WORDPRESS_DB_NAME: wpqa
+    volumes:
+      - wpqa-content:/var/www/html
+      - ./dist:/dist
+    networks:
+      - wpqa-network
+
+networks:
+  wpqa-network:
+    driver: bridge
+
+volumes:
+  wpqa-db-data:
+  wpqa-content:
