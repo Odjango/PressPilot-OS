@@ -1,28 +1,44 @@
-<!-- wp:template-part {"slug":"header","area":"header"} /-->
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
-<!-- wp:group {"tagName":"main","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"top":"3rem","bottom":"3rem","left":"1.5rem","right":"1.5rem"},"blockGap":"3rem"}}} -->
+<!-- wp:group {"tagName":"main","layout":{"type":"constrained"}} -->
 <main class="wp-block-group">
-    <!-- wp:pattern {"slug":"presspilot/hero-default"} /-->
-
-    <!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"blockGap":"1.5rem"}}} -->
+    <!-- wp:group {"style":{"spacing":{"blockGap":"2rem"}}} -->
     <div class="wp-block-group">
-        <!-- wp:heading {"level":2,"fontSize":"md"} -->
-        <h2 class="has-md-font-size">Latest updates</h2>
+        <!-- wp:heading {"level":1,"textAlign":"center"} -->
+        <h1 class="has-text-align-center">Welcome to Golden Demo</h1>
         <!-- /wp:heading -->
 
-        <!-- wp:query {"query":{"perPage":3,"pages":0,"offset":0,"postType":"post","order":"desc","orderby":"date"}} -->
-        <!-- wp:post-template -->
-        <!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"blockGap":"0.5rem"}}} -->
-        <div class="wp-block-group">
-            <!-- wp:post-title {"isLink":true,"fontSize":"base"} /-->
-            <!-- wp:post-excerpt /-->
+        <!-- wp:paragraph {"align":"center"} -->
+        <p class="has-text-align-center">Experience the stability of V1.2.1.</p>
+        <!-- /wp:paragraph -->
+
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
+        <div class="wp-block-buttons">
+            <!-- wp:button -->
+            <div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Get Started</a></div>
+            <!-- /wp:button -->
         </div>
-        <!-- /wp:group -->
-        <!-- /wp:post-template -->
+        <!-- /wp:buttons -->
+    </div>
+    <!-- /wp:group -->
+
+    <!-- wp:group {"style":{"spacing":{"padding":{"top":"3rem"}}}} -->
+    <div class="wp-block-group" style="padding-top:3rem">
+        <!-- wp:heading {"level":2} -->
+        <h2>Latest Updates</h2>
+        <!-- /wp:heading -->
+
+        <!-- wp:query {"queryId":2,"query":{"perPage":3,"postType":"post","order":"desc","orderby":"date"}} -->
+        <div class="wp-block-query">
+            <!-- wp:post-template -->
+            <!-- wp:post-title {"isLink":true} /-->
+            <!-- wp:post-excerpt /-->
+            <!-- /wp:post-template -->
+        </div>
         <!-- /wp:query -->
     </div>
     <!-- /wp:group -->
 </main>
 <!-- /wp:group -->
 
-<!-- wp:template-part {"slug":"footer","area":"footer"} /-->
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
