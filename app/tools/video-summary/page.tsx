@@ -4,6 +4,7 @@
 // Minimal client UI for the YouTube Video Summary tool.
 
 import { useState } from "react";
+import { isValidYouTubeUrl } from "@/lib/yt/validation";
 
 type ApiError = {
   code: string;
@@ -55,6 +56,15 @@ export default function VideoSummaryPage() {
     setError(null);
     setResult(null);
     setManualTranscript(""); // Reset manual transcript on new URL
+
+    if (!isValidYouTubeUrl(url)) {
+      setLoading(false);
+      setError({
+        code: "INVALID_URL",
+        message: "The provided URL is not a valid YouTube link.",
+      });
+      return;
+    }
 
     try {
       const res = await fetch("/api/yt/summary", {
@@ -124,6 +134,14 @@ export default function VideoSummaryPage() {
     }
   }
 
+  function handleNewSession() {
+    setUrl("");
+    setResult(null);
+    setError(null);
+    setManualTranscript("");
+    setQuality("standard");
+  }
+
   const handleCopy = async () => {
     if (!result) return;
 
@@ -191,60 +209,62 @@ export default function VideoSummaryPage() {
           </p>
         </section>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1">
-            <label htmlFor="url" className="block text-sm font-medium text-gray-300">
-              YouTube URL
-            </label>
-            <input
-              id="url"
-              type="url"
-              required
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://www.youtube.com/watch?v=..."
-              className="w-full border border-neutral-700 rounded-md px-3 py-2 text-sm bg-neutral-900 text-gray-100 placeholder:text-neutral-500 focus:ring-1 focus:ring-neutral-500 focus:border-neutral-500 outline-none transition-colors"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="block text-sm font-medium text-gray-300">Quality</label>
-            <div className="flex items-center space-x-4">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="quality"
-                  value="standard"
-                  checked={quality === "standard"}
-                  onChange={() => setQuality("standard")}
-                  className="text-neutral-500 focus:ring-neutral-500 bg-neutral-900 border-neutral-700"
-                />
-                <span className="text-sm text-gray-300">Standard (Fast, Cheaper)</span>
+        {!result && (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1">
+              <label htmlFor="url" className="block text-sm font-medium text-gray-300">
+                YouTube URL
               </label>
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="quality"
-                  value="premium"
-                  checked={quality === "premium"}
-                  onChange={() => setQuality("premium")}
-                  className="text-neutral-500 focus:ring-neutral-500 bg-neutral-900 border-neutral-700"
-                />
-                <span className="text-sm text-gray-300">Premium (Deep Analysis)</span>
-              </label>
+              <input
+                id="url"
+                type="url"
+                required
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=..."
+                className="w-full border border-neutral-700 rounded-md px-3 py-2 text-sm bg-neutral-900 text-gray-100 placeholder:text-neutral-500 focus:ring-1 focus:ring-neutral-500 focus:border-neutral-500 outline-none transition-colors"
+              />
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading || manualLoading}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md border border-neutral-700 bg-neutral-800 text-white hover:bg-neutral-700 disabled:opacity-60 transition-colors"
-          >
-            {loading ? "Summarizing…" : "Summarize Video"}
-          </button>
-        </form>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-300">Quality</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="quality"
+                    value="standard"
+                    checked={quality === "standard"}
+                    onChange={() => setQuality("standard")}
+                    className="text-neutral-500 focus:ring-neutral-500 bg-neutral-900 border-neutral-700"
+                  />
+                  <span className="text-sm text-gray-300">Standard (Fast, Cheaper)</span>
+                </label>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="quality"
+                    value="premium"
+                    checked={quality === "premium"}
+                    onChange={() => setQuality("premium")}
+                    className="text-neutral-500 focus:ring-neutral-500 bg-neutral-900 border-neutral-700"
+                  />
+                  <span className="text-sm text-gray-300">Premium (Deep Analysis)</span>
+                </label>
+              </div>
+            </div>
 
-        {error && (
+            <button
+              type="submit"
+              disabled={loading || manualLoading}
+              className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md border border-neutral-700 bg-neutral-800 text-white hover:bg-neutral-700 disabled:opacity-60 transition-colors"
+            >
+              {loading ? "Summarizing…" : "Summarize Video"}
+            </button>
+          </form>
+        )}
+
+        {error && !result && (
           <div className="space-y-4">
             <div className="border border-red-500/50 bg-red-900/20 text-red-200 text-sm px-3 py-2 rounded-md">
               <strong>{error.code}:</strong> {error.message}
@@ -285,6 +305,29 @@ export default function VideoSummaryPage() {
 
         {result && (
           <section className="space-y-6">
+
+            {/* Header: Title & New Session */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-lg font-semibold text-gray-100 pr-4">
+                {result.video.title && (
+                  <>
+                    <span className="block text-xs uppercase text-neutral-500 mb-1 tracking-wider">
+                      Video Title
+                    </span>
+                    <span className="line-clamp-2 leading-tight">{result.video.title}</span>
+                  </>
+                )}
+              </div>
+
+              <button
+                type="button"
+                className="shrink-0 px-3 py-1.5 rounded-md border border-neutral-700 bg-neutral-800 text-sm hover:bg-neutral-700 transition-colors"
+                onClick={handleNewSession}
+              >
+                + New
+              </button>
+            </div>
+
             {/* Executive Summary */}
             <div className="border border-neutral-800 rounded-md p-4 space-y-2 bg-neutral-900">
               <div className="flex justify-between items-start">

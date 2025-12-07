@@ -1,4 +1,4 @@
-import { extractYouTubeVideoId } from "./transcript";
+import { extractYouTubeVideoId } from "@/lib/yt/validation";
 
 export interface YTVideoMetadata {
     videoId: string;

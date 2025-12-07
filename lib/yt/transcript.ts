@@ -14,25 +14,7 @@ export type TranscriptResult =
     message: string;
   };
 
-/**
- * Extract a YouTube video ID from a URL or return null if invalid.
- * This should handle both youtu.be and youtube.com links.
- */
-export function extractYouTubeVideoId(url: string): string | null {
-  try {
-    const u = new URL(url.trim());
-    if (u.hostname.includes("youtu.be")) {
-      return u.pathname.replace("/", "") || null;
-    }
-    if (u.hostname.includes("youtube.com")) {
-      const v = u.searchParams.get("v");
-      return v || null;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
+// function moved to ./validation.ts
 
 /**
  * Placeholder implementation.

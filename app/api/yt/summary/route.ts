@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { extractYouTubeVideoId, getTranscript } from "@/lib/yt/transcript";
+import { getTranscript } from "@/lib/yt/transcript";
+import { extractYouTubeVideoId } from "@/lib/yt/validation";
 import { summarizeTranscript, SummarizeOptions, YTQuality } from "@/lib/yt/summarize";
 import { getVideoMetadata } from "@/lib/yt/metadata";
 import { getCachedSummary, setCachedSummary } from "@/lib/yt/cache";
