@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+.gitignore
+Dockerfile
+Dockerfile.coolify
+README.md
+*.log
+tmp
+.turbo
+.ds_store
+.env*
+! .env.example
