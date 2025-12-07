@@ -1,0 +1,47 @@
+name: Next.js Version Guard
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Next.js Version
+        id: check_version
+        run: |
+          REQUIRED_VERSION="15.5.7"
+          PACKAGE_JSON_VERSION=$(jq -r '.dependencies.next' package.json)
+          
+          echo "Current Next.js version: $PACKAGE_JSON_VERSION"
+          echo "Required Next.js version: >= $REQUIRED_VERSION"
+
+          # Remove caret or tilde if present for comparison, although policy is strict pinning
+          CLEAN_VERSION=$(echo "$PACKAGE_JSON_VERSION" | sed 's/[\^~]//g')
+
+          if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$CLEAN_VERSION" | sort -V | head -n1)" = "$REQUIRED_VERSION" ]; then
+            echo "✅ Version check passed."
+          else
+            echo "❌ Blocked: Vulnerable Next.js version detected ($CLEAN_VERSION). Upgrade to $REQUIRED_VERSION or later required."
+            echo "failure=true" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: Notify N8N on Failure
+        if: failure() && steps.check_version.outcome == 'failure'
+        run: |
+          curl -X POST https://n8n.presspilotapp.com/webhook/nextjs-security-alert \
+          -H "Content-Type: application/json" \
+          -d '{
+            "type": "security_gate_blocked",
+            "message": "Deployment blocked due to vulnerable Next.js version.",
+            "version": "'"$PACKAGE_JSON_VERSION"'",
+            "repository": "${{ github.repository }}",
+            "branch": "${{ github.ref_name }}",
+            "actor": "${{ github.actor }}"
+          }'

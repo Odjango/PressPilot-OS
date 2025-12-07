@@ -1,0 +1,104 @@
+name: Next.js Security Auto-Upgrade
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Every 6 hours
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-and-upgrade:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check for Updates
+        id: check_update
+        run: |
+          CURRENT_VERSION=$(jq -r '.dependencies.next' package.json)
+          LATEST_VERSION=$(npm view next dist-tags.latest)
+          
+          # Use semver sort to compare
+          if [ "$(printf '%s\n' "$CURRENT_VERSION" "$LATEST_VERSION" | sort -V | tail -n1)" = "$LATEST_VERSION" ] && [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
+            echo "New version available: $LATEST_VERSION (Current: $CURRENT_VERSION)"
+            echo "upgrade_needed=true" >> $GITHUB_OUTPUT
+            echo "latest_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+            echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "Next.js is up to date ($CURRENT_VERSION)."
+            echo "upgrade_needed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify N8N of Vulnerability/Upgrade Opportunity
+        if: steps.check_update.outputs.upgrade_needed == 'true'
+        run: |
+          curl -X POST https://n8n.presspilotapp.com/webhook/nextjs-security-alert \
+          -H "Content-Type: application/json" \
+          -d '{
+            "type": "vulnerability_detected",
+            "message": "New Next.js version detected. Initiating auto-upgrade.",
+            "version": "${{ steps.check_update.outputs.current_version }}",
+            "repository": "${{ github.repository }}",
+            "branch": "main",
+            "actor": "system-bot"
+          }'
+
+      - name: Perform Upgrade
+        if: steps.check_update.outputs.upgrade_needed == 'true'
+        run: |
+          # Pin exact versions
+          npm install next@${{ steps.check_update.outputs.latest_version }} eslint-config-next@${{ steps.check_update.outputs.latest_version }} react@rc react-dom@rc --save-exact
+          
+          # Run build to verify
+          npm run build
+
+      - name: Create Pull Request
+        if: steps.check_update.outputs.upgrade_needed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: security/nextjs-upgrade-${{ steps.check_update.outputs.latest_version }}
+          title: "Security: Next.js upgraded from ${{ steps.check_update.outputs.current_version }} to ${{ steps.check_update.outputs.latest_version }}"
+          body: |
+            Automated security upgrade for Next.js.
+            
+            - **From**: ${{ steps.check_update.outputs.current_version }}
+            - **To**: ${{ steps.check_update.outputs.latest_version }}
+            
+            Build verification passed.
+            
+            cc @Odjango
+          reviewers: Odjango
+          commit-message: "Security: Next.js upgraded to ${{ steps.check_update.outputs.latest_version }}"
+
+      - name: Deploy to Vercel (Production)
+        if: steps.check_update.outputs.upgrade_needed == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          npm i -g vercel
+          vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+          vercel build --prod --token=$VERCEL_TOKEN
+          vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+
+      - name: Notify N8N of PR Creation
+        if: steps.check_update.outputs.upgrade_needed == 'true'
+        run: |
+          curl -X POST https://n8n.presspilotapp.com/webhook/nextjs-security-alert \
+          -H "Content-Type: application/json" \
+          -d '{
+            "type": "pr_created",
+            "message": "Auto-upgrade PR created and deployment triggered.",
+            "version": "${{ steps.check_update.outputs.latest_version }}",
+            "repository": "${{ github.repository }}",
+            "branch": "security/nextjs-upgrade-${{ steps.check_update.outputs.latest_version }}",
+            "actor": "system-bot"
+          }'
