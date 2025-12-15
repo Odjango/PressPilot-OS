@@ -20,6 +20,7 @@
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.84.0",
+    "@wordpress/block-serialization-default-parser": "^5.36.0",
     "adm-zip": "^0.5.12",
     "dotenv": "^17.2.3",
     "next": "14.2.5",
