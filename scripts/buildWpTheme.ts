@@ -6,7 +6,6 @@ import * as path from "node:path";
 import { execSync } from "node:child_process";
 
 const THEME_VERSION = "1.2.0." + Math.floor(Date.now() / 1000);
-const GOLDEN_SPEC_PATH = path.join(process.cwd(), "golden-spec");
 
 // Config Interface
 interface ThemeGeneratorConfig {
@@ -43,8 +42,9 @@ const MOCK_CONFIG: ThemeGeneratorConfig = {
     }
 };
 
+
 // Use injected config or mock, or load from CLI arg
-let CONFIG: ThemeGeneratorConfig = (global as any).THEME_CONFIG || MOCK_CONFIG;
+let CONFIG: ThemeGeneratorConfig & { source_spec?: string } = (global as any).THEME_CONFIG || MOCK_CONFIG;
 let OUTPUT_DIR = path.join(process.cwd(), "themes");
 
 // CLI Argument Parsing
@@ -81,6 +81,10 @@ for (let i = 0; i < args.length; i++) {
     }
 }
 
+const GOLDEN_SPEC_PATH = CONFIG.source_spec
+    ? path.resolve(CONFIG.source_spec)
+    : path.join(process.cwd(), "golden-spec");
+
 const { theme_name, theme_slug, site_title } = CONFIG;
 
 const THEME_SLUG = theme_slug;
@@ -110,12 +114,15 @@ function buildWpTheme() {
     ensureDir(themePath());
 
     copyCoreFiles();
+    createIndexPhp(); // [NEW] Spec 2.1
+    createReadme();   // [NEW] Spec 2.1
     updateThemeJson();
     updateFunctionsPhp();
 
     copyTemplates();
     copyParts();
     copyPatterns();
+    copyAssets();
 
     createZipArchive();
     console.log("Build Complete.");
@@ -141,18 +148,15 @@ function updateThemeJson() {
     if (fs.existsSync(src)) {
         const themeJson = JSON.parse(fs.readFileSync(src, "utf8"));
 
-        // Inject Config Colors if needed, or just keep Golden Spec defaults?
-        // The rulebook says: "You may: Adjust theme.json design tokens (colors, fonts, spacing)."
-        // Let's inject our config colors into the palette.
-
+        // [Spec 3.2.1] Palette Generation
+        // Mapping Config Colors to Semantic Slugs: base, contrast, primary, secondary, tertiary
         if (themeJson.settings?.color?.palette) {
-            // Mapping accent to primary for buttons, and background to background
             const paletteMap: Record<string, string> = {
-                "background": CONFIG.colors.background,
-                "primary": CONFIG.colors.accent,
-                "foreground": "#111111", // Default
-                "accent": "#8dc63f", // Default
-                "muted": "#f5f5f7" // Default
+                "base": CONFIG.colors.background || "#ffffff", // Site Background
+                "contrast": "#1e1e1e", // Text (Default)
+                "primary": CONFIG.colors.accent || "#0066cc", // Brand Color
+                "secondary": CONFIG.colors.base || "#6c757d", // Secondary/Neutral
+                "tertiary": "#f8f9fa" // Subtle background
             };
 
             themeJson.settings.color.palette = themeJson.settings.color.palette.map((p: any) => {
@@ -179,78 +183,163 @@ function updateFunctionsPhp() {
         content = content.replace(/presspilot_golden_v1/g, NAMESPACE_SLUG);
         content = content.replace(/presspilot-golden-v1/g, THEME_SLUG);
 
-        // Append Activation Logic (Pages & Nav)
-        // We keep the Golden Spec functions.php clean, but append our activation logic
-        // to ensure the theme works out of the box with content.
+        // [Spec 5] Programmatic Activation Logic (Seeder Class)
+        // Implements Appendix B: The "Seeder" Class Architecture
+        // Uses Hybrid Menu Approach (Classic Menu Injection)
 
-        const activationLogic = `
+        const seederClass = `
 /**
- * Activation Logic: Create Pages & Navigation
+ * AI Theme Seeder: Automates clean install and content injection.
  */
-add_action( 'after_switch_theme', '${NAMESPACE_SLUG}_activate' );
-function ${NAMESPACE_SLUG}_activate() {
-    $destructive = ${CONFIG.destructive_mode ? 'true' : 'false'};
-    
-    if ($destructive) {
-        $pages = get_posts(['post_type'=>'page','numberposts'=>-1]);
-        foreach($pages as $p) wp_trash_post($p->ID);
-        $navs = get_posts(['post_type'=>'wp_navigation','numberposts'=>-1]);
-        foreach($navs as $n) wp_trash_post($n->ID);
+class ${NAMESPACE_SLUG}_Seeder {
+
+    public function __construct() {
+        add_action( 'after_switch_theme', array( $this, 'activation_logic' ) );
     }
 
-    // Create Pages
-    $pages_config = [
-${CONFIG.pages.map(p => `        '${p.slug}' => ['title' => '${p.title}', 'content' => '${p.content}'],`).join("\n")}
-    ];
-
-    $created_ids = [];
-    foreach ($pages_config as $slug => $data) {
-        // Wrap content in paragraph block automatically
-        $content_block = '<!-- wp:paragraph --><p>' . $data['content'] . '</p><!-- /wp:paragraph -->';
-        $id = wp_insert_post([
-            'post_type' => 'page',
-            'post_title' => $data['title'],
-            'post_name' => $slug,
-            'post_content' => $content_block,
-            'post_status' => 'publish'
-        ]);
-        if (!is_wp_error($id)) $created_ids[$slug] = $id;
-    }
-
-    if (isset($created_ids['home'])) {
-        update_option('show_on_front', 'page');
-        update_option('page_on_front', $created_ids['home']);
-    }
-
-    // Create Navigation
-    if (!empty($created_ids)) {
-        $nav_content = '<!-- wp:navigation -->';
-        foreach ($created_ids as $slug => $id) {
-            $nav_content .= sprintf(
-                '<!-- wp:navigation-link {"label":"%s","type":"page","id":%d} /-->',
-                get_the_title($id), $id
-            );
+    public function activation_logic() {
+        // 1. Guard Clause: Prevent re-running if already seeded
+        if ( get_option( '${NAMESPACE_SLUG}_seeded' ) ) {
+            return;
         }
-        $nav_content .= '<!-- /wp:navigation -->';
-        
-        wp_insert_post([
-            'post_type' => 'wp_navigation',
-            'post_title' => 'Main Navigation',
-            'post_content' => $nav_content,
-            'post_status' => 'publish'
-        ]);
+
+        // Check destructive mode (default true for generated themes)
+        $destructive = ${CONFIG.destructive_mode ? 'true' : 'false'};
+
+        if ( $destructive ) {
+            $this->wipe_content();
+        }
+
+        // 3. Create Content
+        $pages = $this->create_pages();
+
+        // 4. Setup Menus
+        $this->setup_menus( $pages );
+
+        // 5. Update Options
+        $this->update_site_options( $pages );
+
+        // 6. Set Flag
+        update_option( '${NAMESPACE_SLUG}_seeded', true );
     }
-    
-    update_option('blogname', '${site_title}');
+
+    private function wipe_content() {
+        // Delete all Pages
+        $pages = get_posts( array( 'post_type' => 'page', 'numberposts' => -1 ) );
+        foreach( $pages as $p ) {
+            wp_delete_post( $p->ID, true );
+        }
+        
+        // Delete all Menus
+        $menus = wp_get_nav_menus();
+        foreach ( $menus as $menu ) {
+            wp_delete_nav_menu( $menu->term_id );
+        }
+    }
+
+    private function create_pages() {
+        $created_ids = array();
+        $pages_config = array(
+${CONFIG.pages.map(p => {
+            // Agent C: Use Safe BlockBuilder
+            // We are generating PHP code that contains the HTML string.
+            // The BlockBuilder is TS, but we can usage it here to generate the string.
+            const safeContent = BlockBuilder.paragraph(p.content.replace(/'/g, "\\'"));
+            return `            '${p.slug}' => array(
+                'title' => '${p.title}',
+                'content' => '${safeContent}'
+            ),`;
+        }).join("\n")}
+        );
+
+        foreach ( $pages_config as $slug => $data ) {
+            $id = wp_insert_post( array(
+                'post_title'    => $data['title'],
+                'post_content'  => $data['content'],
+                'post_status'   => 'publish',
+                'post_type'     => 'page',
+                'post_name'     => $slug
+            ) );
+            if ( ! is_wp_error( $id ) ) {
+                $created_ids[$slug] = $id;
+            }
+        }
+        return $created_ids;
+    }
+
+    private function setup_menus( $pages ) {
+        // [Spec 5.3.2] Approach B: Hybrid Way (Classic Menu Injection)
+        $menu_name = 'Primary Menu';
+        $menu_id = wp_create_nav_menu( $menu_name );
+
+        if ( is_wp_error( $menu_id ) ) {
+            return;
+        }
+
+        // Add pages to menu
+        foreach ( $pages as $slug => $page_id ) {
+            wp_update_nav_menu_item( $menu_id, 0, array(
+                'menu-item-title'  => get_the_title( $page_id ),
+                'menu-item-object-id' => $page_id,
+                'menu-item-object' => 'page',
+                'menu-item-type'   => 'post_type',
+                'menu-item-status' => 'publish'
+            ) );
+        }
+
+        // Assign to location if theme has one (Core FSE often relies on just the name, but setting location is safe)
+    }
+
+    private function update_site_options( $pages ) {
+        // [Spec 5.3.3] Site Identity and Homepage
+        update_option( 'blogname', '${site_title.replace(/'/g, "\\'")}' );
+
+        if ( isset( $pages['home'] ) ) {
+            update_option( 'show_on_front', 'page' );
+            update_option( 'page_on_front', $pages['home'] );
+        }
+    }
 }
+
+new ${NAMESPACE_SLUG}_Seeder();
 `;
-        content += activationLogic;
+        content += seederClass;
 
         fs.writeFileSync(themePath("functions.php"), content);
     } else {
         console.error("CRITICAL: functions.php missing in Golden Spec");
         process.exit(1);
     }
+}
+
+// [Spec 2.1] Generate index.php (Silence is Golden)
+function createIndexPhp() {
+    const content = "<?php\n// Silence is golden.\n";
+    fs.writeFileSync(themePath("index.php"), content);
+}
+
+// [Spec 2.1] Generate readme.txt
+function createReadme() {
+    const content = `=== ${theme_name} ===
+Contributors: PressPilot AI
+Tags: full-site-editing, block-theme
+Requires at least: 6.0
+Tested up to: 6.4
+Stable tag: 1.0.0
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+${theme_name} is an AI-generated Full Site Editing (FSE) theme.
+
+== Description ==
+This theme was algorithmically generated by PressPilot. It features a modern, block-based architecture with fluid typography and a semantic color system.
+
+== Installation ==
+1. Upload the theme folder to the /wp-content/themes/ directory.
+2. Activate the theme through the 'Appearance' menu in WordPress.
+3. The theme will automatically provision pages and menus upon activation.
+`;
+    fs.writeFileSync(themePath("readme.txt"), content);
 }
 
 function copyTemplates() {
@@ -271,7 +360,7 @@ function copyTemplates() {
             // Let's stick to the Spec's "presspilot/" prefix for simplicity unless we rewrite the PHP headers.
             // Actually, let's rewrite the PHP headers to use our theme slug so they are unique to this theme.
 
-            content = content.replace(/slug":"presspilot\//g, `slug":"${PATTERN_PREFIX}/`);
+            content = content.replace(new RegExp('slug":"presspilot/', 'g'), `slug":"${PATTERN_PREFIX}/`);
 
             fs.writeFileSync(path.join(dest, file), content);
         }
@@ -294,6 +383,17 @@ function copyParts() {
                 const copyright = CONFIG.copyrightText || defaultCopyright;
                 content = content.replace('{{COPYRIGHT_TEXT}}', copyright);
             }
+
+            // [Golden Contract] Refless Navigation Enforcement
+            // Remove "ref":123 or "ref":"..." from wp:navigation blocks
+            if (file === 'header.html' || content.includes('wp:navigation')) {
+                content = content.replace(/"ref":\s*[\d"]+,?/g, '');
+                // Also remove double commas if any
+                content = content.replace(/,(\s*})/g, '$1');
+            }
+
+            // Replace Asset URL Token
+            content = content.replace(/{{THEME_ASSETS_URL}}/g, `/wp-content/themes/${THEME_SLUG}/assets`);
 
             fs.writeFileSync(path.join(dest, file), content);
         }
@@ -322,6 +422,20 @@ function copyPatterns() {
     }
 }
 
+
+function copyAssets() {
+    const src = path.join(GOLDEN_SPEC_PATH, "assets");
+    const dest = themePath("assets");
+    if (fs.existsSync(src)) {
+        ensureDir(dest);
+        // recursive copy manually or just files?
+        // cp -r is easier via shell if simple, but fs.cpSync is available in recent node.
+        // Let's use cpSync if available (Node 16.7+) or manual. Environment is Node?
+        // Just use recursive read/write for safety or execSync cp -r
+        execSync(`cp -r "${src}/"* "${dest}/"`, { stdio: 'inherit' });
+    }
+}
+
 function createZipArchive() {
     let parentDir, dirName;
 
@@ -336,8 +450,89 @@ function createZipArchive() {
     }
 
     console.log(`Zipping ${dirName} in ${parentDir}...`);
-    // Use -q for quiet zip to reduce noise in logs, or keep inherit for debug
-    execSync(`cd "${parentDir}" && zip -r "${dirName}.zip" "${dirName}"`, { stdio: "inherit" });
+
+    // Agent C: Emit-Guard Check
+    console.log(`🛡️ Running Emit-Time Guard scan on ${themePath()}...`);
+    try {
+        scanForCorruption(themePath());
+    } catch (e: any) {
+        console.error("⛔️ EMIT GUARD PREVENTED BUILD:");
+        console.error(e.message);
+        process.exit(1);
+    }
+
+    // Agent 1: Packager - Deterministic Zip
+    // -r: recursive
+    // -X: exclude file attributes (deterministic)
+    // -q: quiet
+    // -x: exclude patterns
+    const zipCmd = `cd "${parentDir}" && zip -r -X "${dirName}.zip" "${dirName}" -x "*.DS_Store" -x "__MACOSX*" -x "*.git*"`;
+    execSync(zipCmd, { stdio: "inherit" });
+
+    // Agent 2: Validator - Hard Fail Check
+    const zipPath = path.join(parentDir, `${dirName}.zip`);
+    console.log(`Verifying Zip: ${zipPath}`);
+    try {
+        execSync(`npx tsx scripts/validateZip.ts "${zipPath}"`, { stdio: "inherit" });
+    } catch (e) {
+        console.error("CRITICAL: Zip validation failed. Build aborted.");
+        process.exit(1);
+    }
+}
+
+// --- Agent C: BlockBuilder Safety Helpers ---
+class BlockBuilder {
+    static open(name: string, attrs: Record<string, any> = {}): string {
+        const json = JSON.stringify(attrs);
+        return `<!-- wp:${name} ${json} -->`;
+    }
+    static close(name: string): string {
+        return `<!-- /wp:${name} -->`;
+    }
+    static self(name: string, attrs: Record<string, any> = {}): string {
+        const json = JSON.stringify(attrs);
+        return `<!-- wp:${name} ${json} /-->`;
+    }
+    static paragraph(content: string, attrs: Record<string, any> = {}): string {
+        return this.open('paragraph', attrs) + '<p>' + content + '</p>' + this.close('paragraph');
+    }
+}
+
+// --- Agent C: Emit-Time Guard ---
+function scanForCorruption(dir: string) {
+    const files = fs.readdirSync(dir);
+    for (const file of files) {
+        const fullPath = path.join(dir, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+            scanForCorruption(fullPath);
+        } else if (file.endsWith('.html') || file.endsWith('.php')) {
+            const content = fs.readFileSync(fullPath, 'utf8');
+            // Check 1: Ref Ban
+            if (content.includes('"ref":')) {
+                throw new Error(`CRITICAL EMIT ERROR: forbidden "ref" attribute found in ${file}`);
+            }
+            // Check 2: Truncation
+            if (content.includes('...')) {
+                // Relaxed check: ellipses in text are fine, but in block comments they are fatal.
+                // Simple regex check for block comment context is hard without parser.
+                // Use simple TRUNC-01 heuristic from validator:
+                const blockRegex = /<!-- wp:[^>]*?-->/g;
+                let match;
+                while ((match = blockRegex.exec(content)) !== null) {
+                    if (match[0].includes('...')) {
+                        throw new Error(`CRITICAL EMIT ERROR: Truncated JSON found in ${file}`);
+                    }
+                }
+            }
+            // Check 3: Malformed JSON
+            const jsonBlockRegex = /<!-- wp:[a-z0-9\/-]+\s+({.*?})\s+(?:\/)?-->/g;
+            let jMatch;
+            while ((jMatch = jsonBlockRegex.exec(content)) !== null) {
+                try { JSON.parse(jMatch[1]); }
+                catch (e) { throw new Error(`CRITICAL EMIT ERROR: Malformed JSON emitted in ${file}`); }
+            }
+        }
+    }
 }
 
 if (require.main === module) {

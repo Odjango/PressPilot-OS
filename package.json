@@ -5,44 +5,41 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start -p 3000",
+    "start": "next start",
     "lint": "next lint",
     "demo-kits": "npm run build && tsx scripts/demo-kits.ts",
     "verify-supabase": "tsx scripts/verify-supabase.ts",
     "build-wp-theme": "tsx scripts/buildWpTheme.ts",
     "theme:build": "npx tsx scripts/validateGenerator.ts && npx tsx scripts/buildWpTheme.ts",
     "validate-theme": "node validator/presspilot-validator.js",
-    "test:themes": "npm run lint:blocks && node scripts/generate-and-validate-test-themes.js",
-    "build:golden-demo": "npx tsx scripts/buildWpTheme.ts --config tests/themes/golden-demo.json --out-dir dist/presspilot-golden-demo-v1-2",
-    "lint:blocks": "node scripts/lint-block-json.js",
-    "wp:qa:up": "npm run build:golden-demo && bash scripts/wp-qa-setup.sh",
-    "wp:qa:down": "bash scripts/wp-qa-down.sh"
+    "test:themes": "node scripts/generate-and-validate-test-themes.js"
   },
   "bin": {
     "presspilot-validate": "validator/presspilot-validator.js"
   },
   "dependencies": {
-    "@supabase/auth-helpers-nextjs": "0.10.0",
-    "@supabase/supabase-js": "2.84.0",
-    "adm-zip": "0.5.12",
-    "dotenv": "17.2.3",
-    "next": "15.5.7",
-    "openai": "4.104.0",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/supabase-js": "^2.84.0",
+    "@wordpress/block-serialization-default-parser": "^5.36.0",
+    "adm-zip": "^0.5.12",
+    "dotenv": "^17.2.3",
+    "next": "14.2.5",
+    "openai": "^4.104.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "youtube-transcript": "1.2.1"
+    "youtube-transcript": "^1.2.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "4.1.17",
-    "@types/node": "20.12.12",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
-    "autoprefixer": "10.4.22",
-    "eslint": "8.57.0",
-    "eslint-config-next": "15.5.7",
-    "postcss": "8.5.6",
-    "tailwindcss": "4.1.17",
-    "tsx": "4.19.2",
-    "typescript": "5.4.5"
+    "@tailwindcss/postcss": "^4.1.17",
+    "@types/node": "^20.12.12",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.22",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.5",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.4.5"
   }
 }
