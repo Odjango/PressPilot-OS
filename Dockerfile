@@ -1,5 +1,6 @@
 # Dockerfile for PressPilot-OS (YT Summarizer) on Coolify
 # Uses npm (since package-lock.json is present) and multi-stage build.
+# SECURITY: Runtime secrets only. No secret ARGs.
 
 # 1. Base image
 # 1. Base image
