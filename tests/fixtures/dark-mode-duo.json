@@ -1,0 +1,19 @@
+{
+    "theme_name": "Dark Mode Test",
+    "theme_slug": "dark-mode-theme",
+    "site_title": "Dark Site",
+    "destructive_mode": true,
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Dark Content"
+        }
+    ],
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#000000",
+        "background": "#eeeeee"
+    },
+    "darkMode": true
+}

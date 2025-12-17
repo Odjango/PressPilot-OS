@@ -1,0 +1,21 @@
+{
+    "theme_name": "Test Theme",
+    "theme_slug": "test-theme-v1",
+    "site_title": "Test Site",
+    "destructive_mode": true,
+    "acf": {
+        "enabled": false
+    },
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#000000",
+        "background": "#eeeeee"
+    },
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Home Content"
+        }
+    ]
+}

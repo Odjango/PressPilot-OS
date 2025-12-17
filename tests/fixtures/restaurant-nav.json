@@ -1,0 +1,19 @@
+{
+    "theme_name": "Restaurant Nav Test",
+    "theme_slug": "restaurant-nav-theme",
+    "site_title": "Pizza Place",
+    "destructive_mode": true,
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Pizza"
+        }
+    ],
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#000000",
+        "background": "#eeeeee"
+    },
+    "businessType": "restaurant"
+}

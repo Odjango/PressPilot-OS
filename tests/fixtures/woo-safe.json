@@ -1,0 +1,19 @@
+{
+    "theme_name": "Woo Safe Test",
+    "theme_slug": "woo-safe-theme",
+    "site_title": "Shop Site",
+    "destructive_mode": true,
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Shop Content"
+        }
+    ],
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#000000",
+        "background": "#eeeeee"
+    },
+    "ecommerce": true
+}

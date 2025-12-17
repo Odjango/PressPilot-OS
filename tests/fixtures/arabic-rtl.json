@@ -1,0 +1,20 @@
+{
+    "theme_name": "Arabic RTL Test",
+    "theme_slug": "arabic-rtl-theme",
+    "site_title": "Arabic Site",
+    "destructive_mode": true,
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Arabic Content"
+        }
+    ],
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#000000",
+        "background": "#eeeeee"
+    },
+    "language": "ar",
+    "direction": "rtl"
+}

@@ -8,9 +8,6 @@
             "wideSize": "1120px"
         },
         "spacing": {
-            "spacingScale": {
-                "steps": 6
-            },
             "units": [
                 "px",
                 "em",
@@ -20,70 +17,53 @@
             "padding": true,
             "margin": true
         },
-        "border": {
-            "radius": [
-                {
-                    "slug": "none",
-                    "name": "None",
-                    "radius": "0"
-                },
-                {
-                    "slug": "sm",
-                    "name": "Small",
-                    "radius": "0.25rem"
-                },
-                {
-                    "slug": "md",
-                    "name": "Medium",
-                    "radius": "0.5rem"
-                },
-                {
-                    "slug": "lg",
-                    "name": "Large",
-                    "radius": "1rem"
-                },
-                {
-                    "slug": "full",
-                    "name": "Full",
-                    "radius": "9999px"
-                }
-            ],
-            "color": true,
-            "style": true,
-            "width": true
-        },
         "color": {
             "defaultPalette": false,
             "palette": [
                 {
-                    "slug": "background",
-                    "name": "Background",
+                    "slug": "base",
+                    "name": "Base",
                     "color": "#ffffff"
                 },
                 {
-                    "slug": "foreground",
-                    "name": "Foreground",
-                    "color": "#1e293b"
+                    "slug": "contrast",
+                    "name": "Contrast",
+                    "color": "#111111"
                 },
                 {
-                    "slug": "primary",
-                    "name": "Primary",
-                    "color": "#2563eb"
+                    "slug": "contrast-2",
+                    "name": "Contrast 2",
+                    "color": "#636363"
                 },
                 {
-                    "slug": "secondary",
-                    "name": "Secondary",
-                    "color": "#475569"
+                    "slug": "contrast-3",
+                    "name": "Contrast 3",
+                    "color": "#A4A4A4"
                 },
                 {
                     "slug": "accent",
                     "name": "Accent",
-                    "color": "#0f172a"
+                    "color": "#cf2e2e"
                 },
                 {
-                    "slug": "muted",
-                    "name": "Muted",
-                    "color": "#f1f5f9"
+                    "slug": "accent-2",
+                    "name": "Accent 2",
+                    "color": "#ff0000"
+                },
+                {
+                    "slug": "accent-3",
+                    "name": "Accent 3",
+                    "color": "#ff8800"
+                },
+                {
+                    "slug": "accent-4",
+                    "name": "Accent 4",
+                    "color": "#ffcc00"
+                },
+                {
+                    "slug": "accent-5",
+                    "name": "Accent 5",
+                    "color": "#ffeebb"
                 }
             ]
         },
@@ -99,37 +79,32 @@
                 {
                     "slug": "xs",
                     "name": "XS",
-                    "size": "0.75rem"
+                    "size": "12px"
                 },
                 {
                     "slug": "sm",
                     "name": "Small",
-                    "size": "0.875rem"
+                    "size": "14px"
                 },
                 {
                     "slug": "base",
                     "name": "Base",
-                    "size": "1rem"
+                    "size": "16px"
                 },
                 {
                     "slug": "md",
                     "name": "Medium",
-                    "size": "1.125rem"
+                    "size": "20px"
                 },
                 {
                     "slug": "lg",
                     "name": "Large",
-                    "size": "1.5rem"
+                    "size": "24px"
                 },
                 {
                     "slug": "xl",
                     "name": "XL",
-                    "size": "2rem"
-                },
-                {
-                    "slug": "xxl",
-                    "name": "XXL",
-                    "size": "3rem"
+                    "size": "32px"
                 }
             ]
         }
@@ -141,25 +116,19 @@
         },
         "typography": {
             "fontFamily": "var(--wp--preset--font-family--system-sans)",
-            "lineHeight": "1.6",
-            "fontSize": "var(--wp--preset--font-size--base)"
+            "lineHeight": "1.6"
         },
         "layout": {
             "contentSize": "720px",
             "wideSize": "1120px"
         },
-        "elements": {
-            "heading": {
-                "typography": {
-                    "fontWeight": "700",
-                    "lineHeight": "1.2"
-                }
-            },
-            "button": {
+        "blocks": {
+            "core/button": {
                 "border": {
-                    "radius": "var(--wp--preset--border-radius--md)"
+                    "radius": "999px"
                 },
                 "typography": {
+                    "fontSize": "var(--wp--preset--font-size--md)",
                     "fontWeight": "600"
                 },
                 "spacing": {
@@ -173,26 +142,6 @@
                 "color": {
                     "background": "var(--wp--preset--color--primary)",
                     "text": "#ffffff"
-                }
-            }
-        },
-        "blocks": {
-            "core/site-title": {
-                "typography": {
-                    "fontWeight": "700",
-                    "textDecoration": "none"
-                },
-                "elements": {
-                    "link": {
-                        "typography": {
-                            "textDecoration": "none"
-                        }
-                    }
-                }
-            },
-            "core/post-title": {
-                "typography": {
-                    "fontWeight": "700"
                 }
             },
             "core/navigation": {

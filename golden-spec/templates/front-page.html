@@ -1,53 +1,40 @@
-<!-- wp:template-part {"slug":"header","tagName":"header","area":"header"} /-->
+<!-- wp:template-part {"slug":"header","area":"header","tagName":"header"} /-->
 
-<!-- wp:group {"tagName":"main","layout":{"type":"constrained"}} -->
-<!-- Hero -->
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"4rem","bottom":"4rem"}}}} -->
-<!-- wp:heading {"level":1} -->
-Grow your business with a modern WordPress site.
-<!-- /wp:heading -->
+<!-- wp:group {"tagName":"main","align":"full","layout":{"type":"constrained"}} -->
+<main class="wp-block-group alignfull">
 
-<!-- wp:paragraph -->
-Launch fast, stay flexible, and keep full control over your content with a clean, block-based theme.
-<!-- /wp:paragraph -->
+    <!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
+    <div class="wp-block-group alignwide"
+        style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
+        <!-- wp:heading {"textAlign":"center","level":1} -->
+        <h1 class="has-text-align-center">{{HERO_TITLE}}</h1>
+        <!-- /wp:heading -->
+    </div>
+    <!-- /wp:group -->
 
-<!-- wp:buttons -->
-<!-- wp:button -->
-<a class="wp-block-button__link">Get started</a>
-<!-- /wp:button -->
-<!-- wp:button {"className":"is-style-outline"} -->
-<a class="wp-block-button__link">View services</a>
-<!-- /wp:button -->
-<!-- /wp:buttons -->
+    <!-- wp:columns {"align":"wide"} -->
+    <div class="wp-block-columns alignwide">
+        <!-- wp:column -->
+        <div class="wp-block-column">
+            <!-- wp:heading {"level":3} -->
+            <h3>Service 1</h3>
+            <!-- /wp:heading -->
+            <!-- wp:paragraph -->
+            <p>Details...</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
+        <!-- wp:column -->
+        <div class="wp-block-column">
+            <!-- wp:heading {"level":3} -->
+            <h3>Service 2</h3>
+            <!-- /wp:heading -->
+        </div>
+        <!-- /wp:column -->
+    </div>
+    <!-- /wp:columns -->
+
+</main>
 <!-- /wp:group -->
 
-<!-- Latest updates -->
-<!-- wp:group -->
-<!-- wp:heading {"level":3} -->
-Latest updates
-<!-- /wp:heading -->
-
-<!-- wp:query {"queryId":2,"query":{"perPage":3,"postType":"post","inherit":true}} -->
-<!-- wp:post-template -->
-<!-- wp:post-title {"isLink":true} /-->
-<!-- wp:post-date /-->
-<!-- /wp:post-template -->
-<!-- /wp:query -->
-<!-- /wp:group -->
-
-<!-- Quick links -->
-<!-- wp:group -->
-<!-- wp:heading {"level":4} -->
-Quick links
-<!-- /wp:heading -->
-
-<!-- wp:list -->
-<!-- wp:list-item --><a href="#">About Us</a><!-- /wp:list-item -->
-<!-- wp:list-item --><a href="#">Contact</a><!-- /wp:list-item -->
-<!-- wp:list-item --><a href="#">Home</a><!-- /wp:list-item -->
-<!-- wp:list-item --><a href="#">Services</a><!-- /wp:list-item -->
-<!-- /wp:list -->
-<!-- /wp:group -->
-<!-- /wp:group -->
-
-<!-- wp:template-part {"slug":"footer","tagName":"footer","area":"footer"} /-->
+<!-- wp:template-part {"slug":"footer","area":"footer","tagName":"footer"} /-->
