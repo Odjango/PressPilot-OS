@@ -19,6 +19,10 @@ RUN apt-get update && apt-get install -y \
     libgif-dev \
     librsvg2-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# Fix: Set PYTHON for node-gyp
+ENV PYTHON=/usr/bin/python3
+
 COPY package.json package-lock.json ./
 # Install dependencies based on lockfile
 RUN npm ci
