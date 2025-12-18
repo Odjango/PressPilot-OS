@@ -1,0 +1,410 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 .SFNS-Regular_wdth_opsz1E0000_GRAD_wght1F40000;\f1\fnil\fcharset0 HelveticaNeue;\f2\fnil\fcharset0 HelveticaNeue-Bold;
+\f3\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;
+\red29\green29\blue31;\red223\green225\blue230;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c99985;\cssrgb\c0\c1\c1;\cssrgb\c100000\c100000\c99985\c60000;
+\cssrgb\c15317\c15318\c16476;\cssrgb\c89913\c90699\c92156;}
+\margl1440\margr1440\vieww24080\viewh15800\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs60 \cf2 \cb3 \expnd0\expndtw0\kerning0
+Create WordPress Posts, Pages, Users and Menus Programmatically
+\f1\fs24 \cf4 \cb3 \
+\pard\pardeftab720\qc\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.wpxpo.com/create-a-post-or-page-programmatically-in-wordpress/"}}{\fldrslt \cf4 \cb3 \
+}}\pard\pardeftab720\partightenfactor0
+
+\fs36 \cf2 \cb3 {{\NeXTGraphic cropped-site-favicon-180x180.png \width3600 \height3600 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \
+\pard\pardeftab720\partightenfactor0
+
+\fs28 \cf4 \cb3 WPXPO\
+Apr 18, 2021\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\fs32 \cf2 \cb3 WordPress is a great tool for beginners especially for creating posts, pages, menus, and users. However, things are not welcoming for the developers as they often need to create dummy data while creating websites.\
+Good news for you if you also have a similar intention, as you can effortlessly create pages, posts, menus, and users programmatically.\'a0\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f2\b \cf2 \cb3 Key Takeaways\'a0
+\f1\b0 \cf2 \cb3 \
+In this blog post, I will walk you through the following things:\
+\uc0\u10004  Prerequisites for Creating Things Programmatically\
+\uc0\u10004  Create Custom Page Programmatically in WordPress\
+\uc0\u10004  Create Posts Programmatically in WordPress\
+\uc0\u10004  Create Menu Programmatically in WordPress\
+\uc0\u10004  Create a User Programmatically in WordPress\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Why Create Pages, Posts, Menus, and User Programmatically? (Real-World Use Cases)\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 At first glance, it may seem unnecessary to create pages, posts, menus, or users through code was WordPress has a simplified UI to do this. However, in real-world development scenarios, a programmatic approach is not only useful but also essential. Let\'92s explore why:\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Rapidly Set Up New Websites\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 WordPress developers often need to create new websites. So, they need to use dummy content as the site owners can easily add or update their content after completing the development. So, with the programmatic approach, they can easily create essential pages like About, Contact, Privacy Policy, etc.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Staging / Testing Environment\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Not just dummy content, the developers may also need images, custom pages, news users, etc, for testing themes or plugins. With the coding approach, they can instantly accomplish their goal and create testing environments.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Client Projects\'a0\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 The freelance developers must add some dummy content while delivering their project, otherwise the sites will not look good. And the coding approaches help them to do it with ease.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Add New User / Login Access\'a0\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 The developers can also create user roles by adding a few lines of code to their theme\'92s functions.php file. This method is also useful if you have lost login access and had issues while resetting your password.\'a0\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Prerequisites: What You Need Before Starting\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Before you start playing with code, there are some essential things that need to be ensured. Setting up the following things will not only help you accomplish your goal, but you can avoid unwanted situations.\'a0\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Backup Your Website\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 I shouldn\'92t tell you this if you have been writing codes for some time, as you must have a backup of your site. I still remember my early days when I used to do experiments with codes to tweak my WordPress site. I faced a lot of errors, thanks to the support team of Namecheap for helping me restore backups of my site.\'a0\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Use a Child Theme\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Another must-have thing is a child theme before starting to add custom codes. Without having a child theme, your changes in the theme\'92s code are removed with the latest updates. So, to avoid this kind of situation, you must install a child theme on your website.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Basic Knowledge of WordPress and PHP\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 If you really want to add custom codes to your site, you must have a basic knowledge of coding especially PHP as we are going to use it to accomplish the goal. Yes, I know that being a coder is not necessary in this generation of AI. However, you should at least have knowledge about how coding actually works.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Have Access to Theme Files\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 It is not mandatory to be the website owner to create posts, pages, etc programmatically. You can also do it on behalf of the site owner. However, you must have access to the theme files.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Enable Debugging in WordPress\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Last but not least, you should enable the WordPress debugging mode. So that you can find out the error in case something goes wrong. Don\'92t worry if you are not familiar with this as we have a detailed guide on enabling {\field{\*\fldinst{HYPERLINK "https://www.wpxpo.com/how-to-enable-error-reporting-in-wordpress/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 WordPress error reporting}}.\'a0\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 How to Create Pages Programmatically in WordPress\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 First, let\'92s see how we can create custom pages with codes. For that, we need to open the Function.php file of the {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/themes/advanced-topics/child-themes/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 Child theme}} and place the below code.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 {{\NeXTGraphic 101d09f5d194bda4f738c6cba01603673d3cf214bb093d341f8b6979d7714d85.png \width38400 \height19080 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf4 \cb3 \
+\
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f3\fs20\fsmilli10240 \cf6 \cb3 function wpxpo_create_or_update_multiple_pages() \{\
+    $pages = [\
+        [\
+            'title'    => 'About',\
+            'content'  => 'Welcome to our About page. This was created or updated programmatically.',\
+            'template' => '', // Optional: e.g., 'template-about.php'\
+        ],\
+        [\
+            'title'    => 'Contact',\
+            'content'  => 'Contact us using the form below. This page was added or refreshed via code.',\
+            'template' => '', // Optional: e.g., 'template-contact.php'\
+        ],\
+        [\
+            'title'    => 'Privacy Policy',\
+            'content'  => 'This is the Privacy Policy page. Generated automatically for demonstration.',\
+            'template' => '', // Optional: e.g., 'template-privacy.php'\
+        ],\
+    ];\
+\
+    foreach ( $pages as $page ) \{\
+        $existing_page = get_page_by_title( $page['title'] );\
+\
+        if ( $existing_page ) \{\
+            // Update existing page\
+            wp_update_post( [\
+                'ID'           => $existing_page->ID,\
+                'post_content' => $page['content'],\
+                'post_status'  => 'publish',\
+            ] );\
+\
+            if ( ! empty( $page['template'] ) ) \{\
+                update_post_meta( $existing_page->ID, '_wp_page_template', $page['template'] );\
+            \}\
+        \} else \{\
+            // Create new page\
+            $new_page_id = wp_insert_post( [\
+                'post_title'   => $page['title'],\
+                'post_content' => $page['content'],\
+                'post_status'  => 'publish',\
+                'post_type'    => 'page',\
+            ] );\
+\
+            if ( ! empty( $page['template'] ) ) \{\
+                update_post_meta( $new_page_id, '_wp_page_template', $page['template'] );\
+            \}\
+        \}\
+    \}\
+\}\
+add_action( 'init', 'wpxpo_create_or_update_multiple_pages' );
+\fs25\fsmilli12800 \cf6 \cb3 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 \
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 {{\NeXTGraphic 6c26d8d3ac00f12a06685d770b56ff3afbe5a6d1504cd4123348b19081240739.png \width38400 \height19080 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf4 \cb3 \
+\
+\
+\
+\pard\pardeftab720\sa320\partightenfactor0
+\cf2 \cb3 Now, if we refresh the page section, we can see that three new pages have been created as per my code. I have added dummy content. You can use my code to create more or less pages with your pages.\'a0\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 How to Create Posts Programmatically in WordPress\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 \
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 {{\NeXTGraphic 389fd61fc00abbbb7eb01d5566435e54c5675aeae0c522595dddc1d49a6886a8.png \width38400 \height19080 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf4 \cb3 \
+\
+\
+\
+\pard\pardeftab720\sa320\partightenfactor0
+\cf2 \cb3 Similarly, we can also add the following codes to the Function.php file. And as expected 5 new posts have been created on my local website.\'a0\
+\pard\pardeftab720\partightenfactor0
+
+\f3\fs20\fsmilli10240 \cf6 \cb3 function wpxpo_create_dummy_blog_posts() \{\
+    $posts = [\
+        [\
+            'title'   => '5 Essential WordPress Plugins for Every New Website',\
+            'content' => 'Launching a new WordPress site? These 5 plugins will help you secure, optimize, and grow your website from day one. From SEO to caching, here\'92s what you need...',\
+        ],\
+        [\
+            'title'   => 'How to Speed Up Your WordPress Website in 2025',\
+            'content' => 'A slow website means lost visitors. In this post, we cover modern performance techniques like image optimization, lazy loading, and server-level tweaks to keep your site fast.',\
+        ],\
+        [\
+            'title'   => 'Beginner\'92s Guide to Creating a Blog with WordPress',\
+            'content' => 'Want to start blogging? This simple step-by-step guide walks you through installing WordPress, choosing a theme, writing your first post, and getting traffic to your blog.',\
+        ],\
+        [\
+            'title'   => '10 Common WordPress Mistakes and How to Avoid Them',\
+            'content' => 'Even experienced users make mistakes that can hurt their site. We\'92ll show you the most common missteps\'97like using weak passwords, ignoring updates, or choosing bad hosting\'97and how to fix them.',\
+        ],\
+        [\
+            'title'   => 'What\'92s New in WordPress 6.5: Features You Should Know',\
+            'content' => 'WordPress 6.5 has landed! Check out the top new features, including performance improvements, better editor tools, and enhanced full-site editing capabilities.',\
+        ],\
+    ];\
+\
+    foreach ( $posts as $post ) \{\
+        // Check if the post already exists\
+        $existing_post = get_page_by_title( $post['title'], OBJECT, 'post' );\
+\
+        if ( $existing_post ) \{\
+            // Update existing post\
+            wp_update_post( [\
+                'ID'           => $existing_post->ID,\
+                'post_content' => $post['content'],\
+                'post_status'  => 'publish',\
+            ] );\
+        \} else \{\
+            // Insert new post\
+            wp_insert_post( [\
+                'post_title'   => $post['title'],\
+                'post_content' => $post['content'],\
+                'post_status'  => 'publish',\
+                'post_type'    => 'post',\
+            ] );\
+        \}\
+    \}\
+\}\
+add_action( 'init', 'wpxpo_create_dummy_blog_posts' );
+\fs25\fsmilli12800 \cf6 \cb3 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 \
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 {{\NeXTGraphic 2a236073e7fb209c43e0f248837b7acce6ee177fb014a94a3f1efa6c9262aa7f.png \width38400 \height19080 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf4 \cb3 \
+\
+\
+\
+\pard\pardeftab720\sa320\partightenfactor0
+\cf2 \cb3 For creating the menu, I have collected the code in a way that adds the pages that I have recently created. You can change the page name from the code below to replace it with the pages of your current site.\
+\pard\pardeftab720\partightenfactor0
+
+\f3\fs20\fsmilli10240 \cf6 \cb3 function wpxpo_setup_main_menu() \{\
+    $menu_name = 'Main Menu';\
+\
+    // Check if the menu already exists\
+    $menu_id = wp_get_nav_menu_object( $menu_name );\
+    if ( ! $menu_id ) \{\
+        $menu_id = wp_create_nav_menu( $menu_name );\
+\
+        // Get page IDs\
+        $pages = [\
+            'About'           => get_page_by_title( 'About' ),\
+            'Contact'         => get_page_by_title( 'Contact' ),\
+            'Privacy Policy'  => get_page_by_title( 'Privacy Policy' ),\
+        ];\
+\
+        foreach ( $pages as $title => $page ) \{\
+            if ( $page ) \{\
+                wp_update_nav_menu_item( $menu_id, 0, [\
+                    'menu-item-title'     => $title,\
+                    'menu-item-object-id' => $page->ID,\
+                    'menu-item-object'    => 'page',\
+                    'menu-item-type'      => 'post_type',\
+                    'menu-item-status'    => 'publish',\
+                ] );\
+            \}\
+        \}\
+    \}\
+\
+    // Assign the menu to a theme location\
+    $locations = get_registered_nav_menus();\
+    $menu_locations = get_nav_menu_locations();\
+\
+    // Use 'primary' if available, else first location\
+    $assign_location = array_key_exists( 'primary', $locations ) ? 'primary' : array_key_first( $locations );\
+\
+    if ( $assign_location && ( ! isset( $menu_locations[ $assign_location ] ) || $menu_locations[ $assign_location ] !== $menu_id->term_id ) ) \{\
+        $menu_locations[ $assign_location ] = $menu_id->term_id;\
+        set_theme_mod( 'nav_menu_locations', $menu_locations );\
+    \}\
+\}\
+add_action( 'init', 'wpxpo_setup_main_menu' );
+\fs25\fsmilli12800 \cf6 \cb3 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 How to Create a User Programmatically in WordPress\
+\pard\pardeftab720\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 \
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 {{\NeXTGraphic d13afc7eb4d33c57f3c27c9cc755478f0c037fdc687ee7da4758f67734abd85d.png \width38400 \height19080 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf5 \cb3 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf4 \cb3 \
+\
+\
+\
+\pard\pardeftab720\sa320\partightenfactor0
+\cf2 \cb3 Last but not least, we can also create new users by using the following code. You just need to change the username, password, and email as per your requirements. I have assigned the new user to the editor role for example. You can change it to your preferred role.\'a0\
+\pard\pardeftab720\partightenfactor0
+
+\f3\fs20\fsmilli10240 \cf6 \cb3 function wpxpo_create_custom_user() \{\
+    $username = 'john_doe';\
+    $password = 'securepassword123';\
+    $email    = '{\field{\*\fldinst{HYPERLINK "https://www.wpxpo.com/cdn-cgi/l/email-protection"}}{\fldrslt \cf6 \cb3 \ul \ulc6 [email\'a0protected]}}';\
+\
+    if ( ! username_exists( $username ) && ! email_exists( $email ) ) \{\
+        $user_id = wp_create_user( $username, $password, $email );\
+\
+        if ( ! is_wp_error( $user_id ) ) \{\
+            // Set role (e.g., subscriber, editor, administrator)\
+            $user = new WP_User( $user_id );\
+            $user->set_role( 'editor' );\
+\
+            // Optional: Add more metadata\
+            update_user_meta( $user_id, 'first_name', 'John' );\
+            update_user_meta( $user_id, 'last_name', 'Doe' );\
+        \}\
+    \}\
+\}\
+add_action( 'init', 'wpxpo_create_custom_user' );
+\fs25\fsmilli12800 \cf6 \cb3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f2\b\fs32 \cf2 \cb3 *** Important Note:
+\f1\b0 \cf2 \cb3  Don\'92t forget to remove the code from the Function.php file once you have successfully created posts, pages, menus, or users. Otherwise, you face duplicate content or unwanted updates every time the site loads.\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Troubleshooting: Common Errors and How to Fix Them\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 No matter if you write the codes yourself or collect them from other sources, you may face some uses here and there. So I have tried to collect the most common problems and fixes to help you out.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Error: \'93Page/Post Not Appearing on the Frontend\'94\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\fs32 \cf2 \cb3 Cause:
+\f1\b0 \cf2 \cb3  You may face a post status issue while creating custom posts or pages.\
+
+\f2\b \cf2 \cb3 Solution:
+\f1\b0 \cf2 \cb3  To avoid this, you must ensure that the parameter of the post_status is set to publish. If not, WordPress will create the posts/pages as drafts.\'a0\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Error: \'93Menu Items Not Displaying\'94\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\fs32 \cf2 \cb3 Cause: 
+\f1\b0 \cf2 \cb3 The custom menu creation process will not work if it is not correctly assigned to the location.\
+
+\f2\b \cf2 \cb3 Solution:
+\f1\b0 \cf2 \cb3  So make sure to assign the menu properly to your preferred location using the wp_nav_menu function.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Error: \'93Incorrect Post Type or Page Template\'94\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\fs32 \cf2 \cb3 Cause:
+\f1\b0 \cf2 \cb3  My current code will not work if you have custom templates without modifying the name of the template.\
+
+\f2\b \cf2 \cb3 Solution:
+\f1\b0 \cf2 \cb3  So if you are using a custom template on your site, make use of adding the name of that in the page_template parameter.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Error: \'93Missing Content or Fields\'94\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\fs32 \cf2 \cb3 Cause:
+\f1\b0 \cf2 \cb3  If the codes are not written properly, some fields like title, content, or metadata will not be visible.\
+
+\f2\b \cf2 \cb3 Solution:
+\f1\b0 \cf2 \cb3  So make sure to pass all of your required post elements using the wp_insert_post() or wp_create_nav_menu() calls.\
+You may also like to read:\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Final Thoughts\'a0\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 That\'92s all about creating posts, pages, menus, and users programmatically. I hope you have got your questions answered and accomplished your goal by using the given codes. Don\'92t hesitate to comment below if you face any kind of issues. You can also share your personal opinion regarding the {\field{\*\fldinst{HYPERLINK "https://www.wpxpo.com/blog/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 WPXPO blog}}.}

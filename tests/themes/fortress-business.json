@@ -1,0 +1,35 @@
+{
+    "theme_name": "Fortress Business V1",
+    "theme_slug": "presspilot-fortress-business-v1",
+    "site_title": "Fortress Business",
+    "destructive_mode": true,
+    "style_mode": "json",
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Welcome to Fortress Business."
+        },
+        {
+            "slug": "about",
+            "title": "About",
+            "content": "Secure and stable."
+        },
+        {
+            "slug": "services",
+            "title": "Services",
+            "content": "We protect your business."
+        },
+        {
+            "slug": "contact",
+            "title": "Contact",
+            "content": "Reach out securely."
+        }
+    ],
+    "copyrightText": "© 2024 Fortress Business. All rights reserved.",
+    "colors": {
+        "base": "#FFFFFF",
+        "accent": "#0055FF",
+        "background": "#F0F0F0"
+    }
+}

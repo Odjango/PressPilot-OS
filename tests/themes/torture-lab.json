@@ -1,0 +1,25 @@
+{
+    "theme_name": "PP Torture Lab",
+    "theme_slug": "presspilot-torture-lab-v1",
+    "site_title": "Torture Lab",
+    "destructive_mode": true,
+    "source_spec": "tests/fixtures/torture-spec",
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "<!-- wp:paragraph --><p>Content is driven by front-page.html template.</p><!-- /wp:paragraph -->"
+        },
+        {
+            "slug": "sample",
+            "title": "Sample Page",
+            "content": "<!-- wp:paragraph --><p>This is a sample page.</p><!-- /wp:paragraph -->"
+        }
+    ],
+    "copyrightText": "© 2025 PP Torture Lab. Stress Test Edition.",
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#ff0000",
+        "background": "#f0f0f0"
+    }
+}

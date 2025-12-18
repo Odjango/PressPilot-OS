@@ -1,0 +1,19 @@
+{
+    "theme_name": "Compliance Test Theme",
+    "theme_slug": "presspilot-compliance-v1",
+    "site_title": "Compliance Check",
+    "destructive_mode": true,
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "<!-- wp:paragraph --><p>Welcome to constant compliance.</p><!-- /wp:paragraph -->"
+        }
+    ],
+    "copyrightText": "© 2024 Verified.",
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#0000ff",
+        "background": "#f0f0f0"
+    }
+}

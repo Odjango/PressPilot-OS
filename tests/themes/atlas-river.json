@@ -1,0 +1,52 @@
+{
+    "slug": "presspilot-atlas-river-v1",
+    "site_title": "Atlas River Dental Group",
+    "source_spec": "tests/fixtures/atlas-spec",
+    "colors": {
+        "base": "#f8fbff",
+        "accent": "#0077b6",
+        "background": "#ffffff"
+    },
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Welcome to Atlas River Dental."
+        },
+        {
+            "slug": "about",
+            "title": "Our Team",
+            "content": "Meet our specialists."
+        },
+        {
+            "slug": "services",
+            "title": "Services",
+            "content": "Comprehensive dental care."
+        },
+        {
+            "slug": "implants",
+            "title": "Dental Implants",
+            "content": "Restorative dentistry."
+        },
+        {
+            "slug": "orthodontics",
+            "title": "Orthodontics",
+            "content": "Invisalign and Braces."
+        },
+        {
+            "slug": "patient-info",
+            "title": "Patient Info",
+            "content": "Forms and Insurance."
+        },
+        {
+            "slug": "contact",
+            "title": "Contact Us",
+            "content": "Book your appointment."
+        },
+        {
+            "slug": "blog",
+            "title": "Dental Health Blog",
+            "content": "Latest news."
+        }
+    ]
+}

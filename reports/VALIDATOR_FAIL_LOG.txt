@@ -1,0 +1,23 @@
+PressPilot Theme Validator (Structural Integrity V2.0)
+Theme path: themes/validator-check-fail
+
+=== 1. Structure & Required Files ===
+❌ Missing required file: style.css
+❌ Missing required file: theme.json
+❌ Missing required file: functions.php
+✅ Found required directory: templates/
+❌ Missing required directory: parts/
+
+=== 2. theme.json Validation ===
+❌ theme.json not found.
+
+=== 3. Capability Checks ===
+
+=== 4. Integrity Scanning ===
+❌ templates/nav-ref.html: Forbidden 'ref' attribute in Navigation block.
+
+=== Summary ===
+Errors: 6
+Warnings: 0
+Report saved to: /Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/reports/BLOCK_MARKUP_INTEGRITY_REPORT.md
+Validation FAILED.

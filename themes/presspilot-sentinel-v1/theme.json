@@ -1,0 +1,127 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 2,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "840px",
+      "wideSize": "1200px"
+    },
+    "color": {
+      "palette": [
+        {
+          "slug": "base",
+          "color": "#f4f4f4",
+          "name": "Base"
+        },
+        {
+          "slug": "contrast",
+          "color": "#111111",
+          "name": "Contrast"
+        },
+        {
+          "slug": "contrast-2",
+          "color": "#636363",
+          "name": "Contrast 2"
+        },
+        {
+          "slug": "accent",
+          "color": "#e74c3c",
+          "name": "Accent"
+        },
+        {
+          "slug": "accent-2",
+          "color": "#1a1a1a",
+          "name": "Accent 2"
+        }
+      ]
+    },
+    "typography": {
+      "fontSizes": [
+        {
+          "slug": "sm",
+          "size": "0.875rem",
+          "name": "Small"
+        },
+        {
+          "slug": "base",
+          "size": "1rem",
+          "name": "Base"
+        },
+        {
+          "slug": "lg",
+          "size": "1.25rem",
+          "name": "Large"
+        },
+        {
+          "slug": "xl",
+          "size": "1.75rem",
+          "name": "Extra Large"
+        },
+        {
+          "slug": "2xl",
+          "size": "2.5rem",
+          "name": "Double Extra Large"
+        },
+        {
+          "slug": "3xl",
+          "size": "3.5rem",
+          "name": "Triple Extra Large"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "slug": "xs",
+          "size": "0.5rem",
+          "name": "Extra Small"
+        },
+        {
+          "slug": "sm",
+          "size": "1rem",
+          "name": "Small"
+        },
+        {
+          "slug": "md",
+          "size": "2rem",
+          "name": "Medium"
+        },
+        {
+          "slug": "lg",
+          "size": "4rem",
+          "name": "Large"
+        },
+        {
+          "slug": "30",
+          "size": "1.5rem",
+          "name": "Step 30"
+        },
+        {
+          "slug": "40",
+          "size": "2.5rem",
+          "name": "Step 40"
+        },
+        {
+          "slug": "50",
+          "size": "3.5rem",
+          "name": "Step 50"
+        },
+        {
+          "slug": "xl",
+          "size": "6rem",
+          "name": "Extra Large"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "blocks": {
+      "core/post-content": {
+        "spacing": {
+          "blockGap": "var(--wp--preset--spacing--md)"
+        }
+      }
+    }
+  }
+}

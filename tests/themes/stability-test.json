@@ -1,0 +1,43 @@
+{
+    "theme_name": "Stability Test Theme V1",
+    "theme_slug": "presspilot-stability-test-v1",
+    "site_title": "Stability Systems",
+    "destructive_mode": true,
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#ff4500",
+        "background": "#f4f4f4"
+    },
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Welcome to the Stability Systems homepage. We are testing the architectural integrity of the generated WordPress content. This page contains a significant amount of text to ensure the database insertion logic handles larger payloads correctly without truncation or encoding errors. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        },
+        {
+            "slug": "about",
+            "title": "About Our Stability",
+            "content": "Our mission is to provide rock-solid themes. Founded in 2024, we adhere to the strictest Golden Specifications. Our team consists of AI agents dedicated to correct PHP syntax and valid JSON schemas. We believe in Silence is Golden (index.php) and Fluid Typography (theme.json). Join us on our journey to 100% build success rates."
+        },
+        {
+            "slug": "services",
+            "title": "Services",
+            "content": "1. Theme Generation: We build FSE themes. 2. Content Seeding: We populate your site automatically. 3. Menu Creation: We wire up your navigation using a hybrid approach. 4. Zip Validation: We ensure your package is ready for upload."
+        },
+        {
+            "slug": "faq",
+            "title": "F.A.Q.",
+            "content": "Q: Is this stable? A: Yes, that is the point of this test. Q: Can I edit this? A: Yes, it is fully block-based. Q: Why is this text all one paragraph? A: Because the V1.2 Seeder currently wraps input in a single paragraph block for simplicity."
+        },
+        {
+            "slug": "contact",
+            "title": "Contact Us",
+            "content": "Reach us at test@example.com or visit our office at 123 Boolean Blvd, Null City."
+        },
+        {
+            "slug": "legacy",
+            "title": "Legacy Systems",
+            "content": "This page tests the handling of potential special characters: 'Quotes', \"Double Quotes\", Ampersands & Symbols @ # $ % ^ *. The seeder must escape these correctly."
+        }
+    ]
+}

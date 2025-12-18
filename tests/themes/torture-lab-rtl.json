@@ -1,0 +1,50 @@
+{
+    "theme_name": "PP Torture Lab RTL",
+    "theme_slug": "presspilot-torture-lab-rtl-v1",
+    "site_title": "مختبر التعذيب",
+    "destructive_mode": true,
+    "source_spec": "tests/fixtures/torture-rtl-spec",
+    "pages": [
+        {
+            "slug": "home",
+            "title": "الرئيسية",
+            "content": "<!-- wp:paragraph --><p>Content is driven by front-page.html template.</p><!-- /wp:paragraph -->"
+        },
+        {
+            "slug": "services",
+            "title": "خدماتنا",
+            "content": "<!-- wp:heading --><h2>ماذا نقدم</h2><!-- /wp:heading --><!-- wp:list --><ul><li>تدقيق</li><li>إصلاح</li><li>تحسين</li></ul><!-- /wp:list -->"
+        },
+        {
+            "slug": "case-studies",
+            "title": "دراسات الحالة",
+            "content": "<!-- wp:heading --><h2>قصص النجاح</h2><!-- /wp:heading --><!-- wp:paragraph --><p>شركة ACME حققت نمواً بنسبة 99%.</p><!-- /wp:paragraph -->"
+        },
+        {
+            "slug": "pricing",
+            "title": "الأسعار",
+            "content": "<!-- wp:heading --><h2>الباقات</h2><!-- /wp:heading --><!-- wp:paragraph --><p>انظر الصفحة الرئيسية للتفاصيل.</p><!-- /wp:paragraph -->"
+        },
+        {
+            "slug": "blog",
+            "title": "المدونة",
+            "content": "<!-- wp:paragraph --><p>أحدث المقالات والأخبار.</p><!-- /wp:paragraph -->"
+        },
+        {
+            "slug": "contact",
+            "title": "اتصل بنا",
+            "content": "<!-- wp:heading --><h2>تواصل معنا</h2><!-- /wp:heading --><!-- wp:paragraph --><p>البريد الإلكتروني: hello@torture-lab.ar</p><!-- /wp:paragraph -->"
+        },
+        {
+            "slug": "get-started",
+            "title": "ابدأ الآن",
+            "content": "<!-- wp:heading --><h2>انضم إلينا</h2><!-- /wp:heading --><!-- wp:button --><div class=\"wp-block-button\"><a class=\"wp-block-button__link\">سجل الآن</a></div><!-- /wp:button -->"
+        }
+    ],
+    "copyrightText": "© 2025 مختبر التعذيب. نسخة الضغط العالي.",
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#009900",
+        "background": "#f9f9f9"
+    }
+}

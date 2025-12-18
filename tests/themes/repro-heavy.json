@@ -1,0 +1,19 @@
+{
+    "slug": "presspilot-repro-heavy-v1",
+    "site_title": "PressPilot Repro Heavy",
+    "source_spec": "tests/fixtures/heavy-spec",
+    "pages": [
+        "Home",
+        "Services",
+        "Case Studies",
+        "Pricing",
+        "Blog",
+        "Contact",
+        "Get Started",
+        "Mega Footer Link 1",
+        "Mega Footer Link 2",
+        "Mega Footer Link 3",
+        "Privacy",
+        "Terms"
+    ]
+}

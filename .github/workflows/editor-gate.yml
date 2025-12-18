@@ -1,0 +1,94 @@
+name: Editor Gate (No Attempt Recovery)
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  editor-gate:
+    runs-on: ubuntu-latest
+    
+    # Remove conflicting service definitions, relying on docker-compose step
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps
+
+      - name: Start WP-QA Stack
+        run: |
+          # Bring up the stack defined in the repo
+          docker-compose -f docker-compose.wp-qa.yml up -d
+          
+          # Wait for DB/WP to initialize
+          echo "⏳ Waiting for services..."
+          sleep 15
+          
+          # Check Status
+          docker-compose -f docker-compose.wp-qa.yml ps
+
+      - name: Install WP & Activate Theme
+        run: |
+          # 1. Deploy Theme to WP Content Dir (Idempotent)
+          docker-compose -f docker-compose.wp-qa.yml exec -T wpqa-cli bash -c "rm -rf /var/www/html/wp-content/themes/presspilot-heavy-content-v3 && cp -r /presspilot/themes/presspilot-heavy-content-v3 /var/www/html/wp-content/themes/"
+          
+          # 2. Check Install / Install
+          if ! docker-compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp core is-installed; then
+            echo "📦 Installing WordPress..."
+            docker-compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp core install \
+              --url=http://localhost:8089 \
+              --title="CI Gate" \
+              --admin_user=admin \
+              --admin_password=admin \
+              --admin_email=admin@example.com \
+              --skip-email
+          else
+             echo "ℹ️ WordPress already installed."
+          fi
+          
+          # 3. Activate Theme (Fail loudly if fails)
+          echo "🎨 Activating Theme..."
+          docker-compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp theme activate presspilot-heavy-content-v3
+
+      - name: Export Dynamic Template IDs
+        run: |
+          docker-compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp eval '
+            $theme = "presspilot-heavy-content-v3";
+            $t = get_posts(["post_type"=>"wp_template","numberposts"=>100]);
+            $p = get_posts(["post_type"=>"wp_template_part","numberposts"=>100]);
+            
+            $template = "";
+            foreach ($t as $x) { if (str_starts_with($x->post_name, $theme."//")) { $template = $x->post_name; break; } }
+            
+            $part = "";
+            foreach ($p as $x) { if (str_starts_with($x->post_name, $theme."//")) { $part = $x->post_name; break; } }
+            
+            echo "TEMPLATE_ID=$template\n";
+            echo "PART_ID=$part\n";
+          ' > /tmp/ids.txt
+
+          cat /tmp/ids.txt
+          grep "TEMPLATE_ID=" /tmp/ids.txt >> $GITHUB_ENV || true
+          grep "PART_ID=" /tmp/ids.txt >> $GITHUB_ENV || true
+
+      - name: Run Playwright Editor Gate
+        run: |
+          npx playwright test -c playwright.config.js
+
+      - name: Upload Playwright Artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            playwright-report
+            test-results

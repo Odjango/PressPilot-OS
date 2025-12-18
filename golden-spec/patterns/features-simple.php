@@ -8,13 +8,13 @@
  */
 ?>
 <!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"blockGap":"1.5rem","margin":{"top":"2rem","bottom":"2rem"}}}} -->
-<div class="wp-block-group">
+<div class="wp-block-group" style="margin-top:2rem;margin-bottom:2rem;gap:1.5rem">
     <!-- wp:heading {"level":2,"fontSize":"lg","textAlign":"center"} -->
     <h2 class="has-text-align-center has-lg-font-size">Why this site works for your business</h2>
     <!-- /wp:heading -->
 
     <!-- wp:columns {"style":{"spacing":{"blockGap":"1.5rem"}}} -->
-    <div class="wp-block-columns">
+    <div class="wp-block-columns" style="gap:1.5rem">
         <!-- wp:column -->
         <div class="wp-block-column">
             <!-- wp:heading {"level":3,"fontSize":"md"} -->

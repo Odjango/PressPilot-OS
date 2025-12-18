@@ -1,41 +1,38 @@
-<!-- wp:group {"tagName":"footer","layout":{"type":"constrained"}} -->
-<footer class="wp-block-group">
-	<!-- wp:group {"align":"full","layout":{"type":"default"}} -->
-	<div class="wp-block-group alignfull">
-		<!-- wp:columns {"align":"wide"} -->
-		<div class="wp-block-columns alignwide">
-			<!-- wp:column {"width":"40%"} -->
-			<div class="wp-block-column" style="flex-basis:40%">
-				<!-- wp:site-title /-->
-				<!-- wp:paragraph {"fontSize":"small"} -->
-				<p class="has-small-font-size">{{COPYRIGHT_TEXT}}</p>
-				<!-- /wp:paragraph -->
-			</div>
-			<!-- /wp:column -->
+<!-- wp:group {"tagName":"footer","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
+<footer class="wp-block-group alignfull has-base-background-color has-background"
+    style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
+    <!-- wp:columns {"align":"wide"} -->
+    <div class="wp-block-columns alignwide">
+        <!-- wp:column {"style":{"layout":{"selfStretch":"fit","flexSize":null}}} -->
+        <div class="wp-block-column">
+            <!-- wp:site-title {"level":0} /-->
+            <!-- wp:paragraph {"style":{"typography":{"fontSize":"var:preset|font-size|small"}}} -->
+            <p class="has-small-font-size">{{COPYRIGHT_TEXT}}</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
 
-			<!-- wp:column {"width":"30%"} -->
-			<div class="wp-block-column" style="flex-basis:30%">
-				<!-- wp:heading {"level":6,"fontSize":"small"} -->
-				<h6 class="has-small-font-size">Quick links</h6>
-				<!-- /wp:heading -->
-				<!-- wp:page-list /-->
-			</div>
-			<!-- /wp:column -->
+        <!-- wp:column {"style":{"layout":{"selfStretch":"fit","flexSize":null}}} -->
+        <div class="wp-block-column">
+            <!-- wp:heading {"level":6,"style":{"typography":{"fontSize":"var:preset|font-size|small"}}} -->
+            <h6 class="has-small-font-size">Quick links</h6>
+            <!-- /wp:heading -->
+            <!-- wp:page-list /-->
+        </div>
+        <!-- /wp:column -->
 
-			<!-- wp:column {"width":"30%"} -->
-			<div class="wp-block-column" style="flex-basis:30%">
-				<!-- wp:social-links {"layout":{"type":"flex","justifyContent":"flex-end"}} -->
-				<ul class="wp-block-social-links">
-					<!-- wp:social-link {"service":"facebook"} /-->
-					<!-- wp:social-link {"service":"instagram"} /-->
-					<!-- wp:social-link {"service":"x"} /-->
-				</ul>
-				<!-- /wp:social-links -->
-			</div>
-			<!-- /wp:column -->
-		</div>
-		<!-- /wp:columns -->
-	</div>
-	<!-- /wp:group -->
+        <!-- wp:column {"style":{"layout":{"selfStretch":"fit","flexSize":null}}} -->
+        <div class="wp-block-column">
+            <!-- wp:social-links {"iconColor":"contrast","iconColorValue":"#1e1e1e"} -->
+            <ul class="wp-block-social-links has-icon-color" style="color:#1e1e1e">
+                <!-- wp:social-link {"url":"#","service":"twitter"} /-->
+                <!-- wp:social-link {"url":"#","service":"instagram"} /-->
+                <!-- wp:social-link {"url":"#","service":"linkedin"} /-->
+            </ul>
+            <!-- /wp:social-links -->
+        </div>
+        <!-- /wp:column -->
+    </div>
+    <!-- /wp:columns -->
 </footer>
 <!-- /wp:group -->

@@ -1,0 +1,53 @@
+{
+    "theme_name": "Heavy Content V2",
+    "theme_slug": "presspilot-heavy-content-v2",
+    "site_title": "Heavy Stress Test",
+    "destructive_mode": true,
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#ff0000",
+        "background": "#f0f0f0"
+    },
+    "pages": [
+        {
+            "slug": "about",
+            "title": "About Us",
+            "content": "About content with many blocks."
+        },
+        {
+            "slug": "services",
+            "title": "Services",
+            "content": "Services list."
+        },
+        {
+            "slug": "contact",
+            "title": "Contact",
+            "content": "Contact form placeholder."
+        },
+        {
+            "slug": "blog",
+            "title": "Blog",
+            "content": "Blog posts."
+        },
+        {
+            "slug": "faq",
+            "title": "FAQ",
+            "content": "FAQ section."
+        },
+        {
+            "slug": "pricing",
+            "title": "Pricing",
+            "content": "Pricing table."
+        },
+        {
+            "slug": "testimonials",
+            "title": "Testimonials",
+            "content": "Client quotes."
+        },
+        {
+            "slug": "portfolio",
+            "title": "Portfolio",
+            "content": "Gallery of work."
+        }
+    ]
+}

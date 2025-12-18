@@ -1,0 +1,17 @@
+{
+    "slug": "presspilot-tt4-verify",
+    "site_title": "TT4 Verification Station",
+    "source_spec": "golden-spec",
+    "colors": {
+        "base": "#000000",
+        "accent": "#ff0000",
+        "background": "#ffffff"
+    },
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Welcome to TT4."
+        }
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "slug": "presspilot-sentinel-v1",
+    "site_title": "PressPilot Sentinel",
+    "source_spec": "tests/fixtures/atlas-spec",
+    "colors": {
+        "base": "#1a1a1a",
+        "accent": "#e74c3c",
+        "background": "#f4f4f4"
+    },
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Breaking news and in-depth analysis from around the globe."
+        },
+        {
+            "slug": "world",
+            "title": "World News",
+            "content": "International affairs, conflicts, and resolutions."
+        },
+        {
+            "slug": "politics",
+            "title": "Politics",
+            "content": "Legislative updates and policy debates."
+        },
+        {
+            "slug": "economy",
+            "title": "Economy",
+            "content": "Market trends, crypto, and fiscal policy."
+        },
+        {
+            "slug": "tech",
+            "title": "Technology",
+            "content": "AI, cyber-security, and consumer electronics."
+        },
+        {
+            "slug": "science",
+            "title": "Science",
+            "content": "Space exploration, climate research, and biotech."
+        },
+        {
+            "slug": "health",
+            "title": "Health",
+            "content": "Wellness, medical breakthroughs, and public health."
+        },
+        {
+            "slug": "opinion",
+            "title": "Opinion",
+            "content": "Editorials and guest columns."
+        },
+        {
+            "slug": "culture",
+            "title": "Culture",
+            "content": "Arts, movies, music, and literature reviews."
+        },
+        {
+            "slug": "subscribe",
+            "title": "Subscribe",
+            "content": "Join our premium membership today."
+        }
+    ]
+}

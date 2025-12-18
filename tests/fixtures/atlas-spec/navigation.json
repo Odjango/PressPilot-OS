@@ -1,0 +1,44 @@
+[
+    {
+        "label": "{{HOME_PAGE_TITLE}}",
+        "type": "page",
+        "id": "{{HOME_PAGE_ID}}",
+        "url": "{{HOME_PAGE_URL}}",
+        "kind": "post-type"
+    },
+    {
+        "label": "{{MENU_PAGE_TITLE}}",
+        "type": "page",
+        "id": "{{MENU_PAGE_ID}}",
+        "url": "{{MENU_PAGE_URL}}",
+        "kind": "post-type"
+    },
+    {
+        "label": "{{ABOUT_PAGE_TITLE}}",
+        "type": "page",
+        "id": "{{ABOUT_PAGE_ID}}",
+        "url": "{{ABOUT_PAGE_URL}}",
+        "kind": "post-type"
+    },
+    {
+        "label": "{{SERVICES_PAGE_TITLE}}",
+        "type": "page",
+        "id": "{{SERVICES_PAGE_ID}}",
+        "url": "{{SERVICES_PAGE_URL}}",
+        "kind": "post-type"
+    },
+    {
+        "label": "{{BLOG_PAGE_TITLE}}",
+        "type": "page",
+        "id": "{{BLOG_PAGE_ID}}",
+        "url": "{{BLOG_PAGE_URL}}",
+        "kind": "post-type"
+    },
+    {
+        "label": "{{CONTACT_PAGE_TITLE}}",
+        "type": "page",
+        "id": "{{CONTACT_PAGE_ID}}",
+        "url": "{{CONTACT_PAGE_URL}}",
+        "kind": "post-type"
+    }
+]

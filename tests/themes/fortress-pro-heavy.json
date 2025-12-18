@@ -1,0 +1,45 @@
+{
+    "theme_name": "Fortress Pro Heavy QA",
+    "theme_slug": "presspilot-fortress-heavy-v1",
+    "site_title": "Fortress Pro",
+    "destructive_mode": true,
+    "source_spec": "tests/fixtures/heavy-spec",
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "<!-- wp:paragraph --><p>Content is driven by front-page.html template.</p><!-- /wp:paragraph -->"
+        },
+        {
+            "slug": "about",
+            "title": "About Us",
+            "content": "<!-- wp:heading --><h2>Our Journey</h2><!-- /wp:heading --><!-- wp:list --><ul><li>2020: Founded</li><li>2022: Scaled</li><li>2024: IPO</li></ul><!-- /wp:list --><!-- wp:heading --><h2>The Team</h2><!-- /wp:heading --><!-- wp:columns --><div class=\"wp-block-columns\"><!-- wp:column --><div class=\"wp-block-column\"><p>CEO</p></div><!-- /wp:column --><!-- wp:column --><div class=\"wp-block-column\"><p>CTO</p></div><!-- /wp:column --></div><!-- /wp:columns -->"
+        },
+        {
+            "slug": "services",
+            "title": "Services",
+            "content": "<!-- wp:heading --><h2>What We Do</h2><!-- /wp:heading --><!-- wp:table --><figure class=\"wp-block-table\"><table><thead><tr><th>Tier</th><th>Features</th></tr></thead><tbody><tr><td>Basic</td><td>Audit</td></tr><tr><td>Pro</td><td>Audit + Fix</td></tr></tbody></table></figure><!-- /wp:table -->"
+        },
+        {
+            "slug": "case-studies",
+            "title": "Case Studies",
+            "content": "<!-- wp:heading --><h2>Success Stories</h2><!-- /wp:heading --><!-- wp:paragraph --><p>ACME Corp improved uptime by 99%.</p><!-- /wp:paragraph -->"
+        },
+        {
+            "slug": "pricing",
+            "title": "Pricing",
+            "content": "<!-- wp:heading --><h2>Plans</h2><!-- /wp:heading --><!-- wp:paragraph --><p>See homepage for details.</p><!-- /wp:paragraph -->"
+        },
+        {
+            "slug": "contact",
+            "title": "Contact",
+            "content": "<!-- wp:heading --><h2>Get in Touch</h2><!-- /wp:heading --><!-- wp:paragraph --><p>Email: hello@fortress.pro</p><!-- /wp:paragraph --><!-- wp:group {\"style\":{\"border\":{\"width\":\"1px\"}}} --><div class=\"wp-block-group\" style=\"border-width:1px\"><!-- wp:paragraph --><p>Name:</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>Email:</p><!-- /wp:paragraph --><!-- wp:button --><div class=\"wp-block-button\"><a class=\"wp-block-button__link\">Send</a></div><!-- /wp:button --></div><!-- /wp:group -->"
+        }
+    ],
+    "copyrightText": "© 2024 Fortress Pro. Heavy QA Edition.",
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#000000",
+        "background": "#ffffff"
+    }
+}

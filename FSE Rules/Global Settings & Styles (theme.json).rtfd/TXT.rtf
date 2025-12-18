@@ -1,0 +1,1525 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 .SFNS-Regular_wdth_opsz1E0000_GRAD_wght1F40000;\f1\fnil\fcharset0 HelveticaNeue;\f2\fnil\fcharset0 Menlo-Regular;
+\f3\fnil\fcharset0 HelveticaNeue-Bold;\f4\fnil\fcharset0 HelveticaNeue-Italic;}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;
+\red223\green225\blue230;\red255\green255\blue255;\red29\green29\blue31;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c99985;\cssrgb\c0\c1\c1;\cssrgb\c100000\c100000\c99985\c60000;
+\cssrgb\c89913\c90699\c92156;\cssrgb\c100000\c100000\c100000;\cssrgb\c15317\c15318\c16476;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid1\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\margl1440\margr1440\vieww26240\viewh15520\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs60 \cf2 \cb3 \expnd0\expndtw0\kerning0
+Global Settings & Styles (theme.json) \'96 Block Editor Handbook | Developer.WordPress.org
+\f1\fs24 \cf4 \cb3 \
+\pard\pardeftab720\qc\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/how-to-guides/themes/global-settings-and-styles/"}}{\fldrslt \cf4 \cb3 \
+}}\pard\pardeftab720\partightenfactor0
+
+\fs36 \cf2 \cb3 {{\NeXTGraphic wmark.png \width20000 \height20000 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \
+\pard\pardeftab720\partightenfactor0
+
+\fs28 \cf4 \cb3 WordPress Developer Resources\
+Dec 28, 2023\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\fs32 \cf2 \cb3 WordPress 5.8 comes with {\field{\*\fldinst{HYPERLINK "https://make.wordpress.org/core/2021/06/25/introducing-theme-json-in-wordpress-5-8/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 a new mechanism}} to configure the editor that enables a finer-grained control and introduces the first step in managing styles for future WordPress releases: the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  file.\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\fs48 \cf2 \cb3 \ul \ulc2 Rationale
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 The Block Editor API has evolved at different velocities and there are some growing pains, specially in areas that affect themes. Examples of this are: the ability to {\field{\*\fldinst{HYPERLINK "https://make.wordpress.org/core/2020/01/23/controlling-the-block-editor/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 control the editor programmatically}}, or {\field{\*\fldinst{HYPERLINK "https://github.com/WordPress/gutenberg/issues/9534"}}{\fldrslt \cf2 \cb3 \ul \ulc2 a block style system}} that facilitates user, theme, and core style preferences.\
+This describes the current efforts to consolidate the various APIs related to styles into a single point \'96 a 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  file that should be located inside the root of the theme directory.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 \ul \ulc2 Settings for the block editor
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Instead of the proliferation of theme support flags or alternative methods, the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  files provides a canonical way to define the settings of the block editor. These settings includes things like:\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 \ul \ulc2 Settings can be controlled per block
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 For more granularity, these settings also work at the block level in 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3 .\
+Examples of what can be achieved are:\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 \ul \ulc2 Styles are managed
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 By using the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  file to set style properties in a structured way, the Block Editor can \'93manage\'94 the CSS that comes from different origins (user, theme, and core CSS). For example, if a theme and a user set the font size for paragraphs, we only enqueue the style coming from the user and not the theme\'92s.\
+Some of the advantages are:\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 \ul \ulc2 CSS Custom Properties: presets & custom
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 There are some areas of styling that would benefit from having shared values that can change across a site.\
+To address this need, we\'92ve started to experiment with CSS Custom Properties, aka CSS Variables, in some places:\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\fs48 \cf2 \cb3 \ul \ulc2 Specification
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 This specification is the same for the three different origins that use this format: core, themes, and users. Themes can override core\'92s defaults by creating a file called 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3 . Users, via the site editor, will also be able to override theme\'92s or core\'92s preferences via a user interface that is being worked on.\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "settings": \{\},\
+    "styles": \{\},\
+    "customTemplates": \{\},\
+    "templateParts": \{\}\
+\}\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f1\fs40 \cf2 \cb3 \ul \ulc2 Version
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 This field describes the format of the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  file. The latest version is {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/reference-guides/theme-json-reference/theme-json-living/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 version 3}} introduced in WordPress 6.6.\
+New versions are introduced when a breaking change needs to be made. This allows theme authors to choose when to opt-in to the breaking changes and migrate their theme.json files to the new format.\
+Older versions of 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  are backwards-compatible and will continue to work with newer versions of WordPress and the Gutenberg plugin. However new features will be developed on the latest version.\
+Follow the instructions in {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/reference-guides/theme-json-reference/theme-json-migrations/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 migrating to newer versions}} for details on updating to the latest version.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 \ul \ulc2 Settings
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 The settings section has the following structure:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "settings": \{\
+        "border": \{\
+            "radius": false,\
+            "color": false,\
+            "style": false,\
+            "width": false\
+        \},\
+        "color": \{\
+            "custom": true,\
+            "customDuotone": true,\
+            "customGradient": true,\
+            "duotone": [],\
+            "gradients": [],\
+            "link": false,\
+            "palette": [],\
+            "text": true,\
+            "background": true,\
+            "defaultGradients": true,\
+            "defaultPalette": true\
+        \},\
+        "custom": \{\},\
+        "layout": \{\
+            "contentSize": "800px",\
+            "wideSize": "1000px"\
+        \},\
+        "spacing": \{\
+            "margin": false,\
+            "padding": false,\
+            "blockGap": null,\
+            "units": [ "px", "em", "rem", "vh", "vw" ]\
+        \},\
+        "typography": \{\
+            "customFontSize": true,\
+            "lineHeight": false,\
+            "dropCap": true,\
+            "fluid": false,\
+            "fontStyle": true,\
+            "fontWeight": true,\
+            "letterSpacing": true,\
+            "textDecoration": true,\
+            "textTransform": true,\
+            "fontSizes": [],\
+            "fontFamilies": []\
+        \},\
+        "blocks": \{\
+            "core/paragraph": \{\
+                "color": \{\},\
+                "custom": \{\},\
+                "layout": \{\},\
+                "spacing": \{\},\
+                "typography": \{\}\
+            \},\
+            "core/heading": \{\},\
+            "etc": \{\}\
+        \}\
+    \}\
+\}\
+\{\
+    "version": 3,\
+    "settings": \{\
+        "appearanceTools": false,\
+        "border": \{\
+            "color": false,\
+            "radius": false,\
+            "style": false,\
+            "width": false\
+        \},\
+        "color": \{\
+            "background": true,\
+            "custom": true,\
+            "customDuotone": true,\
+            "customGradient": true,\
+            "defaultGradients": true,\
+            "defaultPalette": true,\
+            "duotone": [],\
+            "gradients": [],\
+            "link": false,\
+            "palette": [],\
+            "text": true\
+        \},\
+        "custom": \{\},\
+        "dimensions": \{\
+            "aspectRatio": false,\
+            "minHeight": false,\
+            "width": false,\
+        \},\
+        "layout": \{\
+            "contentSize": "800px",\
+            "wideSize": "1000px"\
+        \},\
+        "spacing": \{\
+            "blockGap": null,\
+            "margin": false,\
+            "padding": false,\
+            "customSpacingSize": true,\
+            "units": [ "px", "em", "rem", "vh", "vw" ],\
+            "spacingScale": \{\
+                "operator": "*",\
+                "increment": 1.5,\
+                "steps": 7,\
+                "mediumStep": 1.5,\
+                "unit": "rem"\
+            \},\
+            "spacingSizes": []\
+        \},\
+        "typography": \{\
+            "customFontSize": true,\
+            "dropCap": true,\
+            "fluid": false,\
+            "fontFamilies": [],\
+            "fontSizes": [],\
+            "fontStyle": true,\
+            "fontWeight": true,\
+            "letterSpacing": true,\
+            "lineHeight": false,\
+            "textAlign": true,\
+            "textColumns": false,\
+            "textDecoration": true,\
+            "textTransform": true\
+        \},\
+        "blocks": \{\
+            "core/paragraph": \{\
+                "border": \{\},\
+                "color": \{\},\
+                "custom": \{\},\
+                "layout": \{\},\
+                "spacing": \{\},\
+                "typography": \{\}\
+            \},\
+            "core/heading": \{\},\
+            "etc": \{\}\
+        \}\
+    \}\
+\}\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 Each block can configure any of these settings separately, providing a more fine-grained control over what exists via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 add_theme_support
+\f1\fs32 \cf2 \cb3 . The settings declared at the top-level affect to all blocks, unless a particular block overwrites it. It\'92s a way to provide inheritance and configure all blocks at once.\
+Note, however, that not all settings are relevant for all blocks. The settings section provides an opt-in/opt-out mechanism for themes, but it\'92s the block\'92s responsibility to add support for the features that are relevant to it. For example, if a block doesn\'92t implement the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 dropCap
+\f1\fs32 \cf2 \cb3  feature, a theme can\'92t enable it for such a block through 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3 .\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 \ul \ulc2 Opt-in into UI controls
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 There\'92s one special setting property, 
+\f2\fs25\fsmilli12800 \cf2 \cb3 appearanceTools
+\f1\fs32 \cf2 \cb3 , which is a boolean and its default value is false. Themes can use this setting to enable the following ones:\
+\pard\pardeftab720\sa425\partightenfactor0
+\cf2 \cb3 \ul \ulc2 Backward compatibility with add_theme_support
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 To retain backward compatibility, the existing 
+\f2\fs25\fsmilli12800 \cf2 \cb3 add_theme_support
+\f1\fs32 \cf2 \cb3  declarations that configure the block editor are retrofit in the proper categories for the top-level section. For example, if a theme uses 
+\f2\fs25\fsmilli12800 \cf2 \cb3 add_theme_support('disable-custom-colors')
+\f1\fs32 \cf2 \cb3 , it\'92ll be the same as setting 
+\f2\fs25\fsmilli12800 \cf2 \cb3 settings.color.custom
+\f1\fs32 \cf2 \cb3  to 
+\f2\fs25\fsmilli12800 \cf2 \cb3 false
+\f1\fs32 \cf2 \cb3 . If the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  contains any settings, these will take precedence over the values declared via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 add_theme_support
+\f1\fs32 \cf2 \cb3 . This is the complete list of equivalences:\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f3\b \cf2 \cb3 add_theme_support\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 \cb3 theme.json setting\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\b0\fs25\fsmilli12800 \cf2 \cb3 custom-line-height
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Set 
+\f2\fs25\fsmilli12800 \cf2 \cb3 typography.lineHeight
+\f1\fs32 \cf2 \cb3  to 
+\f2\fs25\fsmilli12800 \cf2 \cb3 true
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 custom-spacing
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Set 
+\f2\fs25\fsmilli12800 \cf2 \cb3 spacing.padding
+\f1\fs32 \cf2 \cb3  to 
+\f2\fs25\fsmilli12800 \cf2 \cb3 true
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 custom-units
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Provide the list of units via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 spacing.units
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 disable-custom-colors
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Set 
+\f2\fs25\fsmilli12800 \cf2 \cb3 color.custom
+\f1\fs32 \cf2 \cb3  to 
+\f2\fs25\fsmilli12800 \cf2 \cb3 false
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 disable-custom-font-sizes
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Set 
+\f2\fs25\fsmilli12800 \cf2 \cb3 typography.customFontSize
+\f1\fs32 \cf2 \cb3  to 
+\f2\fs25\fsmilli12800 \cf2 \cb3 false
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 disable-custom-gradients
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Set 
+\f2\fs25\fsmilli12800 \cf2 \cb3 color.customGradient
+\f1\fs32 \cf2 \cb3  to 
+\f2\fs25\fsmilli12800 \cf2 \cb3 false
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 editor-color-palette
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Provide the list of colors via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 color.palette
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 editor-font-sizes
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Provide the list of font size via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 typography.fontSizes
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 editor-gradient-presets
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Provide the list of gradients via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 color.gradients
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 editor-spacing-sizes
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Provide the list of spacing sizes via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 spacing.spacingSizes
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 appearance-tools
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Set 
+\f2\fs25\fsmilli12800 \cf2 \cb3 appearanceTools
+\f1\fs32 \cf2 \cb3  to 
+\f2\fs25\fsmilli12800 \cf2 \cb3 true
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 border
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Set 
+\f2\fs25\fsmilli12800 \cf2 \cb3 border: color, radius, style, width
+\f1\fs32 \cf2 \cb3  to 
+\f2\fs25\fsmilli12800 \cf2 \cb3 true
+\f1\fs32 \cf2 \cb3 .\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth4473\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth8926\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 link-color
+\f1\fs32 \cf2 \cb3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cb3 Set 
+\f2\fs25\fsmilli12800 \cf2 \cb3 color.link
+\f1\fs32 \cf2 \cb3  to 
+\f2\fs25\fsmilli12800 \cf2 \cb3 true
+\f1\fs32 \cf2 \cb3 .\cell \lastrow\row
+\pard\pardeftab720\sa425\partightenfactor0
+\cf2 \cb3 \ul \ulc2 Presets
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 Presets are part of the settings section. They are values that are shown to the user via some UI controls. By defining them via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  the engine can do more for themes, such as automatically translate the preset name or enqueue the corresponding CSS classes and custom properties.\
+The following presets can be defined via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3 :\
+The naming schema for the classes and the custom properties is as follows:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "settings": \{\
+        "color": \{\
+            "duotone": [\
+                \{\
+                    "colors": [ "#000", "#FFF" ],\
+                    "slug": "black-and-white",\
+                    "name": "Black and White"\
+                \}\
+            ],\
+            "gradients": [\
+                \{\
+                    "slug": "blush-bordeaux",\
+                    "gradient": "linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%)",\
+                    "name": "Blush bordeaux"\
+                \},\
+                \{\
+                    "slug": "blush-light-purple",\
+                    "gradient": "linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%)",\
+                    "name": "Blush light purple"\
+                \}\
+            ],\
+            "palette": [\
+                \{\
+                    "slug": "strong-magenta",\
+                    "color": "#a156b4",\
+                    "name": "Strong magenta"\
+                \},\
+                \{\
+                    "slug": "very-dark-grey",\
+                    "color": "rgb(131, 12, 8)",\
+                    "name": "Very dark grey"\
+                \}\
+            ]\
+        \},\
+        "typography": \{\
+            "fontFamilies": [\
+                \{\
+                    "fontFamily": "-apple-system,BlinkMacSystemFont,\\"Segoe UI\\",Roboto,Oxygen-Sans,Ubuntu,Cantarell, \\"Helvetica Neue\\",sans-serif",\
+                    "slug": "system-font",\
+                    "name": "System Font"\
+                \},\
+                \{\
+                    "fontFamily": "Helvetica Neue, Helvetica, Arial, sans-serif",\
+                    "slug": "helvetica-arial",\
+                    "name": "Helvetica or Arial"\
+                \}\
+            ],\
+            "fontSizes": [\
+                \{\
+                    "slug": "big",\
+                    "size": 32,\
+                    "name": "Big"\
+                \},\
+                \{\
+                    "slug": "x-large",\
+                    "size": 46,\
+                    "name": "Large"\
+                \}\
+            ]\
+        \},\
+        "spacing": \{\
+            "spacingScale": \{\
+                "operator": "*",\
+                "increment": 1.5,\
+                "steps": 7,\
+                "mediumStep": 1.5,\
+                "unit": "rem"\
+            \},\
+            "spacingSizes": [\
+                \{\
+                    "slug": "40",\
+                    "size": "1rem",\
+                    "name": "Small"\
+                \},\
+                \{\
+                    "slug": "50",\
+                    "size": "1.5rem",\
+                    "name": "Medium"\
+                \},\
+                \{\
+                    "slug": "60",\
+                    "size": "2rem",\
+                    "name": "Large"\
+                \}\
+            ]\
+        \},\
+        "blocks": \{\
+            "core/group": \{\
+                "color": \{\
+                    "palette": [\
+                        \{\
+                            "slug": "black",\
+                            "color": "#000000",\
+                            "name": "Black"\
+                        \},\
+                        \{\
+                            "slug": "white",\
+                            "color": "#ffffff",\
+                            "name": "White"\
+                        \}\
+                    ]\
+                \}\
+            \}\
+        \}\
+    \}\
+\}\
+/* Top-level custom properties */\
+body \{\
+    --wp--preset--color--strong-magenta: #a156b4;\
+    --wp--preset--color--very-dark-grey: #444;\
+    --wp--preset--gradient--blush-bordeaux: linear-gradient( 135deg, rgb( 254, 205, 165 ) 0%, rgb( 254, 45, 45 ) 50%, rgb( 107, 0, 62 ) 100% );\
+    --wp--preset--gradient--blush-light-purple: linear-gradient( 135deg, rgb( 255, 206, 236 ) 0%, rgb( 152, 150, 240 ) 100% );\
+    --wp--preset--font-size--x-large: 46;\
+    --wp--preset--font-size--big: 32;\
+    --wp--preset--font-family--helvetica-arial: Helvetica Neue, Helvetica, Arial, sans-serif;\
+    --wp--preset--font-family--system: -apple-system,BlinkMacSystemFont,\\"Segoe UI\\",Roboto,Oxygen-Sans,Ubuntu,Cantarell, \\"Helvetica Neue\\",sans-serif;\
+    --wp--preset--spacing--20: 0.44rem;\
+    --wp--preset--spacing--30: 0.67rem;\
+    --wp--preset--spacing--40: 1rem;\
+    --wp--preset--spacing--50: 1.5rem;\
+    --wp--preset--spacing--60: 2.25rem;\
+    --wp--preset--spacing--70: 3.38rem;\
+    --wp--preset--spacing--80: 5.06rem;\
+\}\
+\
+/* Block-level custom properties (bounded to the group block) */\
+.wp-block-group \{\
+    --wp--preset--color--black: #000000;\
+    --wp--preset--color--white: #ffffff;\
+\}\
+\
+/* Top-level classes */\
+.has-strong-magenta-color \{ color: #a156b4 !important; \}\
+.has-strong-magenta-background-color \{ background-color: #a156b4 !important; \}\
+.has-strong-magenta-border-color \{ border-color: #a156b4 !important; \}\
+.has-very-dark-grey-color \{ color: #444 !important; \}\
+.has-very-dark-grey-background-color \{ background-color: #444 !important; \}\
+.has-very-dark-grey-border-color \{ border-color: #444 !important; \}\
+.has-blush-bordeaux-background \{ background: linear-gradient( 135deg, rgb( 254, 205, 165 ) 0%, rgb( 254, 45, 45 ) 50%, rgb( 107, 0, 62 ) 100% ) !important; \}\
+.has-blush-light-purple-background \{ background: linear-gradient( 135deg, rgb( 255, 206, 236 ) 0%, rgb( 152, 150, 240 ) 100% ) !important; \}\
+.has-big-font-size \{ font-size: 32; \}\
+.has-normal-font-size \{ font-size: 16; \}\
+\
+/* Block-level classes (bounded to the group block) */\
+.wp-block-group.has-black-color \{ color: #a156b4 !important; \}\
+.wp-block-group.has-black-background-color \{ background-color: #a156b4 !important; \}\
+.wp-block-group.has-black-border-color \{ border-color: #a156b4 !important; \}\
+.wp-block-group.has-white-color \{ color: #444 !important; \}\
+.wp-block-group.has-white-background-color \{ background-color: #444 !important; \}\
+.wp-block-group.has-white-border-color \{ border-color: #444 !important; \}\
+\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 To maintain backward compatibility, the presets declared via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 add_theme_support
+\f1\fs32 \cf2 \cb3  will also generate the CSS Custom Properties. If the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  contains any presets, these will take precedence over the ones declared via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 add_theme_support
+\f1\fs32 \cf2 \cb3 .\
+Preset classes are attached to the content of a post by some user action. That\'92s why the engine will add 
+\f2\fs25\fsmilli12800 \cf2 \cb3 !important
+\f1\fs32 \cf2 \cb3  to these, because user styles should take precedence over theme styles.\
+\pard\pardeftab720\sa425\partightenfactor0
+\cf2 \cb3 \ul \ulc2 Custom
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 In addition to create CSS Custom Properties for the presets, the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  also allows for themes to create their own, so they don\'92t have to be enqueued separately. Any values declared within the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 custom
+\f1\fs32 \cf2 \cb3  field will be transformed to CSS Custom Properties following this naming schema: 
+\f2\fs25\fsmilli12800 \cf2 \cb3 --wp--custom--<variable-name>
+\f1\fs32 \cf2 \cb3 .\
+For example:\
+Note that the name of the variable is created by adding 
+\f2\fs25\fsmilli12800 \cf2 \cb3 --
+\f1\fs32 \cf2 \cb3  in between each nesting level and 
+\f2\fs25\fsmilli12800 \cf2 \cb3 camelCase
+\f1\fs32 \cf2 \cb3  fields are transformed to 
+\f2\fs25\fsmilli12800 \cf2 \cb3 kebab-case
+\f1\fs32 \cf2 \cb3 .\
+\pard\pardeftab720\sa425\partightenfactor0
+\cf2 \cb3 \ul \ulc2 Settings examples
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "settings": \{\
+        "color": \{\
+            "custom": false\
+        \},\
+        "blocks": \{\
+            "core/paragraph": \{\
+                "color": \{\
+                    "custom": true\
+                \}\
+            \}\
+        \}\
+    \}\
+\}\
+\{\
+    "version": 3,\
+    "settings": \{\
+        "blocks": \{\
+            "core/button": \{\
+                "border": \{\
+                    "radius": false\
+                \}\
+            \}\
+        \}\
+    \}\
+\}\
+\{\
+    "version": 3,\
+    "settings": \{\
+        "color": \{\
+            "palette": [\
+                \{\
+                    "slug": "black",\
+                    "color": "#000000",\
+                    "name": "Black"\
+                \},\
+                \{\
+                    "slug": "white",\
+                    "color": "#FFFFFF",\
+                    "name": "White"\
+                \},\
+                \{\
+                    "slug": "red",\
+                    "color": "#FF0000",\
+                    "name": "Red"\
+                \},\
+                \{\
+                    "slug": "green",\
+                    "color": "#00FF00",\
+                    "name": "Green"\
+                \},\
+                \{\
+                    "slug": "blue",\
+                    "color": "#0000FF",\
+                    "name": "Blue"\
+                \}\
+            ]\
+        \},\
+        "blocks": \{\
+            "core/group": \{\
+                "color": \{\
+                    "palette": [\
+                        \{\
+                            "slug": "black",\
+                            "color": "#000000",\
+                            "name": "Black"\
+                        \},\
+                        \{\
+                            "slug": "white",\
+                            "color": "#FFF",\
+                            "name": "White"\
+                        \}\
+                    ]\
+                \}\
+            \}\
+        \}\
+    \}\
+\}\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f1\fs40 \cf2 \cb3 \ul \ulc2 Styles
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Each block declares which style properties it exposes via the {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 block supports mechanism}}. The support declarations are used to automatically generate the UI controls for the block in the editor. Themes can use any style property via the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  for any block \uc0\u8213  it\'92s the theme\'92s responsibility to verify that it works properly according to the block markup, etc.\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "styles": \{\
+        "border": \{\
+            "radius": "value",\
+            "color": "value",\
+            "style": "value",\
+            "width": "value"\
+        \},\
+        "filter": \{\
+            "duotone": "value"\
+        \},\
+        "color": \{\
+            "background": "value",\
+            "gradient": "value",\
+            "text": "value"\
+        \},\
+        "spacing": \{\
+            "blockGap": "value",\
+            "margin": \{\
+                "top": "value",\
+                "right": "value",\
+                "bottom": "value",\
+                "left": "value",\
+            \},\
+            "padding": \{\
+                "top": "value",\
+                "right": "value",\
+                "bottom": "value",\
+                "left": "value"\
+            \}\
+        \},\
+        "typography": \{\
+            "fontSize": "value",\
+            "fontStyle": "value",\
+            "fontWeight": "value",\
+            "letterSpacing": "value",\
+            "lineHeight": "value",\
+            "textDecoration": "value",\
+            "textTransform": "value"\
+        \},\
+        "elements": \{\
+            "link": \{\
+                "border": \{\},\
+                "color": \{\},\
+                "spacing": \{\},\
+                "typography": \{\}\
+            \},\
+            "h1": \{\},\
+            "h2": \{\},\
+            "h3": \{\},\
+            "h4": \{\},\
+            "h5": \{\},\
+            "h6": \{\}\
+        \},\
+        "blocks": \{\
+            "core/group": \{\
+                "border": \{\},\
+                "color": \{\},\
+                "spacing": \{\},\
+                "typography": \{\},\
+                "elements": \{\
+                    "link": \{\},\
+                    "h1": \{\},\
+                    "h2": \{\},\
+                    "h3": \{\},\
+                    "h4": \{\},\
+                    "h5": \{\},\
+                    "h6": \{\}\
+                \}\
+            \},\
+            "etc": \{\}\
+        \}\
+    \}\
+\}\
+\{\
+    "version": 3,\
+    "styles": \{\
+        "border": \{\
+            "color": "value",\
+            "radius": "value",\
+            "style": "value",\
+            "width": "value"\
+        \},\
+        "color": \{\
+            "background": "value",\
+            "gradient": "value",\
+            "text": "value"\
+        \},\
+        "dimensions": \{\
+            "aspectRatio": "value",\
+            "minHeight": "value"\
+            "width": "value"\
+        \},\
+        "filter": \{\
+            "duotone": "value"\
+        \},\
+        "spacing": \{\
+            "blockGap": "value",\
+            "margin": \{\
+                "top": "value",\
+                "right": "value",\
+                "bottom": "value",\
+                "left": "value"\
+            \},\
+            "padding": \{\
+                "top": "value",\
+                "right": "value",\
+                "bottom": "value",\
+                "left": "value"\
+            \}\
+        \},\
+        "typography": \{\
+            "fontFamily": "value",\
+            "fontSize": "value",\
+            "fontStyle": "value",\
+            "fontWeight": "value",\
+            "letterSpacing": "value",\
+            "lineHeight": "value",\
+            "textColumns": "value",\
+            "textDecoration": "value",\
+            "textTransform": "value"\
+        \},\
+        "elements": \{\
+            "link": \{\
+                "border": \{\},\
+                "color": \{\},\
+                "spacing": \{\},\
+                "typography": \{\}\
+            \},\
+            "h1": \{\},\
+            "h2": \{\},\
+            "h3": \{\},\
+            "h4": \{\},\
+            "h5": \{\},\
+            "h6": \{\},\
+            "heading": \{\},\
+            "button": \{\},\
+            "caption": \{\}\
+        \},\
+        "blocks": \{\
+            "core/group": \{\
+                "border": \{\},\
+                "color": \{\},\
+                "dimensions": \{\},\
+                "spacing": \{\},\
+                "typography": \{\},\
+                "elements": \{\
+                    "link": \{\},\
+                    "h1": \{\},\
+                    "h2": \{\},\
+                    "h3": \{\},\
+                    "h4": \{\},\
+                    "h5": \{\},\
+                    "h6": \{\}\
+                \}\
+            \},\
+            "etc": \{\}\
+        \}\
+    \}\
+\}\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f1\fs40 \cf2 \cb3 \ul \ulc2 Top-level styles
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Styles found at the top-level will be enqueued using the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 body
+\f1\fs32 \cf2 \cb3  selector.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 \ul \ulc2 Block styles
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Styles found within a block will be enqueued using the block selector.\
+By default, the block selector is generated based on its name such as 
+\f2\fs25\fsmilli12800 \cf2 \cb3 .wp-block-<blockname-without-namespace>
+\f1\fs32 \cf2 \cb3 . For example, 
+\f2\fs25\fsmilli12800 \cf2 \cb3 .wp-block-group
+\f1\fs32 \cf2 \cb3  for the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 core/group
+\f1\fs32 \cf2 \cb3  block. There are some blocks that want to opt-out from this default behavior. They can do so by explicitly telling the system which selector to use for them via the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 __experimentalSelector
+\f1\fs32 \cf2 \cb3  key within the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 supports
+\f1\fs32 \cf2 \cb3  section of its 
+\f2\fs25\fsmilli12800 \cf2 \cb3 block.json
+\f1\fs32 \cf2 \cb3  file. Note that the block needs to be registered server-side for the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 __experimentalSelector
+\f1\fs32 \cf2 \cb3  field to be available to the style engine.\
+\pard\pardeftab720\sa425\partightenfactor0
+\cf2 \cb3 \ul \ulc2 Referencing a style
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 A block can be styled using a reference to a root level style. This feature is supported by Gutenberg.\uc0\u8232 If you register a background color for the root using styles.color.background:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 "styles": \{\
+        "color": \{\
+            "background": "var(--wp--preset--color--primary)"\
+        \}\
+    \}\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 You can use 
+\f2\fs25\fsmilli12800 \cf2 \cb3 ref: "styles.color.background"
+\f1\fs32 \cf2 \cb3  to re-use the style for a block:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "color": \{\
+        "text": \{ "ref": "styles.color.background" \}\
+    \}\
+\}\
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 \ul \ulc2 Element styles
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 In addition to top-level and block-level styles, there\'92s the concept of elements that can be used in both places. There\'92s a closed set of them:\
+Supported by Gutenberg:\
+Supported by WordPress:\
+If they\'92re found in the top-level the element selector will be used. If they\'92re found within a block, the selector to be used will be the element\'92s appended to the corresponding block.\
+\pard\pardeftab720\sa534\partightenfactor0
+\cf2 \cb3 \ul \ulc2 Element pseudo selectors
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 Pseudo selectors 
+\f2\fs25\fsmilli12800 \cf2 \cb3 :hover
+\f1\fs32 \cf2 \cb3 , 
+\f2\fs25\fsmilli12800 \cf2 \cb3 :focus
+\f1\fs32 \cf2 \cb3 , 
+\f2\fs25\fsmilli12800 \cf2 \cb3 :focus-visible
+\f1\fs32 \cf2 \cb3 , 
+\f2\fs25\fsmilli12800 \cf2 \cb3 :visited
+\f1\fs32 \cf2 \cb3 , 
+\f2\fs25\fsmilli12800 \cf2 \cb3 :active
+\f1\fs32 \cf2 \cb3 , 
+\f2\fs25\fsmilli12800 \cf2 \cb3 :link
+\f1\fs32 \cf2 \cb3 , 
+\f2\fs25\fsmilli12800 \cf2 \cb3 :any-link
+\f1\fs32 \cf2 \cb3  are supported by Gutenberg.\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 "elements": \{\
+        "link": \{\
+            "color": \{\
+                "text": "green"\
+            \},\
+            ":hover": \{\
+                "color": \{\
+                    "text": "hotpink"\
+                \}\
+            \}\
+        \}\
+    \}\
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 \ul \ulc2 Variations
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 A block can have a \'93style variation,\'94 as defined in the {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/#styles-optional"}}{\fldrslt \cf2 \cb3 \ul \ulc2 block.json specification}}. Theme authors can define the style attributes for an existing style variation using the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  file. Styles for unregistered style variations will be ignored.\
+Note that variations are a \'93block concept\'94\'97they only exist when bound to blocks. The 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  specification respects this distinction by only allowing 
+\f2\fs25\fsmilli12800 \cf2 \cb3 variations
+\f1\fs32 \cf2 \cb3  at the block level, not the top level. It\'92s also worth highlighting that only variations defined in the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 block.json
+\f1\fs32 \cf2 \cb3  file of the block or via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 register_block_style
+\f1\fs32 \cf2 \cb3  on the server are considered \'93registered\'94 for 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  styling purposes.\
+For example, this is how to provide styles for the existing 
+\f2\fs25\fsmilli12800 \cf2 \cb3 plain
+\f1\fs32 \cf2 \cb3  variation for the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 core/quote
+\f1\fs32 \cf2 \cb3  block:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "styles": \{\
+        "blocks": \{\
+            "core/quote": \{\
+                "variations": \{\
+                    "plain": \{\
+                        "color": \{\
+                            "background": "red"\
+                        \}\
+                    \}\
+                \}\
+            \}\
+        \}\
+    \}\
+\}\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 The resulting CSS output is:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 .wp-block-quote.is-style-plain \{\
+    background-color: red;\
+\}\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 It is also possible for multiple block types to share the same variation styles. There are two recommended ways to define such shared styles:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0
+\f2\fs25\fsmilli12800 \cf2 \cb3 \kerning1\expnd0\expndtw0 {\listtext	1	}\cf2 \cb3 \expnd0\expndtw0\kerning0
+theme.json
+\f1\fs32 \cf2 \cb3  partial files\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0\cf2 \cb3 \kerning1\expnd0\expndtw0 {\listtext	2	}\cf2 \cb3 \expnd0\expndtw0\kerning0
+programmatically, using 
+\f2\fs25\fsmilli12800 \cf2 \cb3 register_block_style
+\f1\fs32 \cf2 \cb3 \
+\pard\pardeftab720\sa534\partightenfactor0
+\cf2 \cb3 \ul \ulc2 Variation Theme.json Partials
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 Like theme style variation partials, those for block style variations reside within a theme\'92s 
+\f2\fs25\fsmilli12800 \cf2 \cb3 /styles
+\f1\fs32 \cf2 \cb3  directory. However, they are differentiated from theme style variations by the introduction of a top-level property called 
+\f2\fs25\fsmilli12800 \cf2 \cb3 blockTypes
+\f1\fs32 \cf2 \cb3 . The 
+\f2\fs25\fsmilli12800 \cf2 \cb3 blockTypes
+\f1\fs32 \cf2 \cb3  property is an array of block types for which the block style variation has been registered.\
+Additionally, a 
+\f2\fs25\fsmilli12800 \cf2 \cb3 slug
+\f1\fs32 \cf2 \cb3  property is available to provide consistency between the different sources that may define block style variations and to decouple the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 slug
+\f1\fs32 \cf2 \cb3  from the translatable 
+\f2\fs25\fsmilli12800 \cf2 \cb3 title
+\f1\fs32 \cf2 \cb3  property.\
+The following is an example of a 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  partial that defines styles for the \'93Variation A\'94 block style for the Group, Columns, and Media & Text block types:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "$schema": "https://schemas.wp.org/trunk/theme.json",\
+    "version": 3,\
+    "title": "Variation A",\
+    "slug": "variation-a",\
+    "blockTypes": [ "core/group", "core/columns", "core/media-text" ],\
+    "styles": \{\
+        "color": \{\
+            "background": "#eed8d3",\
+            "text": "#201819"\
+        \},\
+        "elements": \{\
+            "heading": \{\
+                "color": \{\
+                    "text": "#201819"\
+                \}\
+            \}\
+        \},\
+        "blocks": \{\
+            "core/group": \{\
+                "color": \{\
+                    "background": "#825f58",\
+                    "text": "#eed8d3"\
+                \},\
+                "elements": \{\
+                    "heading": \{\
+                        "color": \{\
+                            "text": "#eed8d3"\
+                        \}\
+                    \}\
+                \}\
+            \}\
+        \}\
+    \}\
+\}\
+\pard\pardeftab720\sa534\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 \ul \ulc2 Programmatically Registering Variation Styles
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 As an alternative to 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  partials, you can register variation styles at the same time as registering the variation itself through 
+\f2\fs25\fsmilli12800 \cf2 \cb3 register_block_style
+\f1\fs32 \cf2 \cb3 . This is done by registering the block style for an array of block types while also passing a \'93style object\'94 within the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 style_data
+\f1\fs32 \cf2 \cb3  option.\
+The example below registers a \'93Green\'94 variation for the Group and Columns blocks. Note that the style object passed via 
+\f2\fs25\fsmilli12800 \cf2 \cb3 style_data
+\f1\fs32 \cf2 \cb3  follows the same shape as the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 styles
+\f1\fs32 \cf2 \cb3  property of a 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  partial.\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 register_block_style(\
+    array( 'core/group', 'core/columns' ),\
+    array(\
+        'name'       => 'green',\
+        'label'      => __( 'Green' ),\
+        'style_data' => array(\
+            'color'    => array(\
+                'background' => '#4f6f52',\
+                'text'       => '#d2e3c8',\
+            ),\
+            'blocks'   => array(\
+                'core/group' => array(\
+                    'color' => array(\
+                        'background' => '#739072',\
+                        'text'       => '#e3eedd',\
+                    ),\
+                ),\
+            ),\
+            'elements' => array(\
+                'link'   => array(\
+                    'color'  => array(\
+                        'text' => '#ead196',\
+                    ),\
+                    ':hover' => array(\
+                        'color' => array(\
+                            'text' => '#ebd9b4',\
+                        ),\
+                    ),\
+                ),\
+            ),\
+        ),\
+    )\
+);\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f1\fs40 \cf2 \cb3 \ul \ulc2 customTemplates
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Supported in WordPress from version 5.9.\
+Within this field themes can list the custom templates present in the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 templates
+\f1\fs32 \cf2 \cb3  folder. For example, for a custom template named 
+\f2\fs25\fsmilli12800 \cf2 \cb3 my-custom-template.html
+\f1\fs32 \cf2 \cb3 , the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  can declare what post types can use it and what\'92s the title to show the user:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "customTemplates": [\
+        \{\
+            "name": "my-custom-template",\
+            "title": "The template title",\
+            "postTypes": [\
+                "page",\
+                "post",\
+                "my-cpt"\
+            ]\
+        \}\
+    ]\
+\}\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f1\fs40 \cf2 \cb3 \ul \ulc2 templateParts
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Supported in WordPress from version 5.9.\
+Within this field themes can list the template parts present in the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 parts
+\f1\fs32 \cf2 \cb3  folder. For example, for a template part named 
+\f2\fs25\fsmilli12800 \cf2 \cb3 my-template-part.html
+\f1\fs32 \cf2 \cb3 , the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  can declare the area term for the template part entity which is responsible for rendering the corresponding block variation (Header block, Footer block, etc.) in the editor. Defining this area term in the json will allow the setting to persist across all uses of that template part entity, as opposed to a block attribute that would only affect one block. Defining area as a block attribute is not recommended as this is only used \'91behind the scenes\'92 to aid in bridging the gap between placeholder flows and entity creation.\
+Currently block variations exist for \'93header\'94 and \'93footer\'94 values of the area term, any other values and template parts not defined in the json will default to the general template part block. Variations will be denoted by specific icons within the editor\'92s interface, will default to the corresponding semantic HTML element for the wrapper (this can also be overridden by the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 tagName
+\f1\fs32 \cf2 \cb3  attribute set on the template part block), and will contextualize the template part allowing more custom flows in future editor improvements.\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "templateParts": [\
+        \{\
+            "name": "my-template-part",\
+            "title": "Header",\
+            "area": "header"\
+        \}\
+    ]\
+\}\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f1\fs40 \cf2 \cb3 \ul \ulc2 patterns
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Supported in WordPress from version 6.0.\
+Within this field themes can list patterns to register from {\field{\*\fldinst{HYPERLINK "https://wordpress.org/patterns/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 Pattern Directory}}. The 
+\f2\fs25\fsmilli12800 \cf2 \cb3 patterns
+\f1\fs32 \cf2 \cb3  field is an array of pattern 
+\f2\fs25\fsmilli12800 \cf2 \cb3 slugs
+\f1\fs32 \cf2 \cb3  from the Pattern Directory. Pattern slugs can be extracted by the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 url
+\f1\fs32 \cf2 \cb3  in single pattern view at the Pattern Directory. For example in this url 
+\f2\fs25\fsmilli12800 \cf2 \cb3 https://wordpress.org/patterns/pattern/partner-logos` the slug is
+\f1\fs32 \cf2 \cb3 partner-logos`.\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "patterns": [ "short-text-surrounded-by-round-images", "partner-logos" ]\
+\}\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f1\fs48 \cf2 \cb3 \ul \ulc2 Developing with theme.json
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 It can be difficult to remember the theme.json settings and properties and which versions of WordPress support which settings while you develop, so it can be helpful to use the provided JSON schema for theme.json.\
+Many code editors support JSON schema and can provide help like tooltips, autocomplete, or schema validation right in your editor.\
+Theme.json schemas for each WordPress version are available at 
+\f2\fs25\fsmilli12800 \cf2 \cb3 https://schemas.wp.org/wp/\{\{version\}\}/theme.json`. For example a schema for WordPress 5.8 is available at
+\f1\fs32 \cf2 \cb3 https://schemas.wp.org/wp/5.8/theme.json`. To ensure that you\'92re only using features available to your users, it\'92s best to use the oldest version that your theme supports.\
+The latest schema including all the latest changes from the Gutenberg plugin is available at `https://schemas.wp.org/trunk/theme.json`.\
+Check your editor\'92s documentation for JSON schema support. In Visual Studio Code, for example, you need to add 
+\f2\fs25\fsmilli12800 \cf2 \cb3 "$schema": "https://schemas.wp.org/wp/x.x/theme.json"
+\f1\fs32 \cf2 \cb3  as a top-level property of your theme.json file, but other editors may be configured differently.\
+\pard\pardeftab720\partightenfactor0
+\cf7 \cb3 {{\NeXTGraphic aa7cbac760c1c67827f28748b90e19b9149fe026ca582cc6aaa3690253a7b8ba.gif \width27000 \height12920 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf7 \cb3 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf4 \cb3 \
+\
+\
+\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\fs48 \cf2 \cb3 \ul \ulc2 Frequently Asked Questions
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f1\b0\fs40 \cf2 \cb3 \ul \ulc2 The naming schema of CSS Custom Properties
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 One thing you may have noticed is the naming schema used for the CSS Custom Properties the system creates, including the use of double hyphen, 
+\f2\fs25\fsmilli12800 \cf2 \cb3 --
+\f1\fs32 \cf2 \cb3 , to separate the different \'93concepts\'94. Take the following examples.\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f3\b \cf2 \cb3 Presets
+\f1\b0 \cf2 \cb3  such as 
+\f2\fs25\fsmilli12800 \cf2 \cb3 --wp--preset--color--black
+\f1\fs32 \cf2 \cb3  can be divided into the following chunks:\
+
+\f3\b \cf2 \cb3 Custom
+\f1\b0 \cf2 \cb3  properties such as 
+\f2\fs25\fsmilli12800 \cf2 \cb3 --wp--custom--line-height--body
+\f1\fs32 \cf2 \cb3 , which can be divided into the following chunks:\
+The 
+\f2\fs25\fsmilli12800 \cf2 \cb3 --
+\f1\fs32 \cf2 \cb3  as a separator has two functions:\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 \ul \ulc2 Why using \'97 as a separator?
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 We could have used any other separator, such as a single 
+\f2\fs25\fsmilli12800 \cf2 \cb3 -
+\f1\fs32 \cf2 \cb3 .\
+However, that\'92d have been problematic, as it\'92d have been impossible to tell how 
+\f2\fs25\fsmilli12800 \cf2 \cb3 --wp-custom-line-height-template-header
+\f1\fs32 \cf2 \cb3  should be converted back into an object, unless we force theme authors not to use 
+\f2\fs25\fsmilli12800 \cf2 \cb3 -
+\f1\fs32 \cf2 \cb3  in their variable names.\
+By reserving 
+\f2\fs25\fsmilli12800 \cf2 \cb3 --
+\f1\fs32 \cf2 \cb3  as a category separator and let theme authors use 
+\f2\fs25\fsmilli12800 \cf2 \cb3 -
+\f1\fs32 \cf2 \cb3  for word-boundaries, the naming is clearer: 
+\f2\fs25\fsmilli12800 \cf2 \cb3 --wp--custom--line-height--template-header
+\f1\fs32 \cf2 \cb3 .\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 \ul \ulc2 How settings under \'93custom\'94 create new CSS Custom Properties
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 The algorithm to create CSS Variables out of the settings under the \'93custom\'94 key works this way:\
+This is for clarity, but also because we want a mechanism to parse back a variable name such 
+\f2\fs25\fsmilli12800 \cf2 \cb3 --wp--custom--line-height--body
+\f1\fs32 \cf2 \cb3  to its object form in theme.json. We use the same separation for presets.\
+For example:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "settings": \{\
+        "custom": \{\
+            "lineHeight": \{\
+                "body": 1.7\
+            \},\
+            "font-primary": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif"\
+        \}\
+    \}\
+\}\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 A few notes about this process:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "settings": \{\
+        "custom": \{\
+            "line--height": \{ // DO NOT DO THIS\
+                "body": 1.7\
+            \}\
+        \}\
+    \}\
+\}\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f1\fs40 \cf2 \cb3 \ul \ulc2 Global Stylesheet
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 In WordPress 5.8, the CSS for some of the presets defined by WordPress (font sizes, colors, and gradients) was loaded twice for most themes: in the block-library stylesheet plus in the global stylesheet. Additionally, there were slight differences in the CSS in both places.\
+In WordPress 5.9 release, CSS of presets are consolidated into the global stylesheet, that is now loaded for all themes. Each preset value generates a single CSS Custom Property and a class, as in:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 /* CSS Custom Properties for the preset values */\
+body \{\
+  --wp--preset--<PRESET_TYPE>--<PRESET_SLUG>: <DEFAULT_VALUE>;\
+  --wp--preset--color--pale-pink: #f78da7;\
+  --wp--preset--font-size--large: 36px;\
+  /* etc. */\
+\}\
+\
+/* CSS classes for the preset values */\
+.has-<PRESET_SLUG>-<PRESET_TYPE> \{ ... \}\
+.has-pale-pink-color \{ color: var(--wp--preset--color--pale-pink) !important; \}\
+.has-large-font-size \{ font-size: var(--wp--preset--font-size--large) !important; \}\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 For themes to override the default values they can use the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  and provide the same slug. Themes that do not use a 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  can still override the default values by enqueuing some CSS that sets the corresponding CSS Custom Property.\
+
+\f2\fs25\fsmilli12800 \cf2 \cb3 Example
+\f1\fs32 \cf2 \cb3  (sets a new value for the default large font size):\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 body \{\
+ --wp--preset--font-size--large: <NEW_VALUE>;\
+\}\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f1\fs40 \cf2 \cb3 \ul \ulc2 Specificity for link colors provided by the user
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 In WordPress 5.8, when a user selected a link color for a specific block we attached a class to that block in the form of 
+\f2\fs25\fsmilli12800 \cf2 \cb3 .wp-element-<ID>
+\f1\fs32 \cf2 \cb3  and then enqueued the following style:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 .wp-element-<ID> a \{ color: <USER_COLOR_VALUE> !important; \}\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 While this preserved user preferences at all times, the specificity was too strong and conflicted with some blocks with legit uses of an HTML element that shouldn\'92t be considered links. To {\field{\*\fldinst{HYPERLINK "https://github.com/WordPress/gutenberg/pull/34689"}}{\fldrslt \cf2 \cb3 \ul \ulc2 address this issue}}, in WordPress 5.9 release, the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 !important
+\f1\fs32 \cf2 \cb3  was removed and updated the corresponding blocks to style the a elements with a specificity higher than the user link color, which now is:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 .wp-element-<ID> a \{ color: <USER_COLOR_VALUE>; \}\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 As a result of this change, it\'92s now the block author and theme author\'92s responsibility to make sure the user choices are respected at all times and that the link color provided by the user (specificity 011) is not overridden.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 \ul \ulc2 What is blockGap and how can I use it?
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 For blocks that contain inner blocks, such as Group, Columns, Buttons, and Social Icons, 
+\f2\fs25\fsmilli12800 \cf2 \cb3 blockGap
+\f1\fs32 \cf2 \cb3  controls the spacing between inner blocks. For 
+\f2\fs25\fsmilli12800 \cf2 \cb3 blockGap
+\f1\fs32 \cf2 \cb3  to work, the block must also opt in to the {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/#layout"}}{\fldrslt 
+\f2\fs25\fsmilli12800 \cf2 \cb3 \ul \ulc2 layout
+\f1\fs32 \cf2 \cb3 \ulc2  block support}}, which provides layout styles that can be adjusted via the block spacing controls. Depending on the layout of the block, the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 blockGap
+\f1\fs32 \cf2 \cb3  value will be output as either a vertical margin or a 
+\f2\fs25\fsmilli12800 \cf2 \cb3 gap
+\f1\fs32 \cf2 \cb3  value. In the editor, the control for the 
+\f2\fs25\fsmilli12800 \cf2 \cb3 blockGap
+\f1\fs32 \cf2 \cb3  value is called 
+\f4\i \cf2 \cb3 Block spacing
+\f1\i0 \cf2 \cb3 , located in the Dimensions panel.\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs20\fsmilli10240 \cf5 \cb3 \{\
+    "version": 3,\
+    "settings": \{\
+        "spacing": \{\
+            "blockGap": true,\
+        \}\
+    \},\
+    "styles": \{\
+        "spacing": \{\
+            "blockGap": "1.5rem"\
+        \}\
+    \}\
+\}\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 The setting for 
+\f2\fs25\fsmilli12800 \cf2 \cb3 blockGap
+\f1\fs32 \cf2 \cb3  is either a boolean or 
+\f2\fs25\fsmilli12800 \cf2 \cb3 null
+\f1\fs32 \cf2 \cb3  value and is 
+\f2\fs25\fsmilli12800 \cf2 \cb3 null
+\f1\fs32 \cf2 \cb3  by default. This allows an extra level of control over style output. The 
+\f2\fs25\fsmilli12800 \cf2 \cb3 settings.spacing.blockGap
+\f1\fs32 \cf2 \cb3  setting in a 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  file accepts the following values:\
+The value defined for the root 
+\f2\fs25\fsmilli12800 \cf2 \cb3 styles.spacing.blockGap
+\f1\fs32 \cf2 \cb3  style is also output as a CSS property, named 
+\f2\fs25\fsmilli12800 \cf2 \cb3 --wp--style--block-gap
+\f1\fs32 \cf2 \cb3 .\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 \ul \ulc2 Why does it take so long to update the styles in the browser?
+\f3\b \cf2 \cb3 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 When you are actively developing with theme.json you may notice it takes 30+ seconds for your changes to show up in the browser, this is because 
+\f2\fs25\fsmilli12800 \cf2 \cb3 theme.json
+\f1\fs32 \cf2 \cb3  is cached. To remove this caching issue, set either {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/#wp_debug"}}{\fldrslt 
+\f2\fs25\fsmilli12800 \cf2 \cb3 \ul \ulc2 WP_DEBUG}} or {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/#script_debug"}}{\fldrslt 
+\f2\fs25\fsmilli12800 \cf2 \cb3 \ul \ulc2 SCRIPT_DEBUG}} to \'91true\'92 in your {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/advanced-administration/wordpress/wp-config/"}}{\fldrslt 
+\f2\fs25\fsmilli12800 \cf2 \cb3 \ul \ulc2 wp-config.php}}. This tells WordPress to skip the cache and always use fresh data.}

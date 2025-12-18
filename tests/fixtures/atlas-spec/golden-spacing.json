@@ -1,0 +1,12 @@
+{
+    "spacing": {
+        "blockGap": "1.2rem",
+        "padding": {
+            "left": "var(--wp--preset--spacing--lg)",
+            "right": "var(--wp--preset--spacing--lg)"
+        }
+    },
+    "typography": {
+        "lineHeight": "1.55"
+    }
+}

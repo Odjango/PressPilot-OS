@@ -1,0 +1,2383 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 .SFNS-Regular_wdth_opsz1E0000_GRAD_wght1F40000;\f1\fnil\fcharset0 HelveticaNeue;\f2\fnil\fcharset0 HelveticaNeue-Bold;
+\f3\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;
+\red255\green255\blue255;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c99985;\cssrgb\c0\c0\c0;\cssrgb\c100000\c100000\c99910;
+\cssrgb\c100000\c100000\c99910\c60000;\cssrgb\c100000\c100000\c100000;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\margl1440\margr1440\vieww16280\viewh14460\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs60 \cf2 \cb3 \expnd0\expndtw0\kerning0
+Theme.json Version 3 Reference (latest) \'96 Block Editor Handbook | Developer.WordPress.org
+\f1\fs24 \cf2 \
+\pard\pardeftab720\qc\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/reference-guides/theme-json-reference/theme-json-living/"}}{\fldrslt \cf2 \
+}}\pard\pardeftab720\partightenfactor0
+
+\fs36 \cf2 {{\NeXTGraphic wmark.png \width20000 \height20000 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\cf2 \
+
+\fs28 \cf2 WordPress Developer Resources\
+Jan 14, 2022\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\fs32 \cf2 This is the living specification for 
+\f2\b \cf2 version 3
+\f1\b0 \cf2  of 
+\f3\fs25\fsmilli12800 \cf2 theme.json
+\f1\fs32 \cf2 . This version works with WordPress 6.6 or later, and the latest Gutenberg plugin.\
+There are some related documents that you may be interested in:\uc0\u8232 \'96 the {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/reference-guides/theme-json-reference/theme-json-v1/"}}{\fldrslt \cf2 \ul \ulc2 theme.json v1}} specification,\uc0\u8232 \'96 the {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/reference-guides/theme-json-reference/theme-json-v2/"}}{\fldrslt \cf2 \ul \ulc2 theme.json v2}} specification, and\uc0\u8232 \'96 the {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/reference-guides/theme-json-reference/theme-json-migrations/"}}{\fldrslt \cf2 \ul \ulc2 reference to migrate from older theme.json versions}}.\
+This reference guide lists the settings and style properties defined in the 
+\f3\fs25\fsmilli12800 \cf2 theme.json
+\f1\fs32 \cf2  schema. See the {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/how-to-guides/themes/global-settings-and-styles/"}}{\fldrslt \cf2 \ul \ulc2 theme.json how to guide}} for examples and guidance on how to use the 
+\f3\fs25\fsmilli12800 \cf2 theme.json
+\f1\fs32 \cf2  file in your theme.\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\fs48 \cf2 \ul \ulc4 JSON Schema
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 This documentation was generated from the JSON schema for theme.json.\
+The latest schema for version 3, including all the latest changes from the Gutenberg plugin, is available at 
+\f3\fs25\fsmilli12800 \cf2 https://schemas.wp.org/trunk/theme.json
+\f1\fs32 \cf2 .\
+Theme.json schemas for each WordPress version are available at 
+\f3\fs25\fsmilli12800 \cf2 https://schemas.wp.org/wp/\{\{version\}\}/theme.json
+\f1\fs32 \cf2 .\uc0\u8232 For example, a schema for WordPress 5.8 is available at 
+\f3\fs25\fsmilli12800 \cf2 https://schemas.wp.org/wp/5.8/theme.json
+\f1\fs32 \cf2 .\
+See {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/how-to-guides/themes/global-settings-and-styles/#developing-with-themejson"}}{\fldrslt \cf2 \ul \ulc4 Developing with theme.json}} for how to use the JSON schema in your editor.\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\fs48 \cf2 \ul \ulc4 settings
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Settings for the block editor and individual blocks. These include things like:\uc0\u8232 \'96 Which customization options should be available to the user.\u8232 \'96 The default colors, font sizes\'85 available to the user.\u8232 \'96 CSS custom properties and class names used in styles.\u8232 \'96 And the default layout of the editor (widths and available alignments).\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 useRootPaddingAwareAlignments
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Enables root padding (the values from 
+\f3\fs25\fsmilli12800 \cf2 styles.spacing.padding
+\f1\fs32 \cf2 ) to be applied to the contents of full-width blocks instead of the root block.\
+Please note that when using this setting, 
+\f3\fs25\fsmilli12800 \cf2 styles.spacing.padding
+\f1\fs32 \cf2  should always be set as an object with 
+\f3\fs25\fsmilli12800 \cf2 top
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 right
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 bottom
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 left
+\f1\fs32 \cf2  values declared separately.\
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f2\b \cf2 Note:
+\f1\b0 \cf2  Top-level only property. Not available in blocks.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 appearanceTools
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Setting that enables the following UI tools:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0\cf2 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\cf2 \expnd0\expndtw0\kerning0
+background: backgroundImage, backgroundSize\
+\ls1\ilvl0\cf2 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\cf2 \expnd0\expndtw0\kerning0
+border: color, radius, style, width\
+\ls1\ilvl0\cf2 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\cf2 \expnd0\expndtw0\kerning0
+color: link, heading, button, caption\
+\ls1\ilvl0\cf2 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\cf2 \expnd0\expndtw0\kerning0
+dimensions: aspectRatio, minHeight, width\
+\ls1\ilvl0\cf2 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\cf2 \expnd0\expndtw0\kerning0
+position: sticky\
+\ls1\ilvl0\cf2 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\cf2 \expnd0\expndtw0\kerning0
+spacing: blockGap, margin, padding\
+\ls1\ilvl0\cf2 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\cf2 \expnd0\expndtw0\kerning0
+typography: lineHeight\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 background
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Settings related to background.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1777\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth10172\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1050\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth860\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Default\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1777\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth10172\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1050\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth860\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 backgroundImage\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set a background image.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1777\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth10172\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1050\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth860\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 backgroundSize\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set values related to the size of a background image, including size, position, and repeat controls.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 border
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Settings related to borders.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1658\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7271\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3729\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Default\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1658\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7271\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3729\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 color\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom border colors.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1658\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7271\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3729\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 radius\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom border radius.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1658\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7271\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3729\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 style\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom border styles.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1658\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7271\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3729\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 width\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom border widths.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1658\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7271\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3729\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 radiusSizes\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Border radius size presets for the border radius selector.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 [ \{ name, slug, size \} ]
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 color
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Settings related to colors.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Default\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 background\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set background colors.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 custom\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to select custom colors.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 customDuotone\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to create custom duotone filters.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 customGradient\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to create custom gradients.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 defaultDuotone\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to choose filters from the default duotone filter presets.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 defaultGradients\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to choose colors from the default gradients.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 defaultPalette\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to choose colors from the default palette.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 duotone\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Duotone presets for the duotone picker.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 [ \{ name, slug, colors \} ]
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 gradients\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Gradient presets for the gradient picker.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 [ \{ name, slug, gradient \} ]
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 link\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set link colors in a block.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 palette\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Color palette presets for the color picker.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 [ \{ name, slug, color \} ]
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 text\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set text colors in a block.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 heading\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set heading colors in a block.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 button\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set button colors in a block.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1949\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7298\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3598\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1014\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 caption\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set caption colors in a block.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 dimensions
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Settings related to dimensions.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2230\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7526\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3130\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth973\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Default\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2230\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7526\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3130\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth973\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 aspectRatio\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set an aspect ratio.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2230\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7526\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3130\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth973\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 defaultAspectRatios\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to choose aspect ratios from the default set of aspect ratios.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2230\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7526\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3130\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth973\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 aspectRatios\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to define aspect ratios for some blocks.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 [ \{ name, slug, ratio \} ]
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2230\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7526\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3130\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth973\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 minHeight\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom minimum height.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2230\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7526\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3130\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth973\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 width\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom width.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 layout
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Settings related to layout.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2777\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth9438\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth905\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth739\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Default\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2777\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth9438\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth905\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth739\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 contentSize\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the max-width of the content.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2777\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth9438\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth905\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth739\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 wideSize\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the max-width of wide (
+\f3\fs25\fsmilli12800 \cf2 .alignwide
+\f1\fs32 \cf2 ) content. Also used as the maximum viewport when calculating fluid font sizes\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2777\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth9438\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth905\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth739\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 allowEditing\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Disable the layout UI controls.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2777\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth9438\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth905\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth739\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 allowCustomContentAndWideSize\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Enable or disable the custom content and wide size controls.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 lightbox
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Settings related to the lightbox.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1022\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth11257\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth710\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Default\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1022\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth11257\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth710\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 enabled\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Defines whether the lightbox is enabled or not.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1022\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth11257\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth710\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 allowEditing\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Defines whether to show the Lightbox UI in the block editor. If set to 
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 , the user won\'92t be able to change the lightbox settings in the block editor.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 position
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Settings related to position.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1624\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth5077\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1699\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1390\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Default\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1624\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth5077\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth1699\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1390\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 sticky\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set sticky position.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 shadow
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Settings related to shadows.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1812\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7422\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3557\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1067\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Default\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1812\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7422\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3557\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1067\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 defaultPresets\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to choose shadows from the default shadow presets.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1812\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth7422\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3557\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth1067\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 presets\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Shadow presets for the shadow picker.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 [ \{ name, slug, shadow \} ]
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 spacing
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Settings related to spacing.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1548\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth5837\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2605\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Default\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1548\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth5837\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2605\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 blockGap\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Enables 
+\f3\fs25\fsmilli12800 \cf2 --wp--style--block-gap
+\f1\fs32 \cf2  to be generated from styles.spacing.blockGap.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 null
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 null
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1548\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth5837\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2605\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 margin\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set a custom margin.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1548\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth5837\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2605\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 padding\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set a custom padding.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1548\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth5837\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2605\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 units\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 List of units the user can use for spacing values.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 [ string ]
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 ["px","em","rem","vh","vw","%"]
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1548\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth5837\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2605\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 customSpacingSize\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom space sizes.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1548\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth5837\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2605\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 defaultSpacingSizes\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to choose space sizes from the default space size presets.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1548\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth5837\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2605\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 spacingSizes\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Space size presets for the space size selector.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 [ \{ name, slug, size \} ]
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1548\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth5837\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3869\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2605\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 spacingScale\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Settings to auto-generate space size presets for the space size selector.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 \{ operator, increment, steps, mediumStep, unit \}
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 typography
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Settings related to typography.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Default\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 defaultFontSizes\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to choose font sizes from the default font size presets.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 customFontSize\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom font sizes.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 fontStyle\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom font styles.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 fontWeight\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom font weights.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 fluid\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Enables fluid typography and allows users to set global fluid typography parameters.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ minFontSize, maxViewportWidth, minViewportWidth \}
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 letterSpacing\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom letter spacing.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 lineHeight\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom line height.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 textAlign\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set the text align.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 textColumns\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set the number of text columns.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 textDecoration\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom text decorations.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 writingMode\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set the writing mode.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 false
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 textTransform\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Allow users to set custom text transforms.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 dropCap\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Enable drop cap.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 boolean
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 true
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 fontSizes\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Font size presets for the font size selector.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 [ \{ name, slug, size, fluid \} ]
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1397\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth6489\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth5249\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth723\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 fontFamilies\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Font family presets for the font family selector.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 [ \{ name, slug, fontFamily, fontFace \} ]
+\f1\fs32 \cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 custom
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Generate custom CSS custom properties of the form 
+\f3\fs25\fsmilli12800 \cf2 --wp--custom--\{key\}--\{nested-key\}: \{value\};
+\f1\fs32 \cf2 . 
+\f3\fs25\fsmilli12800 \cf2 camelCased
+\f1\fs32 \cf2  keys are transformed to 
+\f3\fs25\fsmilli12800 \cf2 kebab-case
+\f1\fs32 \cf2  as to follow the CSS property naming schema. Keys at different depth levels are separated by 
+\f3\fs25\fsmilli12800 \cf2 --
+\f1\fs32 \cf2 , so keys should not include 
+\f3\fs25\fsmilli12800 \cf2 --
+\f1\fs32 \cf2  in the name.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\fs48 \cf2 \ul \ulc4 styles
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Organized way to set CSS properties. Styles in the top-level will be added in the 
+\f3\fs25\fsmilli12800 \cf2 body
+\f1\fs32 \cf2  selector.\
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 background
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Background styles.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth3247\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6395\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth4217\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth3247\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6395\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth4217\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 backgroundImage\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 background-image
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ url \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth3247\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6395\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth4217\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 backgroundPosition\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 background-position
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth3247\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6395\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth4217\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 backgroundRepeat\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 background-repeat
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth3247\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6395\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth4217\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 backgroundSize\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 background-size
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth3247\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6395\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth4217\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 backgroundAttachment\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 background-attachment
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 border
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Border styles.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1224\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth4517\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth8118\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1224\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth4517\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth8118\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 color\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 border-color
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1224\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth4517\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth8118\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 radius\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 border-radius
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ topLeft, topRight, bottomLeft, bottomRight \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1224\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth4517\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth8118\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 style\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 border-style
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1224\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth4517\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth8118\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 width\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 border-width
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1224\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth4517\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth8118\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 top\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 \{ color, style, width \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1224\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth4517\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth8118\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 right\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 \{ color, style, width \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1224\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth4517\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth8118\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 bottom\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 \{ color, style, width \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1224\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth4517\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth8118\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 left\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 \{ color, style, width \}
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 color
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Color styles.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1986\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6460\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1986\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6460\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 background\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 background-color
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1986\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6460\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 gradient\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 background
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1986\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6460\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 text\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 color
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 css
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Sets custom CSS to apply styling not covered by other theme.json properties.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 dimensions
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Dimensions styles.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1981\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth5843\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1981\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth5843\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 aspectRatio\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 aspect-ratio
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1981\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth5843\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 minHeight\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 min-height
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1981\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth5843\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 width\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 width
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 filter
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 CSS and SVG filter styles.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1624\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth3548\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1624\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth3548\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 duotone\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the duotone filter.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 outline
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Outline styles.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1624\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6151\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1624\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6151\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 color\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 outline-color
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1624\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6151\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 offset\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 outline-offset
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1624\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6151\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 style\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 outline-style
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1624\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6151\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 width\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 outline-width
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 shadow
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Box shadow styles.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 spacing
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Spacing styles.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1086\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth9505\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3268\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1086\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth9505\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3268\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 blockGap\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 --wp--style--block-gap
+\f1\fs32 \cf2  CSS custom property when settings.spacing.blockGap is true.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1086\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth9505\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3268\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 margin\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Margin styles.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 \{ top, right, bottom, left \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1086\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth9505\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3268\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 padding\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Padding styles.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 \{ top, right, bottom, left \}
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \ul \ulc4 typography
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Typography styles.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 fontFamily\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 font-family
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 fontSize\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 font-size
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 fontStyle\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 font-style
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 fontWeight\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 font-weight
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 letterSpacing\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 letter-spacing
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 lineHeight\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 line-height
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 textAlign\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 text-align
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 textColumns\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 column-count
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 textDecoration\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 text-decoration
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 writingMode\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 writing-mode
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth2400\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth6305\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth3156\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 textTransform\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Sets the 
+\f3\fs25\fsmilli12800 \cf2 text-transform
+\f1\fs32 \cf2  CSS property.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 , 
+\f3\fs25\fsmilli12800 \cf2 \{ ref \}
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\fs48 \cf2 \ul \ulc4 customTemplates
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Additional metadata for custom templates defined in the templates folder.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1744\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth9974\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth2141\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1744\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth9974\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth2141\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 name\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Filename, without extension, of the template in the templates folder.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1744\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth9974\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth2141\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 title\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Title of the template, translatable.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth1744\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth9974\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth2141\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 postTypes\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 List of post types that can use this custom template.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 [ string ]
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\sa398\partightenfactor0
+
+\fs48 \cf2 \ul \ulc4 templateParts
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 Additional metadata for template parts defined in the parts folder.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrt\brdrs\brdrw20\brdrcf6 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth912\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth12079\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth868\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+
+\f2\b \cf2 Property\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Description\cell 
+\pard\intbl\itap1\pardeftab720\qc\partightenfactor0
+\cf2 Type\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth912\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth12079\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth868\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f1\b0 \cf2 name\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Filename, without extension, of the template in the parts folder.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth912\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth12079\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth868\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 title\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 Title of the template, translatable.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \tamart100 \trmarl100 \tamarb100 \trmarr100 \trbrdrl\brdrs\brdrw20\brdrcf6 \trbrdrb\brdrs\brdrw20\brdrcf6 \trbrdrr\brdrs\brdrw20\brdrcf6 \tapadt120 \trpadl120 \tapadb120 \trpadr120 
+\clvertalt \clshdrawnil \clwWidth912\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth12079\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth868\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt120 \clpadl120 \clpadb120 \clpadr120 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 area\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+\cf2 The area the template part is used for. Block variations for 
+\f3\fs25\fsmilli12800 \cf2 header
+\f1\fs32 \cf2  and 
+\f3\fs25\fsmilli12800 \cf2 footer
+\f1\fs32 \cf2  values exist and will be used when the area is set to one of those.\cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f3\fs25\fsmilli12800 \cf2 string
+\f1\fs32 \cf2 \cell \lastrow\row
+\pard\pardeftab720\sa398\partightenfactor0
+
+\fs48 \cf2 \ul \ulc4 patterns
+\f2\b \cf2 \ulnone \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 An array of pattern slugs to be registered from the Pattern Directory.\
+Type: 
+\f3\fs25\fsmilli12800 \cf2 [ string ]
+\f1\fs32 \cf2 .}

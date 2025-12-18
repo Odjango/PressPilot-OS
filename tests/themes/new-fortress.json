@@ -1,0 +1,35 @@
+{
+    "theme_name": "New Fortress V1",
+    "theme_slug": "presspilot-new-fortress-v1",
+    "site_title": "New Fortress",
+    "destructive_mode": true,
+    "style_mode": "json",
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Welcome to New Fortress."
+        },
+        {
+            "slug": "security",
+            "title": "Security",
+            "content": "Advanced protection."
+        },
+        {
+            "slug": "network",
+            "title": "Network",
+            "content": "Global coverage."
+        },
+        {
+            "slug": "contact",
+            "title": "Contact",
+            "content": "Secure lines open."
+        }
+    ],
+    "copyrightText": "© 2024 New Fortress. All rights reserved.",
+    "colors": {
+        "base": "#FFFFFF",
+        "accent": "#228800",
+        "background": "#F5F5F5"
+    }
+}

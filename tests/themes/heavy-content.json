@@ -1,0 +1,12 @@
+{
+    "theme_name": "Heavy Content V1",
+    "theme_slug": "presspilot-heavy-content-v1",
+    "site_title": "Heavy Content Test",
+    "destructive_mode": true,
+    "colors": {
+        "base": "#ffffff",
+        "accent": "#ff0000",
+        "background": "#f0f0f0"
+    },
+    "pages": []
+}

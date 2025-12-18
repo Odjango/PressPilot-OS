@@ -1,0 +1,3 @@
+🧠 Editor Validation (EV-01): Scanning themes/presspilot-roma-pizza-v2...
+
+✅ [EV-01] Passed. No freeform leakage or forbidden patterns.

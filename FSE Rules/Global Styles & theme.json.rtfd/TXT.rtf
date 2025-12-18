@@ -1,0 +1,438 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 .SFNS-Regular_wdth_opsz1E0000_GRAD_wght1F40000;\f1\fnil\fcharset0 HelveticaNeue;\f2\fnil\fcharset0 HelveticaNeue-Bold;
+\f3\fnil\fcharset0 HelveticaNeue-Italic;\f4\fnil\fcharset0 Menlo-Regular;\f5\fnil\fcharset0 Menlo-Italic;
+\f6\fnil\fcharset0 Menlo-BoldItalic;}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red20\green20\blue20;\red255\green255\blue255;
+\red29\green29\blue31;\red255\green255\blue255;\red223\green225\blue230;\red24\green30\blue42;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c100000;\cssrgb\c10196\c10196\c10196;\cssrgb\c100000\c100000\c100000\c60000;
+\cssrgb\c15294\c15294\c16471;\cssrgb\c100000\c100000\c100000\c5882;\cssrgb\c89804\c90588\c92157;\cssrgb\c12157\c16078\c21569;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid101\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
+\margl1440\margr1440\vieww12720\viewh7800\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs60 \cf2 \cb3 \expnd0\expndtw0\kerning0
+Global Styles & theme.json
+\f1\fs24 \cf4 \cb1 \
+\pard\pardeftab720\qc\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://fullsiteediting.com/lessons/global-styles/"}}{\fldrslt \cf4 \
+}}\pard\pardeftab720\partightenfactor0
+
+\fs36 \cf2 {{\NeXTGraphic wapuu-themes-by-carolina-baloon-250.png \width5000 \height5000 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+
+\fs28 \cf4 \cb3 Full Site Editing\cb1 \
+\cb3 Apr 19, 2025\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f2\b\fs32 \cf2 \cb3 Global Styles
+\f1\b0  helps users change the style of their site without having to edit individual blocks or pages. It also lowers the entry barrier and makes it easier for theme developers to style blocks.\cb1 \
+
+\f2\b \cb3 Theme.json 
+\f1\b0 is a new theme configuration for block settings, site-wide styles, and block styles.\cb1 \
+\cb3 In this lesson, you will learn what Global Styles are, how to create a theme.json file, and how you can benefit from Global Styles.\cb1 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 What are Global Styles?\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 \'93Global Styles\'94 is both a system for loading CSS and an interface created to help users change the style of their site without having to edit individual blocks or pages. \cb1 \uc0\u8232 \cb3 From a theme developer perspective, Global Styles makes it easier to style blocks in the editor and front.\cb1 \
+\cb3 Both classic PHP-based themes and block themes can take advantage of global styles using theme.json. 
+\f2\b But only block themes use the new Styles interface.
+\f1\b0 \cb1 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 The Styles interface\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 WordPress introduced the Styles interface as part of the Site Editor in version 5.9. You find the controls inside a separate sidebar panel in the Site Editor.\cb1 \uc0\u8232 \cb3 First, access the Site Editor via Appearance > Editor in the WordPress admin.\cb1 \uc0\u8232 \cb3 Next, select the Styles menu item in the sidebar:\cb1 \uc0\u8232 \cb3 In the Site Editor, you can open the Styles sidebar by clicking on the icon with the black and white split circle (next to the save button).\cb1 \uc0\u8232 \cb3 In the first panel, you can access options for typography, colors, and layout for the website:\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf5 {{\NeXTGraphic 016ef337e2d4e5386ef1793526fe254a4aaf8002fe6b2b2fbb9064d38334ee2f.png \width30220 \height13960 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf5 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf4 \
+\
+\
+\
+\pard\pardeftab720\sa320\partightenfactor0
+\cf2 \cb3 At the bottom of the sidebar, you can open the Blocks panel to select defaults for block types:\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf5 {{\NeXTGraphic 4f43fd885f122cef5adcc64143e485fdb1cc2d5b2b7f2a4ae9ac27b93a252c25.png \width30220 \height13960 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf5 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf4 \
+\
+\
+\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Who benefits from Global Styles?\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Besides the users who will have more possibilities to change the look of their sites, Global Styles also benefits new theme developers. The new controls drastically reduce the need for custom solutions for styling, for example, a theme options panel or customizer settings. It lowers the entry barrier for new theme developers and designers while allowing control of the styles.\cb1 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 What is theme.json?\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Global Styles works with the help of a new theme configuration file called 
+\f3\i theme.json
+\f1\i0 . Theme developers can use theme.json to define defaults for both the website and blocks.\cb1 \
+\cb3 You use theme.json to enable and disable supported features, 
+\f2\b but you can not use it to add new unsupported features to blocks.
+\f1\b0 \cb1 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Format\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Theme.json uses JSON format. One of the reasons the Gutenberg developers selected JSON was its ease of use. If you are familiar with arrays or JavaScript Objects, you will have no problems working with theme.json.\cb1 \
+\cb3 WordPress parses the data from the JSON objects and reformats it as CSS and CSS custom properties. WordPress then loads the styles in the editors and on the front.\cb1 \uc0\u8232 \cb3 In classic PHP-based themes, {\field{\*\fldinst{HYPERLINK "https://fullsiteediting.com/lessons/adding-full-site-editing-features-to-classic-themes/"}}{\fldrslt \ul the styles are only loaded in the editors}}.\cb1 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Documentation and specification\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Since WordPress 5.9, there have been considerable improvements to the official documentation for theme.json. I strongly recommend that you bookmark the {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/block-editor/reference-guides/theme-json-reference/"}}{\fldrslt \ul theme.json reference.}}\cb1 \
+\cb3 \'96 I also want to highlight that theme.json 
+\f2\b will continue to evolve
+\f1\b0 . In this lesson, you are only scratching the surface. You can use new or experimental features if you activate the Gutenberg plugin.\cb1 \
+\cb3 The \'93{\field{\*\fldinst{HYPERLINK "https://make.wordpress.org/core/tag/gutenberg-new/"}}{\fldrslt \ul What\'92s new in Gutenberg}}\'94 posts on WordPress.org and the {\field{\*\fldinst{HYPERLINK "https://gutenbergtimes.com/podcast/"}}{\fldrslt \ul Gutenberg Changelog podcast by Birgit Pauli-Haack}} are good ways to stay informed about the experimental features.\cb1 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 How to create theme.json\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\fs32 \cf2 \cb3 This is an introduction and a limited overview of the available features in theme.json. 
+\f1\b0 \cb1 \uc0\u8232 \cb3 For more in-depth information, please see the {\field{\*\fldinst{HYPERLINK "https://fullsiteediting.com/courses/full-site-editing-for-theme-developers/#h-theme-json"}}{\fldrslt \ul theme.json lessons}} listed on the course page.\cb1 \
+\cb3 You place the new 
+\f3\i theme.json
+\f1\i0  configuration file in the theme\'92s root folder:\cb1 \
+\cb3 You start the file with two curly brackets, 
+\f4\fs25\fsmilli12800 \cb6 \{ \}
+\f1\fs32 \cb3  and you will place all the content inside these brackets.\cb1 \
+\cb3 Then, you will use a format with 
+\f3\i property names
+\f1\i0  and 
+\f3\i values
+\f1\i0  encased in double quotes and separated with a colon:\cb1 \
+\cb3 The property name can be a block name or a setting:\cb1 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Versioning\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 You must include the version at the top of your file inside the first curly brackets.\cb1 \
+\cb3 There are currently no plans for changes that would require a version 4 in the foreseeable future. The recommendation is to use version 3.\cb1 \uc0\u8232 \cb3 \uc0\u9786 \u65039 
+\f3\i  If you see me using version 2, then I have not had the time to update the resource.
+\f1\i0 \cb1 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Main sections\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 You separate the theme.json file into two main sections: 
+\f2\b settings
+\f1\b0  and 
+\f2\b styles
+\f1\b0 .\cb1 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Settings\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Here are 
+\f3\i some 
+\f1\i0 of the features that you can change in the settings section:\cb1 \
+\cb3 You can also create custom CSS properties.\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Color\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 In the example below, the preset category is 
+\f4\fs25\fsmilli12800 \cb6 color
+\f1\fs32 \cb3  and the subcategories of 
+\f4\fs25\fsmilli12800 \cb6 color
+\f1\fs32 \cb3  are 
+\f4\fs25\fsmilli12800 \cb6 palette
+\f1\fs32 \cb3 , 
+\f4\fs25\fsmilli12800 \cb6 duotone
+\f1\fs32 \cb3 , and 
+\f4\fs25\fsmilli12800 \cb6 gradients
+\f1\fs32 \cb3 .\cb1 \
+\cb3 The official documentation sometimes presents this nesting as:\cb1 \uc0\u8232 
+\f4\fs25\fsmilli12800 \cb6 settings.color.palette
+\f1\fs32 \cb3 , 
+\f4\fs25\fsmilli12800 \cb6 settings.blocks.blockname.color.gradients
+\f1\fs32 \cb1 \
+\cb3 You place multiple values inside arrays and separate properties with a comma:\cb1 \
+\cb3 If you look at the gradient above, you can see that it uses the primary and secondary colors from the palette. Each preset generates a CSS custom property using this naming convention:\cb1 \
+\cb3 The output from the example is:\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Typography\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 You can add font families and font sizes under the typography category.\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f4\fs25\fsmilli12800 \cf2 \cb6 FontFamilies
+\f1\fs32 \cb3  contains an array with the following keys:\cb1 \
+
+\f4\fs25\fsmilli12800 \cb6 FontSizes
+\f1\fs32 \cb3  is the theme.json equivalent of 
+\f4\fs25\fsmilli12800 \cb6 add_theme_support( "editor-font-sizes" )
+\f1\fs32 \cb3 .\cb1 \uc0\u8232 \cb3 The 
+\f4\fs25\fsmilli12800 \cb6 size
+\f1\fs32 \cb3  property can use any valid CSS font size.\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Layout and content width\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 The layout category replaces 
+\f4\fs25\fsmilli12800 \cb6 add_theme_support( 'align-wide'
+\f1\fs32 \cb3  
+\f4\fs25\fsmilli12800 \cb6 );
+\f1\fs32 \cb3  and defines the width of the content.\cb1 \
+\cb3 This setting does not output CSS custom properties.\cb1 \
+\cb3 Place this code under 
+\f4\fs25\fsmilli12800 \cb6 settings
+\f1\fs32 \cb3 :\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Custom presets\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 When you create a theme.json file and add custom presets, you are not limited to using properties supported by the block. Compared to standard presets, they do 
+\f2\b not
+\f1\b0  influence the block controls in the editor. A custom preset can be anything. If you want to handle all your CSS custom properties in one settings file, you can use theme.json to create CSS custom properties that you can use anywhere in your CSS.\cb1 \
+\cb3 Custom preset generates a CSS custom property using this naming convention:\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f3\i \cf2 \cb3 Because of this, you should not use 
+\f5\fs25\fsmilli12800 \cb6 --
+\f3\fs32 \cb3  in your slug or values.
+\f1\i0 \cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+\cf2 \cb3 The output from the example is:\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Presets for blocks\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 Add the name of the block, 
+\f4\fs25\fsmilli12800 \cb6 core/heading
+\f1\fs32 \cb3 , inside the new blocks section:\cb1 \
+\cb3 Any presets you create inside this section will only apply to the heading block.\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 Example with both color palettes together\cb1 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Enable or disable features\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\fs32 \cf2 \cb3 Reminder:
+\f1\b0  When a feature is enabled, the editor control is available, but only for the blocks that have registered support. You can learn which block has which supports in the {\field{\*\fldinst{HYPERLINK "https://fullsiteediting.com/block-reference/"}}{\fldrslt \ul block reference}}.\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 AppearanceTools -A setting that enables multiple features\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 AppearanceTools enables the following features:\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Typography features\cb1 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0
+\f4\b0\fs25\fsmilli12800 \cf2 \cb6 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+customFontSize:
+\f1\fs32 \cb3 \'a0Let the user select a custom size value. Enabled by default, set to false to disable.\cb1 \
+\ls1\ilvl0
+\f4\fs25\fsmilli12800 \cb6 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+dropCap
+\f1\fs32 \cb3 : Let the user add a drop cap to paragraphs. Enabled by default, set to false to disable.\cb1 \
+\ls1\ilvl0
+\f4\fs25\fsmilli12800 \cb6 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+fontWeight
+\f1\fs32 \cb3 : Enabled by default, set to false to disable.\cb1 \
+\ls1\ilvl0
+\f4\fs25\fsmilli12800 \cb6 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+lineHeight:
+\f1\fs32 \cb3  Opt-in, set to true to enable.\cb1 \
+\ls1\ilvl0
+\f4\fs25\fsmilli12800 \cb6 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+fontStyle
+\f1\fs32 \cb3 : Enabled by default, set to false to disable.\cb1 \
+\ls1\ilvl0
+\f4\fs25\fsmilli12800 \cb6 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+textDecoration:
+\f1\fs32 \cb3  Let the user add an underline or line through the text. Enabled by default, set to false to disable.\cb1 \
+\ls1\ilvl0
+\f4\fs25\fsmilli12800 \cb6 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+textTransform:
+\f1\fs32 \cb3  Let the user select uppercase, capitalized, and lowercase text. Enabled by default, set to false to disable.\cb1 \
+\ls1\ilvl0
+\f4\fs25\fsmilli12800 \cb6 \kerning1\expnd0\expndtw0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+writingMode
+\f1\fs32 \cb3 : Let the user change the direction of the text to vertical. Disabled by default, set to true to enable (from WordPress 6.3).\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+\cf2 \cb3 Example code:\cb1 \
+\cb3 \'96 It is not possible to choose which font weights should be available in the editor, and the weights do not change depending on the font family.\cb1 \uc0\u8232 \cb3 This feature has been requested but has not been built yet.\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Color features\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 The color options include:\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://fullsiteediting.com/lessons/theme-json-color-options/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 For more color options, please read the lesson about theme.json colors.}}\
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Spacing features\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 Enable support for padding, margin, and block gap.\cb1 \
+\cb3 Enable custom units for the margin and padding:\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://fullsiteediting.com/lessons/theme-json-layout-and-spacing-options/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 To learn about the blockGap spacing feature, please continue to the lesson about Layout.}}\
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Borders\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 Enable support for borders. You can enable all or some, and allow different settings for different blocks:\cb1 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Styles\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 The CSS output is:\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Block Styles\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 Block styles override the default styles for blocks. WordPress applies the styles to all instances of the block. For block styles, the category name is always an existing property.\cb1 \
+\cb3 In the example, I am adding the secondary text color to the heading block:\cb1 \
+\cb3 The resulting CSS output is:\cb1 \
+\pard\pardeftab720\sa534\partightenfactor0
+
+\f2\b \cf2 \cb3 Referencing styles\cb1 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\fs40 \cf2 \cb3 Additional sections\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\fs32 \cf2 \cb3 Template parts\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 With full site editing, there are three optional template part areas: header, footer, and uncategorized (general). You can assign a template part that you have designed as a header to the header 
+\f3\i area
+\f1\i0 . This helps users select the correct template parts when they are creating or editing their website.\cb1 \
+\cb3 This section is at the base level of theme.json. The section name is 
+\f4\fs25\fsmilli12800 \cb6 templateParts
+\f1\fs32 \cb3 , followed by the template part slug (name) and the area. The title is the visible name in the editor.\cb1 \
+\cb3 In the example, the template part file name is 
+\f4\fs25\fsmilli12800 \cb6 header.htm
+\f1\fs32 \cb3 l, which means that 
+\f4\fs25\fsmilli12800 \cb6 header
+\f1\fs32 \cb3  is the slug you need to use as a value for the 
+\f4\fs25\fsmilli12800 \cb6 name
+\f1\fs32 \cb3  property:\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f4\fs25\fsmilli12800 \cf2 \cb6 wp_template_part_area
+\f1\fs32 \cb3  is a taxonomy for the 
+\f4\fs25\fsmilli12800 \cb6 wp_template_part
+\f1\fs32 \cb3  post type.\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Custom templates\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 With a traditional PHP-based theme, you place the required information in the file header of the template file:\cb1 \
+\cb3 With full site editing, you can list templates in theme.json.\cb1 \uc0\u8232 \cb3 The section name is 
+\f4\fs25\fsmilli12800 \cb6 customTemplates
+\f1\fs32 \cb3  and just like the 
+\f4\fs25\fsmilli12800 \cb6 settings
+\f1\fs32 \cb3 , 
+\f4\fs25\fsmilli12800 \cb6 styles
+\f1\fs32 \cb3 , and 
+\f4\fs25\fsmilli12800 \cb6 templateParts
+\f1\fs32 \cb3 , the section is at the base level of theme.json.\cb1 \
+\cb3 The first key is the name and slug of the template. In the example, I have named the template file 
+\f4\fs25\fsmilli12800 \cb6 page-about.html
+\f1\fs32 \cb3 , and the slug is 
+\f4\fs25\fsmilli12800 \cb6 page-about
+\f1\fs32 \cb3 .\cb1 \
+\pard\pardeftab720\sa425\partightenfactor0
+
+\f2\b \cf2 \cb3 Patterns\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0 \cf2 \cb3 The 
+\f4\fs25\fsmilli12800 \cb6 patterns
+\f1\fs32 \cb3  section was added to theme.json in Gutenberg version 12.7 to make it easier to include patterns from the {\field{\*\fldinst{HYPERLINK "https://wordpress.org/patterns/"}}{\fldrslt \ul WordPress.org pattern directory.}}\cb1 \
+\cb3 It is in the root level of theme.json and uses an array of block pattern slugs:\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f4\fs20\fsmilli10240 \cf7 \cb8 "patterns": [ "short-text-surrounded-by-round-images", "partner-logos" ]
+\fs25\fsmilli12800 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 Visit the pattern directory and select the pattern you want to include. For example, I have created {\field{\*\fldinst{HYPERLINK "https://wordpress.org/patterns/pattern/paragraph-heading/"}}{\fldrslt \ul this popular heading pattern}}.\cb1 \uc0\u8232 \cb3 The slug of the pattern is the last part of the URL: 
+\f4\fs25\fsmilli12800 \cb6 paragraph-heading
+\f1\fs32 \cb3 , and the code for the pattern section would be:\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f4\fs20\fsmilli10240 \cf7 \cb8 "patterns": [ "paragraph-heading" ]
+\fs25\fsmilli12800 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Theme.json schema\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 WordPress contributors have created a schema to help you use theme.json.\cb1 \uc0\u8232 \cb3 By including the schema at the top of the file, you can validate the file, see tooltips with descriptions of the settings, and autocomplete in your code editor.\cb1 \
+
+\f2\b \cb3 Schema for theme.json version 3:
+\f1\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f4\fs20\fsmilli10240 \cf7 \cb8 "$schema": "https://schemas.wp.org/trunk/theme.json"
+\fs25\fsmilli12800 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 Placement:\cb1 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Style priority\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Now you know that theme.json creates custom CSS properties and overrides default styles for blocks. I have also shown a screenshot of the interface where users can select global styles. The user-selected styles have priority over the styles created with theme.json.\cb1 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls2\ilvl0\cf2 \cb3 \kerning1\expnd0\expndtw0 {\listtext	1	}\expnd0\expndtw0\kerning0
+Styles on an individual block that users add in the block editor. For example, a color change. {\field{\*\fldinst{HYPERLINK "https://fullsiteediting.com/lessons/block-grammar-basics/#using-block-metadata-in-markup"}}{\fldrslt \ul Note that some of these styles are 
+\f2\b inline
+\f1\b0  in block\'92s the style attribute}}.\cb1 \
+\ls2\ilvl0\cb3 \kerning1\expnd0\expndtw0 {\listtext	2	}\expnd0\expndtw0\kerning0
+Stylesheets that you enqueue: 
+\f2\b Specificity and use of 
+\f6\i\fs25\fsmilli12800 \cb6 !important
+\f2\i0\fs32 \cb3  matters! There are always ways to override styles.
+\f1\b0 \cb1 \
+\ls2\ilvl0\cb3 \kerning1\expnd0\expndtw0 {\listtext	3	}\expnd0\expndtw0\kerning0
+Styles that are added in the theme.json file and via the Styles interface in the Site Editor.\cb1 \
+\ls2\ilvl0\cb3 \kerning1\expnd0\expndtw0 {\listtext	4	}\expnd0\expndtw0\kerning0
+Default block styles from WordPress (or Gutenberg if the plugin is active).}

@@ -1,0 +1,52 @@
+{
+    "slug": "presspilot-capital-corp-v1",
+    "site_title": "Capital Corporation",
+    "source_spec": "tests/fixtures/atlas-spec",
+    "colors": {
+        "base": "#f4f4f4",
+        "accent": "#2c3e50",
+        "background": "#ffffff"
+    },
+    "pages": [
+        {
+            "slug": "home",
+            "title": "Home",
+            "content": "Welcome to Capital Corp."
+        },
+        {
+            "slug": "about",
+            "title": "Our Firm",
+            "content": "Leading the industry since 1999."
+        },
+        {
+            "slug": "services",
+            "title": "Services",
+            "content": "Corporate solutions."
+        },
+        {
+            "slug": "investors",
+            "title": "Investor Relations",
+            "content": "Quarterly reports available."
+        },
+        {
+            "slug": "carriers",
+            "title": "Careers",
+            "content": "Join our team."
+        },
+        {
+            "slug": "legal",
+            "title": "Legal",
+            "content": "Terms and Conditions."
+        },
+        {
+            "slug": "contact",
+            "title": "Contact",
+            "content": "Global Headquarters."
+        },
+        {
+            "slug": "news",
+            "title": "Latest News",
+            "content": "Market updates."
+        }
+    ]
+}

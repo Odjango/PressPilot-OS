@@ -1,0 +1,229 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 .SFNS-Regular_wdth_opsz1E0000_GRAD_wght1F40000;\f1\fnil\fcharset0 HelveticaNeue;\f2\fnil\fcharset0 HelveticaNeue-Bold;
+\f3\fnil\fcharset0 HelveticaNeue-Italic;\f4\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red20\green20\blue20;\red255\green255\blue255;
+\red29\green29\blue31;\red255\green255\blue255;\red223\green225\blue230;\red24\green30\blue42;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c100000;\cssrgb\c10196\c10196\c10196;\cssrgb\c100000\c100000\c100000\c60000;
+\cssrgb\c15294\c15294\c16471;\cssrgb\c100000\c100000\c100000\c5882;\cssrgb\c89804\c90588\c92157;\cssrgb\c12157\c16078\c21569;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid1\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\margl1440\margr1440\vieww12720\viewh7800\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs60 \cf2 \cb3 \expnd0\expndtw0\kerning0
+Creating WordPress block themes
+\f1\fs24 \cf4 \cb1 \
+\pard\pardeftab720\qc\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://fullsiteediting.com/lessons/creating-block-based-themes/"}}{\fldrslt \cf4 \
+}}\pard\pardeftab720\partightenfactor0
+
+\fs36 \cf2 {{\NeXTGraphic wapuu-themes-by-carolina-baloon-250.png \width5000 \height5000 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+
+\fs28 \cf4 \cb3 Full Site Editing\cb1 \
+\cb3 Apr 10, 2025\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\fs32 \cf2 \cb3 This lesson is the first in a series of exercises to learn how to create block themes, also known as full site editing themes. You will learn about the minimum file requirements, theme setup, and file structure. I will also highlight some differences between classic themes and block themes.\cb1 \
+\cb3 By the end of this first lesson, you will have created an 
+\f2\b empty
+\f1\b0  WordPress block theme with support for the Site Editor. You will continue to build upon this theme over the next lessons:\cb1 \
+\cb3 For this lesson, you will need your favorite code editor and a WordPress installation to test your theme.\cb1 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Introduction\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 The {\field{\*\fldinst{HYPERLINK "https://fullsiteediting.com/site-creators/introduction-to-the-site-editor/"}}{\fldrslt \cb3 \ul Site Editor}} will be one of your primary tools for creating WordPress block themes. For most block theme projects, this is where you will assemble and style blocks to create your templates, parts, and patterns.\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf5 {{\NeXTGraphic af8cb05214c7b7b0ce0403db1c1ef299ce30644b57fbcb8dfd6e815cf64895c7.png \width25200 \height14175 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\partightenfactor0
+\cf5 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf4 \
+\
+\
+\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Workflow for creating block themes\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Once you have learned the basics about block themes, your block theme creation flow will probably look something like this:\cb1 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0\cf2 \cb3 \kerning1\expnd0\expndtw0 {\listtext	1	}\expnd0\expndtw0\kerning0
+Install the {\field{\*\fldinst{HYPERLINK "https://wordpress.org/plugins/create-block-theme/"}}{\fldrslt \ul Create Block Theme plugin}}\cb1 \
+\ls1\ilvl0\cb3 \kerning1\expnd0\expndtw0 {\listtext	2	}\expnd0\expndtw0\kerning0
+Create a blank theme from the plugin options\cb1 \
+\ls1\ilvl0\cb3 \kerning1\expnd0\expndtw0 {\listtext	3	}\expnd0\expndtw0\kerning0
+Add a color palette and fonts in the Site Editor 
+\f3\i Styles
+\f1\i0  panel\cb1 \
+\ls1\ilvl0\cb3 \kerning1\expnd0\expndtw0 {\listtext	4	}\expnd0\expndtw0\kerning0
+Create block templates based on the desired design\cb1 \
+\ls1\ilvl0\cb3 \kerning1\expnd0\expndtw0 {\listtext	5	}\expnd0\expndtw0\kerning0
+Export the changes to a theme .zip file\cb1 \
+\ls1\ilvl0\cb3 \kerning1\expnd0\expndtw0 {\listtext	6	}\expnd0\expndtw0\kerning0
+Tweak the theme files in your code editor\cb1 \
+\ls1\ilvl0\cb3 \kerning1\expnd0\expndtw0 {\listtext	7	}\expnd0\expndtw0\kerning0
+Repeat from step 4\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+\cf2 \cb3 There are no right or wrong workflows. With some practice, you will find a workflow that suits you. Eventually, you will have created your own starter theme and you will no longer need to use the plugin to create the initial files. You will also likely have a library of pattern and template designs that you can reuse in your themes.\cb1 \
+\cb3 However, there are several 
+\f3\i gotchas
+\f1\i0  when creating block themes, especially if you are comparing them to classic themes. That is why I suggest starting with these five lessons, which will help you understand the basics of block themes and give you a good starting point.\cb1 \
+\cb3 You can follow along and create a block theme with me, or use the \'93super quick start guide\'94 and only have this page as a reference.\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf2 \cb3 Super quick start guide
+\f1\b0 \cb3  
+\f2\b \cb3 for eager theme developers
+\f1\b0 \cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+\cf2 \cb3 1. Create a new theme folder inside 
+\f4\fs25\fsmilli12800 \cb6 wp-content/themes
+\f1\fs32 \cb3 .\cb1 \uc0\u8232 \cb3 2. Create a style.css file for your new theme.\cb1 \uc0\u8232 \cb3 3. Create two new folders inside the theme folder: 
+\f4\fs25\fsmilli12800 \cb6 templates
+\f1\fs32 \cb3  and 
+\f4\fs25\fsmilli12800 \cb6 parts
+\f1\fs32 \cb3 .\cb1 \uc0\u8232 \cb3 4. Inside the 
+\f4\fs25\fsmilli12800 \cb6 parts
+\f1\fs32 \cb3  folder, create an HTML file called 
+\f4\fs25\fsmilli12800 \cb6 header.html
+\f1\fs32 \cb3 . \cb1 \uc0\u8232 \cb3 5. In 
+\f4\fs25\fsmilli12800 \cb6 header.html
+\f1\fs32 \cb3 , add the following code: 
+\f4\fs25\fsmilli12800 \cb6 <!--\'a0wp:site-title\'a0/-->
+\f1\fs32 \cb3  and save.\cb1 \uc0\u8232 \cb3 6. Inside the 
+\f4\fs25\fsmilli12800 \cb6 templates
+\f1\fs32 \cb3  folder, create an HTML file called 
+\f4\fs25\fsmilli12800 \cb6 index.html
+\f1\fs32 \cb3 . \cb1 \uc0\u8232 \cb3 7. In 
+\f4\fs25\fsmilli12800 \cb6 index.html
+\f1\fs32 \cb3 , add the block code below, and save:\cb1 \
+\cb3 8: Activate the theme.\cb1 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Step 1: Create the theme folder and style.css\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 You can expect that the theme setup will be more straightforward and require fewer files in the future. It is even possible that the only file you will need is the new 
+\f4\fs25\fsmilli12800 \cb6 theme.json
+\f1\fs32 \cb3  configuration file. But let\'92s look at the theme file structure and block templates required to create block themes today.\cb1 \
+\cb3 First, select a theme name and use the slug to create your new theme folder inside\cb1 \uc0\u8232 
+\f4\fs25\fsmilli12800 \cb6 wp-content/themes
+\f1\fs32 \cb3 . If your theme name is \'93Lesson One\'94, your folder will be:\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f4\fs20\fsmilli10240 \cf7 \cb8 wp-content/themes/lesson-one
+\fs25\fsmilli12800 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\fs32 \cf2 \cb3 Create a 
+\f4\fs25\fsmilli12800 \cb6 style.css
+\f1\fs32 \cb3  file in the root folder of the theme. Block themes use a {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/themes/basics/main-stylesheet-style-css/#basic-structure"}}{\fldrslt \cb3 \ul standard style.css file header}}. Copy and paste the following code into the file. Update the fields as needed.\cb1 \uc0\u8232 \cb3 The only 
+\f2\b required
+\f1\b0  part of the file header is the theme name.\cb1 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Start with an empty style.css file\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Your theme will rely on block styles and the 
+\f4\fs25\fsmilli12800 \cb6 theme.json
+\f1\fs32 \cb3  configuration file as much as possible.\cb1 \uc0\u8232 \cb3 I suggest starting with an empty 
+\f4\fs25\fsmilli12800 \cb6 style.css
+\f1\fs32 \cb3  file, except for the file header. Using an empty 
+\f4\fs25\fsmilli12800 \cb6 style.css
+\f1\fs32 \cb3  file is an excellent way to learn the strengths and limitations of 
+\f4\fs25\fsmilli12800 \cb6 theme.json
+\f1\fs32 \cb3 .\cb1 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Step 2: Add your first block template\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\fs32 \cf2 \cb3 Block templates
+\f1\b0  are your base HTML files, and just like PHP files in classic themes, they follow the WordPress template hierarchy.\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b \cf2 \cb3 The template hierarchy -refresher
+\f1\b0 \cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+\cf2 \cb3 The following default, top-level templates are supported in the WordPress template hierarchy:\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/themes/basics/template-hierarchy/"}}{\fldrslt \cf2 \cb3 \ul \ulc2 https://developer.wordpress.org/themes/basics/template-hierarchy/}}\
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Step 3: Create the theme.json configuration file\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f4\b0\fs25\fsmilli12800 \cf2 \cb6 Theme.json
+\f1\fs32 \cb3  is a configuration file for enabling and disabling block settings and for applying styles to blocks. I will describe how to use 
+\f4\fs25\fsmilli12800 \cb6 theme.json
+\f1\fs32 \cb3  in detail in {\field{\*\fldinst{HYPERLINK "https://fullsiteediting.com/lessons/global-styles/"}}{\fldrslt \cb3 \ul upcoming lessons}}, so do not worry if you are not familiar with this format yet.\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+\cf2 \cb3 In this lesson, you will add the layout setting: Block themes use this setting to specify the default content width and to support wide width, full width, left, center, and right alignments.\cb1 \
+\cb3 Create the 
+\f4\fs25\fsmilli12800 \cb6 theme.json
+\f1\fs32 \cb3  file in the root folder, and copy and paste the following code:\cb1 \
+\cb3 You have now set the content width to 840px and the wide width to 1100px. These two values match the default widths in the editors, but you can adjust them.\cb1 \
+\cb3 \'a0\'97 There is no setting for full width because it is unnecessary: WordPress handles the width limitations by setting a 
+\f4\fs25\fsmilli12800 \cb6 max-width
+\f1\fs32 \cb3  on the blocks using CSS.\cb1 \
+
+\f2\b \cb3 Tip!
+\f1\b0  840px gives your website many characters per line, making it difficult to read. Adjust the width to a comfortable reading length depending on your selected font family and size.\cb1 \
+\cb3 Your theme structure should now look like this:\cb1 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Step 4: Include functions.php and theme support (optional)\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 Themes do not require a 
+\f4\fs25\fsmilli12800 \cb6 functions.php
+\f1\fs32 \cb3  file to work. You can include 
+\f4\fs25\fsmilli12800 \cb6 functions.php
+\f1\fs32 \cb3  in your block theme, if you need to enqueue stylesheets or JavaScript, add custom block styles and image sizes, or use hooks.\cb1 \
+\cb3 Create a new file in the root folder and name it 
+\f4\fs25\fsmilli12800 \cb6 functions.php
+\f1\fs32 \cb3 .\cb1 \uc0\u8232 \cb3 Next, add the file header, and if you like, enqueue the 
+\f4\fs25\fsmilli12800 \cb6 style.css
+\f1\fs32 \cb3  file for later use with {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/reference/functions/wp_enqueue_style/"}}{\fldrslt 
+\f4\fs25\fsmilli12800 \cb6 \ul wp_enqueue_style()}}:\cb1 \
+\cb3 You do not need to enqueue the comment-reply script commonly used in classic themes because the comments block enqueues this automatically.\cb1 \
+\pard\pardeftab720\sa400\partightenfactor0
+
+\f2\b\fs40 \cf2 \cb3 Theme support\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 The following theme support is automatically enabled for block themes:\cb1 \uc0\u8232 \cb3 post-thumbnails, editor-styles, responsive-embeds, automatic-feed-links, html5 styles, and html5 scripts.\cb1 \
+\cb3 You do not need to include 
+\f4\fs25\fsmilli12800 \cb6 add_theme_support(\'a0'title-tag'\'a0)
+\f1\fs32 \cb3  in the setup function, because WordPress already renders the title tag for full site editing themes.\cb1 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Templates are loaded in the body element\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f1\b0\fs32 \cf2 \cb3 WordPress already adds the necessary HTML elements and hooks. The complete code is:\cb1 \
+\cb3 If you need to change the meta tags, you need to use hooks and filters.\cb1 \
+\cb3 On the front, your templates and all your blocks are loaded in the 
+\f4\fs25\fsmilli12800 \cb6 <body>
+\f1\fs32 \cb3  element, inside a 
+\f4\fs25\fsmilli12800 \cb6 <div>
+\f1\fs32 \cb3  with the class 
+\f4\fs25\fsmilli12800 \cb6 wp-site-blocks
+\f1\fs32 \cb3 . There is no way to remove this div.\cb1 \
+\cb3 This is added by the private function {\field{\*\fldinst{HYPERLINK "https://developer.wordpress.org/reference/functions/get_the_block_template_html/"}}{\fldrslt \cb3 \ul get_the_block_template_html()}}.\cb1 \
+\pard\pardeftab720\sa398\partightenfactor0
+
+\f2\b\fs48 \cf2 \cb3 Resources\cb1 \
+\pard\pardeftab720\sa320\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://github.com/carolinan/fullsiteediting/tree/course/Lessons/lesson-one"}}{\fldrslt 
+\f1\b0\fs32 \cf2 \cb3 \ul \ulc2 Download a copy of the theme}}}
