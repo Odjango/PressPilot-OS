@@ -283,8 +283,17 @@ function compileSection(section: Section): BlockNode {
 
 function compileHero(hero: Section & { type: 'hero' }): BlockNode {
     return {
-        name: 'core/group',
-        attributes: { align: 'full', layout: { type: 'constrained' }, style: { spacing: { padding: { top: 'var:preset|spacing|80', bottom: 'var:preset|spacing|80' } } }, backgroundColor: 'base' },
+        name: 'core/cover',
+        attributes: {
+            useFeaturedImage: false,
+            dimRatio: 0,
+            overlayColor: 'base',
+            align: 'full',
+            minHeight: 80,
+            minHeightUnit: 'vh',
+            layout: { type: 'constrained' },
+            tagName: 'section' // Semantic HTML
+        },
         innerBlocks: [
             {
                 name: 'core/heading',
@@ -381,7 +390,13 @@ function compileUpdates(section: Section & { type: 'updates' }): BlockNode {
 function compileContact(section: Section & { type: 'contact' }): BlockNode {
     return {
         name: 'core/group',
-        attributes: { align: 'full', layout: { type: 'constrained' }, backgroundColor: 'base' },
+        attributes: {
+            align: 'full',
+            layout: { type: 'constrained' },
+            backgroundColor: 'base',
+            tagName: 'section', // Semantic HTML
+            style: { spacing: { padding: { top: 'var:preset|spacing|80', bottom: 'var:preset|spacing|80' } } }
+        },
         innerBlocks: [
             { name: 'core/heading', attributes: { level: 2, textAlign: 'center' }, textContent: section.headline },
             { name: 'core/paragraph', attributes: { align: 'center' }, textContent: section.body },
