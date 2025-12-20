@@ -32,10 +32,25 @@ export function compileAST(layout: SiteLayout): Record<string, BlockNode[]> {
 // --- Specific Compilers ---
 
 function compileHeader(layout: SiteLayout): BlockNode[] {
-    // Structure: Group(Header) -> Group(Row) -> [Site Title, Navigation]
-    const siteTitleBlock: BlockNode = {
-        name: 'core/site-title',
-        attributes: { level: 1 } // Fixed: level: 0 is invalid, using 1 (h1)
+    // Structure: Group(Header) -> Group(Row) -> [Group(Branding: Logo + Title), Navigation]
+
+    // 1. Branding Group (Logo + Title)
+    const brandingGroup: BlockNode = {
+        name: 'core/group',
+        attributes: {
+            layout: { type: 'flex', flexWrap: 'nowrap', alignItems: 'center' }
+        },
+        innerBlocks: [
+            {
+                name: 'core/site-logo',
+                attributes: { width: 48, shouldSyncIcon: false }
+            },
+            {
+                name: 'core/site-title',
+                // Core Site Title 'level' defaults to h1 (1). Using 1 for strict compliance and SEO.
+                attributes: { level: 1, isLink: true }
+            }
+        ]
     };
 
     const navItems = layout.header.navItems.map(item => createNavLink(item));
@@ -52,15 +67,15 @@ function compileHeader(layout: SiteLayout): BlockNode[] {
     const row: BlockNode = {
         name: 'core/group',
         attributes: {
-            layout: { type: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between' }
+            layout: { type: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between', alignItems: 'center' }
         },
-        innerBlocks: [siteTitleBlock, navBlock]
+        innerBlocks: [brandingGroup, navBlock]
     };
 
     return [
         {
             name: 'core/group',
-            attributes: { tagName: 'header', align: 'full', style: { spacing: { padding: { top: 'var:preset|spacing|30', bottom: 'var:preset|spacing|30' } } } },
+            attributes: { tagName: 'header', align: 'full', layout: { type: 'constrained' }, style: { spacing: { padding: { top: 'var:preset|spacing|30', bottom: 'var:preset|spacing|30' } } } },
             innerBlocks: [row]
         }
     ];
