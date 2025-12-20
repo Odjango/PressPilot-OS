@@ -4,9 +4,14 @@ Theme URI: https://presspilotapp.com
 Author: PressPilot
 Author URI: https://presspilotapp.com
 Description: Stable, host-safe block theme skeleton for AI-generated variations.
-Version: 2.0.0.1766110237
+Version: 2.0.0.1766113085.TEST-RUN-1234
 Requires at least: 6.5
 Tested up to: 6.9
 Requires PHP: 7.4
 Text Domain: presspilot-heavy-content-v3
 */
+/*
+ * PressPilot-Build-ID: TEST-RUN-1234
+ * PressPilot-Commit: abcdef
+ * PressPilot-Generated-At: 2025-12-19T02:58:05.790Z
+ */

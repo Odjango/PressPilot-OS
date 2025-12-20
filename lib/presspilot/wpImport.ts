@@ -1,3 +1,4 @@
+import { serialize, BlockNode } from './serializer';
 import type { KitSummary } from '@/lib/presspilot/kitSummary';
 import type {
   PressPilotBusinessCopy,
@@ -16,7 +17,7 @@ type BuildParams = {
 type PageDefinition = {
   slug: string;
   title: string;
-  content: string;
+  content: BlockNode[];
 };
 
 const AUTHOR_LOGIN = 'presspilot';
@@ -51,15 +52,21 @@ export function buildWpImportXmlFromKit({ kit, copy }: BuildParams): string {
     const navTitle = kit.wpImport?.menu?.name || 'Main Menu';
 
     // Build the inner blocks for the navigation
-    const navContent = menuItems.map(itemSlug => {
+    const navContentNodes: BlockNode[] = menuItems.map(itemSlug => {
       const label = itemSlug.charAt(0).toUpperCase() + itemSlug.slice(1);
-      // We use relative URLs for portability, or full URLs if needed. 
-      // Ideally, FSE nav links use 'kind':'custom' or 'kind':'post-type'.
-      // For simplicity and robustness in import, we'll use custom links with relative paths 
-      // which WP usually handles well, or absolute if we trust baseUrl.
-      // Let's use absolute to be safe with the baseUrl we defined.
-      return `<!-- wp:navigation-link {"label":"${label}","url":"${baseUrl}/${itemSlug}","kind":"custom","isTopLevelLink":true} /-->`;
-    }).join('\n');
+      return {
+        name: 'core/navigation-link',
+        attributes: {
+          label: label,
+          url: `${baseUrl}/${itemSlug}`,
+          kind: 'custom',
+          isTopLevelLink: true
+        }
+      };
+    });
+
+    // Content for Nav Post is technically HTML, so we serialize the nodes
+    const navContent = serialize(navContentNodes);
 
     navigationXml = buildWpNavigationPostXml({
       id: navPostId,
@@ -118,24 +125,24 @@ function buildPages({
   hero: PressPilotHeroConfig;
 }): PageDefinition[] {
   const pages: PageDefinition[] = [
-    { slug: 'home', title: 'Home', content: joinSections([sections.hero, sections.features, sections.pricing, sections.updates, sections.contact]) },
-    { slug: 'about', title: 'About', content: joinSections([sections.featuresWithCustomHeading(`About ${brandName}`), sections.updates, sections.contact]) },
-    { slug: 'pricing', title: 'Pricing', content: joinSections([sections.pricing, sections.contact]) },
-    { slug: 'updates', title: 'Updates', content: joinSections([sections.updates, sections.contact]) },
-    { slug: 'contact', title: 'Contact', content: sections.contact },
-    { slug: 'blog', title: 'Blog', content: sections.updates },
-    { slug: 'services', title: 'Services', content: joinSections([sections.features, sections.pricing, sections.contact]) }
+    { slug: 'home', title: 'Home', content: [sections.hero, sections.features, sections.pricing, sections.updates, sections.contact] },
+    { slug: 'about', title: 'About', content: [sections.featuresWithCustomHeading(`About ${brandName}`), sections.updates, sections.contact] },
+    { slug: 'pricing', title: 'Pricing', content: [sections.pricing, sections.contact] },
+    { slug: 'updates', title: 'Updates', content: [sections.updates, sections.contact] },
+    { slug: 'contact', title: 'Contact', content: [sections.contact] },
+    { slug: 'blog', title: 'Blog', content: [sections.updates] },
+    { slug: 'services', title: 'Services', content: [sections.features, sections.pricing, sections.contact] }
   ];
 
   if (isEcommerce) {
     pages.push({
       slug: 'shop',
       title: 'Shop',
-      content: joinSections([
+      content: [
         sections.featuresWithCustomHeading('Featured products'),
         sections.pricingWithCustomHeading('Shop bundles', `Collections from ${brandName}`),
         sections.contact
-      ])
+      ]
     });
   }
 
@@ -145,12 +152,12 @@ function buildPages({
     pages.push({
       slug: 'menu',
       title: 'Menu',
-      content: joinSections([
+      content: [
         menuHero,
         sections.featuresWithCustomHeading('Menu highlights'),
         sections.pricingWithCustomHeading('Signature courses', `Favorites from ${brandName}`),
         sections.contact
-      ])
+      ]
     });
   }
 
@@ -175,278 +182,436 @@ function buildSections(copy: PressPilotBusinessCopy, brandName: string) {
   };
 }
 
-function renderHeroBlock(hero: PressPilotHeroConfig, brandName: string): string {
-  const title = escapeHtml(hero.title || brandName);
-  const subtitle = escapeHtml(hero.subtitle || '');
-  const primaryLabel = escapeHtml(hero.primaryCta || 'Get started');
-  const secondaryLabel = hero.secondaryCta ? escapeHtml(hero.secondaryCta) : null;
-  const primaryUrl = escapeAttribute(hero.primaryCtaUrl || '#contact');
-  const secondaryUrl = escapeAttribute(hero.secondaryCtaUrl || '#services');
+function renderHeroBlock(hero: PressPilotHeroConfig, brandName: string): BlockNode {
+  const title = hero.title || brandName;
+  const subtitle = hero.subtitle || '';
+  const primaryLabel = hero.primaryCta || 'Get started';
+  const secondaryLabel = hero.secondaryCta;
+  const primaryUrl = hero.primaryCtaUrl || '#contact';
+  const secondaryUrl = hero.secondaryCtaUrl || '#services';
 
-  const secondaryButton = secondaryLabel
-    ? `
-    <!-- wp:button {"className":"pp-button-secondary is-style-outline btn secondary"} -->
-    <div class="wp-block-button pp-button-secondary is-style-outline btn secondary">
-      <a class="wp-block-button__link pp-hero-cta-secondary btn secondary" href="${secondaryUrl}">${secondaryLabel}</a>
-    </div>
-    <!-- /wp:button -->`
-    : '';
+  const innerButtons: BlockNode[] = [
+    {
+      name: 'core/button',
+      attributes: { className: 'pp-button-primary btn primary' },
+      textContent: primaryLabel // Using textContent shimmed by serializer
+    }
+  ];
 
-  return `<!-- wp:group {"align":"full","backgroundColor":"soft-bg","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern hero-basic"} -->
-<div class="wp-block-group alignfull presspilot-section presspilot-pattern hero-basic has-soft-bg-background-color has-background">
-  <!-- wp:group {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|20"}}} -->
-  <div class="wp-block-group">
-    <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"xs","className":"hero-eyebrow"} -->
-    <p class="has-text-align-center has-muted-color has-xs-font-size hero-eyebrow">Built with PressPilot Golden Foundation</p>
-    <!-- /wp:paragraph -->
-  </div>
-  <!-- /wp:group -->
+  if (secondaryLabel) {
+    innerButtons.push({
+      name: 'core/button',
+      attributes: { className: 'pp-button-secondary is-style-outline btn secondary' },
+      textContent: secondaryLabel
+    });
+  }
 
-  <!-- wp:heading {"textAlign":"center","level":1,"fontSize":"xxl","className":"hero-title"} -->
-  <h1 class="wp-block-heading has-text-align-center has-xxl-font-size pp-hero-headline hero-title">${title}</h1>
-  <!-- /wp:heading -->
-
-  <!-- wp:paragraph {"align":"center","fontSize":"lg","className":"hero-subtitle"} -->
-  <p class="has-text-align-center has-lg-font-size pp-hero-subheadline hero-subtitle">${subtitle}</p>
-  <!-- /wp:paragraph -->
-
-  <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}},"className":"pp-hero-ctas hero-ctas"} -->
-  <div class="wp-block-buttons pp-hero-ctas hero-ctas" style="margin-top:var(--wp--preset--spacing--40)">
-    <!-- wp:button {"className":"pp-button-primary btn primary"} -->
-    <div class="wp-block-button pp-button-primary btn primary">
-      <a class="wp-block-button__link pp-hero-cta-primary btn primary" href="${primaryUrl}">${primaryLabel}</a>
-    </div>
-    <!-- /wp:button -->
-    ${secondaryButton}
-  </div>
-  <!-- /wp:buttons -->
-</div>
-<!-- /wp:group -->`;
+  return {
+    name: 'core/group',
+    attributes: {
+      align: 'full',
+      backgroundColor: 'soft-bg',
+      style: {
+        spacing: {
+          padding: { top: 'var:preset|spacing|60', right: 'var:preset|spacing|40', bottom: 'var:preset|spacing|60', left: 'var:preset|spacing|40' }
+        }
+      },
+      layout: { type: 'constrained', contentSize: '1100px' },
+      className: 'presspilot-section presspilot-pattern hero-basic'
+    },
+    innerBlocks: [
+      {
+        name: 'core/group',
+        attributes: {
+          layout: { type: 'flex', justifyContent: 'center' },
+          style: { spacing: { blockGap: 'var:preset|spacing|20' } }
+        },
+        innerBlocks: [
+          {
+            name: 'core/paragraph',
+            attributes: { align: 'center', textColor: 'muted', fontSize: 'xs', className: 'hero-eyebrow' },
+            textContent: 'Built with PressPilot Golden Foundation'
+          }
+        ]
+      },
+      {
+        name: 'core/heading',
+        attributes: { textAlign: 'center', level: 1, fontSize: 'xxl', className: 'hero-title' },
+        textContent: title
+      },
+      {
+        name: 'core/paragraph',
+        attributes: { align: 'center', fontSize: 'lg', className: 'hero-subtitle' },
+        textContent: subtitle
+      },
+      {
+        name: 'core/buttons',
+        attributes: {
+          layout: { type: 'flex', justifyContent: 'center' },
+          style: { spacing: { margin: { top: 'var:preset|spacing|40' }, blockGap: 'var:preset|spacing|30' } },
+          className: 'pp-hero-ctas hero-ctas'
+        },
+        innerBlocks: innerButtons
+      }
+    ]
+  };
 }
 
-function renderMenuHeroBlock(brandName: string, hero: PressPilotHeroConfig): string {
-  const title = escapeHtml(brandName);
-  const subtitle = escapeHtml(hero.subtitle || `Discover our seasonal menu featuring locally sourced ingredients and time-honored recipes.`);
-  const primaryLabel = escapeHtml(hero.primaryCta || 'Reserve a table');
-  const secondaryLabel = hero.secondaryCta ? escapeHtml(hero.secondaryCta) : null;
-  const primaryUrl = escapeAttribute(hero.primaryCtaUrl || '#contact');
-  const secondaryUrl = escapeAttribute(hero.secondaryCtaUrl || '#menu');
+function renderMenuHeroBlock(brandName: string, hero: PressPilotHeroConfig): BlockNode {
+  const title = brandName;
+  const subtitle = hero.subtitle || `Discover our seasonal menu featuring locally sourced ingredients and time-honored recipes.`;
+  const primaryLabel = hero.primaryCta || 'Reserve a table';
+  const secondaryLabel = hero.secondaryCta;
 
-  const secondaryButton = secondaryLabel
-    ? `
-    <!-- wp:button {"className":"pp-button-secondary is-style-outline btn secondary"} -->
-    <div class="wp-block-button pp-button-secondary is-style-outline btn secondary">
-      <a class="wp-block-button__link pp-hero-cta-secondary btn secondary" href="${secondaryUrl}">${secondaryLabel}</a>
-    </div>
-    <!-- /wp:button -->`
-    : '';
+  const innerButtons: BlockNode[] = [
+    {
+      name: 'core/button',
+      attributes: { className: 'pp-button-primary btn primary' },
+      textContent: primaryLabel
+    }
+  ];
 
-  return `<!-- wp:group {"align":"full","backgroundColor":"soft-bg","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern hero-basic"} -->
-<div class="wp-block-group alignfull presspilot-section presspilot-pattern hero-basic has-soft-bg-background-color has-background">
-  <!-- wp:heading {"textAlign":"center","level":1,"fontSize":"xxl","className":"hero-title"} -->
-  <h1 class="wp-block-heading has-text-align-center has-xxl-font-size pp-hero-headline hero-title">${title} Menu</h1>
-  <!-- /wp:heading -->
+  if (secondaryLabel) {
+    innerButtons.push({
+      name: 'core/button',
+      attributes: { className: 'pp-button-secondary is-style-outline btn secondary' },
+      textContent: secondaryLabel
+    });
+  }
 
-  <!-- wp:paragraph {"align":"center","fontSize":"lg","className":"hero-subtitle"} -->
-  <p class="has-text-align-center has-lg-font-size pp-hero-subheadline hero-subtitle">${subtitle}</p>
-  <!-- /wp:paragraph -->
-
-  <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}},"className":"pp-hero-ctas hero-ctas"} -->
-  <div class="wp-block-buttons pp-hero-ctas hero-ctas" style="margin-top:var(--wp--preset--spacing--40)">
-    <!-- wp:button {"className":"pp-button-primary btn primary"} -->
-    <div class="wp-block-button pp-button-primary btn primary">
-      <a class="wp-block-button__link pp-hero-cta-primary btn primary" href="${primaryUrl}">${primaryLabel}</a>
-    </div>
-    <!-- /wp:button -->
-    ${secondaryButton}
-  </div>
-  <!-- /wp:buttons -->
-</div>
-<!-- /wp:group -->`;
+  return {
+    name: 'core/group',
+    attributes: {
+      align: 'full',
+      backgroundColor: 'soft-bg',
+      style: { spacing: { padding: { top: 'var:preset|spacing|60', right: 'var:preset|spacing|40', bottom: 'var:preset|spacing|60', left: 'var:preset|spacing|40' } } },
+      layout: { type: 'constrained', contentSize: '1100px' },
+      className: 'presspilot-section presspilot-pattern hero-basic'
+    },
+    innerBlocks: [
+      {
+        name: 'core/heading',
+        attributes: { textAlign: 'center', level: 1, fontSize: 'xxl', className: 'hero-title' },
+        textContent: `${title} Menu`
+      },
+      {
+        name: 'core/paragraph',
+        attributes: { align: 'center', fontSize: 'lg', className: 'hero-subtitle' },
+        textContent: subtitle
+      },
+      {
+        name: 'core/buttons',
+        attributes: {
+          layout: { type: 'flex', justifyContent: 'center' },
+          style: { spacing: { margin: { top: 'var:preset|spacing|40' }, blockGap: 'var:preset|spacing|30' } },
+          className: 'pp-hero-ctas hero-ctas'
+        },
+        innerBlocks: innerButtons
+      }
+    ]
+  };
 }
 
-function renderFeaturesBlock(heading: string, features: PressPilotFeatureConfig[]): string {
-  const safeHeading = escapeHtml(heading || 'Why work with us?');
+function renderFeaturesBlock(heading: string, features: PressPilotFeatureConfig[]): BlockNode {
+  const safeHeading = heading || 'Why work with us?';
   const normalized = padArray(features, 4).slice(0, 4);
-  const columns = normalized
-    .map(
-      (feature) => `    <!-- wp:column -->
-    <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-card feature-card"} -->
-      <div class="wp-block-group has-soft-bg-background-color pp-card feature-card has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
-        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
-        <h3 class="wp-block-heading has-lg-font-size pp-feature-title">${escapeHtml(feature.icon ?? '⭐')} ${escapeHtml(feature.label)}</h3>
-        <!-- /wp:heading -->
-        <!-- wp:paragraph {"fontSize":"sm"} -->
-        <p class="has-sm-font-size pp-feature-body">${escapeHtml(feature.description)}</p>
-        <!-- /wp:paragraph -->
-      </div>
-      <!-- /wp:group -->
-    </div>
-    <!-- /wp:column -->`
-    )
-    .join('\n');
+  const columns: BlockNode[] = normalized.map((feature) => ({
+    name: 'core/column',
+    innerBlocks: [
+      {
+        name: 'core/group',
+        attributes: {
+          style: {
+            spacing: { blockGap: 'var:preset|spacing|20' },
+            border: { width: '1px', style: 'solid', color: 'var:preset|color|border' },
+            padding: { top: 'var:preset|spacing|30', right: 'var:preset|spacing|30', bottom: 'var:preset|spacing|30', left: 'var:preset|spacing|30' }
+          },
+          backgroundColor: 'soft-bg',
+          className: 'pp-card feature-card'
+        },
+        innerBlocks: [
+          {
+            name: 'core/heading',
+            attributes: { level: 3, fontSize: 'lg' },
+            textContent: `${feature.icon ?? '⭐'} ${feature.label}`
+          },
+          {
+            name: 'core/paragraph',
+            attributes: { fontSize: 'sm' },
+            textContent: feature.description
+          }
+        ]
+      }
+    ]
+  }));
 
-  return `<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|50","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern features-grid"} -->
-<div class="wp-block-group presspilot-section presspilot-pattern features-grid" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--40)">
-  <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
-  <h2 class="wp-block-heading has-text-align-center has-xl-font-size">${safeHeading}</h2>
-  <!-- /wp:heading -->
-
-  <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40","margin":{"top":"var:preset|spacing|40"}}},"className":"feature-grid"} -->
-  <div class="wp-block-columns feature-grid" style="margin-top:var(--wp--preset--spacing--40)">
-${columns}
-  </div>
-  <!-- /wp:columns -->
-</div>
-<!-- /wp:group -->`;
+  return {
+    name: 'core/group',
+    attributes: {
+      style: { spacing: { padding: { top: 'var:preset|spacing|50', right: 'var:preset|spacing|40', bottom: 'var:preset|spacing|50', left: 'var:preset|spacing|40' } } },
+      layout: { type: 'constrained', contentSize: '1100px' },
+      className: 'presspilot-section presspilot-pattern features-grid'
+    },
+    innerBlocks: [
+      {
+        name: 'core/heading',
+        attributes: { textAlign: 'center', level: 2, fontSize: 'xl' },
+        textContent: safeHeading
+      },
+      {
+        name: 'core/columns',
+        attributes: {
+          style: { spacing: { blockGap: 'var:preset|spacing|40', margin: { top: 'var:preset|spacing|40' } } },
+          className: 'feature-grid'
+        },
+        innerBlocks: columns
+      }
+    ]
+  };
 }
 
-function renderPricingBlock(heading: string, subheading: string, tiers: PressPilotPricingTier[]): string {
-  const safeHeading = escapeHtml(heading || 'Plans for every team');
-  const safeSubheading = escapeHtml(subheading || 'Switch tiers any time—kits stay in sync automatically.');
+function renderPricingBlock(heading: string, subheading: string, tiers: PressPilotPricingTier[]): BlockNode {
+  const safeHeading = heading || 'Plans for every team';
+  const safeSubheading = subheading || 'Switch tiers any time—kits stay in sync automatically.';
   const normalized = padArray(tiers, 3).slice(0, 3);
-  const columns = normalized
-    .map((tier) => renderPricingColumn(tier))
-    .join('\n');
+  const columns: BlockNode[] = normalized.map((tier) => renderPricingColumn(tier));
 
-  return `<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|50","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern pricing-columns"} -->
-<div class="wp-block-group presspilot-section presspilot-pattern pricing-columns" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--40)">
-  <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
-  <h2 class="wp-block-heading has-text-align-center has-xl-font-size">${safeHeading}</h2>
-  <!-- /wp:heading -->
-
-  <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"sm","className":"section-subhead"} -->
-  <p class="has-text-align-center has-muted-color has-sm-font-size section-subhead">${safeSubheading}</p>
-  <!-- /wp:paragraph -->
-
-  <!-- wp:columns {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|40"}},"className":"pricing-grid"} -->
-  <div class="wp-block-columns pricing-grid" style="margin-top:var(--wp--preset--spacing--40)">
-${columns}
-  </div>
-  <!-- /wp:columns -->
-</div>
-<!-- /wp:group -->`;
+  return {
+    name: 'core/group',
+    attributes: {
+      style: { spacing: { padding: { top: 'var:preset|spacing|50', right: 'var:preset|spacing|40', bottom: 'var:preset|spacing|50', left: 'var:preset|spacing|40' } } },
+      layout: { type: 'constrained', contentSize: '1100px' },
+      className: 'presspilot-section presspilot-pattern pricing-columns'
+    },
+    innerBlocks: [
+      {
+        name: 'core/heading',
+        attributes: { textAlign: 'center', level: 2, fontSize: 'xl' },
+        textContent: safeHeading
+      },
+      {
+        name: 'core/paragraph',
+        attributes: { align: 'center', textColor: 'muted', fontSize: 'sm', className: 'section-subhead' },
+        textContent: safeSubheading
+      },
+      {
+        name: 'core/columns',
+        attributes: {
+          style: { spacing: { margin: { top: 'var:preset|spacing|40' }, blockGap: 'var:preset|spacing|40' } },
+          className: 'pricing-grid'
+        },
+        innerBlocks: columns
+      }
+    ]
+  };
 }
 
-function renderPricingColumn(tier: PressPilotPricingTier): string {
+function renderPricingColumn(tier: PressPilotPricingTier): BlockNode {
   const highlightClass = tier.highlight ? ' highlight' : '';
-  const features = tier.features.map((feature) => `<li>${escapeHtml(feature)}</li>`).join('');
+  const featuresList = `<ul>${tier.features.map((f) => `<li>${f}</li>`).join('')}</ul>`; // List block takes HTML list?? No, core/list uses inner items.
 
-  return `    <!-- wp:column -->
-    <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"layout":{"type":"constrained"},"className":"pp-pricing-card pricing-card${highlightClass}${tier.highlight ? ' pp-pricing-card-highlight' : ''}"} -->
-      <div class="wp-block-group pp-pricing-card pricing-card${highlightClass}${tier.highlight ? ' pp-pricing-card-highlight' : ''}" style="${tier.highlight ? 'border-color:var(--wp--preset--color--primary);border-width:2px;' : 'border-color:var(--wp--preset--color--border);border-width:1px;'}border-style:solid;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
-        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
-        <h3 class="wp-block-heading has-lg-font-size pp-plan-name">${escapeHtml(tier.name)}</h3>
-        <!-- /wp:heading -->
-        <!-- wp:paragraph {"fontSize":"xl"} -->
-        <p class="has-xl-font-size pp-plan-price">${escapeHtml(tier.price)}</p>
-        <!-- /wp:paragraph -->
-        <!-- wp:list {"className":"pp-plan-list","fontSize":"sm"} -->
-        <ul class="pp-plan-list has-sm-font-size">${features}</ul>
-        <!-- /wp:list -->
-        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"stretch"}} -->
-        <div class="wp-block-buttons">
-          <!-- wp:button {"className":"pp-button-primary btn primary","width":100} -->
-          <div class="wp-block-button pp-button-primary btn primary">
-            <a class="wp-block-button__link btn primary" href="#contact">${escapeHtml(tier.cta)}</a>
-          </div>
-          <!-- /wp:button -->
-        </div>
-        <!-- /wp:buttons -->
-      </div>
-      <!-- /wp:group -->
-    </div>
-    <!-- /wp:column -->`;
+  // Refactoring List to core/list and core/list-item
+  const listItems: BlockNode[] = tier.features.map(f => ({
+    name: 'core/list-item',
+    textContent: f
+  }));
+
+  return {
+    name: 'core/column',
+    innerBlocks: [
+      {
+        name: 'core/group',
+        attributes: {
+          style: {
+            spacing: { blockGap: 'var:preset|spacing|30' },
+            border: { width: '1px', style: 'solid', color: 'var:preset|color|border' },
+            padding: { top: 'var:preset|spacing|40', right: 'var:preset|spacing|40', bottom: 'var:preset|spacing|40', left: 'var:preset|spacing|40' }
+          },
+          layout: { type: 'constrained' },
+          className: `pp-pricing-card pricing-card${highlightClass}${tier.highlight ? ' pp-pricing-card-highlight' : ''}`
+        },
+        innerBlocks: [
+          {
+            name: 'core/heading',
+            attributes: { level: 3, fontSize: 'lg', className: 'pp-plan-name' },
+            textContent: tier.name
+          },
+          {
+            name: 'core/paragraph',
+            attributes: { fontSize: 'xl', className: 'pp-plan-price' },
+            textContent: tier.price
+          },
+          {
+            name: 'core/list',
+            attributes: { className: 'pp-plan-list', fontSize: 'sm' },
+            innerBlocks: listItems
+          },
+          {
+            name: 'core/buttons',
+            attributes: { layout: { type: 'flex', justifyContent: 'stretch' } },
+            innerBlocks: [
+              {
+                name: 'core/button',
+                attributes: { className: 'pp-button-primary btn primary', width: 100 },
+                textContent: tier.cta
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
 }
 
-function renderUpdatesBlock(heading: string, subheading: string, updates: PressPilotUpdateCard[]): string {
-  const safeHeading = escapeHtml(heading || 'Latest updates');
-  const safeSubheading = escapeHtml(subheading || 'Use this strip to keep teammates and customers in the loop.');
+function renderUpdatesBlock(heading: string, subheading: string, updates: PressPilotUpdateCard[]): BlockNode {
+  const safeHeading = heading || 'Latest updates';
+  const safeSubheading = subheading || 'Use this strip to keep teammates and customers in the loop.';
   const normalized = padArray(updates, 3).slice(0, 3);
-  const columns = normalized
-    .map(
-      (update) => `    <!-- wp:column -->
-    <div class="wp-block-column">
-      <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"border":{"width":"1px","style":"solid","color":"var:preset|color|border"},"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}},"backgroundColor":"soft-bg","className":"pp-update-card blog-card"} -->
-      <div class="wp-block-group pp-update-card blog-card has-soft-bg-background-color has-background" style="border-color:var(--wp--preset--color--border);border-style:solid;border-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
-        <!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
-        <p class="has-muted-color has-xs-font-size">${escapeHtml(update.eyebrow)}</p>
-        <!-- /wp:paragraph -->
-        <!-- wp:heading {"level":3,"fontSize":"lg"} -->
-        <h3 class="wp-block-heading has-lg-font-size pp-update-title">${escapeHtml(update.title)}</h3>
-        <!-- /wp:heading -->
-        <!-- wp:paragraph {"fontSize":"sm"} -->
-        <p class="has-sm-font-size pp-update-body">${escapeHtml(update.body)}</p>
-        <!-- /wp:paragraph -->
-      </div>
-      <!-- /wp:group -->
-    </div>
-    <!-- /wp:column -->`
-    )
-    .join('\n');
+  const columns: BlockNode[] = normalized.map((update) => ({
+    name: 'core/column',
+    innerBlocks: [
+      {
+        name: 'core/group',
+        attributes: {
+          style: {
+            spacing: { blockGap: 'var:preset|spacing|20' },
+            border: { width: '1px', style: 'solid', color: 'var:preset|color|border' },
+            padding: { top: 'var:preset|spacing|30', right: 'var:preset|spacing|30', bottom: 'var:preset|spacing|30', left: 'var:preset|spacing|30' }
+          },
+          backgroundColor: 'soft-bg',
+          className: 'pp-update-card blog-card'
+        },
+        innerBlocks: [
+          {
+            name: 'core/paragraph',
+            attributes: { textColor: 'muted', fontSize: 'xs' },
+            textContent: update.eyebrow
+          },
+          {
+            name: 'core/heading',
+            attributes: { level: 3, fontSize: 'lg', className: 'pp-update-title' },
+            textContent: update.title
+          },
+          {
+            name: 'core/paragraph',
+            attributes: { fontSize: 'sm', className: 'pp-update-body' },
+            textContent: update.body
+          }
+        ]
+      }
+    ]
+  }));
 
-  return `<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern blog-teasers"} -->
-<div class="wp-block-group presspilot-section presspilot-pattern blog-teasers" style="padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
-  <!-- wp:heading {"textAlign":"center","level":2,"fontSize":"xl"} -->
-  <h2 class="wp-block-heading has-text-align-center has-xl-font-size">${safeHeading}</h2>
-  <!-- /wp:heading -->
-
-  <!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"sm","className":"section-subhead"} -->
-  <p class="has-text-align-center has-muted-color has-sm-font-size section-subhead">${safeSubheading}</p>
-  <!-- /wp:paragraph -->
-
-  <!-- wp:columns {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}},"className":"blog-grid"} -->
-  <div class="wp-block-columns blog-grid" style="margin-top:var(--wp--preset--spacing--40)">
-${columns}
-  </div>
-  <!-- /wp:columns -->
-</div>
-<!-- /wp:group -->`;
+  return {
+    name: 'core/group',
+    attributes: {
+      style: { spacing: { padding: { top: 'var:preset|spacing|50', right: 'var:preset|spacing|40', bottom: 'var:preset|spacing|60', left: 'var:preset|spacing|40' } } },
+      layout: { type: 'constrained', contentSize: '1100px' },
+      className: 'presspilot-section presspilot-pattern blog-teasers'
+    },
+    innerBlocks: [
+      {
+        name: 'core/heading',
+        attributes: { textAlign: 'center', level: 2, fontSize: 'xl' },
+        textContent: safeHeading
+      },
+      {
+        name: 'core/paragraph',
+        attributes: { align: 'center', textColor: 'muted', fontSize: 'sm', className: 'section-subhead' },
+        textContent: safeSubheading
+      },
+      {
+        name: 'core/columns',
+        attributes: {
+          style: { spacing: { margin: { top: 'var:preset|spacing|40' }, blockGap: 'var:preset|spacing|30' } },
+          className: 'blog-grid'
+        },
+        innerBlocks: columns
+      }
+    ]
+  };
 }
 
-function renderContactBlock(contact: PressPilotContactConfig, brandName: string): string {
-  const headline = escapeHtml(contact.headline || `Ready to work with ${brandName}?`);
-  const body = escapeHtml(contact.body || `Tell us about ${brandName} and we’ll assemble your next launch. Reach us at ${contact.email ?? `hello@${brandName.toLowerCase().replace(/\s+/g, '')}.com`}.`);
-  const email = escapeHtml(contact.email ?? `hello@${brandName.toLowerCase().replace(/\s+/g, '')}.com`);
-  const cta = escapeHtml(contact.primaryCta || 'Book a call');
+function renderContactBlock(contact: PressPilotContactConfig, brandName: string): BlockNode {
+  const headline = contact.headline || `Ready to work with ${brandName}?`;
+  const body = contact.body || `Tell us about ${brandName} and we’ll assemble your next launch. Reach us at ${contact.email ?? `hello@${brandName.toLowerCase().replace(/\s+/g, '')}.com`}.`;
+  const email = contact.email ?? `hello@${brandName.toLowerCase().replace(/\s+/g, '')}.com`;
+  const cta = contact.primaryCta || 'Book a call';
 
-  return `<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|60","right":"var:preset|spacing|40","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40"}}},"backgroundColor":"soft-bg","layout":{"type":"constrained","contentSize":"1100px"},"className":"presspilot-section presspilot-pattern cta-contact"} -->
-<div class="wp-block-group presspilot-section presspilot-pattern cta-contact has-soft-bg-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
-  <!-- wp:columns {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"className":"cta-contact-grid"} -->
-  <div class="wp-block-columns cta-contact-grid">
-    <!-- wp:column -->
-    <div class="wp-block-column cta-contact__copy">
-      <!-- wp:heading {"level":2,"fontSize":"xl"} -->
-      <h2 class="wp-block-heading has-xl-font-size pp-contact-heading">${headline}</h2>
-      <!-- /wp:heading -->
-
-      <!-- wp:paragraph {"fontSize":"sm"} -->
-      <p class="has-sm-font-size pp-contact-body">${body}</p>
-      <!-- /wp:paragraph -->
-
-      <!-- wp:list {"fontSize":"sm"} -->
-      <ul class="has-sm-font-size"><li><strong>Email:</strong> <span class="pp-contact-email">${email}</span></li></ul>
-      <!-- /wp:list -->
-    </div>
-    <!-- /wp:column -->
-
-    <!-- wp:column -->
-    <div class="wp-block-column">
-      <!-- wp:group {"style":{"border":{"width":"1px","style":"dashed","color":"var:preset|color|border"},"spacing":{"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"background":{"color":"var:preset|color|background"}},"layout":{"type":"constrained"},"className":"pp-cta-card cta-contact__card"} -->
-      <div class="wp-block-group pp-cta-card cta-contact__card has-background" style="background-color:var(--wp--preset--color--background);border-color:var(--wp--preset--color--border);border-style:dashed;border-width:1px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
-        <!-- wp:paragraph {"fontSize":"sm"} -->
-        <p class="has-sm-font-size">${cta}</p>
-        <!-- /wp:paragraph -->
-      </div>
-      <!-- /wp:group -->
-    </div>
-    <!-- /wp:column -->
-  </div>
-  <!-- /wp:columns -->
-</div>
-<!-- /wp:group -->`;
+  return {
+    name: 'core/group',
+    attributes: {
+      style: { spacing: { padding: { top: 'var:preset|spacing|60', right: 'var:preset|spacing|40', bottom: 'var:preset|spacing|60', left: 'var:preset|spacing|40' } } },
+      backgroundColor: 'soft-bg',
+      layout: { type: 'constrained', contentSize: '1100px' },
+      className: 'presspilot-section presspilot-pattern cta-contact'
+    },
+    innerBlocks: [
+      {
+        name: 'core/columns',
+        attributes: { style: { spacing: { blockGap: 'var:preset|spacing|40' } }, className: 'cta-contact-grid' },
+        innerBlocks: [
+          {
+            name: 'core/column',
+            attributes: { className: 'cta-contact__copy' },
+            innerBlocks: [
+              {
+                name: 'core/heading',
+                attributes: { level: 2, fontSize: 'xl', className: 'pp-contact-heading' },
+                textContent: headline
+              },
+              {
+                name: 'core/paragraph',
+                attributes: { fontSize: 'sm', className: 'pp-contact-body' },
+                textContent: body
+              },
+              {
+                name: 'core/list',
+                attributes: { fontSize: 'sm' },
+                innerBlocks: [
+                  {
+                    name: 'core/list-item',
+                    innerHTML: `<strong>Email:</strong> <span class="pp-contact-email">${email}</span>` // Keep strict innerHTML for special formatting? or use textContent with Rich Text? Core List doesn't support Rich text easily via objects except as innerHTML
+                    // The user said "NEVER hand-craft HTML for core Gutenberg blocks (templates... or content blocks)"
+                    // BUT, innerHTML for a list item IS standard.
+                    // However, let's try to be cleaner.
+                    // "<strong>Email:</strong>..." is rich text.
+                    // "BlockNode.textContent" in our serializer maps to 'content' attribute.
+                    // 'content' attribute supports HTML string for rich text.
+                    // So setting textContent to the HTML string is correct for Rich Text fields.
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            name: 'core/column',
+            innerBlocks: [
+              {
+                name: 'core/group',
+                attributes: {
+                  style: {
+                    border: { width: '1px', style: 'dashed', color: 'var:preset|color|border' },
+                    spacing: { padding: { top: 'var:preset|spacing|40', right: 'var:preset|spacing|40', bottom: 'var:preset|spacing|40', left: 'var:preset|spacing|40' } },
+                    background: { color: 'var:preset|color|background' }
+                  },
+                  layout: { type: 'constrained' },
+                  className: 'pp-cta-card cta-contact__card'
+                },
+                innerBlocks: [
+                  {
+                    name: 'core/paragraph',
+                    attributes: { fontSize: 'sm' },
+                    textContent: cta
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
 }
 
 function buildItemXml({
@@ -463,7 +628,7 @@ function buildItemXml({
   const postId = index + 1;
   const date = new Date(createdAt.getTime() + index * 60 * 1000);
   const formattedDate = formatWpDate(date);
-  const content = wrapCdata(page.content);
+  const content = wrapCdata(serialize(page.content));
 
   return `
   <item>
@@ -533,9 +698,7 @@ function wrapCdata(value: string): string {
   return `<![CDATA[${value.replace(/]]>/g, ']]]]><![CDATA[>')}]]>`;
 }
 
-function joinSections(sections: string[]): string {
-  return sections.filter(Boolean).join('\n\n').trim();
-}
+
 
 function formatWpDate(date: Date): string {
   const year = date.getUTCFullYear();

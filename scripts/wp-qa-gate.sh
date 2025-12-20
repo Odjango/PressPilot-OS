@@ -24,11 +24,25 @@ else
 fi
 
 # Target Theme Directory (Source)
-THEME_DIR="/presspilot/themes/presspilot-heavy-content-v3"
+# Target Theme Config
+THEME_SLUG="presspilot-heavy-content-v3"
+HOST_THEME_DIR="themes/$THEME_SLUG"
+DOCKER_THEME_DIR="/presspilot/themes/$THEME_SLUG"
 
-echo "🚀 Running PHP Round-Trip Validator on: $THEME_DIR"
-# Run the gate
-$COMPOSE exec wpqa-cli wp eval-file /presspilot/scripts/validate-roundtrip.php -- $THEME_DIR
+# Allow override via argument (Artifact Lock)
+if [ ! -z "$1" ]; then
+    # If explicit path provided, ensure it maps correctly to Docker volume
+    # Assuming the input path is relative to repo root like "artifacts/run-123/theme"
+    HOST_THEME_DIR="$1"
+    DOCKER_THEME_DIR="/presspilot/$1"
+    echo "🔒 Artifact Lock: Validating explicit build at $HOST_THEME_DIR"
+fi
+
+# Note: Editor compliance is now enforced during 'theme:build' via serializer.ts strict check.
+
+echo "🚀 Running PHP Round-Trip Validator on DOCKER: $DOCKER_THEME_DIR"
+# Use run --rm for ephemeral execution
+$COMPOSE run --rm wpqa-cli wp eval-file /presspilot/scripts/validate-roundtrip.php $DOCKER_THEME_DIR
 
 STATUS=$?
 if [ $STATUS -eq 0 ]; then

@@ -52,33 +52,44 @@ let OUTPUT_DIR = path.join(process.cwd(), "themes");
 // CLI Argument Parsing
 const args = process.argv.slice(2);
 for (let i = 0; i < args.length; i++) {
-    if (args[i] === "--config" && args[i + 1]) {
-        try {
-            const configPath = path.resolve(args[i + 1]);
-            const configRaw = fs.readFileSync(configPath, "utf8");
-            CONFIG = JSON.parse(configRaw);
+    const arg = args[i];
+    if (arg === "--config" || arg.startsWith("--config=")) {
+        const val = arg.includes("=") ? arg.split("=")[1] : args[++i];
+        if (val) {
+            try {
+                const configPath = path.resolve(val);
+                const configRaw = fs.readFileSync(configPath, "utf8");
+                CONFIG = JSON.parse(configRaw);
 
-            if (!CONFIG.theme_slug) CONFIG.theme_slug = (CONFIG as any).slug || "generated-theme";
-            if (!CONFIG.theme_name) CONFIG.theme_name = (CONFIG as any).siteTitle || "Generated Theme";
-            if (!CONFIG.site_title) CONFIG.site_title = (CONFIG as any).siteTitle || "My Site";
-            if (!CONFIG.colors) CONFIG.colors = MOCK_CONFIG.colors;
-            if (!CONFIG.pages) CONFIG.pages = [];
+                if (!CONFIG.theme_slug) CONFIG.theme_slug = (CONFIG as any).slug || "generated-theme";
+                if (!CONFIG.theme_name) CONFIG.theme_name = (CONFIG as any).siteTitle || "Generated Theme";
+                if (!CONFIG.site_title) CONFIG.site_title = (CONFIG as any).siteTitle || "My Site";
+                if (!CONFIG.colors) CONFIG.colors = MOCK_CONFIG.colors;
+                if (!CONFIG.pages) CONFIG.pages = [];
 
-            CONFIG.pages = CONFIG.pages.map((p: any) => ({
-                slug: p.slug,
-                title: p.title,
-                content: p.content || `Content for ${p.title}`
-            }));
+                CONFIG.pages = CONFIG.pages.map((p: any) => ({
+                    slug: p.slug,
+                    title: p.title,
+                    content: p.content || `Content for ${p.title}`
+                }));
 
-        } catch (e) {
-            console.error("Failed to load config from file:", e);
-            process.exit(1);
+            } catch (e) {
+                console.error("Failed to load config from file:", e);
+                process.exit(1);
+            }
         }
-        i++;
     }
-    if (args[i] === "--out-dir" && args[i + 1]) {
-        OUTPUT_DIR = path.resolve(args[i + 1]);
-        i++;
+    if (arg === "--out-dir" || arg.startsWith("--out-dir=")) {
+        const val = arg.includes("=") ? arg.split("=")[1] : args[++i];
+        if (val) OUTPUT_DIR = path.resolve(val);
+    }
+    if (arg === "--build-id" || arg.startsWith("--build-id=")) {
+        const val = arg.includes("=") ? arg.split("=")[1] : args[++i];
+        if (val) (CONFIG as any).build_id = val;
+    }
+    if (arg === "--commit" || arg.startsWith("--commit=")) {
+        const val = arg.includes("=") ? arg.split("=")[1] : args[++i];
+        if (val) (CONFIG as any).commit = val;
     }
 }
 
@@ -127,8 +138,22 @@ async function buildWpTheme() {
     copyAssets();
 
     // 4. Archive
+    copyPatterns(); // [NEW] Ensure patterns are included
     createZipArchive();
     console.log("Build Complete.");
+}
+
+function copyPatterns() {
+    const src = path.join(GOLDEN_SPEC_PATH, "patterns");
+    if (fs.existsSync(src)) {
+        ensureDir(themePath("patterns"));
+        // Filter for .html and .php files
+        const files = fs.readdirSync(src).filter(f => f.endsWith('.html') || f.endsWith('.php') || f.endsWith('.json'));
+        for (const file of files) {
+            fs.copyFileSync(path.join(src, file), themePath("patterns", file));
+        }
+        console.log(`Copied ${files.length} patterns.`);
+    }
 }
 
 async function generateHtmlArtifacts() {
@@ -167,7 +192,21 @@ function copyCoreFiles() {
         let content = fs.readFileSync(styleSrc, "utf8");
         content = content.replace(/Theme Name: PressPilot Golden V1/, `Theme Name: ${theme_name}`);
         content = content.replace(/Text Domain: presspilot-golden-v1/, `Text Domain: ${THEME_SLUG}`);
-        content = content.replace(/Version: 1.0.0/, `Version: ${THEME_VERSION}`);
+
+        const buildId = (CONFIG as any).build_id || "";
+        const versionSuffix = buildId ? `.${buildId}` : "";
+        content = content.replace(/Version: 1.0.0/, `Version: ${THEME_VERSION}${versionSuffix}`);
+
+        // Stamp Metadata
+        const commit = (CONFIG as any).commit || "unknown";
+        const generatedAt = new Date().toISOString();
+
+        content += `\n/*`;
+        content += `\n * PressPilot-Build-ID: ${buildId}`;
+        content += `\n * PressPilot-Commit: ${commit}`;
+        content += `\n * PressPilot-Generated-At: ${generatedAt}`;
+        content += `\n */`;
+
         fs.writeFileSync(themePath("style.css"), content);
     } else {
         console.error("CRITICAL: style.css missing in Golden Spec");

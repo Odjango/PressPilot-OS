@@ -10,7 +10,7 @@
     "demo-kits": "npm run build && tsx scripts/demo-kits.ts",
     "verify-supabase": "tsx scripts/verify-supabase.ts",
     "build-wp-theme": "tsx scripts/buildWpTheme.ts",
-    "theme:build": "npx tsx scripts/validateGenerator.ts && npx tsx scripts/buildWpTheme.ts",
+    "theme:build": "npx tsx scripts/validateGenerator.ts golden-spec && npx tsx scripts/buildWpTheme.ts",
     "validate-theme": "node validator/presspilot-validator.js",
     "test:themes": "node scripts/generate-and-validate-test-themes.js"
   },

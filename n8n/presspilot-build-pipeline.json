@@ -1,0 +1,653 @@
+{
+    "name": "PressPilot Theme Build Line (Hardened)",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "theme-build",
+                "responseMode": "lastNode",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                0,
+                0
+            ],
+            "name": "Webhook Trigger"
+        },
+        {
+            "parameters": {
+                "functionCode": "const runId = new Date().toISOString().replace(/[-:T.Z]/g, '') + '-' + Math.random().toString(36).substring(7);\nconst payload = items[0].json.body;\nconst artifactName = (payload.themeSlug || 'theme') + '-' + runId;\nconst dispatchTime = new Date().toISOString();\n\nreturn {\n  json: {\n    runId,\n    artifactName,\n    payload,\n    dispatchTime\n  }\n};"
+            },
+            "type": "n8n-nodes-base.function",
+            "typeVersion": 1,
+            "position": [
+                200,
+                0
+            ],
+            "name": "Create Run ID"
+        },
+        {
+            "parameters": {
+                "command": "set -e; mkdir -p ../artifacts/{{$json.runId}}/logs; git clone https://github.com/presspilot/presspilot-os.git workspace 2>&1 | tee ../artifacts/{{$json.runId}}/logs/checkout.log"
+            },
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                400,
+                0
+            ],
+            "name": "Checkout Source"
+        },
+        {
+            "parameters": {
+                "command": "set -e; cd workspace && npm ci && npx tsx scripts/buildWpTheme.ts --build-id={{$json.runId}} --commit={{$json.payload.commit || 'unknown'}} --out-dir=../artifacts/{{$json.runId}} 2>&1 | tee ../../artifacts/{{$json.runId}}/logs/build.log"
+            },
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                600,
+                0
+            ],
+            "name": "Build Theme Artifact"
+        },
+        {
+            "parameters": {
+                "command": "set -e; cd workspace && npx tsx scripts/editor-validate.ts ../artifacts/{{$json.runId}}/{{$json.payload.themeSlug}} 2>&1 | tee ../../artifacts/{{$json.runId}}/logs/gate1.log"
+            },
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                800,
+                0
+            ],
+            "name": "Gate 1: Node Editor Compliance"
+        },
+        {
+            "parameters": {
+                "command": "set -e; cd workspace && ./scripts/wp-qa-gate.sh ../artifacts/{{$json.runId}}/{{$json.payload.themeSlug}} 2>&1 | tee ../../artifacts/{{$json.runId}}/logs/gate2.log"
+            },
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                1000,
+                0
+            ],
+            "name": "Gate 2: PHP Round-Trip"
+        },
+        {
+            "parameters": {
+                "command": "set -e; zip -r artifacts/{{$json.runId}}/{{$json.artifactName}}.zip artifacts/{{$json.runId}}/{{$json.payload.themeSlug}} 2>&1 | tee artifacts/{{$json.runId}}/logs/zip.log"
+            },
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                1200,
+                0
+            ],
+            "name": "Package Zip"
+        },
+        {
+            "parameters": {
+                "filePath": "artifacts/{{$json.runId}}/{{$json.artifactName}}.zip",
+                "dataPropertyName": "data"
+            },
+            "type": "n8n-nodes-base.readBinaryFile",
+            "typeVersion": 1,
+            "position": [
+                1400,
+                0
+            ],
+            "name": "Read Binary File"
+        },
+        {
+            "parameters": {
+                "url": "https://storage.presspilot.app/upload",
+                "method": "POST",
+                "sendBinaryData": true,
+                "binaryPropertyName": "data",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 1,
+            "position": [
+                1600,
+                0
+            ],
+            "name": "Upload Artifact"
+        },
+        {
+            "parameters": {
+                "url": "https://api.github.com/repos/presspilot/presspilot-os/actions/workflows/editor-gate.yml/dispatches",
+                "method": "POST",
+                "headerParametersUi": {
+                    "parameter": [
+                        {
+                            "name": "Authorization",
+                            "value": "Bearer <GITHUB_TOKEN>"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/vnd.github.v3+json"
+                        }
+                    ]
+                },
+                "bodyParametersUi": {
+                    "parameter": [
+                        {
+                            "name": "ref",
+                            "value": "main"
+                        },
+                        {
+                            "name": "inputs",
+                            "value": "={{ { runId: $node[\"Create Run ID\"].json.runId, themeSlug: $node[\"Create Run ID\"].json.payload.themeSlug, artifactUrl: JSON.parse($json.body).url } }}"
+                        }
+                    ]
+                }
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 1,
+            "position": [
+                1800,
+                0
+            ],
+            "name": "Trigger GHA Gate"
+        },
+        {
+            "parameters": {
+                "amount": 30,
+                "unit": "seconds"
+            },
+            "type": "n8n-nodes-base.wait",
+            "typeVersion": 1,
+            "position": [
+                2000,
+                0
+            ],
+            "name": "Wait for GHA"
+        },
+        {
+            "parameters": {
+                "url": "https://api.github.com/repos/presspilot/presspilot-os/actions/workflows/editor-gate.yml/runs",
+                "method": "GET",
+                "headerParametersUi": {
+                    "parameter": [
+                        {
+                            "name": "Authorization",
+                            "value": "Bearer <GITHUB_TOKEN>"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/vnd.github.v3+json"
+                        }
+                    ]
+                },
+                "queryParametersUi": {
+                    "parameter": [
+                        {
+                            "name": "per_page",
+                            "value": "5"
+                        },
+                        {
+                            "name": "branch",
+                            "value": "main"
+                        },
+                        {
+                            "name": "event",
+                            "value": "workflow_dispatch"
+                        }
+                    ]
+                }
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 1,
+            "position": [
+                2200,
+                0
+            ],
+            "name": "Poll GHA Status"
+        },
+        {
+            "parameters": {
+                "functionCode": "const runId = $node[\"Create Run ID\"].json.runId;\nconst dispatchTime = new Date($node[\"Create Run ID\"].json.dispatchTime);\nconst runs = items[0].json.workflow_runs;\n\n// Match specific run by name AND timeline (created after dispatch)\nconst matchedRun = runs.find(r => \n  r.name && \n  r.name.includes(runId) && \n  new Date(r.created_at) >= dispatchTime\n);\n\nif (!matchedRun) {\n  return { json: { found: false } };\n}\n\nreturn {\n  json: {\n    found: true,\n    matchedRun\n  }\n};"
+            },
+            "type": "n8n-nodes-base.function",
+            "typeVersion": 1,
+            "position": [
+                2400,
+                0
+            ],
+            "name": "Filter Run"
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "boolean": [
+                        {
+                            "value1": "={{$json.found}}",
+                            "value2": true
+                        }
+                    ]
+                }
+            },
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 1,
+            "position": [
+                2600,
+                0
+            ],
+            "name": "Run Found?"
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "string": [
+                        {
+                            "value1": "={{$json.matchedRun.status}}",
+                            "operation": "equal",
+                            "value2": "completed"
+                        }
+                    ]
+                }
+            },
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 1,
+            "position": [
+                2800,
+                0
+            ],
+            "name": "Run Completed?"
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "string": [
+                        {
+                            "value1": "={{$json.matchedRun.conclusion}}",
+                            "operation": "equal",
+                            "value2": "success"
+                        }
+                    ]
+                }
+            },
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 1,
+            "position": [
+                3000,
+                0
+            ],
+            "name": "Is GHA Success?"
+        },
+        {
+            "parameters": {
+                "url": "https://api.presspilot.app/internal/theme-build-status",
+                "method": "POST",
+                "bodyParametersUi": {
+                    "parameter": [
+                        {
+                            "name": "runId",
+                            "value": "={{$node[\"Create Run ID\"].json.runId}}"
+                        },
+                        {
+                            "name": "status",
+                            "value": "success"
+                        },
+                        {
+                            "name": "artifactUrl",
+                            "value": "={{JSON.parse($node[\"Upload Artifact\"].json).url}}"
+                        }
+                    ]
+                }
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 1,
+            "position": [
+                3200,
+                0
+            ],
+            "name": "Update App"
+        },
+        {
+            "parameters": {
+                "text": "✅ Theme Built Successfully: {{$node[\"Create Run ID\"].json.artifactName}}\n🔗 {{JSON.parse($node[\"Upload Artifact\"].json).url}}\n✅ GHA Gate Passed: {{$json.matchedRun.html_url}}"
+            },
+            "type": "n8n-nodes-base.slack",
+            "typeVersion": 1,
+            "position": [
+                3400,
+                0
+            ],
+            "name": "Notify Success"
+        },
+        {
+            "parameters": {
+                "text": "❌ GHA Gate Failed: {{$node[\"Create Run ID\"].json.runId}}\nLink: {{$json.matchedRun.html_url}}"
+            },
+            "type": "n8n-nodes-base.slack",
+            "typeVersion": 1,
+            "position": [
+                3000,
+                200
+            ],
+            "name": "Notify GHA Failure"
+        },
+        {
+            "parameters": {},
+            "type": "n8n-nodes-base.errorTrigger",
+            "typeVersion": 1,
+            "position": [
+                800,
+                600
+            ],
+            "name": "Error Trigger"
+        },
+        {
+            "parameters": {
+                "command": "tar -czf ../artifacts/{{$node[\"Create Run ID\"].json.runId}}/error-bundle.tar.gz ../artifacts/{{$node[\"Create Run ID\"].json.runId}}/"
+            },
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                1000,
+                600
+            ],
+            "name": "Bundle Error Logs"
+        },
+        {
+            "parameters": {
+                "filePath": "artifacts/{{$node[\"Create Run ID\"].json.runId}}/error-bundle.tar.gz",
+                "dataPropertyName": "data"
+            },
+            "type": "n8n-nodes-base.readBinaryFile",
+            "typeVersion": 1,
+            "position": [
+                1200,
+                600
+            ],
+            "name": "Read Error Bundle"
+        },
+        {
+            "parameters": {
+                "url": "https://storage.presspilot.app/upload",
+                "method": "POST",
+                "sendBinaryData": true,
+                "binaryPropertyName": "data",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 1,
+            "position": [
+                1400,
+                600
+            ],
+            "name": "Upload Error Bundle"
+        },
+        {
+            "parameters": {
+                "text": "❌ Build Failed: {{$node[\"Create Run ID\"].json.runId}}\nStep: {{$node.name}}\nError: {{$json.message}}\nBundle: {{JSON.parse($json).url}}"
+            },
+            "type": "n8n-nodes-base.slack",
+            "typeVersion": 1,
+            "position": [
+                1600,
+                600
+            ],
+            "name": "Notify Failure"
+        }
+    ],
+    "connections": {
+        "Webhook Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Create Run ID",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Create Run ID": {
+            "main": [
+                [
+                    {
+                        "node": "Checkout Source",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Checkout Source": {
+            "main": [
+                [
+                    {
+                        "node": "Build Theme Artifact",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Build Theme Artifact": {
+            "main": [
+                [
+                    {
+                        "node": "Gate 1: Node Editor Compliance",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Gate 1: Node Editor Compliance": {
+            "main": [
+                [
+                    {
+                        "node": "Gate 2: PHP Round-Trip",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Gate 2: PHP Round-Trip": {
+            "main": [
+                [
+                    {
+                        "node": "Package Zip",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Package Zip": {
+            "main": [
+                [
+                    {
+                        "node": "Read Binary File",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Read Binary File": {
+            "main": [
+                [
+                    {
+                        "node": "Upload Artifact",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Upload Artifact": {
+            "main": [
+                [
+                    {
+                        "node": "Trigger GHA Gate",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Trigger GHA Gate": {
+            "main": [
+                [
+                    {
+                        "node": "Wait for GHA",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Wait for GHA": {
+            "main": [
+                [
+                    {
+                        "node": "Poll GHA Status",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Poll GHA Status": {
+            "main": [
+                [
+                    {
+                        "node": "Filter Run",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Filter Run": {
+            "main": [
+                [
+                    {
+                        "node": "Run Found?",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Run Found?": {
+            "main": [
+                [
+                    {
+                        "node": "Run Completed?",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Wait for GHA",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Run Completed?": {
+            "main": [
+                [
+                    {
+                        "node": "Is GHA Success?",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Wait for GHA",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Is GHA Success?": {
+            "main": [
+                [
+                    {
+                        "node": "Update App",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Notify GHA Failure",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Update App": {
+            "main": [
+                [
+                    {
+                        "node": "Notify Success",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Error Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Bundle Error Logs",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Bundle Error Logs": {
+            "main": [
+                [
+                    {
+                        "node": "Read Error Bundle",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Read Error Bundle": {
+            "main": [
+                [
+                    {
+                        "node": "Upload Error Bundle",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Upload Error Bundle": {
+            "main": [
+                [
+                    {
+                        "node": "Notify Failure",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

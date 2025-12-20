@@ -176,83 +176,59 @@ export default function MvpDemoPage() {
   }
 
   async function handleGenerate() {
-    if (!selectedBusinessTypeId) return;
+    // 1. Validation & Reset
+    if (!businessName) return;
     resetEngineState();
     setIsGenerating(true);
 
     try {
       setStages((s) => ({ ...s, inputsNormalized: true }));
 
-      // Map business category to style variation - prioritize category over businessTypeId
-      const category = getBusinessCategoryById(selectedBusinessCategoryId);
-      let selectedStyleVariation: string | null = null;
+      // 2. Map Frontend Data to PHP API Schema
+      // Map Language Code -> Full Name
+      const langMap: Record<string, string> = {
+        'EN': 'English', 'AR': 'Arabic', 'ES': 'Spanish', 'FR': 'French', 'DE': 'German'
+      };
 
-      if (category) {
-        // Map business category to appropriate style variation
-        const categoryToStyleMap: Record<string, string> = {
-          restaurant_cafe: 'restaurant-soft',
-          local_service: 'local-biz-soft',
-          health_fitness: 'local-biz-soft',
-          beauty_salon: 'local-biz-soft',
-          professional_services: 'saas-bright',
-          online_coach: 'saas-bright',
-          saas_product: 'saas-bright',
-        };
-        selectedStyleVariation = categoryToStyleMap[category.id] ?? null;
-      }
+      // Map Category ID -> PressPilot Industry Enum
+      const categoryMap: Record<string, string> = {
+        'restaurant_cafe': 'Restaurant / Food Service',
+        'ecommerce_store': 'E-commerce / Online Store',
+        'health_fitness': 'Fitness / Gym / Wellness',
+      };
+      // Default to Corporate for others
+      const industry = categoryMap[selectedBusinessCategoryId || ''] || 'Corporate / Professional Services';
 
-      // Fallback to businessTypeId style variation if category mapping not found
-      if (!selectedStyleVariation) {
-        selectedStyleVariation =
-          businessTypes.find((t) => t.id === selectedBusinessTypeId)?.styleVariation ?? null;
-      }
-
-      const wpImportPreset = category
-        ? {
-            menu: category.defaultMenu,
-            pages: category.defaultPages,
-            frontPageSlug: 'home' as const,
-          }
-        : null;
-
-      // Map business category to businessTypeId if category is selected
-      let effectiveBusinessTypeId = selectedBusinessTypeId;
-      if (category) {
-        const categoryToBusinessTypeMap: Record<string, string> = {
-          restaurant_cafe: 'restaurant_cafe',
-          local_service: 'local-biz',
-          saas_product: 'saas',
-          health_fitness: 'local-biz',
-          beauty_salon: 'local-biz',
-          professional_services: 'saas',
-          online_coach: 'saas',
-        };
-        if (categoryToBusinessTypeMap[category.id]) {
-          effectiveBusinessTypeId = categoryToBusinessTypeMap[category.id];
-        }
-      }
-
-      const res = await fetch('/api/generate', {
+      // 3. Call External API (The "Gas Line")
+      // Warning: Hardcoded Secret for MVP Demo (Proxy this in production!)
+      const res = await fetch('https://inventithere.com/wp-json/presspilot/v1/generate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-PressPilot-Secret': 'vojRix-juskib-kicse8'
+        },
         body: JSON.stringify({
-          businessTypeId: effectiveBusinessTypeId,
-          styleVariation: selectedStyleVariation,
-          businessCategoryId: selectedBusinessCategoryId,
-          wpImportPreset,
-          input: {
-            businessName,
-            businessDescription,
-            primaryLanguage,
-            businessCategory,
-          },
+          business_name: businessName,
+          business_description: businessDescription,
+          business_type: industry,
+          content_language: langMap[primaryLanguage] || 'English',
+          // Optional
+          business_tagline: ''
         }),
       });
 
-      if (!res.ok) throw new Error('Kit generation failed');
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Generator Error: ${res.statusText} (${errText})`);
+      }
 
       const json = await res.json();
 
+      if (!json.download_url) {
+        throw new Error('API returned success but no download URL.');
+      }
+
+      // 4. Handle Success
       setStages({
         inputsNormalized: true,
         variationsGenerated: true,
@@ -261,25 +237,26 @@ export default function MvpDemoPage() {
         downloadsReady: true,
       });
 
-      setArtifacts({
-        slug: json.slug ?? null,
-        themeZipPath: json.themeZipPath ?? null,
-        staticZipPath: json.staticZipPath ?? null,
-        themeUrl: json.themeUrl ?? null,
-        staticUrl: json.staticUrl ?? null,
-        businessTypeId: json.businessTypeId ?? selectedBusinessTypeId,
-        styleVariation: json.styleVariation ?? null,
-        kitVersion: json.kitVersion ?? null,
-        siteArchetype: json.siteArchetype ?? null,
-        navShell: json.navShell ?? null,
-      });
+      setArtifacts((prev) => ({
+        ...prev,
+        themeUrl: json.download_url, // The External Zip URL
+        staticUrl: null, // Legacy artifact not supported by new engine yet
+        slug: json.unique_id,
+        businessTypeId: selectedBusinessTypeId
+      }));
 
-      const label =
-        businessTypes.find((t) => t.id === selectedBusinessTypeId)?.label ?? 'Selected style';
+      // 5. Auto-Download Trigger
+      const link = document.createElement('a');
+      link.href = json.download_url;
+      link.download = `presspilot-${json.unique_id}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
       setPreviewSummary(
-        `Generated WordPress kit “${json.slug ?? themeSlug}” using “${label}” style.`
+        `Success! Generated theme for ${businessName}. Download started.`
       );
+
     } catch (err: any) {
       console.error(err);
       setError(err.message || 'Generation failed.');
@@ -295,8 +272,8 @@ export default function MvpDemoPage() {
   const heroPreviewSubtitle = isRestaurant
     ? 'Cozy wood-fired favorites · dine-in, pickup, and delivery.'
     : isEcommerce
-    ? 'Launch drops, highlight best sellers, and showcase member perks.'
-    : businessDescription?.trim() || 'Describe the business in full sentences so the preview has real copy.';
+      ? 'Launch drops, highlight best sellers, and showcase member perks.'
+      : businessDescription?.trim() || 'Describe the business in full sentences so the preview has real copy.';
   const presetDescriptions: Record<string, string> = {
     saas: 'Bright blue / neutral palette.',
     'local-biz': 'Warm neutrals for community services.',
@@ -307,13 +284,13 @@ export default function MvpDemoPage() {
   const previewCtas = isRestaurant
     ? ['Book a table', 'View menu']
     : isEcommerce
-    ? ['Shop best sellers', 'View catalog']
-    : ['Primary CTA', 'Secondary CTA'];
+      ? ['Shop best sellers', 'View catalog']
+      : ['Primary CTA', 'Secondary CTA'];
   const previewHighlights = isRestaurant
     ? ['Menu-ready layouts', 'Reservation CTA', 'Delivery & pickup friendly']
     : isEcommerce
-    ? ['Product storytelling', 'Promo-ready cards', 'Checkout friendly']
-    : ['Navigation ready', 'Multilingual safe', 'Kit exports included'];
+      ? ['Product storytelling', 'Promo-ready cards', 'Checkout friendly']
+      : ['Navigation ready', 'Multilingual safe', 'Kit exports included'];
   const statusSteps = [
     { label: 'Inputs normalized', ok: stages.inputsNormalized },
     { label: 'Variations generated', ok: stages.variationsGenerated },
@@ -433,11 +410,10 @@ export default function MvpDemoPage() {
                           }
                           resetEngineState();
                         }}
-                        className={`flex items-start justify-between rounded-xl border px-3 py-2 text-left text-sm transition ${
-                          selected
+                        className={`flex items-start justify-between rounded-xl border px-3 py-2 text-left text-sm transition ${selected
                             ? 'border-sky-500 bg-sky-50 text-neutral-900'
                             : 'border-slate-200 bg-white text-neutral-800 hover:border-sky-400 hover:bg-sky-50'
-                        }`}
+                          }`}
                       >
                         <div>
                           <div className="font-medium">{type.label}</div>
@@ -446,9 +422,8 @@ export default function MvpDemoPage() {
                           </p>
                         </div>
                         <span
-                          className={`mt-1 h-2.5 w-2.5 rounded-full ${
-                            selected ? 'bg-sky-500' : 'bg-slate-300'
-                          }`}
+                          className={`mt-1 h-2.5 w-2.5 rounded-full ${selected ? 'bg-sky-500' : 'bg-slate-300'
+                            }`}
                         />
                       </button>
                     );
@@ -599,11 +574,10 @@ export default function MvpDemoPage() {
                 type="button"
                 disabled={!artifacts.themeUrl}
                 onClick={() => artifacts.themeUrl && window.open(artifacts.themeUrl, '_blank')}
-                className={`flex items-center justify-between rounded-lg border px-3 py-2 text-xs font-medium shadow-sm transition ${
-                  artifacts.themeUrl
+                className={`flex items-center justify-between rounded-lg border px-3 py-2 text-xs font-medium shadow-sm transition ${artifacts.themeUrl
                     ? 'border-sky-300 bg-sky-50 text-sky-700 hover:bg-sky-100'
                     : 'border-slate-200 bg-slate-50 text-slate-400'
-                }`}
+                  }`}
               >
                 <span>WordPress theme (.zip)</span>
                 <span>{artifacts.themeUrl ? 'Download' : 'Generate to unlock'}</span>
@@ -612,11 +586,10 @@ export default function MvpDemoPage() {
                 type="button"
                 disabled={!artifacts.staticUrl}
                 onClick={() => artifacts.staticUrl && window.open(artifacts.staticUrl, '_blank')}
-                className={`flex items-center justify-between rounded-lg border px-3 py-2 text-xs font-medium shadow-sm transition ${
-                  artifacts.staticUrl
+                className={`flex items-center justify-between rounded-lg border px-3 py-2 text-xs font-medium shadow-sm transition ${artifacts.staticUrl
                     ? 'border-sky-300 bg-sky-50 text-sky-700 hover:bg-sky-100'
                     : 'border-slate-200 bg-slate-50 text-slate-400'
-                }`}
+                  }`}
               >
                 <span>Static site (HTML/CSS/JS)</span>
                 <span>{artifacts.staticUrl ? 'Download' : 'Generate to unlock'}</span>

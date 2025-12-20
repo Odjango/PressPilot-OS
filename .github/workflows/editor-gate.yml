@@ -1,9 +1,26 @@
 name: Editor Gate (No Attempt Recovery)
+run-name: "Editor Gate - ${{ inputs.runId }}"
 
 on:
   pull_request:
   push:
     branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      runId:
+        description: 'n8n Run ID'
+        required: true
+      themeSlug:
+        description: 'Theme Slug'
+        required: true
+      artifactUrl:
+        description: 'Theme ZIP URL'
+        required: true
+      # Additional strictness
+      enforceBuildId:
+        description: 'Fail if style.css header mismatch'
+        required: false
+        default: 'true'
 
 jobs:
   editor-gate:
@@ -23,7 +40,18 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Build WP Theme
+      - name: Fetch Artifact (n8n Mode)
+        if: ${{ inputs.artifactUrl != '' }}
+        run: |
+          echo "📥 Downloading artifact from ${{ inputs.artifactUrl }}"
+          curl -L -o theme.zip "${{ inputs.artifactUrl }}"
+          mkdir -p themes/${{ inputs.themeSlug }}
+          unzip theme.zip -d themes/
+          # Ensure unzipped direct into themes/slug or themes/slug/slug depending on zip structure
+          ls -R themes/
+
+      - name: Build WP Theme (Dev Mode)
+        if: ${{ inputs.artifactUrl == '' }}
         run: npm run build-wp-theme
 
       - name: Start WP-QA Stack
@@ -40,8 +68,31 @@ jobs:
 
       - name: Install WP & Activate Theme
         run: |
+          THEME_SLUG="${{ inputs.themeSlug }}"
+          if [ -z "$THEME_SLUG" ]; then
+            THEME_SLUG="presspilot-heavy-content-v3"
+          fi
+          echo "🚀 Using Theme Slug: $THEME_SLUG"
+
+          # 0. Validate Build-ID (Strict Gate)
+          if [ -n "${{ inputs.runId }}" ]; then
+            echo "🔍 Verifying Build-ID..."
+            CSS_PATH="themes/$THEME_SLUG/style.css"
+            if [ ! -f "$CSS_PATH" ]; then
+               CSS_PATH="themes/$THEME_SLUG/$THEME_SLUG/style.css" # Handle optional nested zip
+            fi
+            
+            if grep -q "PressPilot-Build-ID: ${{ inputs.runId }}" "$CSS_PATH"; then
+               echo "✅ Build-ID Matched: ${{ inputs.runId }}"
+            else
+               echo "❌ Build-ID MISMATCH in style.css"
+               head -n 30 "$CSS_PATH"
+               exit 1
+            fi
+          fi
+
           # 1. Deploy Theme to WP Content Dir (Idempotent)
-          docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli bash -c "rm -rf /var/www/html/wp-content/themes/presspilot-heavy-content-v3 && cp -r /presspilot/themes/presspilot-heavy-content-v3 /var/www/html/wp-content/themes/"
+          docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli bash -c "rm -rf /var/www/html/wp-content/themes/$THEME_SLUG && cp -r /presspilot/themes/$THEME_SLUG /var/www/html/wp-content/themes/"
           
           # 2. Check Install / Install
           if ! docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp core is-installed; then
@@ -59,12 +110,17 @@ jobs:
           
           # 3. Activate Theme (Fail loudly if fails)
           echo "🎨 Activating Theme..."
-          docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp theme activate presspilot-heavy-content-v3
+          docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp theme activate $THEME_SLUG
 
       - name: Export Dynamic Template IDs
         run: |
+          THEME_SLUG="${{ inputs.themeSlug }}"
+          if [ -z "$THEME_SLUG" ]; then
+            THEME_SLUG="presspilot-heavy-content-v3"
+          fi
+          
           docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp eval '
-            $theme = "presspilot-heavy-content-v3";
+            $theme = "'"$THEME_SLUG"'";
             $t = get_posts(["post_type"=>"wp_template","numberposts"=>100]);
             $p = get_posts(["post_type"=>"wp_template_part","numberposts"=>100]);
             
@@ -84,7 +140,7 @@ jobs:
 
       - name: Run Playwright Editor Gate
         run: |
-          npx playwright test -c playwright.config.js
+          npx playwright test -c playwright.config.js || (echo "GATE_FAIL runId=${{ inputs.runId }}" && exit 1)
 
       - name: Upload Playwright Artifacts
         if: failure()
