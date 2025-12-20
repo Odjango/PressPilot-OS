@@ -51,7 +51,7 @@ export async function buildWordPressTheme(
     : null;
   await writeKitSummaryFile(themeDir, summaryWithTagline);
   if (summaryWithTagline) {
-    const importerXml = buildWpImportXmlFromKit({ kit: summaryWithTagline, copy });
+    const importerXml = await buildWpImportXmlFromKit({ kit: summaryWithTagline, copy });
     const importerPath = path.join(themeDir, 'presspilot-demo-content.xml');
     await fs.writeFile(importerPath, importerXml, 'utf8');
     console.log('[WPImport] wrote theme demo XML:', importerPath);

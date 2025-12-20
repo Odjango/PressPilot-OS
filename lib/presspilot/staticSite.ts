@@ -49,7 +49,7 @@ export async function buildStaticSite(
     : null;
   await writeKitSummaryFile(siteDir, summaryWithTagline);
   if (summaryWithTagline) {
-    const importerXml = buildWpImportXmlFromKit({ kit: summaryWithTagline, copy });
+    const importerXml = await buildWpImportXmlFromKit({ kit: summaryWithTagline, copy });
     const importerPath = path.join(siteDir, 'presspilot-demo-content.xml');
     await fs.writeFile(importerPath, importerXml, 'utf8');
     console.log('[WPImport] wrote static demo XML:', importerPath);

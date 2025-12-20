@@ -198,7 +198,7 @@ HTML;
         // 6. ASSEMBLE (Concatenation)
         $full_html = $header . "\n" . $hero . "\n" . $body . "\n" . $footer;
 
-        file_put_contents($theme_dir . '/templates/home.html', $full_html);
+        file_put_contents($theme_dir . '/templates/front-page.html', $full_html);
     }
 
     // --- LOGIC: SUPPORT METHODS ---
@@ -288,6 +288,102 @@ HTML;
 
     private function generate_special_pages($theme_dir, $theme_data, $ai_content)
     {
-        // Placeholder for special pages
+        $business_name = $theme_data['business_name'];
+        $year = date('Y');
+
+        // Navigation for Header/Footer (Reused logic for consistency)
+        $header_nav_html = '';
+        foreach ($theme_data['navigation']['header'] as $link) {
+            $header_nav_html .= '<!-- wp:navigation-link {"label":"' . $link['label'] . '","url":"' . $link['url'] . '","kind":"custom","isTopLevelLink":true} /-->';
+        }
+        $footer_nav_html = '';
+        foreach ($theme_data['navigation']['footer'] as $link) {
+            $footer_nav_html .= '<!-- wp:navigation-link {"label":"' . $link['label'] . '","url":"' . $link['url'] . '","kind":"custom","isTopLevelLink":true} /-->';
+        }
+
+        // Common Header (Naked)
+        $header = <<<HTML
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30","right":"var:preset|spacing|30"}}},"layout":{"type":"flex","justifyContent":"space-between"}} -->
+<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
+    <!-- wp:group {"layout":{"type":"flex"}} -->
+    <div class="wp-block-group">
+        <!-- wp:site-logo /-->
+    </div>
+    <!-- /wp:group -->
+    <!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal"}} -->
+    <nav class="wp-block-navigation is-layout-flex wp-container-nav">
+        $header_nav_html
+    </nav>
+    <!-- /wp:navigation -->
+</div>
+<!-- /wp:group -->
+HTML;
+
+        // Common Footer (Naked)
+        $footer = <<<HTML
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
+    <!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"center"}} -->
+    <div class="wp-block-group alignwide">
+        <!-- wp:paragraph {"fontSize":"small"} -->
+        <p class="has-small-font-size">© $year $business_name</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal"}} -->
+        <nav class="wp-block-navigation is-layout-flex wp-container-nav">
+            $footer_nav_html
+        </nav>
+        <!-- /wp:navigation -->
+    </div>
+    <!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+HTML;
+
+        // 1. INDEX.HTML (Safe Query Loop)
+        $index_html = <<<HTML
+$header
+
+<!-- wp:group {"layout":{"type":"constrained"}} -->
+<div class="wp-block-group">
+    <!-- wp:query {"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true}} -->
+    <div class="wp-block-query">
+        <!-- wp:post-template -->
+            <!-- wp:post-title {"isLink":true} /-->
+            <!-- wp:post-excerpt /-->
+            <!-- wp:post-date /-->
+        <!-- /wp:post-template -->
+        <!-- wp:query-pagination -->
+            <!-- wp:query-pagination-previous /-->
+            <!-- wp:query-pagination-numbers /-->
+            <!-- wp:query-pagination-next /-->
+        <!-- /wp:query-pagination -->
+    </div>
+    <!-- /wp:query -->
+</div>
+<!-- /wp:group -->
+
+$footer
+HTML;
+        file_put_contents($theme_dir . '/templates/index.html', $index_html);
+
+        // 2. 404.HTML
+        $four_oh_four = <<<HTML
+$header
+
+<!-- wp:group {"layout":{"type":"constrained"}} -->
+<div class="wp-block-group">
+    <!-- wp:heading {"textAlign":"center","level":1} -->
+    <h1 class="wp-block-heading has-text-align-center">Page Not Found</h1>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"align":"center"} -->
+    <p class="has-text-align-center">The page you are looking for does not exist.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:search {"label":"Search","showLabel":false,"buttonText":"Search"} /-->
+</div>
+<!-- /wp:group -->
+
+$footer
+HTML;
+        file_put_contents($theme_dir . '/templates/404.html', $four_oh_four);
     }
 }

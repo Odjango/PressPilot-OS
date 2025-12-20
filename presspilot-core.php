@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PressPilot Core
  * Description: Core functionality for the PressPilot WaaS platform. Exposes the theme generator via REST API.
- * Version: 1.0.0
+ * Version: 5.1.0
  * Author: PressPilot
  */
 

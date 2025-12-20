@@ -23,7 +23,7 @@ type PageDefinition = {
 const AUTHOR_LOGIN = 'presspilot';
 const AUTHOR_EMAIL = 'importer@presspilot.app';
 
-export function buildWpImportXmlFromKit({ kit, copy }: BuildParams): string {
+export async function buildWpImportXmlFromKit({ kit, copy }: BuildParams): Promise<string> {
   const brandName = kit.brandName || 'PressPilot Site';
   const baseUrl = `https://presspilot.local/${kit.slug || brandName.toLowerCase().replace(/\s+/g, '-')}`;
   const now = new Date();
@@ -39,9 +39,9 @@ export function buildWpImportXmlFromKit({ kit, copy }: BuildParams): string {
     pageIdMap.set(page.slug, index + 1);
   });
 
-  const itemsXml = pages
-    .map((page, index) => buildItemXml({ page, index, baseUrl, createdAt: now }))
-    .join('\n');
+  const itemPromises = pages.map((page, index) => buildItemXml({ page, index, baseUrl, createdAt: now }));
+  const itemsXmlArray = await Promise.all(itemPromises);
+  const itemsXml = itemsXmlArray.join('\n');
 
   // Build FSE Navigation Post XML
   let navigationXml = '';
@@ -66,7 +66,7 @@ export function buildWpImportXmlFromKit({ kit, copy }: BuildParams): string {
     });
 
     // Content for Nav Post is technically HTML, so we serialize the nodes
-    const navContent = serialize(navContentNodes);
+    const navContent = await serialize(navContentNodes);
 
     navigationXml = buildWpNavigationPostXml({
       id: navPostId,
@@ -614,7 +614,7 @@ function renderContactBlock(contact: PressPilotContactConfig, brandName: string)
   };
 }
 
-function buildItemXml({
+async function buildItemXml({
   page,
   index,
   baseUrl,
@@ -624,11 +624,12 @@ function buildItemXml({
   index: number;
   baseUrl: string;
   createdAt: Date;
-}): string {
+}): Promise<string> {
   const postId = index + 1;
   const date = new Date(createdAt.getTime() + index * 60 * 1000);
   const formattedDate = formatWpDate(date);
-  const content = wrapCdata(serialize(page.content));
+  const serializedContent = await serialize(page.content);
+  const content = wrapCdata(serializedContent);
 
   return `
   <item>
