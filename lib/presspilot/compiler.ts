@@ -32,51 +32,38 @@ export function compileAST(layout: SiteLayout): Record<string, BlockNode[]> {
 // --- Specific Compilers ---
 
 function compileHeader(layout: SiteLayout): BlockNode[] {
-    // Structure: Group(Header) -> Group(Row) -> [Group(Branding: Logo + Title), Navigation]
-
-    // 1. Branding Group (Logo + Title)
-    const brandingGroup: BlockNode = {
-        name: 'core/group',
-        attributes: {
-            layout: { type: 'flex', flexWrap: 'nowrap', alignItems: 'center' }
-        },
-        innerBlocks: [
-            {
-                name: 'core/site-logo',
-                attributes: { width: 48, shouldSyncIcon: false }
-            },
-            {
-                name: 'core/site-title',
-                // Core Site Title 'level' defaults to h1 (1). Using 1 for strict compliance and SEO.
-                attributes: { level: 1, isLink: true }
-            }
-        ]
-    };
-
-    const navItems = layout.header.navItems.map(item => createNavLink(item));
-
-    const navBlock: BlockNode = {
-        name: 'core/navigation',
-        attributes: {
-            layout: { type: 'flex', orientation: 'horizontal' },
-            overlayMenu: 'mobile'
-        },
-        innerBlocks: navItems
-    };
-
-    const row: BlockNode = {
-        name: 'core/group',
-        attributes: {
-            layout: { type: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between', alignItems: 'center' }
-        },
-        innerBlocks: [brandingGroup, navBlock]
-    };
+    // SAFE MODE: Simplified Header structure per user request.
+    // Exact requested structure wrapper: <div class="wp-block-group">...</div>
+    // We include Logo + Title + Navigation simply.
 
     return [
         {
             name: 'core/group',
-            attributes: { tagName: 'header', align: 'full', layout: { type: 'constrained' }, style: { spacing: { padding: { top: 'var:preset|spacing|30', bottom: 'var:preset|spacing|30' } } } },
-            innerBlocks: [row]
+            attributes: {
+                tagName: 'header',
+                align: 'full',
+                layout: { type: 'constrained' } // Minimal attributes
+            },
+            innerBlocks: [
+                {
+                    name: 'core/group',
+                    attributes: { layout: { type: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' } },
+                    innerBlocks: [
+                        {
+                            name: 'core/group',
+                            attributes: { layout: { type: 'flex' } },
+                            innerBlocks: [
+                                { name: 'core/site-logo', attributes: { width: 64 } },
+                                { name: 'core/site-title', attributes: { level: 1 } }
+                            ]
+                        },
+                        {
+                            name: 'core/navigation',
+                            attributes: { overlayMenu: 'mobile' }
+                        }
+                    ]
+                }
+            ]
         }
     ];
 }
@@ -297,36 +284,23 @@ function compileSection(section: Section): BlockNode {
 }
 
 function compileHero(hero: Section & { type: 'hero' }): BlockNode {
+    // SAFE MODE: Hard-replaced Hero logic.
+    // Structure: <div class="wp-block-cover"><span ...></span><div ...><h1>...</h1></div></div>
+
     return {
         name: 'core/cover',
         attributes: {
-            useFeaturedImage: false,
-            dimRatio: 0,
-            overlayColor: 'base',
+            url: '', // No image for safe mode
+            dimRatio: 100, // Matches has-background-dim-100
+            overlayColor: 'black', // Matches has-black-background-color
             align: 'full',
-            minHeight: 80,
-            minHeightUnit: 'vh',
-            layout: { type: 'constrained' },
-            tagName: 'section' // Semantic HTML
+            contentPosition: 'center center'
         },
         innerBlocks: [
             {
                 name: 'core/heading',
-                attributes: { level: 1, textAlign: 'center' },
+                attributes: { textAlign: 'center', level: 1 },
                 textContent: hero.title
-            },
-            {
-                name: 'core/paragraph',
-                attributes: { align: 'center', fontSize: 'large' },
-                textContent: hero.subtitle
-            },
-            {
-                name: 'core/buttons',
-                attributes: { layout: { type: 'flex', justifyContent: 'center' } },
-                innerBlocks: [
-                    { name: 'core/button', attributes: { className: 'is-style-fill' }, textContent: hero.primaryCta.label },
-                    hero.secondaryCta ? { name: 'core/button', attributes: { className: 'is-style-outline' }, textContent: hero.secondaryCta.label } : null
-                ].filter(Boolean) as BlockNode[]
             }
         ]
     };
