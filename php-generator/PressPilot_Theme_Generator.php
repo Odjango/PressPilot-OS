@@ -73,10 +73,10 @@ class PressPilot_Theme_Generator
         $this->create_theme_json($theme_dir, $theme_data);
 
         // 5. Assemble Templates (The Fix is Here)
-        $this->assemble_homepage($theme_dir, $theme_data, $ai_content);
+        $this->assemble_homepage($theme_dir, $theme_data, $ai_content, $theme_slug);
 
         // 6. Generate Special Pages
-        $this->generate_special_pages($theme_dir, $theme_data, $ai_content);
+        $this->generate_special_pages($theme_dir, $theme_data, $ai_content, $theme_slug);
 
         // 7. Package
         $zip_url = $this->package_theme($theme_dir, $unique_id, $theme_slug);
@@ -90,72 +90,45 @@ class PressPilot_Theme_Generator
 
     // --- LOGIC: ASSEMBLE HOMEPAGE (SAFE MODE) ---
 
-    private function assemble_homepage($theme_dir, $theme_data, $ai_content)
+    private function assemble_homepage($theme_dir, $theme_data, $ai_content, $theme_slug)
     {
-        // 1. Navigation Links (Safe Self-Closing Tags)
+        // 1. Ensure Parts Directory
+        if (!is_dir($theme_dir . '/parts')) {
+            mkdir($theme_dir . '/parts', 0755, true);
+        }
+
+        // 2. HEADER PART (Strict Single Line)
         $header_nav_html = '';
         foreach ($theme_data['navigation']['header'] as $link) {
             $header_nav_html .= '<!-- wp:navigation-link {"label":"' . $link['label'] . '","url":"' . $link['url'] . '","kind":"custom","isTopLevelLink":true} /-->';
         }
+        $header_html = '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}}} --><div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} --><div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:site-title {"level":1,"isLink":true} /--><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">' . $header_nav_html . '</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group --></div><!-- /wp:group -->';
+        file_put_contents($theme_dir . '/parts/header.html', $this->sanitize_block_html($header_html));
 
+        // 3. FOOTER PART (Strict Single Line)
         $footer_nav_html = '';
         foreach ($theme_data['navigation']['footer'] as $link) {
             $footer_nav_html .= '<!-- wp:navigation-link {"label":"' . $link['label'] . '","url":"' . $link['url'] . '","kind":"custom","isTopLevelLink":true} /-->';
         }
-
-        $bg_color = $theme_data['colors']['primary'] ?? '#000000';
-        $business_name = $theme_data['business_name'];
-        $tagline = $theme_data['business_tagline'];
         $year = date('Y');
+        $business_name = $theme_data['business_name'];
+        $footer_html = '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} --><div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)"><!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"center"}} --><div class="wp-block-group alignwide"><!-- wp:paragraph {"fontSize":"small"} --><p class="has-small-font-size">© ' . $year . ' ' . $business_name . '</p><!-- /wp:paragraph --><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal"}} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">' . $footer_nav_html . '</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group -->';
+        file_put_contents($theme_dir . '/parts/footer.html', $this->sanitize_block_html($footer_html));
 
-        // 2. HEADER
-        // "Keep inner flex containers". Using a clean Group block with Navigation.
-        // 2. HEADER
-        // "Official Standards" Fix: Full > Wide > Flex > [Logo, Title, Nav]
-        // Strictly Minified Output.
-        $header = <<<HTML
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}}} -->
-<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} --><div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:site-title {"level":1,"isLink":true} /--><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">$header_nav_html</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group --></div>
-<!-- /wp:group -->
-HTML;
 
-        // 3. HERO SECTION (Standard core/cover block, no outer group)
-        $hero = <<<HTML
-<!-- wp:cover {"minHeight":600,"align":"full","style":{"color":{"background":"$bg_color"}}} -->
-<div class="wp-block-cover alignfull" style="min-height:600px;background-color:$bg_color">
-    <span aria-hidden="true" class="wp-block-cover__background has-background-dim-100 has-background-dim"></span>
-    <div class="wp-block-cover__inner-container">
-        <!-- wp:group {"layout":{"type":"constrained"}} -->
-        <div class="wp-block-group">
-            <!-- wp:heading {"textAlign":"center","style":{"typography":{"fontSize":"4rem"}}} -->
-            <h1 class="wp-block-heading has-text-align-center" style="font-size:4rem">$business_name</h1>
-            <!-- /wp:heading -->
-            <!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"1.5rem"}}} -->
-            <p class="has-text-align-center" style="font-size:1.5rem">$tagline</p>
-            <!-- /wp:paragraph -->
-            <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
-            <div class="wp-block-buttons">
-                <!-- wp:button {"className":"is-style-fill"} -->
-                <div class="wp-block-button is-style-fill"><a class="wp-block-button__link wp-element-button">Get Started</a></div>
-                <!-- /wp:button -->
-            </div>
-            <!-- /wp:buttons -->
-        </div>
-        <!-- /wp:group -->
-    </div>
-</div>
-<!-- /wp:cover -->
-HTML;
+        // 4. FRONT-PAGE ASSEMBLY (Purely Patterns & Parts)
+        $front_page = '';
 
-        // 4. BODY PATTERNS (Naked Strategy: No wrappers, just pattern slugs)
-        $body = '';
+        // Part: Header
+        $front_page .= '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header"} /-->' . "\n";
+
+        // Patterns Loop
         foreach ($theme_data['patterns'] as $pattern_slug) {
+            // Map keywords to Safe Core Patterns from TwentyTwentyFour
+            $safe_slug = 'twentytwentyfour/text-centered-grid-3-col'; // Default
+
             if ($pattern_slug === 'hero')
-                continue;
-
-            // Map keywords to Safe Core Patterns
-            $safe_slug = 'twentytwentyfour/text-centered-grid-3-col'; // Default fallback
-
+                $safe_slug = 'twentytwentyfour/page-home-business-hero';
             if (strpos($pattern_slug, 'pricing') !== false)
                 $safe_slug = 'twentytwentyfour/pricing';
             if (strpos($pattern_slug, 'contact') !== false)
@@ -163,34 +136,13 @@ HTML;
             if (strpos($pattern_slug, 'testimonials') !== false)
                 $safe_slug = 'twentytwentyfour/testimonial-centered';
 
-            // Just the pattern, NO groups
-            $body .= "\n<!-- wp:pattern {\"slug\":\"$safe_slug\"} /-->\n";
+            $front_page .= '<!-- wp:pattern {"slug":"' . $safe_slug . '"} /-->' . "\n";
         }
 
-        // 5. FOOTER
-        $footer = <<<HTML
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
-    <!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"center"}} -->
-    <div class="wp-block-group alignwide">
-        <!-- wp:paragraph {"fontSize":"small"} -->
-        <p class="has-small-font-size">© $year $business_name</p>
-        <!-- /wp:paragraph -->
-        <!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal"}} -->
-        <nav class="wp-block-navigation is-layout-flex wp-container-nav">
-            $footer_nav_html
-        </nav>
-        <!-- /wp:navigation -->
-    </div>
-    <!-- /wp:group -->
-</div>
-<!-- /wp:group -->
-HTML;
+        // Part: Footer
+        $front_page .= '<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer"} /-->' . "\n";
 
-        // 6. ASSEMBLE (Concatenation)
-        $full_html = $header . "\n" . $hero . "\n" . $body . "\n" . $footer;
-
-        file_put_contents($theme_dir . '/templates/front-page.html', $this->sanitize_block_html($full_html));
+        file_put_contents($theme_dir . '/templates/front-page.html', $front_page);
     }
 
     /**
@@ -287,7 +239,7 @@ HTML;
         return $this->uploads_url . $zip_filename;
     }
 
-    private function generate_special_pages($theme_dir, $theme_data, $ai_content)
+    private function generate_special_pages($theme_dir, $theme_data, $ai_content, $theme_slug)
     {
         $business_name = $theme_data['business_name'];
         $year = date('Y');
@@ -303,36 +255,33 @@ HTML;
         }
 
         // Common Header (Naked) -> Updated to "Official Standards"
-        $header = <<<HTML
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}}} -->
-<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} --><div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:site-title {"level":1,"isLink":true} /--><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">$header_nav_html</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group --></div>
-<!-- /wp:group -->
-HTML;
+        // Common Header (Naked) -> Updated to "Official Standards"
+        // STRICT SINGLE-LINE STRING FORCED
+        // $header = '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}}} --><div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} --><div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:site-title {"level":1,"isLink":true} /--><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">' . $header_nav_html . '</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group --></div><!-- /wp:group -->';
 
         // Common Footer (Naked)
-        $footer = <<<HTML
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
-    <!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"center"}} -->
-    <div class="wp-block-group alignwide">
-        <!-- wp:paragraph {"fontSize":"small"} -->
-        <p class="has-small-font-size">© $year $business_name</p>
-        <!-- /wp:paragraph -->
-        <!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal"}} -->
-        <nav class="wp-block-navigation is-layout-flex wp-container-nav">
-            $footer_nav_html
-        </nav>
-        <!-- /wp:navigation -->
-    </div>
-    <!-- /wp:group -->
-</div>
-<!-- /wp:group -->
-HTML;
+        // $footer = <<<HTML
+// <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
+// <div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
+//     <!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"center"}} -->
+//     <div class="wp-block-group alignwide">
+//         <!-- wp:paragraph {"fontSize":"small"} -->
+//         <p class="has-small-font-size">© $year $business_name</p>
+//         <!-- /wp:paragraph -->
+//         <!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal"}} -->
+//         <nav class="wp-block-navigation is-layout-flex wp-container-nav">
+//             $footer_nav_html
+//         </nav>
+//         <!-- /wp:navigation -->
+//     </div>
+//     <!-- /wp:group -->
+// </div>
+// <!-- /wp:group -->
+// HTML;
 
         // 1. INDEX.HTML (Safe Query Loop)
-        $index_html = <<<HTML
-$header
-
+        $index_html = '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header"} /-->' . "\n";
+        $index_html .= <<<HTML
 <!-- wp:group {"layout":{"type":"constrained"}} -->
 <div class="wp-block-group">
     <!-- wp:query {"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true}} -->
@@ -351,15 +300,14 @@ $header
     <!-- /wp:query -->
 </div>
 <!-- /wp:group -->
-
-$footer
 HTML;
-        file_put_contents($theme_dir . '/templates/index.html', $this->sanitize_block_html($index_html));
+        $index_html .= "\n" . '<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer"} /-->';
+
+        file_put_contents($theme_dir . '/templates/index.html', $index_html); // No sanitizer needed for core blocks + parts
 
         // 2. 404.HTML
-        $four_oh_four = <<<HTML
-$header
-
+        $four_oh_four = '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header"} /-->' . "\n";
+        $four_oh_four .= <<<HTML
 <!-- wp:group {"layout":{"type":"constrained"}} -->
 <div class="wp-block-group">
     <!-- wp:heading {"textAlign":"center","level":1} -->
@@ -371,9 +319,9 @@ $header
     <!-- wp:search {"label":"Search","showLabel":false,"buttonText":"Search"} /-->
 </div>
 <!-- /wp:group -->
-
-$footer
 HTML;
-        file_put_contents($theme_dir . '/templates/404.html', $this->sanitize_block_html($four_oh_four));
+        $four_oh_four .= "\n" . '<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer"} /-->';
+
+        file_put_contents($theme_dir . '/templates/404.html', $four_oh_four);
     }
 }
