@@ -198,7 +198,18 @@ HTML;
         // 6. ASSEMBLE (Concatenation)
         $full_html = $header . "\n" . $hero . "\n" . $body . "\n" . $footer;
 
-        file_put_contents($theme_dir . '/templates/front-page.html', $full_html);
+        file_put_contents($theme_dir . '/templates/front-page.html', $this->sanitize_block_html($full_html));
+    }
+
+    /**
+     * Sanitizer Guardrail: Prevents "Attempt Recovery" errors.
+     * Replaces newlines/multi-spaces with single space, removes spaces between tags.
+     */
+    private function sanitize_block_html($html)
+    {
+        $html = preg_replace('/\s+/', ' ', $html);
+        $html = preg_replace('/>\s+</', '><', $html);
+        return trim($html);
     }
 
     // --- LOGIC: SUPPORT METHODS ---
@@ -364,7 +375,7 @@ $header
 
 $footer
 HTML;
-        file_put_contents($theme_dir . '/templates/index.html', $index_html);
+        file_put_contents($theme_dir . '/templates/index.html', $this->sanitize_block_html($index_html));
 
         // 2. 404.HTML
         $four_oh_four = <<<HTML
@@ -384,6 +395,6 @@ $header
 
 $footer
 HTML;
-        file_put_contents($theme_dir . '/templates/404.html', $four_oh_four);
+        file_put_contents($theme_dir . '/templates/404.html', $this->sanitize_block_html($four_oh_four));
     }
 }

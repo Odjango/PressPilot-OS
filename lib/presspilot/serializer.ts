@@ -77,7 +77,16 @@ export async function serialize(nodes: BlockNode[]): Promise<string> {
         checkStrict(b);
     });
 
-    return wpSerialize(blocks);
+    const serialized = wpSerialize(blocks);
+    return sanitizeBlockHTML(serialized);
+}
+
+/**
+ * Sanitizer Guardrail: Prevents "Attempt Recovery" errors by enforcing strict minification.
+ * Replaces all newlines/multi-spaces with single space, and removes spaces between tags.
+ */
+function sanitizeBlockHTML(html: string): string {
+    return html.replace(/\s+/g, ' ').replace(/>\s+</g, '><').trim();
 }
 
 function getValid(res: any) {
