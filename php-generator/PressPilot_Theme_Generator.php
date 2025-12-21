@@ -97,13 +97,15 @@ class PressPilot_Theme_Generator
             mkdir($theme_dir . '/parts', 0755, true);
         }
 
-        // 2. HEADER PART (Strict Single Line)
+        // 2. HEADER PART (Strict Single Line - TURN ON THE LIGHT)
         $header_nav_html = '';
         foreach ($theme_data['navigation']['header'] as $link) {
             $header_nav_html .= '<!-- wp:navigation-link {"label":"' . $link['label'] . '","url":"' . $link['url'] . '","kind":"custom","isTopLevelLink":true} /-->';
         }
+        // Force Minified String with Logo
         $header_html = '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}}} --><div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} --><div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:site-title {"level":1,"isLink":true} /--><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">' . $header_nav_html . '</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group --></div><!-- /wp:group -->';
-        file_put_contents($theme_dir . '/parts/header.html', $this->sanitize_block_html($header_html));
+
+        file_put_contents($theme_dir . '/parts/header.html', $header_html); // Direct write, assume trusted string
 
         // 3. FOOTER PART (Strict Single Line)
         $footer_nav_html = '';
@@ -113,8 +115,8 @@ class PressPilot_Theme_Generator
         $year = date('Y');
         $business_name = $theme_data['business_name'];
         $footer_html = '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} --><div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)"><!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"center"}} --><div class="wp-block-group alignwide"><!-- wp:paragraph {"fontSize":"small"} --><p class="has-small-font-size">© ' . $year . ' ' . $business_name . '</p><!-- /wp:paragraph --><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal"}} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">' . $footer_nav_html . '</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group -->';
-        file_put_contents($theme_dir . '/parts/footer.html', $this->sanitize_block_html($footer_html));
 
+        file_put_contents($theme_dir . '/parts/footer.html', $footer_html); // Direct write
 
         // 4. FRONT-PAGE ASSEMBLY (Purely Patterns & Parts)
         $front_page = '';
