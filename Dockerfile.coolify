@@ -32,6 +32,8 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the application
+# INCREASE BUILD MEMORY: Force Node to use up to 4GB if available
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
 # 4. Runner
