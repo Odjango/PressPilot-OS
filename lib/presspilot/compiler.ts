@@ -61,6 +61,7 @@ function compileHeader(layout: SiteLayout): BlockNode[] {
                             attributes: { layout: { type: 'flex', justifyContent: 'space-between' } },
                             innerBlocks: [
                                 { name: 'core/site-logo', attributes: { width: 64, shouldSyncIcon: false } },
+                                { name: 'core/site-title', attributes: { level: 1, isLink: true } },
                                 {
                                     name: 'core/navigation',
                                     attributes: { layout: { type: 'flex', orientation: 'horizontal' }, overlayMenu: 'mobile' }

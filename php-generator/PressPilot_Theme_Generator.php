@@ -111,11 +111,11 @@ class PressPilot_Theme_Generator
         // 2. HEADER
         // "Keep inner flex containers". Using a clean Group block with Navigation.
         // 2. HEADER
-        // "Official Standards" Fix: Full Width > Wide Width > Flex Container > [Logo, Nav]
+        // "Official Standards" Fix: Full > Wide > Flex > [Logo, Title, Nav]
         // Strictly Minified Output.
         $header = <<<HTML
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}}} -->
-<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} --><div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">$header_nav_html</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group --></div>
+<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} --><div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:site-title {"level":1,"isLink":true} /--><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">$header_nav_html</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group --></div>
 <!-- /wp:group -->
 HTML;
 
@@ -305,7 +305,7 @@ HTML;
         // Common Header (Naked) -> Updated to "Official Standards"
         $header = <<<HTML
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}}} -->
-<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} --><div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">$header_nav_html</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group --></div>
+<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} --><div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:site-title {"level":1,"isLink":true} /--><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">$header_nav_html</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group --></div>
 <!-- /wp:group -->
 HTML;
 
