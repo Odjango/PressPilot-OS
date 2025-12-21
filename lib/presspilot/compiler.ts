@@ -32,34 +32,40 @@ export function compileAST(layout: SiteLayout): Record<string, BlockNode[]> {
 // --- Specific Compilers ---
 
 function compileHeader(layout: SiteLayout): BlockNode[] {
-    // SAFE MODE: Simplified Header structure per user request.
-    // Exact requested structure wrapper: <div class="wp-block-group">...</div>
-    // We include Logo + Title + Navigation simply.
+    // STANDARD COMPLIANT HEADER
+    // Structure: Group(Full, Pad) -> Group(Wide) -> Group(Flex) -> [Logo, Nav]
 
     return [
         {
             name: 'core/group',
             attributes: {
-                tagName: 'header',
                 align: 'full',
-                layout: { type: 'constrained' } // Minimal attributes
+                style: {
+                    spacing: {
+                        padding: {
+                            top: 'var:preset|spacing|30',
+                            right: 'var:preset|spacing|30',
+                            bottom: 'var:preset|spacing|30',
+                            left: 'var:preset|spacing|30'
+                        }
+                    }
+                }
             },
             innerBlocks: [
                 {
                     name: 'core/group',
-                    attributes: { layout: { type: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' } },
+                    attributes: { align: 'wide' },
                     innerBlocks: [
                         {
                             name: 'core/group',
-                            attributes: { layout: { type: 'flex' } },
+                            attributes: { layout: { type: 'flex', justifyContent: 'space-between' } },
                             innerBlocks: [
-                                { name: 'core/site-logo', attributes: { width: 64 } },
-                                { name: 'core/site-title', attributes: { level: 1 } }
+                                { name: 'core/site-logo', attributes: { width: 64, shouldSyncIcon: false } },
+                                {
+                                    name: 'core/navigation',
+                                    attributes: { layout: { type: 'flex', orientation: 'horizontal' }, overlayMenu: 'mobile' }
+                                }
                             ]
-                        },
-                        {
-                            name: 'core/navigation',
-                            attributes: { overlayMenu: 'mobile' }
                         }
                     ]
                 }
