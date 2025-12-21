@@ -195,13 +195,11 @@ HTML;
 
     /**
      * Sanitizer Guardrail: Prevents "Attempt Recovery" errors.
-     * Replaces newlines/multi-spaces with single space, removes spaces between tags.
+     * Replaces whitespace between tags with empty string.
      */
     private function sanitize_block_html($html)
     {
-        $html = preg_replace('/\s+/', ' ', $html);
-        $html = preg_replace('/>\s+</', '><', $html);
-        return trim($html);
+        return trim(preg_replace('/>\s+</', '><', $html));
     }
 
     // --- LOGIC: SUPPORT METHODS ---
