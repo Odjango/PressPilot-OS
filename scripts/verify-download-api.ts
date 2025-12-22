@@ -11,12 +11,12 @@ async function setup() {
         fs.mkdirSync(BUILD_ROOT, { recursive: true });
     }
 
-    // Create valid file (> 1MB)
-    const validData = Buffer.alloc(1_000_001, 'a');
+    // Create valid file (> 100KB)
+    const validData = Buffer.alloc(100_001, 'a');
     fs.writeFileSync(path.join(BUILD_ROOT, 'valid-theme.zip'), validData);
 
-    // Create invalid file (< 1MB)
-    const invalidData = Buffer.alloc(999_999, 'b');
+    // Create invalid file (< 100KB)
+    const invalidData = Buffer.alloc(99_999, 'b');
     fs.writeFileSync(path.join(BUILD_ROOT, 'invalid-theme.zip'), invalidData);
 }
 
@@ -26,7 +26,7 @@ async function cleanup() {
 }
 
 async function testValidDownload() {
-    console.log('Testing valid download (>1MB)...');
+    console.log('Testing valid download (>100KB)...');
     const request = new Request('http://localhost:3000/api/download?kind=theme&slug=valid-theme');
     const response = await GET(request);
 
@@ -40,15 +40,15 @@ async function testValidDownload() {
     }
 
     const contentLength = response.headers.get('Content-Length');
-    if (contentLength !== '1000001') {
-        throw new Error(`Expected content-length 1000001, got ${contentLength}`);
+    if (contentLength !== '100001') {
+        throw new Error(`Expected content-length 100001, got ${contentLength}`);
     }
 
     console.log('✅ Valid download test passed');
 }
 
 async function testInvalidDownload() {
-    console.log('Testing invalid download (<1MB)...');
+    console.log('Testing invalid download (<100KB)...');
     const request = new Request('http://localhost:3000/api/download?kind=theme&slug=invalid-theme');
     const response = await GET(request);
 

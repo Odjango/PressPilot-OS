@@ -79,6 +79,19 @@ sed -i 's/\(mem_limit: [0-9]\{3,\}\)$/\1m/g' "$COMPOSE_FILE"
 sed -i 's/\(memory: [0-9]\{3,\}\)$/\1m/g' "$COMPOSE_FILE"
 sed -i 's/mem_limit: 4096$/mem_limit: 4096m/g' "$COMPOSE_FILE"
 
+# Optimize Build RAM: Inject NODE_OPTIONS into environment
+# We look for "environment:" and append the node options if not present
+if grep -q "environment:" "$COMPOSE_FILE"; then
+    if ! grep -q "NODE_OPTIONS" "$COMPOSE_FILE"; then
+        echo "Injecting NODE_OPTIONS=--max-old-space-size=4096 into environment..."
+        sed -i '/environment:/a \      - NODE_OPTIONS=--max-old-space-size=4096' "$COMPOSE_FILE"
+    fi
+else
+    # If no environment block exists, this simple sed won't work perfectly for all cases, 
+    # but most Coolify apps have it. We'll skip complex creation to avoid breaking yaml.
+    echo "WARNING: No 'environment:' block found. Skipping NODE_OPTIONS injection."
+fi
+
 echo "Diff of changes:"
 diff "$COMPOSE_FILE.bak" "$COMPOSE_FILE" || true
 

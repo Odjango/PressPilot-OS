@@ -38,16 +38,14 @@ export async function GET(request: Request) {
 
     // Strict 1MB size enforcement for themes
     // We treat anything under 1MB as a likely generation failure (incomplete zip)
-    // TEMPORARY: Validation disabled (0KB threshold) to force download
-    /*
-    if (kind === 'theme' && stats.size < 500_000) {
+    // LOWERED: Set to 100KB (100,000 bytes) to accept 442KB themes while still catching empty files.
+    if (kind === 'theme' && stats.size < 100_000) {
       console.error('[api/download] File too small, rejecting', { slug, size: stats.size });
       return NextResponse.json({
         error: 'Generated file is invalid (too small)',
         size: stats.size
       }, { status: 500 });
     }
-    */
 
     const buffer = await fs.readFile(filePath);
 
