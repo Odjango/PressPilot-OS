@@ -34,12 +34,27 @@ export async function GET(request: Request) {
 
   try {
     await fs.access(filePath);
+    const stats = await fs.stat(filePath);
+
+    // Strict 1MB size enforcement for themes
+    // We treat anything under 1MB as a likely generation failure (incomplete zip)
+    if (kind === 'theme' && stats.size < 1_000_000) {
+      console.error('[api/download] File too small, rejecting', { slug, size: stats.size });
+      return NextResponse.json({
+        error: 'Generated file is invalid (too small)',
+        size: stats.size
+      }, { status: 500 });
+    }
+
     const buffer = await fs.readFile(filePath);
+
     return new NextResponse(buffer, {
       status: 200,
       headers: {
         'Content-Type': 'application/zip',
-        'Content-Disposition': `attachment; filename="${slug}-${kind}.zip"`
+        'Content-Disposition': `attachment; filename="${slug}-${kind}.zip"`,
+        'Content-Length': stats.size.toString(),
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
       }
     });
   } catch (error) {

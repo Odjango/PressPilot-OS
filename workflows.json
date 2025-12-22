@@ -1,168 +1,235 @@
-{
-  "version": "0.1",
-  "description": "Reusable PressPilot OS workflows you can drop into any build.",
-  "workflows": [
+[
     {
-      "id": "pp-brand-kit-from-input",
-      "name": "Create Brand Kit From Logo or Description",
-      "summary": "Start with a PressPilotSaaSInput payload and turn it into a PressPilot-ready brand kit + normalized context.",
-      "inputs": [
-        "PressPilotSaaSInput payload"
-      ],
-      "outputs": [
-        "PressPilotNormalizedContext",
-        "Brand summary (tone, vibe, audience)",
-        "Color palette (7–9 colors, accessibility-safe variants included)",
-        "Font recommendations",
-        "Core messaging (tagline, value prop, 3–5 key statements)",
-        "Structured JSON ready for theme.json and patterns"
-      ],
-      "steps": [
-        "Use module: apply_business_inputs (produce PressPilotNormalizedContext)",
-        "Use module: analyze-brand-input (read brand + narrative cues)",
-        "Use module: generate_color_palette",
-        "Use module: choose_google_font_pair",
-        "Use module: build-brand-json-schema"
-      ],
-      "tags": ["brand", "design", "input-prep"],
-      "status": "stable"
+        "updatedAt": "2025-12-08T01:54:14.000Z",
+        "createdAt": "2025-12-07T19:15:56.085Z",
+        "id": "C1YGArvgfKadCp6u",
+        "name": "My workflow",
+        "description": null,
+        "active": false,
+        "isArchived": false,
+        "nodes": [
+            {
+                "parameters": {},
+                "type": "n8n-nodes-base.manualTrigger",
+                "typeVersion": 1,
+                "position": [
+                    0,
+                    0
+                ],
+                "id": "aa835c70-f561-4dd0-b787-a38ec9b02424",
+                "name": "When clicking ‘Execute workflow’"
+            },
+            {
+                "parameters": {
+                    "sendHTML": true,
+                    "subject": "Test email from n8n + Brevo",
+                    "htmlContent": "<h1>Hello Mort</h1><p>This is your first real email sent from n8n + Brevo.</p>",
+                    "sender": "omar@presspilotapp.com",
+                    "receipients": "odjango4@gmail.com",
+                    "additionalFields": {},
+                    "requestOptions": {}
+                },
+                "type": "n8n-nodes-base.sendInBlue",
+                "typeVersion": 1,
+                "position": [
+                    208,
+                    0
+                ],
+                "id": "03fc3516-23f0-4de5-8bc4-434031676e8e",
+                "name": "Send a transactional email",
+                "credentials": {
+                    "sendInBlueApi": {
+                        "id": "IwaDVmU3v7nHxlTY",
+                        "name": "Brevo account"
+                    }
+                }
+            }
+        ],
+        "connections": {
+            "When clicking ‘Execute workflow’": {
+                "main": [
+                    [
+                        {
+                            "node": "Send a transactional email",
+                            "type": "main",
+                            "index": 0
+                        }
+                    ]
+                ]
+            }
+        },
+        "settings": {
+            "executionOrder": "v1"
+        },
+        "staticData": null,
+        "meta": {
+            "templateCredsSetupCompleted": true
+        },
+        "pinData": {},
+        "versionId": "5a6fea84-7cd1-492e-a10a-b6ed5ceeeee7",
+        "activeVersionId": null,
+        "versionCounter": 2,
+        "triggerCount": 0,
+        "tags": [],
+        "shared": [
+            {
+                "updatedAt": "2025-12-07T19:15:56.089Z",
+                "createdAt": "2025-12-07T19:15:56.089Z",
+                "role": "workflow:owner",
+                "workflowId": "C1YGArvgfKadCp6u",
+                "projectId": "MvbsIwVMJEa61Ugu",
+                "project": {
+                    "updatedAt": "2025-12-07T16:53:24.326Z",
+                    "createdAt": "2025-12-07T16:45:48.258Z",
+                    "id": "MvbsIwVMJEa61Ugu",
+                    "name": "Omar Django <odjango4@gmail.com>",
+                    "type": "personal",
+                    "icon": null,
+                    "description": null
+                }
+            }
+        ]
     },
     {
-      "id": "pp-generate-theme-json",
-      "name": "Generate theme.json for WordPress Starter Theme",
-      "summary": "Take the normalized brand kit JSON and output a production-ready theme.json for pp-starter.",
-      "inputs": [
-        "Brand JSON (from pp-brand-kit-from-input)",
-        "PressPilotNormalizedContext",
-        "Optional: theme presets (layout density, corner style)"
-      ],
-      "outputs": [
-        "Complete theme.json file for the WordPress block theme"
-      ],
-      "steps": [
-        "Use module: map-brand-to-theme-tokens",
-        "Use module: build-theme-json-structure",
-        "Use module: validate-theme-json"
-      ],
-      "tags": ["wordpress", "theme", "tokens"],
-      "status": "stable"
-    },
-    {
-      "id": "pp-generate-3-design-variations",
-      "name": "Generate Three Design Variations",
-      "summary": "Give users three visual directions based on one PressPilotNormalizedContext before they lock in a kit.",
-      "inputs": [
-        "PressPilotNormalizedContext",
-        "Variation preset definitions (spacing, radii, motion)",
-        "Mode + navigation requirements from context.modes"
-      ],
-      "outputs": [
-        "PressPilotVariationSet (context + 3 manifests)",
-        "Preview assets or links for each variation",
-        "Metadata describing the differences for UI tabs"
-      ],
-      "steps": [
-        "Ensure PressPilotNormalizedContext is available (run apply_business_inputs if starting from payload)",
-        "Use module: generate_color_palette",
-        "Use module: choose_google_font_pair",
-        "Use module: build_pattern_set",
-        "Assemble three PressPilotVariationManifest objects with different palette/font/layout combos, including nav flags from context.modes",
-        "Return a PressPilotVariationSet for the preview UI"
-      ],
-      "tags": ["design", "preview", "variations"],
-      "status": "planned"
-    },
-    {
-      "id": "pp-restaurant-menu-generator",
-      "name": "Restaurant Menu Generator",
-      "summary": "Create a menu page and navigation item for restaurant/café mode using PressPilotSaaSInput.modes.restaurant.",
-      "inputs": [
-        "PressPilotNormalizedContext",
-        "Restaurant menu sections and PDF fields from PressPilotSaaSInput.modes.restaurant"
-      ],
-      "outputs": [
-        "Menu page pattern markup",
-        "Navigation item metadata for Menu",
-        "Localized menu copy blocks"
-      ],
-      "steps": [
-        "Ensure PressPilotNormalizedContext is available (run apply_business_inputs if needed)",
-        "Use module: generate_menu_page_from_pdf",
-        "Use module: build_pattern_set for menu blocks"
-      ],
-      "tags": ["restaurant", "patterns", "content"],
-      "status": "planned"
-    },
-    {
-      "id": "pp-woocommerce-population",
-      "name": "WooCommerce Population",
-      "summary": "Generate starter products, categories, and copy for ecommerce mode using PressPilotNormalizedContext.",
-      "inputs": [
-        "PressPilotNormalizedContext",
-        "Ecommerce product/category fields from PressPilotSaaSInput.modes.ecommerce"
-      ],
-      "outputs": [
-        "WooCommerce-ready seed data (products, categories, shipping)",
-        "Content JSON for kit bundling"
-      ],
-      "steps": [
-        "Ensure PressPilotNormalizedContext is available (run apply_business_inputs if needed)",
-        "Use module: generate_woocommerce_seed_content"
-      ],
-      "tags": ["ecommerce", "content", "woocommerce"],
-      "status": "planned"
-    },
-    {
-      "id": "pp-build-wp-kit",
-      "name": "Build WordPress Kit",
-      "summary": "Assemble the selected variation, patterns, and content into a WordPress block theme folder plus kit manifest.",
-      "inputs": [
-        "PressPilotNormalizedContext",
-        "Selected PressPilotVariationManifest",
-        "Pattern set (hero, pricing, features, contact)",
-        "Mode-specific assets (menu blocks or WooCommerce seed data)",
-        "Multilingual copy blocks"
-      ],
-      "outputs": [
-        "WordPress block theme folder structure",
-        "Content XML/JSON payload",
-        "Kit manifest describing assets"
-      ],
-      "steps": [
-        "Use module: build_pattern_set",
-        "Merge mode-specific assets into the theme folder structure",
-        "Attach navigation requirements (Menu/Shop) from PressPilotNormalizedContext.modes"
-      ],
-      "tags": ["wordpress", "kit", "assembly"],
-      "status": "planned"
-    },
-    {
-      "id": "pp-export-final-kits",
-      "name": "Export Final Kits",
-      "summary": "Package the theme folder, static site, and kit manifest into downloadable artifacts for the dashboard.",
-      "inputs": [
-        "PressPilotNormalizedContext",
-        "WordPress block theme directory",
-        "Kit manifest",
-        "Content payloads",
-        "Static site folder"
-      ],
-      "outputs": [
-        "Theme folder in ./build/themes/{slug}",
-        "PressPilot kit zip in ./build/kits/{slug}.zip",
-        "Static site folder in ./build/static/{slug}",
-        "Static site zip in ./build/static/{slug}.zip",
-        "Download metadata for both artifacts"
-      ],
-      "steps": [
-        "Validate folder structure and manifests",
-        "Use module: generate_static_site_bundle",
-        "Compress kit assets into zip",
-        "Compress static site folder into zip",
-        "Register download metadata for both downloads in the SaaS dashboard"
-      ],
-      "tags": ["export", "build", "distribution"],
-      "status": "planned"
+        "updatedAt": "2025-12-21T19:43:15.000Z",
+        "createdAt": "2025-12-08T02:11:17.917Z",
+        "id": "MPytJMRKmEoHNE2r",
+        "name": "My workflow 2",
+        "description": null,
+        "active": true,
+        "isArchived": false,
+        "nodes": [
+            {
+                "parameters": {
+                    "jsCode": "// This connects your Form fields directly to the Theme Generator\nconst input = items[0].json;\n\nreturn [{\n    json: {\n        business_name: input[\"Business Name\"], // Matches your form field exactly\n        industry: input[\"Industry\"]            // Matches your form field exactly\n    }\n}];"
+                },
+                "type": "n8n-nodes-base.code",
+                "typeVersion": 2,
+                "position": [
+                    -176,
+                    -64
+                ],
+                "id": "3ee8afbf-966b-4f9e-af08-c196cdc32a16",
+                "name": "Code in JavaScript"
+            },
+            {
+                "parameters": {
+                    "method": "POST",
+                    "url": "https://presspilotapp.com/api/generate",
+                    "authentication": "genericCredentialType",
+                    "genericAuthType": "httpHeaderAuth",
+                    "sendBody": true,
+                    "specifyBody": "json",
+                    "jsonBody": "={\n  \"business_name\": \"{{ $node[\"Code in JavaScript\"].json[\"business_name\"] }}\",\n  \"business_type\": \"{{ $node[\"Code in JavaScript\"].json[\"industry\"] }}\",\n  \"strategy\": \"pattern_assembly\"\n}",
+                    "options": {
+                        "response": {
+                            "response": {
+                                "responseFormat": "file",
+                                "fileName": "={{ $node[\"Code in JavaScript\"].json[\"business_name\"] }}.zip"
+                            }
+                        }
+                    }
+                },
+                "type": "n8n-nodes-base.httpRequest",
+                "typeVersion": 4.3,
+                "position": [
+                    32,
+                    -64
+                ],
+                "id": "03768e80-4189-4a2f-b374-ebac75c8a805",
+                "name": "HTTP Request",
+                "credentials": {
+                    "httpHeaderAuth": {
+                        "id": "gJ7rg61OMiNj39iB",
+                        "name": "Header Auth account"
+                    }
+                }
+            },
+            {
+                "parameters": {
+                    "formTitle": "Success Pizza",
+                    "formFields": {
+                        "values": [
+                            {
+                                "fieldLabel": "Business Name"
+                            },
+                            {
+                                "fieldLabel": "Industry"
+                            }
+                        ]
+                    },
+                    "options": {}
+                },
+                "type": "n8n-nodes-base.formTrigger",
+                "typeVersion": 2.3,
+                "position": [
+                    -368,
+                    -64
+                ],
+                "id": "45ce7e94-7900-49c6-bc54-da0970e47b4e",
+                "name": "On form submission",
+                "webhookId": "38db5ba3-ab2b-49b7-84d3-4d78b1d2cc15"
+            }
+        ],
+        "connections": {
+            "Code in JavaScript": {
+                "main": [
+                    [
+                        {
+                            "node": "HTTP Request",
+                            "type": "main",
+                            "index": 0
+                        }
+                    ]
+                ]
+            },
+            "HTTP Request": {
+                "main": [
+                    []
+                ]
+            },
+            "On form submission": {
+                "main": [
+                    [
+                        {
+                            "node": "Code in JavaScript",
+                            "type": "main",
+                            "index": 0
+                        }
+                    ]
+                ]
+            }
+        },
+        "settings": {
+            "executionOrder": "v1"
+        },
+        "staticData": null,
+        "meta": {
+            "templateCredsSetupCompleted": true
+        },
+        "pinData": {},
+        "versionId": "22917f9d-f150-4d3a-93f9-4155157ff456",
+        "activeVersionId": "22917f9d-f150-4d3a-93f9-4155157ff456",
+        "versionCounter": 24,
+        "triggerCount": 1,
+        "tags": [],
+        "shared": [
+            {
+                "updatedAt": "2025-12-08T02:11:17.925Z",
+                "createdAt": "2025-12-08T02:11:17.925Z",
+                "role": "workflow:owner",
+                "workflowId": "MPytJMRKmEoHNE2r",
+                "projectId": "MvbsIwVMJEa61Ugu",
+                "project": {
+                    "updatedAt": "2025-12-07T16:53:24.326Z",
+                    "createdAt": "2025-12-07T16:45:48.258Z",
+                    "id": "MvbsIwVMJEa61Ugu",
+                    "name": "Omar Django <odjango4@gmail.com>",
+                    "type": "personal",
+                    "icon": null,
+                    "description": null
+                }
+            }
+        ]
     }
-  ]
-}
+]
