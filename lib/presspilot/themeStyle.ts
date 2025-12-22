@@ -106,6 +106,19 @@ export async function applyStyleVariationToThemeJson(opts: {
     }
   };
 
+  // Enforce WP 6.4+ FSE Standards
+  merged.version = 2;
+  const existingSettings = (merged.settings as Record<string, JsonValue>) || {};
+  merged.settings = {
+    ...existingSettings,
+    appearanceTools: true,
+    useRootPaddingAwareAlignments: true,
+    layout: deepMerge(existingSettings.layout || {}, {
+      contentSize: '620px',
+      wideSize: '1280px'
+    })
+  };
+
   await fs.writeFile(themeJsonPath, JSON.stringify(merged, null, 2), 'utf8');
 
   console.log(

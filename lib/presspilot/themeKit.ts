@@ -4,7 +4,7 @@ import AdmZip from 'adm-zip';
 import { PressPilotNormalizedContext, PressPilotVariationManifest } from '@/types/presspilot';
 import { applyStyleVariationToThemeJson } from '@/lib/presspilot/themeStyle';
 import { resolveBusinessCopy, resolveBusinessTypeStyle } from '@/lib/presspilot/kit';
-import { applyBusinessCopyToTheme } from '@/lib/presspilot/contentInject';
+import { applyBusinessCopyToTheme, injectHeaderContent, injectFooterContent } from '@/lib/presspilot/contentInject';
 import { KitSummary, writeKitSummaryFile } from '@/lib/presspilot/kitSummary';
 import { buildWpImportXmlFromKit } from '@/lib/presspilot/wpImport';
 
@@ -56,6 +56,11 @@ export async function buildWordPressTheme(
     await fs.writeFile(importerPath, importerXml, 'utf8');
     console.log('[WPImport] wrote theme demo XML:', importerPath);
   }
+
+  // Inject FSE Parts
+  await injectHeaderContent(themeDir, context.navShell);
+  await injectFooterContent(themeDir, context.brand.name, context.navShell);
+
   await writeThemeStyleHeader(themeDir, context, variation, kit.version);
   await injectThemeConfig(themeDir, options?.businessTypeId);
 

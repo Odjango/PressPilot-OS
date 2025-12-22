@@ -11,6 +11,7 @@ class PressPilot_Theme_Generator
 
     private $base_temp_dir;
     private $uploads_url;
+    private $base_uploads_path;
     private $api_key;
 
     public function __construct()
@@ -19,9 +20,11 @@ class PressPilot_Theme_Generator
             $upload_dir = wp_upload_dir();
             $this->base_temp_dir = $upload_dir['basedir'] . '/presspilot-temp/';
             $this->uploads_url = $upload_dir['baseurl'] . '/presspilot-generated/';
+            $this->base_uploads_path = $upload_dir['basedir'] . '/presspilot-generated/';
         } else {
             $this->base_temp_dir = sys_get_temp_dir() . '/presspilot-temp/';
             $this->uploads_url = '/uploads/presspilot-generated/';
+            $this->base_uploads_path = sys_get_temp_dir() . '/presspilot-generated/';
         }
 
         if (defined('PRESSPILOT_OPENAI_KEY')) {
@@ -79,6 +82,13 @@ class PressPilot_Theme_Generator
         $this->generate_special_pages($theme_dir, $theme_data, $ai_content, $theme_slug);
 
         // 7. Package
+        // 7. Validate
+        $validation = $this->validate_generated_theme($theme_dir);
+        if (!$validation['valid']) {
+            return ['error' => 'Theme validation failed: ' . implode(', ', $validation['errors'])];
+        }
+
+        // 8. Package
         $zip_url = $this->package_theme($theme_dir, $unique_id, $theme_slug);
 
         return [
@@ -97,38 +107,46 @@ class PressPilot_Theme_Generator
             mkdir($theme_dir . '/parts', 0755, true);
         }
 
-        // 2. HEADER PART (Strict Single Line - TURN ON THE LIGHT)
+        // 2. HEADER PART (Native FSE)
         $header_nav_html = '';
         foreach ($theme_data['navigation']['header'] as $link) {
             $header_nav_html .= '<!-- wp:navigation-link {"label":"' . $link['label'] . '","url":"' . $link['url'] . '","kind":"custom","isTopLevelLink":true} /-->';
         }
-        // Force Minified String with Logo
-        $header_html = '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}}} --><div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:group {"align":"wide"} --><div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} --><div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:site-title {"level":1,"isLink":true} /--><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">' . $header_nav_html . '</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group --></div><!-- /wp:group -->';
 
-        file_put_contents($theme_dir . '/parts/header.html', $header_html); // Direct write, assume trusted string
+        $header_html = '<!-- wp:group {"layout":{"type":"constrained"}} -->' . "\n";
+        $header_html .= '<div class="wp-block-group"><!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->' . "\n";
+        $header_html .= '<div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:site-title {"level":1,"isLink":true} /--></div>' . "\n";
+        $header_html .= '<!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} -->' . "\n";
+        $header_html .= '<nav class="wp-block-navigation is-layout-flex wp-container-nav">' . $header_nav_html . '</nav><!-- /wp:navigation -->' . "\n";
+        $header_html .= '<!-- /wp:group --></div><!-- /wp:group -->';
 
-        // 3. FOOTER PART (Strict Single Line)
+        file_put_contents($theme_dir . '/parts/header.html', $header_html);
+
+        // 3. FOOTER PART (Native FSE)
         $footer_nav_html = '';
         foreach ($theme_data['navigation']['footer'] as $link) {
             $footer_nav_html .= '<!-- wp:navigation-link {"label":"' . $link['label'] . '","url":"' . $link['url'] . '","kind":"custom","isTopLevelLink":true} /-->';
         }
         $year = date('Y');
         $business_name = $theme_data['business_name'];
-        $footer_html = '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} --><div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)"><!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"center"}} --><div class="wp-block-group alignwide"><!-- wp:paragraph {"fontSize":"small"} --><p class="has-small-font-size">© ' . $year . ' ' . $business_name . '</p><!-- /wp:paragraph --><!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal"}} --><nav class="wp-block-navigation is-layout-flex wp-container-nav">' . $footer_nav_html . '</nav><!-- /wp:navigation --></div><!-- /wp:group --></div><!-- /wp:group -->';
 
-        file_put_contents($theme_dir . '/parts/footer.html', $footer_html); // Direct write
+        $footer_html = '<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->' . "\n";
+        $footer_html .= '<div class="wp-block-group has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">' . "\n";
+        $footer_html .= '<!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between"}} -->' . "\n";
+        $footer_html .= '<div class="wp-block-group"><!-- wp:paragraph {"fontSize":"small"} -->' . "\n";
+        $footer_html .= '<p class="has-small-font-size">© ' . $year . ' ' . $business_name . '</p><!-- /wp:paragraph -->' . "\n";
+        $footer_html .= '<!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal"}} -->' . "\n";
+        $footer_html .= '<nav class="wp-block-navigation is-layout-flex wp-container-nav">' . $footer_nav_html . '</nav><!-- /wp:navigation -->' . "\n";
+        $footer_html .= '</div><!-- /wp:group --></div><!-- /wp:group -->';
+
+        file_put_contents($theme_dir . '/parts/footer.html', $footer_html);
 
         // 4. FRONT-PAGE ASSEMBLY (Purely Patterns & Parts)
         $front_page = '';
-
-        // Part: Header
         $front_page .= '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header"} /-->' . "\n";
 
-        // Patterns Loop
         foreach ($theme_data['patterns'] as $pattern_slug) {
-            // Map keywords to Safe Core Patterns from TwentyTwentyFour
-            $safe_slug = 'twentytwentyfour/text-centered-grid-3-col'; // Default
-
+            $safe_slug = 'twentytwentyfour/text-centered-grid-3-col';
             if ($pattern_slug === 'hero')
                 $safe_slug = 'twentytwentyfour/page-home-business-hero';
             if (strpos($pattern_slug, 'pricing') !== false)
@@ -141,10 +159,28 @@ class PressPilot_Theme_Generator
             $front_page .= '<!-- wp:pattern {"slug":"' . $safe_slug . '"} /-->' . "\n";
         }
 
-        // Part: Footer
         $front_page .= '<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer"} /-->' . "\n";
 
         file_put_contents($theme_dir . '/templates/front-page.html', $front_page);
+    }
+
+    private function validate_generated_theme($dir)
+    {
+        $errors = [];
+        if (!file_exists($dir . '/style.css'))
+            $errors[] = 'Missing style.css';
+        if (!file_exists($dir . '/theme.json'))
+            $errors[] = 'Missing theme.json';
+        if (!file_exists($dir . '/templates/index.html'))
+            $errors[] = 'Missing templates/index.html';
+
+        $json = json_decode(file_get_contents($dir . '/theme.json'), true);
+        if (!$json)
+            $errors[] = 'Invalid theme.json JSON';
+        if (!isset($json['version']) || $json['version'] !== 2)
+            $errors[] = 'Invalid theme.json version';
+
+        return ['valid' => empty($errors), 'errors' => $errors];
     }
 
     /**
@@ -216,16 +252,41 @@ class PressPilot_Theme_Generator
 
     private function create_theme_json($dir, $data)
     {
-        $json = ['version' => 2, 'settings' => ['color' => ['palette' => []]]];
-        foreach ($data['colors'] as $k => $v)
+        $json = [
+            'version' => 2,
+            'settings' => [
+                'appearanceTools' => true,
+                'useRootPaddingAwareAlignments' => true,
+                'layout' => [
+                    'contentSize' => '620px',
+                    'wideSize' => '1280px'
+                ],
+                'typography' => [
+                    'fluid' => true,
+                    'fontSizes' => [
+                        ['size' => '1rem', 'slug' => 'small', 'name' => 'Small'],
+                        ['size' => '1.2rem', 'slug' => 'medium', 'name' => 'Medium'],
+                        ['size' => '1.5rem', 'slug' => 'large', 'name' => 'Large'],
+                        ['size' => '2rem', 'slug' => 'x-large', 'name' => 'Extra Large']
+                    ]
+                ],
+                'color' => [
+                    'palette' => []
+                ]
+            ]
+        ];
+
+        foreach ($data['colors'] as $k => $v) {
             $json['settings']['color']['palette'][] = ['slug' => $k, 'color' => $v, 'name' => ucfirst($k)];
+        }
+
         file_put_contents($dir . '/theme.json', json_encode($json, JSON_PRETTY_PRINT));
     }
 
     private function package_theme($dir, $id, $slug)
     {
         $zip_filename = $slug . '.zip';
-        $public_dir = wp_upload_dir()['basedir'] . '/presspilot-generated/';
+        $public_dir = $this->base_uploads_path;
         if (!is_dir($public_dir))
             mkdir($public_dir, 0755, true);
 

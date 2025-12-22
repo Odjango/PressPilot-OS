@@ -6,6 +6,7 @@ import {
   PressPilotFeatureConfig,
   PressPilotHeroConfig
 } from '@/lib/presspilot/kit';
+import { NavItemSpec } from '@/lib/presspilot/site-architecture';
 
 const PATTERN_FILES = [
   { file: 'hero-basic.php', type: 'hero' as const },
@@ -159,21 +160,62 @@ export async function applyBusinessCopyToTheme(themeDir: string, copy: PressPilo
     }
   }
 
-  await injectFooterBrand(themeDir, brandName);
+  // Footer logic moved to injectFooterContent which calls directly
 }
 
-async function injectFooterBrand(themeDir: string, brandName: string) {
+// Helper to map Nav IDs to URLs
+function getNavUrl(id: string): string {
+  if (id === 'home') return '/';
+  return `/${id}`;
+}
+
+export async function injectHeaderContent(themeDir: string, navShell: NavItemSpec[]) {
+  const headerPath = path.join(themeDir, 'parts', 'header.html');
+  try {
+    // Ensure directory exists
+    await fs.mkdir(path.dirname(headerPath), { recursive: true });
+  } catch { }
+
+  const navLinksHtml = navShell
+    .map(
+      (item) =>
+        `<!-- wp:navigation-link {"label":"${item.label}","url":"${getNavUrl(item.id)}","kind":"custom","isTopLevelLink":true} /-->`
+    )
+    .join('');
+
+  const headerHtml = `<!-- wp:group {"layout":{"type":"constrained"}} -->
+<div class="wp-block-group"><!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
+<div class="wp-block-group"><!-- wp:site-logo {"width":64,"shouldSyncIcon":false} /--><!-- wp:site-title {"level":1,"isLink":true} /--></div>
+<!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal","justifyContent":"right"},"overlayMenu":"mobile"} -->
+<nav class="wp-block-navigation is-layout-flex wp-container-nav">${navLinksHtml}</nav><!-- /wp:navigation -->
+<!-- /wp:group --></div><!-- /wp:group -->`;
+
+  await fs.writeFile(headerPath, headerHtml, 'utf8');
+}
+
+export async function injectFooterContent(themeDir: string, brandName: string, navShell: NavItemSpec[]) {
   const footerPath = path.join(themeDir, 'parts', 'footer.html');
   try {
-    await fs.access(footerPath);
-  } catch {
-    return;
-  }
+    await fs.mkdir(path.dirname(footerPath), { recursive: true });
+  } catch { }
 
-  const original = await fs.readFile(footerPath, 'utf8');
-  const updated = original.replace(/{{BRAND_NAME}}/g, brandName);
-  if (updated !== original) {
-    await fs.writeFile(footerPath, updated, 'utf8');
-  }
+  const year = new Date().getFullYear();
+  const navLinksHtml = navShell
+    .map(
+      (item) =>
+        `<!-- wp:navigation-link {"label":"${item.label}","url":"${getNavUrl(item.id)}","kind":"custom","isTopLevelLink":true} /-->`
+    )
+    .join('');
+
+  const footerHtml = `<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
+<!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"fontSize":"small"} -->
+<p class="has-small-font-size">© ${year} ${brandName}</p><!-- /wp:paragraph -->
+<!-- wp:navigation {"layout":{"type":"flex","orientation":"horizontal"}} -->
+<nav class="wp-block-navigation is-layout-flex wp-container-nav">${navLinksHtml}</nav><!-- /wp:navigation -->
+</div><!-- /wp:group --></div><!-- /wp:group -->`;
+
+  await fs.writeFile(footerPath, footerHtml, 'utf8');
 }
 
