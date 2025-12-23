@@ -155,8 +155,38 @@ EOF
 chmod +x /root/rescue_latest_theme.sh
 echo "Created /root/rescue_latest_theme.sh - Run this AFTER generating a theme if you need to manually extract it."
 
-# 4. Final Rebuild
-echo ">>> Redeploying..."
+# 5. n8n Workflow Injection (Professional CLI Restoration)
+echo ">>> Injecting n8n Workflow..."
+N8N_CONTAINER=$(docker ps --filter "name=n8n" --format "{{.ID}}" | head -n 1)
+
+if [ -n "$N8N_CONTAINER" ]; then
+    echo "Found n8n container: $N8N_CONTAINER"
+    
+    # Download latest workflow definition from main branch
+    echo "Fetching latest workflows_v2.json..."
+    curl -sSL "https://raw.githubusercontent.com/Odjango/PressPilot-OS/main/workflows_v2.json" -o /tmp/workflows_v2.json
+    
+    if [ -s /tmp/workflows_v2.json ]; then
+        echo "Copying workflow to container..."
+        docker cp /tmp/workflows_v2.json "$N8N_CONTAINER":/tmp/workflows_v2.json
+        
+        echo "Importing workflow via n8n CLI..."
+        # We try 'n8n' command. If n8n runs as non-root, this might need user handling, 
+        # but 'docker exec' runs as root by default unless specified. 
+        # n8n image usually has 'n8n' in PATH.
+        docker exec "$N8N_CONTAINER" n8n import:workflow --input=/tmp/workflows_v2.json || echo "Import failed (try checking n8n path)"
+        
+        echo "Restarting n8n container to force UI refresh..."
+        docker restart "$N8N_CONTAINER"
+    else
+        echo "Failed to download workflows_v2.json"
+    fi
+else
+    echo "WARNING: No n8n container found. Skipping workflow injection."
+fi
+
+# 6. Final Rebuild
+echo ">>> Redeploying Next.js Service..."
 cd "$(dirname "$COMPOSE_FILE")"
 docker compose up -d --build --remove-orphans
 
