@@ -74,39 +74,6 @@
       },
       {
         "parameters": {
-          "method": "GET",
-          "url": "={{ 'https://presspilotapp.com' + $json.themeUrl }}",
-          "authentication": "genericCredentialType",
-          "genericAuthType": "httpHeaderAuth",
-          "options": {
-            "response": {
-              "response": {
-                "responseFormat": "file"
-              }
-            }
-          },
-          "fileName": "={{ $node[\"Code in JavaScript\"].json[\"business_name\"] }}_theme.zip"
-        },
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.1,
-        "position": [
-          250,
-          -64
-        ],
-        "id": "c1eedb9b-3aa1-498e-b58b-f1c64fbb7a71",
-        "name": "Download Theme Zip",
-        "credentials": {
-          "httpHeaderAuth": {
-            "id": "gJ7rg61OMiNj39iB",
-            "name": "Header Auth account"
-          }
-        },
-        "retryOnFail": true,
-        "maxTries": 2,
-        "waitBetweenTries": 5000
-      },
-      {
-        "parameters": {
           "amount": 2,
           "unit": "seconds"
         },
