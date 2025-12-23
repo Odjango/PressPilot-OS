@@ -1,0 +1,223 @@
+[
+  {
+    "updatedAt": "2025-12-22T00:20:41.000Z",
+    "createdAt": "2025-12-08T02:11:17.917Z",
+    "id": "MPytJMRKmEoHNE2r",
+    "name": "My workflow 2",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {
+          "jsCode": "// This connects your Form fields directly to the Theme Generator\nconst input = items[0].json;\n\nreturn [{\n    json: {\n        business_name: input[\"Business Name\"], // Matches your form field exactly\n        industry: input[\"Industry\"]            // Matches your form field exactly\n    }\n}];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -176,
+          -64
+        ],
+        "id": "3ee8afbf-966b-4f9e-af08-c196cdc32a16",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://presspilotapp.com/api/generate",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"business_name\": \"{{ $node[\"Code in JavaScript\"].json[\"business_name\"] }}\",\n  \"business_type\": \"{{ $node[\"Code in JavaScript\"].json[\"industry\"] }}\",\n  \"strategy\": \"pattern_assembly\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          32,
+          -64
+        ],
+        "id": "03768e80-4189-4a2f-b374-ebac75c8a805",
+        "name": "HTTP Request",
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "gJ7rg61OMiNj39iB",
+            "name": "Header Auth account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "formTitle": "Success Pizza",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "Business Name"
+              },
+              {
+                "fieldLabel": "Industry"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.3,
+        "position": [
+          -368,
+          -64
+        ],
+        "id": "45ce7e94-7900-49c6-bc54-da0970e47b4e",
+        "name": "On form submission",
+        "webhookId": "38db5ba3-ab2b-49b7-84d3-4d78b1d2cc15"
+      },
+      {
+        "parameters": {
+          "method": "GET",
+          "url": "={{ 'https://presspilotapp.com' + $json.themeUrl }}",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          },
+          "fileName": "={{ $node[\"Code in JavaScript\"].json[\"business_name\"] }}_theme.zip"
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          250,
+          -64
+        ],
+        "id": "c1eedb9b-3aa1-498e-b58b-f1c64fbb7a71",
+        "name": "Download Theme Zip",
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "gJ7rg61OMiNj39iB",
+            "name": "Header Auth account"
+          }
+        },
+        "retryOnFail": true,
+        "maxTries": 2,
+        "waitBetweenTries": 5000
+      },
+      {
+        "parameters": {
+          "amount": 2,
+          "unit": "seconds"
+        },
+        "id": "1644802e-7315-4747-a120-b04f4e6de87f",
+        "name": "Wait for FS",
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1,
+        "position": [
+          150,
+          -64
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "compress",
+          "outputFormat": "zip",
+          "binaryPropertyName": "data",
+          "fileName": "={{ $node[\"Code in JavaScript\"].json[\"business_name\"] }}.zip",
+          "sourcePath": "/tmp/presspilot-build/themes/"
+        },
+        "name": "Compression",
+        "type": "n8n-nodes-base.compression",
+        "typeVersion": 1,
+        "position": [
+          350,
+          -64
+        ],
+        "id": "5a4f15d2-0949-4363-9524-7667389a9578"
+      }
+    ],
+    "connections": {
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "Wait for FS",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "On form submission": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait for FS": {
+        "main": [
+          [
+            {
+              "node": "Compression",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Compression": {
+        "main": [
+          []
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "meta": {
+      "templateCredsSetupCompleted": true
+    },
+    "pinData": {},
+    "versionId": "22917f9d-f150-4d3a-93f9-4155157ff456",
+    "activeVersionId": "22917f9d-f150-4d3a-93f9-4155157ff456",
+    "versionCounter": 27,
+    "triggerCount": 1,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2025-12-08T02:11:17.925Z",
+        "createdAt": "2025-12-08T02:11:17.925Z",
+        "role": "workflow:owner",
+        "workflowId": "MPytJMRKmEoHNE2r",
+        "projectId": "MvbsIwVMJEa61Ugu",
+        "project": {
+          "updatedAt": "2025-12-07T16:53:24.326Z",
+          "createdAt": "2025-12-07T16:45:48.258Z",
+          "id": "MvbsIwVMJEa61Ugu",
+          "name": "Omar Django <odjango4@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null
+        }
+      }
+    ]
+  }
+]
