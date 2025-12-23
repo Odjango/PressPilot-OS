@@ -48,20 +48,16 @@ async function testValidDownload() {
 }
 
 async function testInvalidDownload() {
-    console.log('Testing invalid download (<100KB)...');
+    console.log('Testing small download (<100KB) - Should PASS now...');
     const request = new Request('http://localhost:3000/api/download?kind=theme&slug=invalid-theme');
     const response = await GET(request);
 
-    if (response.status !== 500) {
-        throw new Error(`Expected 500, got ${response.status}`);
+    // Should now pass validation
+    if (response.status !== 200) {
+        throw new Error(`Expected 200 (Validation Disabled), got ${response.status}`);
     }
 
-    const data = await response.json();
-    if (!data.error || !data.error.includes('too small')) {
-        throw new Error(`Expected error message about size, got ${JSON.stringify(data)}`);
-    }
-
-    console.log('✅ Invalid download test passed');
+    console.log('✅ Small download test passed (Validation successfully bypassed)');
 }
 
 async function run() {

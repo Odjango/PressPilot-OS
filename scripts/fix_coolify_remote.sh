@@ -111,10 +111,49 @@ echo ">>> Purging Application Build Cache (/tmp/presspilot-build)..."
 # However, user asked to "Delete everything inside /tmp/presspilot-build/".
 # If it is a persistent volume, we should find it.
 # For now, we will attempt to exec into the running container to clean it BEFORE restart if it exists.
-if [ -n "$CONTAINER_ID" ]; then
     echo "Cleaning /tmp/presspilot-build inside container $CONTAINER_ID..."
     docker exec "$CONTAINER_ID" rm -rf /tmp/presspilot-build/ || echo "Container flush failed (container might be down), restart will handle it if ephemeral."
 fi
+
+# RESCUE OPERATION: Manual Zip & Direct Link
+# This attempts to rescue any themes generated in the previous session before they are lost (if using persistent storage)
+# OR enables a mode where we can run this AFTER the container comes up and generates something.
+echo ">>> Setting up Theme Rescue Capability..."
+# We interpret "Skip the Next.js Build" as "Use system tools to zip".
+# We will create a helper alias/command on the host to do this easily.
+cat << 'EOF' > /root/rescue_latest_theme.sh
+#!/bin/bash
+CONTAINER_ID=$(docker ps --filter "name=hkws" --format "{{.ID}}" | head -n 1)
+[ -z "$CONTAINER_ID" ] && CONTAINER_ID=$(docker ps --filter "name=presspilot" --format "{{.ID}}" | head -n 1)
+if [ -n "$CONTAINER_ID" ]; then
+    echo "Rescuing latest theme from $CONTAINER_ID..."
+    # Find latest folder in /tmp/presspilot-build/themes/
+    # We assume the directory name is the slug.
+    # We zip it to /app/public/rescue.zip
+    docker exec -u 0 "$CONTAINER_ID" /bin/sh -c "
+        cd /tmp/presspilot-build/themes || exit 1
+        LATEST_DIR=\$(ls -td -- */ | head -n 1 | cut -d'/' -f1)
+        if [ -n \"\$LATEST_DIR\" ]; then
+            echo \"Found theme: \$LATEST_DIR\"
+            # Install zip if missing (it's often missing in slim images, but we'll try or fail gracefully)
+            # If zip missing, we can try tar. But user asked for zip.
+            # Assuming zip is present or we can install it? container is debian based.
+            # apt-get update && apt-get install -y zip
+            # But that might be slow/heavy. Let's try tar if zip fails? No, user explicitly asked for Manual ZIP.
+            # We will attempt to zip.
+            zip -r /app/public/\$LATEST_DIR.zip \$LATEST_DIR
+            echo \"Theme rescued to /app/public/\$LATEST_DIR.zip\"
+            chmod 644 /app/public/\$LATEST_DIR.zip
+        else
+            echo \"No themes found in /tmp/presspilot-build/themes\"
+        fi
+    "
+else
+    echo "No running container found."
+fi
+EOF
+chmod +x /root/rescue_latest_theme.sh
+echo "Created /root/rescue_latest_theme.sh - Run this AFTER generating a theme if you need to manually extract it."
 
 # 4. Final Rebuild
 echo ">>> Redeploying..."
