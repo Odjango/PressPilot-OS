@@ -438,7 +438,11 @@ function createSocialLink(link: SocialLink): BlockNode {
 function createTemplatePart(slug: 'header' | 'footer'): BlockNode {
     return {
         name: 'core/template-part',
-        attributes: { slug, tagName: slug }
+        attributes: {
+            slug,
+            tagName: slug,
+            theme: 'presspilot-fse-v2'
+        }
     };
 }
 

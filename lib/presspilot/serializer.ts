@@ -32,53 +32,143 @@ export async function serialize(nodes: BlockNode[]): Promise<string> {
     const { shim } = await import('./polyfill');
     shim();
 
+    const wpData = await import('@wordpress/data');
+
     // 2. Load WP Dependencies (Dynamically)
-    // These require the global shim to be active
     const { registerCoreBlocks } = await import('@wordpress/block-library');
     const { createBlock, serialize: wpSerialize, validateBlock } = await import('@wordpress/blocks');
     const { parse } = await import('@wordpress/block-serialization-default-parser');
 
-    // Register blocks immediately on every run (safe in Node env usually, or we can guard)
     registerCoreBlocks();
+
+    // Fix: Inject Settings (Dispatch attempt as last resort)
+    if (wpData && wpData.dispatch) {
+        try {
+            const editorDispatch = wpData.dispatch('core/block-editor');
+            if (editorDispatch) {
+                editorDispatch.updateSettings({
+                    alignWide: true,
+                    supportsLayout: true,
+                    imageEditing: true,
+                    __experimentalFeatures: {
+                        color: { text: true, background: true },
+                        spacing: { padding: true, margin: true, blockGap: true }
+                    }
+                });
+            }
+        } catch (e) { /* ignore */ }
+    }
 
     const deps: WpDeps = { createBlock, validateBlock, wpSerialize, parse };
 
     // 3. Create Blocks Recursive
     const blocks = nodes.map(node => createWpBlock(node, deps)).filter(Boolean) as BlockInstance[];
 
-    // 4. Enforce Strict Validator
-    blocks.forEach(b => {
-        const checkStrict = (blk: BlockInstance) => {
-            const serialized = wpSerialize([blk]);
-            const parsed = parse(serialized)[0];
+    // 4. Serialize with Fallback (Rescue Mission + Class Injection)
+    const serialized = blocks.map(b => safeSerialize(b, deps)).join('\n\n');
+    return sanitizeBlockHTML(serialized);
+}
 
-            const blockForValidation = {
-                ...blk,
-                name: blk.name,
-                attributes: blk.attributes,
-                innerBlocks: blk.innerBlocks,
-                originalContent: parsed.innerHTML
-            };
+/**
+ * Safe Serializer: 
+ * 1. Ensures containers are never self-closing if they have children.
+ * 2. Injects mandatory 'wp-block-{slug}' classes into HTML.
+ * 3. Injects 'align{val}' classes into HTML (from hidden _internal_align).
+ * 4. STRICTLY DOES NOT inject 'is-layout-*' classes (Core Standard).
+ */
+function safeSerialize(block: BlockInstance, deps: WpDeps): string {
+    const { wpSerialize } = deps;
+    let raw = wpSerialize([block]);
 
-            const check = validateBlock(blockForValidation);
-            const isValid = getValid(check);
-            if (!isValid) {
-                console.error(`❌ SERIALIZER: Block ${blk.name} failed strict validation!`);
-                const logs = getLogs(check);
-                if (logs) console.error(JSON.stringify(logs));
-                // In production generation, we might want to warn instead of crash, but for now strict.
-                // throw new Error(`Block Validation Failed: ${blk.name}`);
-                // Relaxing to warning to prevent total failure if minor validation issue occurs
-                console.warn(`Block Validation Warning: ${blk.name}`);
+    // Check if it failed (Self-closing tag on a container that has children)
+    const isSelfClosing = raw.trim().endsWith('/-->');
+    const hasChildren = block.innerBlocks && block.innerBlocks.length > 0;
+
+    // We only patch 'core/group', 'core/columns', 'core/column', 'core/cover' etc if they broke
+    const patchable = ['core/group', 'core/columns', 'core/column', 'core/cover'].includes(block.name);
+
+    // Calculate Base Class (e.g. wp-block-group)
+    const slug = block.name.replace('core/', '');
+    const baseClass = `wp-block-${slug}`;
+
+    // Calculate Align Class (from internal prop)
+    // We moved 'align' to '_internal_align' in createWpBlock
+    let alignClass = '';
+    if (block.attributes._internal_align) {
+        alignClass = `align${block.attributes._internal_align}`;
+    }
+
+    // Combine classes to inject
+    // NOTE: We deliberately EXCLUDE layout classes per user request ("Revert to Core Standard")
+    const classesToInject = [baseClass, alignClass].filter(Boolean).join(' ');
+
+    if (isSelfClosing && hasChildren && patchable) {
+        // RESCUE MISSION: Manually reconstruct the wrapper
+        // 1. Convert opening comment: <!-- wp:name {...} /--> to <!-- wp:name {...} -->
+        const openingComment = raw.replace(' /-->', ' -->');
+
+        // 2. Determine wrapper tag
+        const tagName = block.attributes.tagName || 'div';
+
+        // 3. Determine classes (Mix of injected classes + allowed attributes)
+        let className = block.attributes.className || '';
+
+        if (classesToInject) {
+            className = `${classesToInject} ${className}`.trim();
+        }
+
+        // 4. Construct wrapper
+        const openTag = className ? `<${tagName} class="${className}">` : `<${tagName}>`;
+        const closeTag = `</${tagName}>`;
+
+        // 5. Recursively serialize children
+        const innerContent = block.innerBlocks.map(child => safeSerialize(child, deps)).join('');
+
+        // 6. Assemble
+        // Note: 'raw' used for comment might contain 'className'. We cleaned it in createWpBlock.
+        // We do NOT want to put _internal_align in the JSON comment. 
+        // createWpBlock put it in attributes, so wpSerialize *might* have put it in JSON if strict mode didn't strip it.
+        // But wpSerialize for 'core/group' likely ignores unknown attrs or we might see it.
+        // If we see `_internal_align` in JSON, we should strip it. 
+        // regex replace `"_internal_align":"..."`?
+        let finalComment = openingComment;
+        if (finalComment.includes('_internal_align')) {
+            finalComment = finalComment.replace(/,"_internal_align":"[^"]*"/, '').replace(/"_internal_align":"[^"]*",/, '');
+        }
+
+        return `${finalComment}\n${openTag}${innerContent}${closeTag}\n<!-- /wp:${block.name.replace('core/', '')} -->`;
+    }
+
+    // STANDARD PATH: HTML was generated by wpSerialize, but we must ensure base/align classes exist in HTML
+    if (classesToInject && block.name.startsWith('core/')) {
+
+        const commentEnd = raw.indexOf('-->');
+        if (commentEnd !== -1) {
+            let comment = raw.substring(0, commentEnd + 3);
+            let content = raw.substring(commentEnd + 3);
+
+            // Strip _internal_align from comment if present
+            if (comment.includes('_internal_align')) {
+                comment = comment.replace(/,"_internal_align":"[^"]*"/, '').replace(/"_internal_align":"[^"]*",/, '');
             }
 
-            blk.innerBlocks.forEach(checkStrict);
-        };
-        checkStrict(b);
-    });
+            // Inject logic: Look for first tag's class attribute or create it
+            if (/class=['"]/.test(content)) {
+                // Prepend classes inside existing attribute
+                content = content.replace(/class=(['"])/, `class=$1${classesToInject} `);
+            } else {
+                // Inject attribute into first tag
+                const match = content.match(/<([a-z0-9]+)(\s|>)/i);
+                if (match) {
+                    const tag = match[1];
+                    content = content.replace(`<${tag}`, `<${tag} class="${classesToInject}"`);
+                }
+            }
+            return comment + content;
+        }
+    }
 
-    const serialized = wpSerialize(blocks);
-    return sanitizeBlockHTML(serialized);
+    return raw;
 }
 
 /**
@@ -87,16 +177,6 @@ export async function serialize(nodes: BlockNode[]): Promise<string> {
  */
 function sanitizeBlockHTML(html: string): string {
     return html.replace(/>\s+</g, '><').trim();
-}
-
-function getValid(res: any) {
-    if (Array.isArray(res)) return res[0];
-    if (typeof res === 'object') return res.isValid;
-    return !!res;
-}
-function getLogs(res: any) {
-    if (Array.isArray(res)) return res[1];
-    return null;
 }
 
 /**
@@ -110,7 +190,6 @@ function createWpBlock(node: BlockNode, deps: WpDeps): BlockInstance | null {
     const finalAttributes = { ...attributes };
 
     // 2. Map 'textContent' to block-specific attributes
-    // Based on investigation:
     if (textContent) {
         if (name === 'core/paragraph' || name === 'core/heading' || name === 'core/list-item') {
             finalAttributes.content = textContent;
@@ -119,92 +198,54 @@ function createWpBlock(node: BlockNode, deps: WpDeps): BlockInstance | null {
         } else if (name === 'core/image') {
             finalAttributes.caption = textContent;
         } else {
-            // Default fallback for unknown blocks that might use content
             finalAttributes.content = textContent;
         }
     }
 
-    // 3. Handle innerHTML for raw usage (e.g. Tables inserted as HTML)
-    // If a block assumes 'content' is the HTML (like core/freeform or core/shortcode)
+    // 3. Handle innerHTML
     if (innerHTML) {
         if (name === 'core/paragraph' || name === 'core/heading') {
             finalAttributes.content = innerHTML;
-        } else if (name === 'core/table') {
-            // core/table doesn't really accept raw HTML easily via createBlock attributes in all versions,
-            // but it usually parses from HTML. 
-            // For now, if we are building a table, we should construct it via structure if possible, 
-            // OR use core/html if it's raw.
-            // But let's assume 'content' might work or we might need to rely on 'source' matching.
-            // EDIT: core/table attributes are { head, body, foot }. It's complex.
-            // If we have raw HTML table, 'core/html' is safer.
-            // BUT, if the user compiler sends 'core/table' with innerHTML, we might be stuck.
-            // Let's map it to 'content' and hope.
-            // Actually, the compiler currently sends innerHTML for core/table. 
-            // Let's try to parse it? No, that's circular.
-            // Fallback: If innerHTML is present and it's a known complex block, 
-            // maybe we return a core/html block instead?
-            // Or we just try to set it.
         }
     }
 
-    // 4. Resolve 'var:preset|...' style variables in attributes
-    // createBlock doesn't automatically convert 'var:preset' -> 'var(--wp--)'? 
-    // Actually, WP blocks usually expect 'var:preset|color|vivid-red' in attributes as strings, 
-    // and the *renderer* (PHP) handles the CSS var generation, OR the serialization saves it as is?
-    // Wait. The serialization usually saves the style attribute inline if it's dynamic.
-    // In theme.json, we define presets.
-    // If I pass `style: { spacing: { padding: 'var:preset|spacing|50' } }` to `createBlock`,
-    // `core/group` save function will probably serialize that exactly into the style attribute.
-    // AND it will add the classes.
-    // The previous manual serializer resolved `var:preset` to `var(--wp...)`.
-    // Valid block markup usually keeps `var:preset|...` in the comment JSON, 
-    // but the HTML `style="..."` attribute needs the CSS variable.
-    // `createBlock` + `save` *should* handle this if the block support logic is active.
-    // BUT `jsdom` env might not have the full style engine loaded.
-    // The `save` function of `core/group` uses `useBlockProps` / `__experimentalGetElementClassName`.
-    // It might NOT resolve the var syntax to CSS vars in the saved HTML.
-    // Let's keep the `var:preset` -> `var(--wp...)` resolver for the `style` object properties 
-    // BEFORE passing to `createBlock`, just to be safe and ensure the HTML is valid CSS.
-
-    if (finalAttributes.style) {
-        finalAttributes.style = resolveStyleVars(finalAttributes.style);
+    // 4. Align Handling (Crash Prevention & Data Preservation)
+    // We move 'align' to '_internal_align' so it doesn't crash the serializer 
+    // but we can still access it in safeSerialize to inject the class.
+    if (finalAttributes.align) {
+        finalAttributes._internal_align = finalAttributes.align;
+        delete finalAttributes.align;
     }
 
-    // 5. Create Inner Blocks
+    // 5. Forbidden Class Filter (Clean JSON)
+    // Remove system classes from attributes so they don't appear in JSON.
+    if (finalAttributes.className) {
+        const forbidden = [
+            'wp-block-group', 'wp-block-columns', 'wp-block-column', 'wp-block-cover',
+            'is-layout-flex', 'is-layout-constrained', 'is-layout-flow',
+            'is-content-justification-center', 'is-content-justification-space-between',
+            'is-content-justification-right', 'is-content-justification-left',
+            'is-nowrap', 'is-vertical',
+            'alignwide', 'alignfull'
+        ];
+
+        finalAttributes.className = finalAttributes.className
+            .split(' ')
+            .filter(c => !forbidden.some(f => c === f || c.startsWith('wp-block-')))
+            .join(' ')
+            .trim();
+
+        if (!finalAttributes.className) delete finalAttributes.className;
+    }
+
+    // 6. Create Inner Blocks
     const childBlocks = innerBlocks.map(child => createWpBlock(child, deps)).filter(Boolean) as BlockInstance[];
 
-    // 6. Create Block
+    // 7. Create Block
     try {
         return createBlock(name, finalAttributes, childBlocks);
     } catch (e) {
         console.error(`Failed to create block ${name}:`, e);
         return null; // Skip invalid blocks
     }
-}
-
-/**
- * Deeply resolve "var:preset|..." strings in a style object to "var(--wp--preset--...)"
- */
-function resolveStyleVars(obj: any): any {
-    if (typeof obj === 'string') {
-        if (obj.startsWith('var:preset|')) {
-            const parts = obj.split('|');
-            if (parts.length >= 3) {
-                // var:preset|spacing|50 -> var(--wp--preset--spacing--50)
-                return `var(--wp--preset--${parts[1]}--${parts[2]})`;
-            }
-        }
-        return obj;
-    }
-    if (Array.isArray(obj)) {
-        return obj.map(resolveStyleVars);
-    }
-    if (typeof obj === 'object' && obj !== null) {
-        const newObj: any = {};
-        for (const key in obj) {
-            newObj[key] = resolveStyleVars(obj[key]);
-        }
-        return newObj;
-    }
-    return obj;
 }

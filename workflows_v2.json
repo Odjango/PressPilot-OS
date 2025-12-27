@@ -10,7 +10,7 @@
     "nodes": [
       {
         "parameters": {
-          "jsCode": "// This connects your Form fields directly to the Theme Generator\nconst input = items[0].json;\n\nreturn [{\n    json: {\n        business_name: input[\"Business Name\"], // Matches your form field exactly\n        industry: input[\"Industry\"]            // Matches your form field exactly\n    }\n}];"
+          "jsCode": "for (const item of items) {\n  let raw = item.json.body.logo_base64 || '';\n  if (typeof raw === 'string') {\n    // This removes the header if it exists\n    let payload = raw.includes('base64,') ? raw.split('base64,')[1] : raw;\n    // This removes any spaces or invisible characters that break OpenAI\n    payload = payload.replace(/[^A-Za-z0-9+/=]/g, '');\n    // This rebuilds the perfect link for the AI to read\n    item.json.formatted_image_url = `data:image/png;base64,${payload}`;\n  }\n}\nreturn items;"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
@@ -102,10 +102,124 @@
           -64
         ],
         "id": "5a4f15d2-0949-4363-9524-7667389a9578"
+      },
+      {
+        "parameters": {
+          "model": "gpt-4o",
+          "options": {
+            "jsonOutput": true
+          },
+          "messages": {
+            "values": [
+              {
+                "role": "system",
+                "content": "Role: You are the Color Architect for PressPilot. Task: Analyze the logo from the formatted_image_url. Goal: Extract the 2 most dominant colors. Strict Output: Return ONLY a raw JSON object like this: { \"primary_hex\": \"#HEXCODE\", \"secondary_hex\": \"#HEXCODE\" }."
+              },
+              {
+                "role": "user",
+                "content": "={{ $json.formatted_image_url }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.openAi",
+        "typeVersion": 1,
+        "position": [
+          -72,
+          -64
+        ],
+        "id": "analyze-image-auto-gen",
+        "name": "Analyze Image",
+        "credentials": {
+          "openAiApi": {
+            "id": "please_configure_id",
+            "name": "OpenAI account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "GET",
+          "url": "https://factory.presspilotapp.com/wp-json/wp/v2/global-styles?is_global=true",
+          "authentication": "wordpressApi",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          50,
+          -200
+        ],
+        "id": "get-global-styles-id",
+        "name": "Get Global Styles ID",
+        "credentials": {
+          "wordpressApi": {
+            "id": "wp_auth_cred_id",
+            "name": "WordPress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "={{ `https://factory.presspilotapp.com/wp-json/wp/v2/global-styles/${$node[\"Get Global Styles ID\"].json[0].id}` }}",
+          "authentication": "wordpressApi",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"settings\": {\n    \"color\": {\n      \"palette\": {\n        \"theme\": [\n          { \n            \"slug\": \"brand-primary\", \n            \"color\": \"{{ $node[\"Analyze Image\"].json[\"primary_hex\"] }}\", \n            \"name\": \"Brand Primary\" \n          },\n          { \n            \"slug\": \"brand-secondary\", \n            \"color\": \"{{ $node[\"Analyze Image\"].json[\"secondary_hex\"] }}\", \n            \"name\": \"Brand Secondary\" \n          }\n        ]\n      }\n    }\n  }\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          250,
+          -200
+        ],
+        "id": "update-global-styles",
+        "name": "Update Global Styles",
+        "credentials": {
+          "wordpressApi": {
+            "id": "wp_auth_cred_id",
+            "name": "WordPress account"
+          }
+        }
       }
     ],
     "connections": {
       "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Analyze Image",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Analyze Image": {
+        "main": [
+          [
+            {
+              "node": "Get Global Styles ID",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Global Styles ID": {
+        "main": [
+          [
+            {
+              "node": "Update Global Styles",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update Global Styles": {
         "main": [
           [
             {

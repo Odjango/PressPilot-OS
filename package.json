@@ -23,11 +23,16 @@
     "@wordpress/block-serialization-default-parser": "^5.36.0",
     "adm-zip": "^0.5.12",
     "canvas": "^3.2.0",
+    "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
+    "framer-motion": "^12.23.26",
+    "lucide-react": "^0.562.0",
     "next": "14.2.5",
     "openai": "^4.104.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.4.0",
     "youtube-transcript": "^1.2.1"
   },
   "devDependencies": {

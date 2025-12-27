@@ -15,6 +15,16 @@ export function shim() {
         (window as any).matchMedia = (window as any).matchMedia || function () {
             return { matches: false, addListener: function () { }, removeListener: function () { } };
         };
+        (window as any).getComputedStyle = (window as any).getComputedStyle || function () {
+            return {
+                getPropertyValue: () => '',
+            };
+        };
+        (global as any).ResizeObserver = class ResizeObserver {
+            observe() { }
+            unobserve() { }
+            disconnect() { }
+        };
 
         // React Polyfill for WP
         // We use the project's React. 
