@@ -278,3 +278,66 @@ function presspilot_fse_v2_version_check()
 }
 add_action('admin_init', 'presspilot_fse_v2_version_check');
 add_action('after_switch_theme', 'presspilot_fse_v2_content_setup');
+/**
+ * PRESSPILOT OVEN INTAKE
+ * Receives JSON Recipe from n8n and updates Global Styles.
+ */
+add_action('rest_api_init', function () {
+    register_rest_route('presspilot/v1', '/bake', [
+        'methods'  => 'POST',
+        'callback' => 'presspilot_handle_baking',
+        'permission_callback' => '__return_true', // @todo: Secure this with Application Passwords later
+    ]);
+});
+function presspilot_handle_baking($request) { $recipe = $request->get_json_params();
+
+// 1. Update Site Title
+if (isset($recipe['site_title'])) {
+    update_option('blogname', sanitize_text_field($recipe['site_title']));
+}
+// 2. Map Colors to Global Styles Structure
+// We strictly use the slugs 'brand-primary' and 'brand-secondary'
+$styles = [
+    'version' => 3,
+    'isGlobalStylesUserThemeJSON' => true,
+    'settings' => [
+        'color' => [
+            'palette' => [
+                'theme' => [
+                    [
+                        'slug' => 'brand-primary',
+                        'color' => $recipe['colors']['primary'] ?? '#000000',
+                        'name' => 'Primary'
+                    ],
+                    [
+                        'slug' => 'brand-secondary',
+                        'color' => $recipe['colors']['secondary'] ?? '#ffffff',
+                        'name' => 'Secondary'
+                    ]
+                ]
+            ]
+        ]
+    ]
+];
+// 3. Save to wp_global_styles Custom Post Type
+$recent_posts = wp_get_recent_posts([
+    'post_type' => 'wp_global_styles',
+    'numberposts' => 1,
+    'post_status' => 'publish'
+]);
+$content = json_encode($styles);
+if (empty($recent_posts)) {
+    wp_insert_post([
+        'post_type' => 'wp_global_styles',
+        'post_status' => 'publish',
+        'post_title' => 'Custom Styles',
+        'post_content' => $content
+    ]);
+} else {
+    wp_update_post([
+        'ID' => $recent_posts[0]['ID'],
+        'post_content' => $content
+    ]);
+}
+return new WP_REST_Response(['status' => 'baked'], 200);
+}
