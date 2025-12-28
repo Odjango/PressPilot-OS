@@ -1,6 +1,6 @@
 [
   {
-    "updatedAt": "2025-12-22T00:20:41.000Z",
+    "updatedAt": "2025-12-27T19:30:00.000Z",
     "createdAt": "2025-12-08T02:11:17.917Z",
     "id": "MPytJMRKmEoHNE2r",
     "name": "My workflow 2",
@@ -139,50 +139,21 @@
       },
       {
         "parameters": {
-          "method": "GET",
-          "url": "https://factory.presspilotapp.com/wp-json/wp/v2/global-styles?is_global=true",
-          "authentication": "wordpressApi",
-          "options": {}
-        },
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.3,
-        "position": [
-          50,
-          -200
-        ],
-        "id": "get-global-styles-id",
-        "name": "Get Global Styles ID",
-        "credentials": {
-          "wordpressApi": {
-            "id": "wp_auth_cred_id",
-            "name": "WordPress account"
-          }
-        }
-      },
-      {
-        "parameters": {
           "method": "POST",
-          "url": "={{ `https://factory.presspilotapp.com/wp-json/wp/v2/global-styles/${$node[\"Get Global Styles ID\"].json[0].id}` }}",
-          "authentication": "wordpressApi",
+          "url": "https://factory.presspilotapp.com/wp-json/presspilot/v1/bake",
           "sendBody": true,
           "specifyBody": "json",
-          "jsonBody": "={\n  \"settings\": {\n    \"color\": {\n      \"palette\": {\n        \"theme\": [\n          { \n            \"slug\": \"brand-primary\", \n            \"color\": \"{{ $node[\"Analyze Image\"].json[\"primary_hex\"] }}\", \n            \"name\": \"Brand Primary\" \n          },\n          { \n            \"slug\": \"brand-secondary\", \n            \"color\": \"{{ $node[\"Analyze Image\"].json[\"secondary_hex\"] }}\", \n            \"name\": \"Brand Secondary\" \n          }\n        ]\n      }\n    }\n  }\n}",
+          "jsonBody": "={\n  \"site_title\": \"{{ $node[\"Code in JavaScript\"].json[\"business_name\"] }}\",\n  \"colors\": {\n    \"primary\": \"{{ $node[\"Analyze Image\"].json[\"primary_hex\"] }}\",\n    \"secondary\": \"{{ $node[\"Analyze Image\"].json[\"secondary_hex\"] }}\"\n  }\n}",
           "options": {}
         },
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.3,
         "position": [
           250,
-          -200
+          176
         ],
         "id": "update-global-styles",
-        "name": "Update Global Styles",
-        "credentials": {
-          "wordpressApi": {
-            "id": "wp_auth_cred_id",
-            "name": "WordPress account"
-          }
-        }
+        "name": "Update Global Styles"
       }
     ],
     "connections": {
@@ -198,17 +169,6 @@
         ]
       },
       "Analyze Image": {
-        "main": [
-          [
-            {
-              "node": "Get Global Styles ID",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Get Global Styles ID": {
         "main": [
           [
             {
