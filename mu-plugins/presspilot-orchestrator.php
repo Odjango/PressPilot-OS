@@ -29,9 +29,18 @@ function presspilot_bake_handler($request)
 {
     // 1. locate the Assembler
     // We are in /mu-plugins/presspilot-orchestrator.php.
-    // Go up one level to root, then into 4 Antigravity...
-    $root_dir = dirname(__DIR__);
-    $assembler_path = $root_dir . '/4 Antigravity/presspilot-agent-plugin-v6.3/modules/site-assembler.php';
+    // We need to find where the main plugin is installed.
+    // It's usually in /plugins/presspilot-agent-plugin-v6.3/ or similar.
+
+    $plugin_dir = WP_PLUGIN_DIR . '/presspilot-agent-plugin-v6.3';
+
+    // Fallback: Check if we are in local dev "4 Antigravity" structure
+    if (!file_exists($plugin_dir)) {
+        $root_dir = dirname(__DIR__);
+        $plugin_dir = $root_dir . '/4 Antigravity/presspilot-agent-plugin-v6.3';
+    }
+
+    $assembler_path = $plugin_dir . '/modules/site-assembler.php';
 
     if (!file_exists($assembler_path)) {
         return new WP_Error('missing_component', 'Assembler logic not found at path: ' . $assembler_path, ['status' => 500]);
