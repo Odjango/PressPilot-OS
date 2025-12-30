@@ -35,7 +35,11 @@ class PressPilot_Site_Assembler
             'status' => 'success',
             'pages' => $pages,
             'menu_id' => $menu_id,
-            'preview_url' => get_home_url()
+            'preview_url' => get_home_url(),
+            // Frontend Schema Match
+            'original' => get_home_url(),
+            'high_contrast' => get_home_url(),
+            'inverted' => get_home_url()
         ];
     }
 
