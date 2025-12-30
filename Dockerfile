@@ -26,7 +26,7 @@ ENV PYTHON=/usr/bin/python3
 
 COPY package.json package-lock.json ./
 # Install dependencies based on lockfile
-RUN npm ci
+RUN npm install
 
 # 3. Builder
 FROM base AS builder
