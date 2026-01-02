@@ -22,10 +22,12 @@
     "@supabase/supabase-js": "^2.84.0",
     "@wordpress/block-serialization-default-parser": "^5.36.0",
     "adm-zip": "^0.5.12",
+    "archiver": "^7.0.1",
     "canvas": "^3.2.0",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.26",
+    "fs-extra": "^11.3.3",
     "lucide-react": "^0.562.0",
     "next": "14.2.5",
     "openai": "^4.104.0",
@@ -55,9 +57,5 @@
     "tailwindcss": "^4.1.17",
     "tsx": "^4.19.2",
     "typescript": "^5.4.5"
-  },
-  "overrides": {
-    "react": "$react",
-    "react-dom": "$react-dom"
   }
 }
