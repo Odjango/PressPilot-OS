@@ -1,0 +1,497 @@
+#!/bin/bash
+# Manual Fix V7 - The "Real" Fix
+# Purpose: Patch the ACTIVE plugin file, force menu cleanup, and harden styles.
+
+# 1. Prepare the content in a temporary file
+cat > /tmp/site-assembler-v7.php << 'EOF'
+<?php
+/**
+ * Module: Site Assembler
+ * Ported from: presspilot-agent-plugin-v6.3
+ * Purpose: Combine all pieces and create WordPress pages reliably.
+ */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+class PressPilot_Site_Assembler
+{
+
+    /**
+     * Assemble complete WordPress site
+     */
+    public function assemble($business_name, $theme_slug, $content, $colors, $business_type = 'corporate', $logo_url = '', $business_tagline = '')
+    {
+        // 0. Load Dependencies
+        $this->load_dependencies();
+
+        // 1. Feature: Auto-Extract Colors from Logo
+        if (!empty($logo_url) && class_exists('PressPilot_Color_Extractor')) {
+            $extractor = new PressPilot_Color_Extractor();
+            $extracted_palette = $extractor->extract($logo_url);
+            if (isset($extracted_palette['primary'])) {
+                $colors['primary'] = $extracted_palette['primary'];
+                $colors['secondary'] = $extracted_palette['secondary'];
+                $colors['accent'] = $extracted_palette['accent'];
+            }
+        }
+
+        // 2. Feature: Content & Image Personalization
+        $generated_content = [];
+        $site_images = [];
+        if (class_exists('PressPilot_Content_Generator')) {
+            $generator = new PressPilot_Content_Generator();
+            // Get content and images
+            $generated_content = $generator->generate($business_name, $business_type, $business_tagline);
+
+            // Extract the images for use across pages
+            if (isset($generated_content['home']['images'])) {
+                $site_images = $generated_content['home']['images'];
+            } else {
+                // Fallback if gen failed
+                $site_images = $generator->get_images($business_type);
+            }
+        }
+
+        // 3. Create pages (Pass generated content and images)
+        $pages = $this->create_business_type_pages($generated_content, $colors, $business_type, $business_tagline, $site_images);
+
+        // 4. Auto-publish pages
+        $this->auto_publish_pages($pages);
+
+        // 5. Robust Menu Creation (Multi-location support)
+        $menu_id = $this->create_navigation_menu($business_name, $pages);
+
+        // 6. Robust Logo Set
+        if (!empty($logo_url)) {
+            $this->set_site_logo($logo_url, $business_name);
+        }
+
+        // CLEANUP: Remove default WordPress junk
+        $default_page = get_page_by_path('sample-page');
+        if ($default_page)
+            wp_delete_post($default_page->ID, true);
+        $default_post = get_page_by_path('hello-world', OBJECT, 'post');
+        if ($default_post)
+            wp_delete_post($default_post->ID, true);
+
+        // 7. Personalize Footer
+        $this->setup_custom_footer($business_name, 'presspilot-child');
+
+        return [
+            'status' => 'success',
+            'pages' => $pages,
+            'menu_id' => $menu_id,
+            'preview_url' => get_home_url(),
+            'original' => get_home_url(),
+            'high_contrast' => get_home_url(),
+            'inverted' => get_home_url()
+        ];
+    }
+
+    private function load_dependencies()
+    {
+        if (file_exists(dirname(__FILE__) . '/color-extractor.php')) {
+            require_once dirname(__FILE__) . '/color-extractor.php';
+        }
+        if (file_exists(dirname(__FILE__) . '/content-generator.php')) {
+            require_once dirname(__FILE__) . '/content-generator.php';
+        }
+    }
+
+    private function create_business_type_pages($content, $colors, $business_type, $business_tagline = '', $images = [])
+    {
+        $pages = array();
+
+        // Defaults if images missing
+        if (empty($images)) {
+            $images = [
+                'hero' => 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80',
+                'about' => 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80',
+                'service' => 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80'
+            ];
+        }
+
+        $pages['home'] = $this->create_page('Home', $content['home'] ?? [], $colors, true, $business_type, $business_tagline, $images);
+        $pages['about'] = $this->create_page('About Us', $content['about'] ?? [], $colors, false, $business_type, $business_tagline, $images);
+        $pages['services'] = $this->create_page('Services', $content['services'] ?? [], $colors, false, $business_type, $business_tagline, $images);
+        $pages['contact'] = $this->create_page('Contact', $content['contact'] ?? [], $colors, false, $business_type, $business_tagline, $images);
+        $pages['blog'] = $this->create_page('Blog', $content['blog'] ?? [], $colors, false, $business_type, $business_tagline, $images);
+
+        return $pages;
+    }
+
+    private function create_page($title, $content_data, $colors, $is_front = false, $business_type = 'corporate', $business_tagline = '', $images = [])
+    {
+        $html_content = $this->generate_page_html($title, $content_data, $colors, $business_type, $business_tagline, $images);
+
+        $existing = get_page_by_title($title);
+        if ($existing) {
+            wp_delete_post($existing->ID, true);
+        }
+
+        $page_data = array(
+            'post_title' => $title,
+            'post_content' => $html_content,
+            'post_status' => 'publish',
+            'post_type' => 'page',
+            'post_author' => 1,
+            'comment_status' => 'closed'
+        );
+
+        $page_id = wp_insert_post($page_data);
+        if (is_wp_error($page_id))
+            return false;
+
+        update_post_meta($page_id, '_presspilot_generated', time());
+        update_post_meta($page_id, 'hide_title', 'yes');
+
+        if ($is_front) {
+            update_option('show_on_front', 'page');
+            update_option('page_on_front', $page_id);
+        }
+
+        return array(
+            'id' => $page_id,
+            'title' => $title,
+            'url' => get_permalink($page_id)
+        );
+    }
+
+    private function generate_page_html($title, $content_data, $colors, $business_type = 'corporate', $business_tagline = '', $images = [])
+    {
+        if ($title === 'Home') {
+            return $this->generate_home_html($content_data, $colors, $images, $business_tagline);
+        } elseif ($title === 'About Us') {
+            return '<!-- wp:cover {"url":"' . $images['about'] . '","dimRatio":50,"overlayColor":"black","align":"full"} -->
+<div class="wp-block-cover alignfull"><span aria-hidden="true" class="wp-block-cover__background has-black-background-color has-background-dim-50 has-background-dim"></span><img class="wp-block-cover__image-background" src="' . $images['about'] . '" data-object-fit="cover"/><div class="wp-block-cover__inner-container"><!-- wp:heading {"textAlign":"center","level":1,"textColor":"white"} -->
+<h1 class="has-text-align-center has-white-color has-text-color">About Us</h1>
+<!-- /wp:heading --></div></div>
+<!-- /wp:cover -->
+<!-- wp:paragraph --><p>' . ($content_data['content'] ?? 'We are a premier provider...') . '</p><!-- /wp:paragraph -->';
+        }
+        return '<!-- wp:heading --><h1>' . $title . '</h1><!-- /wp:heading --><!-- wp:paragraph --><p>Content coming soon.</p><!-- /wp:paragraph -->';
+    }
+
+    // Kept for backward compat but unused now (overridden by param)
+    private function get_placeholder_images($business_type)
+    {
+        return [];
+    }
+
+    private function generate_home_html($data, $colors, $images, $business_tagline = '')
+    {
+        $hero_title = !empty($data['hero_headline']) ? $data['hero_headline'] : "Welcome";
+        $hero_text = !empty($data['hero_text']) ? $data['hero_text'] : "Generated by PressPilot Magic";
+        $primary_color = $colors['primary'] ?? '#000000';
+        $hero_img = $images['hero'] ?? 'https://s.w.org/images/core/5.3/MtBlanc1.jpg';
+
+        // 1. Hero Section
+        $html = "<!-- wp:cover {\"url\":\"" . $hero_img . "\",\"dimRatio\":50,\"overlayColor\":\"black\",\"align\":\"full\"} -->
+<div class=\"wp-block-cover alignfull\"><span aria-hidden=\"true\" class=\"wp-block-cover__background has-black-background-color has-background-dim-50 has-background-dim\"></span><img class=\"wp-block-cover__image-background\" src=\"" . $hero_img . "\" data-object-fit=\"cover\"/><div class=\"wp-block-cover__inner-container\"><!-- wp:heading {\"textAlign\":\"center\",\"level\":1,\"textColor\":\"white\"} -->
+<h1 class=\"has-text-align-center has-white-color has-text-color\">" . $hero_title . "</h1>
+<!-- /wp:heading -->
+<!-- wp:paragraph {\"align\":\"center\",\"textColor\":\"white\",\"fontSize\":\"large\"} -->
+<p class=\"has-text-align-center has-white-color has-text-color has-large-font-size\">" . $hero_text . "</p>
+<!-- /wp:paragraph -->
+<!-- wp:buttons {\"layout\":{\"type\":\"flex\",\"justifyContent\":\"center\"}} -->
+<div class=\"wp-block-buttons\"><!-- wp:button {\"backgroundColor\":\"vivid-green-cyan\",\"textColor\":\"white\",\"style\":{\"color\":{\"background\":\"" . $primary_color . "\"}}} -->
+<div class=\"wp-block-button\"><a class=\"wp-block-button__link has-white-color has-text-color has-background\" style=\"background-color:" . $primary_color . "\">Order Now</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div></div>
+<!-- /wp:cover -->";
+
+        // 2. Features Section (Expansion)
+        $html .= "<!-- wp:group {\"align\":\"full\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|80\",\"bottom\":\"var:preset|spacing|80\"}}},\"layout\":{\"type\":\"constrained\"}} -->
+<div class=\"wp-block-group alignfull\" style=\"padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80)\">
+<!-- wp:heading {\"textAlign\":\"center\",\"level\":2,\"style\":{\"typography\":{\"fontStyle\":\"normal\",\"fontWeight\":\"700\"}}} -->
+<h2 class=\"has-text-align-center\" style=\"font-style:normal;font-weight:700\">Why Choose Us?</h2>
+<!-- /wp:heading -->
+
+<!-- wp:columns {\"align\":\"wide\",\"style\":{\"spacing\":{\"blockGap\":\"var:preset|spacing|50\"}}} -->
+<div class=\"wp-block-columns alignwide\">
+<!-- wp:column -->
+<div class=\"wp-block-column\"><!-- wp:heading {\"level\":3,\"fontSize\":\"medium\"} -->
+<h3 class=\"has-medium-font-size\">Premium Quality</h3>
+<!-- /wp:heading --><!-- wp:paragraph -->
+<p>We accept nothing less than perfection. Our team ensures that every detail is crafted to the highest standards.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class=\"wp-block-column\"><!-- wp:heading {\"level\":3,\"fontSize\":\"medium\"} -->
+<h3 class=\"has-medium-font-size\">Fast & Reliable</h3>
+<!-- /wp:heading --><!-- wp:paragraph -->
+<p>Time is money. We deliver results quickly without compromising on quality, so you can focus on what matters.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class=\"wp-block-column\"><!-- wp:heading {\"level\":3,\"fontSize\":\"medium\"} -->
+<h3 class=\"has-medium-font-size\">Customer First</h3>
+<!-- /wp:heading --><!-- wp:paragraph -->
+<p>Your satisfaction is our priority. We are dedicated to providing support and service that exceeds expectations.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+</div>
+<!-- /wp:columns -->
+</div>
+<!-- /wp:group -->";
+
+        // 3. Testimonial Section (HARDCODED BACKGROUND FOR CONTRAST)
+        // Added background-color:#1e1e1e explicitly to ensure robustness even if theme tokens fail
+        $html .= "<!-- wp:group {\"align\":\"full\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|60\",\"bottom\":\"var:preset|spacing|60\"}}},\"backgroundColor\":\"contrast\",\"textColor\":\"white\",\"layout\":{\"type\":\"constrained\"}} -->
+<div class=\"wp-block-group alignfull has-white-color has-contrast-background-color has-text-color has-background\" style=\"padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60);background-color:#1e1e1e;color:#ffffff\">
+<!-- wp:quote {\"textAlign\":\"center\",\"style\":{\"typography\":{\"fontSize\":\"var:preset|font-size|large\"}}} -->
+<blockquote class=\"wp-block-quote has-text-align-center\" style=\"font-size:var(--wp--preset--font-size--large)\"><p>\"This is the best service I have ever used. Highly recommended!\"</p><cite>— A Happy Customer</cite></blockquote>
+<!-- /wp:quote -->
+</div>
+<!-- /wp:group -->";
+
+        return $html;
+    }
+
+    /**
+     * Load pattern from JSON file (Adjusted path)
+     */
+    private function load_pattern($pattern_name)
+    {
+        $pattern_file = PRESSPILOT_CHILD_DIR . '/inc/patterns/' . $pattern_name . '.json';
+        if (!file_exists($pattern_file)) {
+            return false;
+        }
+        return json_decode(file_get_contents($pattern_file), true);
+    }
+
+    private function auto_publish_pages($pages)
+    {
+        foreach ($pages as $page) {
+            if (isset($page['id'])) {
+                wp_update_post(['ID' => $page['id'], 'post_status' => 'publish']);
+            }
+        }
+    }
+
+    private function create_navigation_menu($business_name, $pages)
+    {
+        $menu_name = $business_name . ' Main Menu';
+        $menu_id = wp_create_nav_menu($menu_name);
+
+        if (is_wp_error($menu_id)) {
+            $menu = wp_get_nav_menu_object($menu_name);
+            $menu_id = $menu ? $menu->term_id : 0;
+        }
+
+
+        if ($menu_id) {
+            // FIX: Disable "Auto Add Pages" to prevent alphabetical sorting chaos
+            wp_update_nav_menu_object($menu_id, array('auto_add' => false));
+
+            // FIX: Clear existing items to prevent duplicates/ordering issues
+            $existing_items = wp_get_nav_menu_items($menu_id);
+            if ($existing_items) {
+                foreach ($existing_items as $item) {
+                    wp_delete_post($item->ID);
+                }
+            }
+
+            $order = ['home', 'about', 'services', 'contact', 'blog', 'shop', 'cart'];
+            $i = 1;
+            foreach ($order as $key) {
+                if (isset($pages[$key])) {
+                    wp_update_nav_menu_item($menu_id, 0, array(
+                        'menu-item-title' => $pages[$key]['title'],
+                        'menu-item-object' => 'page',
+                        'menu-item-object-id' => $pages[$key]['id'],
+                        'menu-item-type' => 'post_type',
+                        'menu-item-status' => 'publish',
+                        'menu-item-position' => $i++
+                    ));
+                }
+            }
+
+
+            // Robust Location Setting (Try all common keys)
+            $locations = get_theme_mod('nav_menu_locations');
+            if (!is_array($locations))
+                $locations = [];
+
+            $possible_keys = ['primary', 'main', 'header', 'primary-menu', 'header-menu', 'top'];
+            foreach ($possible_keys as $k) {
+                $locations[$k] = $menu_id;
+            }
+            set_theme_mod('nav_menu_locations', $locations);
+        }
+        return $menu_id;
+    }
+
+    private function set_site_logo($logo_url, $business_name)
+    {
+        // Require WP Admin includes for media handling
+        if (!function_exists('download_url')) {
+            require_once ABSPATH . 'wp-admin/includes/media.php';
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            require_once ABSPATH . 'wp-admin/includes/image.php';
+        }
+
+        // Check if already exists by checking if attachment exists? 
+        // Simplest: Just download and set. (Legacy behavior)
+
+        $tmp = download_url($logo_url);
+        if (is_wp_error($tmp))
+            return false;
+
+        $file_array = [
+            'name' => sanitize_title($business_name) . '-logo.png',
+            'tmp_name' => $tmp
+        ];
+
+        // Sideload
+        $id = media_handle_sideload($file_array, 0);
+
+        if (is_wp_error($id)) {
+            @unlink($tmp);
+            return false;
+        }
+
+        // Set as custom_logo
+        set_theme_mod('custom_logo', $id);
+
+        // Also update Site Title just in case
+        update_option('blogname', $business_name);
+
+        return true;
+    }
+
+    private function setup_custom_footer($business_name, $theme_slug)
+    {
+        $year = date('Y');
+
+        // LOGIC: Smart Background-Aware Contrast
+        // If background is 'contrast' (usually dark in this theme), text should be white.
+        // If background is 'base' (usually light), text should be black.
+        $bg_color_slug = 'contrast'; // We are choosing 'contrast' for the footer bg
+
+        $text_color = ($bg_color_slug === 'contrast') ? 'white' : 'black';
+        $text_hex = ($bg_color_slug === 'contrast') ? '#ffffff' : '#000000';
+
+        $content = '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"' . $bg_color_slug . '","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-' . $bg_color_slug . '-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
+<!-- wp:paragraph {"align":"center","fontSize":"small"} -->
+<p class="has-text-align-center has-small-font-size" style="color:' . $text_hex . ' !important">© ' . $year . ' ' . $business_name . '. All rights reserved. &nbsp;|&nbsp; Powered by <a href="https://presspilotapp.com" rel="nofollow" class="has-' . $text_color . '-color" style="color:' . $text_hex . ' !important;text-decoration:underline !important;">PressPilot</a></p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->';
+
+        // STRATEGY 1: File-Based Override (Most Reliable for Child Themes)
+        // Ensure parts directory exists
+        $parts_dir = dirname(dirname(__FILE__)) . '/parts';
+        if (!file_exists($parts_dir)) {
+            mkdir($parts_dir, 0755, true);
+        }
+
+        // Write the footer.html part directly
+        // FSE themes look for parts/footer.html to override the 'footer' area
+        file_put_contents($parts_dir . '/footer.html', $content);
+
+        // STRATEGY 2: Database Override (Fallback/Legacy)
+        // We still update the DB just in case the theme uses a weird slug mapping,
+        // but the file above should take precedence for the standard 'footer' slug.
+        $post_name = $theme_slug . '//footer';
+        $args = [
+            'post_type' => 'wp_template_part',
+            'name' => $post_name,
+            'posts_per_page' => 1,
+            'post_status' => 'publish'
+        ];
+        $query = new WP_Query($args);
+
+        $post_data = [
+            'post_title' => 'Footer',
+            'post_name' => $post_name,
+            'post_content' => $content,
+            'post_status' => 'publish',
+            'post_type' => 'wp_template_part',
+            'tax_input' => [
+                'wp_theme' => [$theme_slug],
+                'wp_template_part_area' => ['footer']
+            ]
+        ];
+
+        if ($query->have_posts()) {
+            $post_data['ID'] = $query->posts[0]->ID;
+            wp_update_post($post_data);
+        } else {
+            $id = wp_insert_post($post_data);
+            if (!is_wp_error($id)) {
+                wp_set_object_terms($id, $theme_slug, 'wp_theme');
+                wp_set_object_terms($id, 'footer', 'wp_template_part_area');
+            }
+        }
+    }
+}
+EOF
+
+# 2. Locate Active Plugin File (Use array to handle potential variations)
+# Primary target is the typical path
+PLUGIN_FILE="/var/www/html/wp-content/plugins/presspilot-agent-plugin-v6.3/modules/site-assembler.php"
+# Fallback target (theme)
+THEME_FILE="/var/www/html/wp-content/themes/presspilot-child/inc/site-assembler.php"
+
+# Apply Patch to Plugin
+if [ -f "$PLUGIN_FILE" ]; then
+    cp /tmp/site-assembler-v7.php "$PLUGIN_FILE"
+    echo "✅ Patched PLUGIN file: $PLUGIN_FILE"
+elif [ -d "/var/www/html/wp-content/plugins/presspilot-agent-plugin-v6.3" ]; then
+    # Create if directory exists but file missing (rare)
+    cp /tmp/site-assembler-v7.php "$PLUGIN_FILE"
+    echo "✅ Patched PLUGIN file (created): $PLUGIN_FILE"
+else
+    # Try finding it broadly
+    FOUND=$(find /var/www/html/wp-content/plugins -name "site-assembler.php" | head -n 1)
+    if [ ! -z "$FOUND" ]; then
+        cp /tmp/site-assembler-v7.php "$FOUND"
+        echo "✅ Patched FOUND plugin file: $FOUND"
+    else
+        echo "⚠️ Could not find Plugin's site-assembler.php. Generator might still use old logic."
+    fi
+fi
+
+# Apply Patch to Theme (just in case)
+mkdir -p "$(dirname "$THEME_FILE")"
+cp /tmp/site-assembler-v7.php "$THEME_FILE"
+echo "✅ Patched THEME file: $THEME_FILE"
+
+
+# 3. FORCE CLEAR MENU ITEMS NOW (Immediate Fix)
+echo "🧹 Force-Clearing 'Main Menu' items..."
+# Get ID of Main Menu (using strict grep to avoid partial matches)
+MENU_ID=$(wp menu list --fields=term_id,name --format=json --allow-root 2>/dev/null | grep "\"name\":\"[^\"]*Main Menu" | awk -F'"term_id":' '{print $2}' | awk -F',' '{print $1}' | head -n 1)
+
+if [ ! -z "$MENU_ID" ]; then
+   echo "Found Menu ID: $MENU_ID"
+   # List all item IDs
+   ITEM_IDS=$(wp menu item list $MENU_ID --format=ids --allow-root 2>/dev/null)
+   if [ ! -z "$ITEM_IDS" ]; then
+       # Delete them
+       echo "Deleting items: $ITEM_IDS"
+       wp menu item delete $ITEM_IDS --force --allow-root
+       echo "✅ Menu items cleared."
+   else
+       echo "ℹ️ Menu is already empty."
+   fi
+   
+   # Disable Auto-Add again to be sure
+   wp eval "wp_update_nav_menu_object($MENU_ID, array('auto_add' => false));" --allow-root
+   echo "✅ Auto-add disabled."
+else
+   echo "⚠️ Main Menu not found. It will be created on generation."
+fi
+
+# 4. Remove default pages again (just in case)
+wp post delete $(wp post list --name="sample-page" --post_type=page --format=ids --allow-root) --force --allow-root 2>/dev/null
+wp post delete $(wp post list --name="hello-world" --post_type=post --format=ids --allow-root) --force --allow-root 2>/dev/null
+
+echo "🚀 Manual Fix V7 Applied. You MUST now click 'Generate Site' (Final Pizza) to see the changes!"
+echo "   (The menu is currently empty, triggering generation will fill it correctly)"

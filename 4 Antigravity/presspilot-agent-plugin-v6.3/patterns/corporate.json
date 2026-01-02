@@ -1,0 +1,38 @@
+{
+  "business_type": "corporate",
+  "tone": "professional, trustworthy, authoritative, solutions-focused",
+  "keywords": "expertise, solutions, partnership, results, innovation, reliability, experience, excellence",
+  "typical_services": [
+    "Consulting Services",
+    "Strategy & Planning",
+    "Implementation Support",
+    "Ongoing Partnership"
+  ],
+  "typical_services_count": 4,
+  "content_style": {
+    "headline_style": "professional, value-proposition, solution-oriented",
+    "description_style": "credible, expertise-focused, benefit-driven",
+    "cta_style": "professional (Schedule Consultation, Learn More, Contact Us)"
+  },
+  "color_preferences": {
+    "primary": ["trust blues", "professional grays", "sophisticated blacks"],
+    "accent": ["confident greens", "premium golds", "accent blues"],
+    "avoid": ["playful colors", "overly bright tones", "juvenile colors"]
+  },
+  "imagery_keywords": [
+    "business professionals",
+    "office environments",
+    "team collaboration",
+    "technology",
+    "handshakes",
+    "modern workspace"
+  ],
+  "trust_elements": [
+    "years of experience",
+    "client logos",
+    "case studies",
+    "industry certifications",
+    "professional credentials",
+    "thought leadership"
+  ]
+}

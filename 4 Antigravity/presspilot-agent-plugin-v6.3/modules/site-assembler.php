@@ -642,6 +642,17 @@ class PressPilot_Site_Assembler
             }
         }
 
+        // CRITICAL FIX: Disable Auto-Add Pages immediately to prevent order chaos
+        wp_update_nav_menu_object($menu_id, array('auto_add' => false));
+
+        // CRITICAL FIX: Clear existing items to ensure precise ordering
+        $existing_items = wp_get_nav_menu_items($menu_id);
+        if ($existing_items) {
+            foreach ($existing_items as $item) {
+                wp_delete_post($item->ID);
+            }
+        }
+
         // Define menu order based on page types
         if (isset($pages['shop'])) {
             // E-commerce menu order
@@ -686,7 +697,7 @@ class PressPilot_Site_Assembler
         }
 
         // Try common menu location names
-        $possible_locations = array('primary', 'main', 'primary-menu', 'header-menu');
+        $possible_locations = array('primary', 'main', 'primary-menu', 'header-menu', 'top', 'header');
         foreach ($possible_locations as $location) {
             $locations[$location] = $menu_id;
         }

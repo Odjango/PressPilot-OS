@@ -112,12 +112,11 @@
           "messages": {
             "values": [
               {
-                "role": "system",
-                "content": "Role: You are the Color Architect for PressPilot. Task: Analyze the logo from the formatted_image_url. Goal: Extract the 2 most dominant colors. Strict Output: Return ONLY a raw JSON object like this: { \"primary_hex\": \"#HEXCODE\", \"secondary_hex\": \"#HEXCODE\" }."
+                "content": "Role: You are the PressPilot Menu Architect. Your goal is to convert raw business info into a structured WordPress 'Recipe'. \n\nInput Analysis:\n1. Extract Business Name & Vibe (e.g. 'Cozy', 'Modern').\n2. Extract 3 Signature Dishes (Name + Description).\n3. Extract Address & Hours.\n4. Determine a Primary Hex Color based on the Vibe.\n\nOutput Generation:\nReturn a JSON object: { \"site_title\": \"...\", \"primary_color\": \"...\", \"full_site_content\": \"...\" }\n\nContent Rules for 'full_site_content':\nGenerate valid WordPress Block HTML for exactly these 4 sections, filling them with the extracted data:\n1. Hero (ollie/hero-header-large): <div class=\"wp-block-cover ...\"><h1>[Business Name]</h1><p>[Vibe Tagline]</p>...</div>\n2. About (ollie/text-and-image-split): <div class=\"wp-block-group ...\"><h2>Our Story</h2><p>[Description]</p>...</div>\n3. Menu (ollie/menu-grid-3-column): <div class=\"wp-block-columns ...\">... [3 Signature Dishes] ...</div>\n4. Contact (ollie/call-to-action-banner): <div class=\"wp-block-group ...\"><h2>Visit Us</h2><p>[Address] | [Hours]</p>...</div>"
               },
               {
                 "role": "user",
-                "content": "={{ $json.formatted_image_url }}"
+                "content": "Business Name: {{ $node[\"Code in JavaScript\"].json[\"business_name\"] }}\nIndustry: {{ $node[\"Code in JavaScript\"].json[\"industry\"] }}\nContext/Image: ={{ $json.formatted_image_url }}"
               }
             ]
           }
@@ -129,7 +128,7 @@
           -64
         ],
         "id": "analyze-image-auto-gen",
-        "name": "Analyze Image",
+        "name": "Menu Architect",
         "credentials": {
           "openAiApi": {
             "id": "please_configure_id",
@@ -143,7 +142,7 @@
           "url": "https://factory.presspilotapp.com/wp-json/presspilot/v1/bake",
           "sendBody": true,
           "specifyBody": "json",
-          "jsonBody": "={\n  \"site_title\": \"{{ $node[\"Code in JavaScript\"].json[\"business_name\"] }}\",\n  \"colors\": {\n    \"primary\": \"{{ $node[\"Analyze Image\"].json[\"primary_hex\"] }}\",\n    \"secondary\": \"{{ $node[\"Analyze Image\"].json[\"secondary_hex\"] }}\"\n  }\n}",
+          "jsonBody": "={\n  \"site_title\": \"{{ $node[\"Menu Architect\"].json[\"site_title\"] }}\",\n  \"primary_color\": \"{{ $node[\"Menu Architect\"].json[\"primary_color\"] }}\",\n  \"full_site_content\": \"{{ $node[\"Menu Architect\"].json[\"full_site_content\"] }}\"\n}",
           "options": {}
         },
         "type": "n8n-nodes-base.httpRequest",
@@ -161,14 +160,14 @@
         "main": [
           [
             {
-              "node": "Analyze Image",
+              "node": "Menu Architect",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "Analyze Image": {
+      "Menu Architect": {
         "main": [
           [
             {

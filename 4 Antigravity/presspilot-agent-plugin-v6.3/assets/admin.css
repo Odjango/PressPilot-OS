@@ -1,0 +1,272 @@
+/**
+ * PressPilot Admin Styles
+ * Clean, modern interface for site generation
+ */
+
+.presspilot-wrap {
+    background: #f0f0f1;
+    margin: 20px 0 0 -20px;
+    padding: 30px;
+}
+
+.presspilot-wrap h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.presspilot-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+/* Form Card */
+.presspilot-form-card {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.presspilot-form-card h2 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #1d2327;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1d2327;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    border-color: #2271b1;
+    outline: none;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+/* Logo Upload Area */
+.logo-upload-area {
+    border: 2px dashed #dcdcde;
+    border-radius: 8px;
+    padding: 60px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #f6f7f7;
+}
+
+.logo-upload-area:hover {
+    border-color: #2271b1;
+    background: #f0f6fc;
+}
+
+.logo-upload-area .dashicons {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #8c8f94;
+}
+
+.logo-upload-area p {
+    margin: 15px 0 5px;
+    font-size: 16px;
+    color: #1d2327;
+}
+
+.logo-upload-area small {
+    color: #646970;
+}
+
+#logo-preview {
+    max-width: 300px;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Generate Button */
+#generate-btn {
+    width: 100%;
+    padding: 15px 30px !important;
+    font-size: 16px !important;
+    height: auto !important;
+    background: #2271b1 !important;
+    border-color: #2271b1 !important;
+}
+
+#generate-btn:hover {
+    background: #135e96 !important;
+    border-color: #135e96 !important;
+}
+
+#generate-btn .dashicons {
+    margin-right: 8px;
+}
+
+/* Progress Bar */
+#generation-progress {
+    margin-top: 30px;
+    padding: 30px;
+    background: #f0f6fc;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #dcdcde;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2271b1, #72aee6);
+    width: 0;
+    transition: width 0.5s ease;
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.progress-text {
+    color: #1d2327;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Results Section */
+#generation-results {
+    margin-top: 30px;
+    padding: 30px;
+    background: #d7f1dd;
+    border-radius: 8px;
+    border-left: 4px solid #00a32a;
+}
+
+#generation-results h2 {
+    margin-top: 0;
+    color: #00a32a;
+}
+
+/* Sidebar */
+.presspilot-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.info-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #1d2327;
+    font-size: 16px;
+}
+
+.feature-list,
+.tech-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-list li,
+.tech-list li {
+    padding: 8px 0;
+    color: #1d2327;
+}
+
+.feature-list li .dashicons {
+    color: #00a32a;
+    margin-right: 8px;
+}
+
+.tech-list li {
+    padding: 6px 0;
+    color: #646970;
+    font-size: 14px;
+}
+
+.version-info {
+    text-align: center;
+    background: #f6f7f7;
+}
+
+.version-info small {
+    display: block;
+    color: #646970;
+    margin: 5px 0;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .presspilot-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Loading State */
+.loading #generate-btn {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* Page List Styles */
+.page-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.page-list li {
+    padding: 15px;
+    background: white;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-list li strong {
+    color: #1d2327;
+}
+
+.page-list li a {
+    color: #2271b1;
+    text-decoration: none;
+}
+
+.page-list li a:hover {
+    text-decoration: underline;
+}

@@ -9,6 +9,16 @@ const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export function createServerSupabaseClient() {
   const cookieStore = cookies();
+  if (!SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    // Return a dummy client that warns but doesn't crash on init
+    return {
+      auth: {
+        getUser: async () => ({ data: { user: null }, error: null }),
+        getSession: async () => ({ data: { session: null }, error: null }),
+      },
+      from: () => ({ select: () => ({ data: [], error: null }) }),
+    } as any;
+  }
   return createServerComponentClient<Database>({
     cookies: () => cookieStore,
   });

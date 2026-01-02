@@ -1,0 +1,38 @@
+{
+  "business_type": "ecommerce",
+  "tone": "persuasive, customer-focused, benefit-driven, trustworthy",
+  "keywords": "shop, products, quality, value, shipping, returns, satisfaction, secure checkout",
+  "typical_services": [
+    "Product Catalog",
+    "Secure Checkout",
+    "Fast Shipping",
+    "Customer Support"
+  ],
+  "typical_services_count": 4,
+  "content_style": {
+    "headline_style": "benefit-focused, value-driven, conversion-oriented",
+    "description_style": "persuasive, detail-rich, trust-building",
+    "cta_style": "direct (Shop Now, Add to Cart, View Products, Get Yours)"
+  },
+  "color_preferences": {
+    "primary": ["conversion oranges", "trust blues", "premium blacks"],
+    "accent": ["sale reds", "success greens", "urgency yellows"],
+    "avoid": ["confusing color combinations", "harsh contrasts"]
+  },
+  "imagery_keywords": [
+    "product photography",
+    "lifestyle shots",
+    "shopping experience",
+    "happy customers",
+    "product in use",
+    "packaging"
+  ],
+  "trust_elements": [
+    "secure payment badges",
+    "customer reviews",
+    "return policy",
+    "shipping guarantees",
+    "SSL certification",
+    "money-back guarantee"
+  ]
+}
