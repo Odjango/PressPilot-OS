@@ -165,7 +165,7 @@ require_once get_stylesheet_directory() . '/inc/site-assembler.php';
 function presspilot_run_trojan_horse()
 {
     // Guard: Run only once
-    if (get_option('presspilot_trojan_horse_ran')) {
+    if (get_option('presspilot_trojan_horse_ran_v3')) {
         return;
     }
 
@@ -212,9 +212,23 @@ function presspilot_run_trojan_horse()
     // Run assembly
     $assembler->assemble($business_name, 'presspilot-child', $content, $colors);
 
-    update_option('presspilot_trojan_horse_ran', true);
+    update_option('presspilot_trojan_horse_ran_v3', true);
 }
 // Trigger on Theme Switch
 add_action('after_switch_theme', 'presspilot_run_trojan_horse');
 // Trigger on Admin Init (for immediate effect if already active)
 add_action('admin_init', 'presspilot_run_trojan_horse');
+
+
+/**
+ * 9. Hybrid Mode: Disable FSE Editor
+ * We use theme.json for styles, but we are a Classic Theme structurally.
+ * This removes the broken 'Appearance > Editor' link.
+ */
+add_action('admin_menu', 'presspilot_disable_fse_editor', 999);
+
+function presspilot_disable_fse_editor()
+{
+    remove_submenu_page('themes.php', 'site-editor.php');
+    remove_submenu_page('themes.php', 'site-editor.php?path=/patterns');
+}
