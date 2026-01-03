@@ -44,7 +44,7 @@
     <!-- /wp:heading -->
 
     <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":"var:preset|spacing|40"}}} -->
-    <div class="wp-block-columns alignwide">
+    <div class="wp-block-columns alignwide" style="gap:var(--wp--preset--spacing--40)">
         {{features_columns}}
     </div>
     <!-- /wp:columns -->

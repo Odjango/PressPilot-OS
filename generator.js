@@ -152,7 +152,7 @@ async function generateTheme() {
                 html += `<!-- wp:column -->
  <div class="wp-block-column">
      <!-- wp:group {"style":{"border":{"radius":"10px"},"spacing":{"padding":{"top":"30px","bottom":"30px","left":"25px","right":"25px"}},"color":{"background":"#f8f9fa"}}} -->
-     <div class="wp-block-group has-background" style="background-color:#f8f9fa;border-radius:10px;padding:30px 25px">
+     <div class="wp-block-group has-background" style="background-color:#f8f9fa;border-radius:10px;padding-top:30px;padding-bottom:30px;padding-left:25px;padding-right:25px">
          <!-- wp:paragraph {"align":"center","fontSize":"large","style":{"color":{"text":"var:preset|color|primary"}}} -->
          <p class="has-text-align-center has-large-font-size" style="color:var(--wp--preset--color--primary)">✓</p>
          <!-- /wp:paragraph -->
@@ -183,7 +183,7 @@ async function generateTheme() {
                 html += `<!-- wp:column -->
  <div class="wp-block-column">
      <!-- wp:group {"style":{"border":{"radius":"10px"},"spacing":{"padding":{"top":"30px","bottom":"30px","left":"25px","right":"25px"}},"color":{"background":"#ffffff"}}} -->
-     <div class="wp-block-group has-background" style="background-color:#ffffff;border-radius:10px;padding:30px 25px">
+     <div class="wp-block-group has-background" style="background-color:#ffffff;border-radius:10px;padding-top:30px;padding-bottom:30px;padding-left:25px;padding-right:25px">
          <!-- wp:paragraph {"style":{"typography":{"fontSize":"1.125rem","fontStyle":"italic"}}} -->
          <p style="font-size:1.125rem;font-style:italic">"${item.text}"</p>
          <!-- /wp:paragraph -->

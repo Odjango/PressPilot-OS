@@ -36,8 +36,46 @@ function presspilot_setup_site_identity()
     if (!empty($info['logo'])) {
         presspilot_sideload_logo($info['logo'], $info['name']);
     }
+
+    // 5. Seed Pages (Ensure Navigation works)
+    presspilot_seed_pages();
 }
 add_action('after_switch_theme', 'presspilot_setup_site_identity');
+
+/**
+ * Helper: Seed Default Pages if they don't exist
+ */
+function presspilot_seed_pages()
+{
+    $pages = array('Home', 'About', 'Services', 'Contact');
+    $first_page = null;
+
+    foreach ($pages as $page_title) {
+        $page_check = get_page_by_title($page_title);
+        if (!isset($page_check->ID)) {
+            $new_page_id = wp_insert_post(array(
+                'post_type' => 'page',
+                'post_title' => $page_title,
+                'post_content' => '<!-- wp:paragraph --><p>' . $page_title . ' content placeholder.</p><!-- /wp:paragraph -->',
+                'post_status' => 'publish',
+                'post_author' => 1,
+            ));
+            if ($page_title === 'Home') {
+                $first_page = $new_page_id;
+            }
+        } else {
+            if ($page_title === 'Home') {
+                $first_page = $page_check->ID;
+            }
+        }
+    }
+
+    // Set 'Home' as front page to ensure Front Page template triggers correctly
+    if ($first_page) {
+        update_option('show_on_front', 'page');
+        update_option('page_on_front', $first_page);
+    }
+}
 
 /**
  * Helper: Download and Set Logo
