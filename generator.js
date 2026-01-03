@@ -87,6 +87,16 @@ async function generateTheme() {
             await fs.writeJson(themeJsonPath, themeJson, { spaces: '\t' });
         }
 
+        // C2. GENERATE SITE-INFO.JSON (For Activator)
+        // This allows the theme to set the Blog Title and Logo on activation
+        const siteInfoPath = path.join(buildPath, 'site-info.json');
+        const siteInfo = {
+            name: userData.name || 'Generated Site',
+            tagline: userData.tagline || '',
+            logo: userData.logo || '' // URL to logo
+        };
+        await fs.writeJson(siteInfoPath, siteInfo, { spaces: '\t' });
+
         // D. UPDATE STYLE.CSS (Metadata)
         const styleCssPath = path.join(buildPath, 'style.css');
         if (await fs.pathExists(styleCssPath)) {

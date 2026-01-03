@@ -6,7 +6,7 @@
  */
 ?>
 <!-- wp:cover {"url":"{{hero_image}}","dimRatio":50,"minHeight":600,"align":"full","style":{"spacing":{"padding":{"top":"0","bottom":"0"}}}} -->
-<div class="wp-block-cover alignfull" style="min-height:600px">
+<div class="wp-block-cover alignfull" style="padding-top:0;padding-bottom:0;min-height:600px">
     <span aria-hidden="true" class="wp-block-cover__background has-background-dim"></span>
     <img class="wp-block-cover__image-background" alt="" src="{{hero_image}}" data-object-fit="cover" />
     <div class="wp-block-cover__inner-container">

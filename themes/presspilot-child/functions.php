@@ -27,3 +27,8 @@ function presspilot_register_pattern_categories()
     );
 }
 add_action('init', 'presspilot_register_pattern_categories');
+
+/**
+ * Site Identity Setup (Generates Title/Logo on activation)
+ */
+require_once get_stylesheet_directory() . '/inc/activator.php';
