@@ -1,0 +1,37 @@
+{
+  "business_type": "fitness",
+  "tone": "energetic, motivational, empowering, results-driven",
+  "keywords": "workout, training, fitness goals, health, strength, transformation, community, wellness",
+  "typical_services": [
+    "Personal Training",
+    "Group Classes",
+    "Nutrition Coaching",
+    "Membership Plans"
+  ],
+  "typical_services_count": 4,
+  "content_style": {
+    "headline_style": "motivational, achievement-focused, powerful",
+    "description_style": "inspiring, benefit-driven, community-oriented",
+    "cta_style": "action-driven (Start Today, Join Us, Get Results, Free Trial)"
+  },
+  "color_preferences": {
+    "primary": ["energetic reds", "powerful oranges", "vibrant blues"],
+    "accent": ["electric greens", "bold yellows", "strong blacks"],
+    "avoid": ["pale pastels", "muted tones", "dull colors"]
+  },
+  "imagery_keywords": [
+    "people working out",
+    "fitness equipment",
+    "active lifestyle",
+    "transformation photos",
+    "group exercise",
+    "gym atmosphere"
+  ],
+  "trust_elements": [
+    "trainer certifications",
+    "success stories",
+    "before/after transformations",
+    "client testimonials",
+    "safety protocols"
+  ]
+}

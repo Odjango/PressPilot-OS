@@ -116,3 +116,14 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
+
+/* Testimonial Fix: Ensure visible text on white cards */
+.wp-block-column[style*="background-color:#ffffff"],
+.wp-block-group[style*="background-color:#ffffff"] {
+    color: #333333 !important;
+}
+
+.wp-block-column[style*="background-color:#ffffff"] p,
+.wp-block-group[style*="background-color:#ffffff"] p {
+    color: #333333 !important;
+}
