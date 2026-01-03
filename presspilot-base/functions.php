@@ -1,6 +1,6 @@
 <?php
 /**
- * PressPilot Child Theme Functions
+ * PressPilot Base Theme Functions
  *
  * @package PressPilot
  * @author  WP Modern Architect
@@ -100,3 +100,8 @@ function presspilot_acf_json_load_point($paths)
     return $paths;
 }
 add_filter('acf/settings/load_json', 'presspilot_acf_json_load_point');
+
+// Include Activator for Site Identity/Seeding if present (keeping this from previous logic as it's useful!)
+if (file_exists(get_stylesheet_directory() . '/inc/activator.php')) {
+    require_once get_stylesheet_directory() . '/inc/activator.php';
+}

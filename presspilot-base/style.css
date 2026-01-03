@@ -1,39 +1,12 @@
 /*
-Theme Name: PressPilot Child
-Template: twentytwentyfour
-Description: The intelligent orchestrator theme for PressPilot.
-Version: 1.0.0
+Theme Name: PressPilot Base
+Theme URI: https://presspilot.ai
 Author: PressPilot Factory
+Author URI: https://presspilot.ai
+Description: A high-performance FSE skeleton theme designed for automated generation.
+Version: 2.0.0
+Requires at least: 6.4
+Tested up to: 6.7
+Requires PHP: 7.4
+Text Domain: presspilot
 */
-
-/* Import Parent Styles (if needed, though TT4 loads them automatically usually) */
-@import url("../twentytwentyfour/style.css");
-
-/* =========================================
-   Legacy Logic Port (from v6.3)
-   ========================================= */
-
-/* Hide titles on generated pages to avoid duplication with Hero H1s */
-.entry-title,
-.wp-block-post-title,
-.page-title,
-h1.entry-title,
-header.entry-header h1 {
-    display: none !important;
-}
-
-/* Ensure Full Width Alignment for Heros */
-.alignfull {
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    max-width: 100vw;
-    width: 100vw;
-}
-
-/* Fix Hero centering if blocked by theme rules */
-.wp-block-cover .wp-block-cover__inner-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    z-index: 10;
-}

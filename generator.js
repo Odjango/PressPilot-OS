@@ -1,239 +1,221 @@
 /**
- * PressPilot Theme Generator Engine
- * Usage: node generator.js --data='{"name":"My Theme","primary":"#00D084","secondary":"#FF6900"}'
+ * PressPilot Factory Worker
+ * Location: /root/presspilot/generator.js
  */
 
 const fs = require('fs-extra');
 const path = require('path');
 const archiver = require('archiver');
 
-// 1. CONFIGURATION
-const BASE_THEME_PATH = path.join(__dirname, 'themes/presspilot-child');
-const OUTPUT_DIR = path.join(__dirname, 'output');
-const TEMP_DIR = path.join(__dirname, 'temp');
-
-// 2. PARSE INPUT (From Command Line or n8n)
-// We expect a JSON string passed as an argument
-const args = process.argv.slice(2);
-let userData = {};
-
-try {
-    // Look for the --data flag
-    const dataArg = args.find(arg => arg.startsWith('--data='));
-    if (dataArg) {
-        // Handle n8n escaping potentially
-        let rawData = dataArg.split('=', 2)[1];
-        // If wrapped in single quotes that node didn't strip (unlikely but safe)
-        if (rawData.startsWith("'") && rawData.endsWith("'")) {
-            rawData = rawData.slice(1, -1);
-        }
-        userData = JSON.parse(rawData);
-    } else {
-        throw new Error("No data provided. Use --data='{...}'");
-    }
-} catch (error) {
-    console.error(JSON.stringify({ status: "error", message: "Error parsing input: " + error.message }));
-    process.exit(1);
+// Helper function to process variables in a string
+function processTemplate(content, data) {
+    return content.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+        return data[key] || match;
+    });
 }
 
-async function generateTheme() {
-    const timestamp = Date.now();
-    const themeSlug = (userData.name || 'presspilot-theme').toLowerCase().replace(/[^a-z0-9]/g, '-');
-    const uniqueId = `${themeSlug}-${timestamp}`;
-    const buildPath = path.join(TEMP_DIR, uniqueId);
-    const zipFilename = `${uniqueId}.zip`;
-    const zipPath = path.join(OUTPUT_DIR, zipFilename);
+/**
+ * Generates HTML for Feature Columns
+ * @param {Array} features - Array of feature strings or objects
+ * @returns {string} - HTML string for the columns
+ */
+function generateFeaturesHTML(features) {
+    if (!features || !Array.isArray(features)) return '';
 
-    try {
-        // A. PREPARE DIRECTORIES
-        await fs.ensureDir(OUTPUT_DIR);
-        await fs.ensureDir(TEMP_DIR);
+    let html = '';
+    features.forEach(feature => {
+        const text = typeof feature === 'string' ? feature : feature.text;
+        html += `<!-- wp:column -->
+<div class="wp-block-column">
+    <!-- wp:group {"style":{"border":{"radius":"10px"},"spacing":{"padding":{"top":"30px","bottom":"30px","left":"25px","right":"25px"}},"color":{"background":"#f8f9fa"}}} -->
+    <div class="wp-block-group has-background" style="background-color:#f8f9fa;border-radius:10px;padding-top:30px;padding-bottom:30px;padding-left:25px;padding-right:25px">
+        <!-- wp:paragraph {"align":"center","fontSize":"large","style":{"color":{"text":"var:preset|color|primary"}}} -->
+        <p class="has-text-align-center has-large-font-size" style="color:var(--wp--preset--color--primary)">✓</p>
+        <!-- /wp:paragraph -->
 
-        // B. COPY BASE THEME
-        if (!fs.existsSync(BASE_THEME_PATH)) {
-            throw new Error(`Base theme not found at ${BASE_THEME_PATH}`);
-        }
-        await fs.copy(BASE_THEME_PATH, buildPath);
+        <!-- wp:heading {"textAlign":"center","level":4} -->
+        <h4 class="wp-block-heading has-text-align-center">${text}</h4>
+        <!-- /wp:heading -->
 
-        // C. INJECT DATA INTO THEME.JSON
-        const themeJsonPath = path.join(buildPath, 'theme.json');
-        if (await fs.pathExists(themeJsonPath)) {
-            const themeJson = await fs.readJson(themeJsonPath);
+        <!-- wp:paragraph {"align":"center","fontSize":"small"} -->
+        <p class="has-text-align-center has-small-font-size">Detail about standard feature compliance.</p>
+        <!-- /wp:paragraph -->
+    </div>
+    <!-- /wp:group -->
+</div>
+<!-- /wp:column -->`;
+    });
+    return html;
+}
 
-            // Ensure structure matches
-            if (!themeJson.settings) themeJson.settings = {};
-            if (!themeJson.settings.color) themeJson.settings.color = {};
-            if (!themeJson.settings.color.palette) themeJson.settings.color.palette = [];
+/**
+ * Generates HTML for Testimonials
+ * @param {Array} testimonials
+ * @returns {string}
+ */
+function generateTestimonialsHTML(testimonials) {
+    if (!testimonials || !Array.isArray(testimonials)) {
+        // Default testimonials if none provided
+        testimonials = [
+            { text: "Amazing service! Highly recommended.", author: "Happy Client" },
+            { text: "Professional and reliable.", author: "Satisfied Customer" }
+        ];
+    }
 
-            const palette = themeJson.settings.color.palette;
-
-            // Helper to update/insert color
-            const upsertColor = (slug, name, colorValue) => {
-                if (!colorValue) return;
-                const existing = palette.find(c => c.slug === slug);
-                if (existing) {
-                    existing.color = colorValue;
-                } else {
-                    palette.push({ slug, name, color: colorValue });
-                }
-            };
-
-            // Update specific slots based on user input
-            if (userData.primary) upsertColor('primary', 'Brand Primary', userData.primary);
-            if (userData.secondary) upsertColor('secondary', 'Brand Secondary', userData.secondary);
-            if (userData.surface) upsertColor('base', 'Base Color', userData.surface);
-
-            // Write back
-            await fs.writeJson(themeJsonPath, themeJson, { spaces: '\t' });
-        }
-
-        // C2. GENERATE SITE-INFO.JSON (For Activator)
-        // This allows the theme to set the Blog Title and Logo on activation
-        const siteInfoPath = path.join(buildPath, 'site-info.json');
-        const siteInfo = {
-            name: userData.name || 'Generated Site',
-            tagline: userData.tagline || '',
-            logo: userData.logo || '' // URL to logo
-        };
-        await fs.writeJson(siteInfoPath, siteInfo, { spaces: '\t' });
-
-        // D. UPDATE STYLE.CSS (Metadata)
-        const styleCssPath = path.join(buildPath, 'style.css');
-        if (await fs.pathExists(styleCssPath)) {
-            let styleCss = await fs.readFile(styleCssPath, 'utf8');
-            const themeName = userData.name || 'PressPilot Generated Theme';
-
-            // Simple regex replacement for standard headers
-            if (styleCss.includes('Theme Name:')) {
-                styleCss = styleCss.replace(/^Theme Name:.*$/m, `Theme Name: ${themeName}`);
-            } else {
-                styleCss = `/*\nTheme Name: ${themeName}\n*/\n` + styleCss;
-            }
-
-            await fs.writeFile(styleCssPath, styleCss);
-        }
-
-        // H. PROCESS PATTERNS (The Pure FSE Logic)
-        // We replace placeholders in the PHP pattern files with actual content
-        const patternsDir = path.join(buildPath, 'patterns');
-        if (await fs.pathExists(patternsDir)) {
-            // 1. Process Home Pattern
-            const homePatternPath = path.join(patternsDir, 'home.php');
-            if (await fs.pathExists(homePatternPath)) {
-                let content = await fs.readFile(homePatternPath, 'utf8');
-
-                // Define replacements map
-                const replacements = {
-                    '{{hero_headline}}': userData.hero_headline || 'Welcome to ' + (userData.name || 'Our Site'),
-                    '{{hero_subheadline}}': userData.hero_subheadline || userData.tagline || 'We provide excellent services.',
-                    '{{hero_image}}': userData.hero_image || 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=800&fit=crop',
-                    '{{cta_text}}': userData.cta_text || 'Get Started',
-                    '{{cta_description}}': userData.cta_description || 'Contact us to learn more.',
-                    '{{cta_button_text}}': userData.cta_button_text || 'Contact Us',
-                    // Complex HTML replacements (Features/Testimonials)
-                    '{{features_columns}}': generateFeaturesHTML(userData.benefits, userData.primary || '#111827'),
-                    '{{testimonial_columns}}': generateTestimonialsHTML(userData.testimonials, userData.primary || '#111827')
-                };
-
-                // Execute replacements
-                for (const [key, value] of Object.entries(replacements)) {
-                    // specific string replace, global flag if needed for multiple occurrences
-                    content = content.replace(new RegExp(key, 'g'), value);
-                }
-
-                await fs.writeFile(homePatternPath, content);
-            }
-        }
-
-        function generateFeaturesHTML(benefits, color) {
-            if (!benefits || !Array.isArray(benefits)) return '';
-            let html = '';
-            benefits.forEach((benefit, index) => {
-                html += `<!-- wp:column -->
- <div class="wp-block-column">
-     <!-- wp:group {"style":{"border":{"radius":"10px"},"spacing":{"padding":{"top":"30px","bottom":"30px","left":"25px","right":"25px"}},"color":{"background":"#f8f9fa"}}} -->
-     <div class="wp-block-group has-background" style="background-color:#f8f9fa;border-radius:10px;padding-top:30px;padding-bottom:30px;padding-left:25px;padding-right:25px">
-         <!-- wp:paragraph {"align":"center","fontSize":"large","style":{"color":{"text":"var:preset|color|primary"}}} -->
-         <p class="has-text-align-center has-large-font-size" style="color:var(--wp--preset--color--primary)">✓</p>
-         <!-- /wp:paragraph -->
-         
-         <!-- wp:heading {"level":3,"textAlign":"center","fontSize":"medium"} -->
-         <h3 class="wp-block-heading has-text-align-center has-medium-font-size">Benefit ${index + 1}</h3>
-         <!-- /wp:heading -->
-         
-         <!-- wp:paragraph {"textAlign":"center"} -->
-         <p class="has-text-align-center">${benefit}</p>
-         <!-- /wp:paragraph -->
-     </div>
-     <!-- /wp:group -->
- </div>
- <!-- /wp:column -->`;
-            });
-            return html;
-        }
-
-        function generateTestimonialsHTML(testimonials, color) {
-            const items = testimonials && Array.isArray(testimonials) ? testimonials : [
-                { text: "Excellent service!", name: "Happy Client" },
-                { text: "Highly recommended.", name: "Satisfied Customer" }
-            ];
-
-            let html = '';
-            items.forEach(item => {
-                html += `<!-- wp:column -->
+    let html = '';
+    testimonials.forEach(item => {
+        html += `<!-- wp:column -->
  <div class="wp-block-column">
      <!-- wp:group {"style":{"border":{"radius":"10px"},"spacing":{"padding":{"top":"30px","bottom":"30px","left":"25px","right":"25px"}},"color":{"background":"#ffffff"}}} -->
      <div class="wp-block-group has-background" style="background-color:#ffffff;border-radius:10px;padding-top:30px;padding-bottom:30px;padding-left:25px;padding-right:25px">
          <!-- wp:paragraph {"style":{"typography":{"fontSize":"1.125rem","fontStyle":"italic"}}} -->
          <p style="font-size:1.125rem;font-style:italic">"${item.text}"</p>
          <!-- /wp:paragraph -->
-         
-         <!-- wp:paragraph {"style":{"color":{"text":"var:preset|color|primary"},"typography":{"fontWeight":"600"}}} -->
-         <p style="color:var(--wp--preset--color--primary);font-weight:600">— ${item.name}</p>
+
+         <!-- wp:paragraph {"style":{"typography":{"weight":"700"},"color":{"text":"var:preset|color|primary"}}} -->
+         <p style="color:var(--wp--preset--color--primary);font-weight:700">— ${item.author}</p>
          <!-- /wp:paragraph -->
      </div>
      <!-- /wp:group -->
  </div>
  <!-- /wp:column -->`;
-            });
-            return html;
+    });
+    return html;
+}
+
+
+async function generateTheme() {
+    // 1. SETUP
+    const args = process.argv.slice(2);
+    const dataArg = args.find(arg => arg.startsWith('--data='));
+
+    let userData = {};
+    if (dataArg) {
+        try {
+            userData = JSON.parse(dataArg.split('=')[1]);
+        } catch (e) {
+            console.error("Error parsing JSON data:", e);
+            process.exit(1);
+        }
+    }
+
+    const themeName = userData.name || 'PressPilot Theme';
+    const safeName = themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const timestamp = Date.now();
+    const buildDir = path.join(__dirname, 'output', `${safeName}-${timestamp}`);
+    const zipPath = path.join(__dirname, 'output', `${safeName}-${timestamp}.zip`);
+    const themeDir = path.join(buildDir, safeName); // Structure: output/ID/theme-slug/
+
+    // Use the new BASE THEME path
+    const BASE_THEME_PATH = path.join(__dirname, 'presspilot-base');
+
+    console.log(`Starting generation for: ${themeName}`);
+
+    try {
+        // A. Create Output Directory
+        await fs.ensureDir(themeDir);
+
+        // B. Copy Base Theme
+        if (!fs.existsSync(BASE_THEME_PATH)) {
+            throw new Error(`Base theme not found at ${BASE_THEME_PATH}`);
+        }
+        await fs.copy(BASE_THEME_PATH, themeDir);
+        console.log('Base theme copied.');
+
+        // C. Inject Data into theme.json (Colors)
+        const themeJsonPath = path.join(themeDir, 'theme.json');
+        if (await fs.pathExists(themeJsonPath)) {
+            const themeJson = await fs.readJson(themeJsonPath);
+
+            if (userData.primary) {
+                const palette = themeJson.settings.color.palette;
+                // Upsert Primary
+                let primary = palette.find(c => c.slug === 'primary');
+                if (primary) primary.color = userData.primary;
+                else palette.push({ slug: 'primary', name: 'Primary', color: userData.primary });
+
+                // Upsert Brand Primary
+                let brand = palette.find(c => c.slug === 'brand-primary');
+                if (brand) brand.color = userData.primary;
+                else palette.push({ slug: 'brand-primary', name: 'Brand Primary', color: userData.primary });
+            }
+
+            if (userData.secondary) {
+                const palette = themeJson.settings.color.palette;
+                // Upsert Secondary
+                let secondary = palette.find(c => c.slug === 'secondary');
+                if (secondary) secondary.color = userData.secondary;
+                else palette.push({ slug: 'secondary', name: 'Secondary', color: userData.secondary });
+
+                // Upsert Brand Secondary
+                let brand = palette.find(c => c.slug === 'brand-secondary');
+                if (brand) brand.color = userData.secondary;
+                else palette.push({ slug: 'brand-secondary', name: 'Brand Secondary', color: userData.secondary });
+            }
+
+            await fs.writeJson(themeJsonPath, themeJson, { spaces: 4 });
+            console.log('theme.json updated.');
         }
 
-        // E. ZIP THE FOLDER
-        await zipDirectory(buildPath, zipPath);
+        // D. Create site-info.json for Actvator
+        const siteInfo = {
+            name: themeName,
+            description: userData.tagline || 'Just another PressPilot site',
+            logo: userData.logo || ''
+        };
+        await fs.writeJson(path.join(themeDir, 'site-info.json'), siteInfo, { spaces: 4 });
+        console.log('site-info.json created.');
 
-        // F. CLEANUP
-        await fs.remove(buildPath);
+        // E. Inject Data into style.css (Theme Name)
+        const styleCssPath = path.join(themeDir, 'style.css');
+        if (await fs.pathExists(styleCssPath)) {
+            let styleContent = await fs.readFile(styleCssPath, 'utf8');
+            styleContent = styleContent.replace(/Theme Name:.*$/m, `Theme Name: ${themeName}`);
+            await fs.writeFile(styleCssPath, styleContent);
+            console.log('style.css updated.');
+        }
 
-        // G. OUTPUT RESULT (JSON for n8n)
-        console.log(JSON.stringify({
-            status: "success",
-            themeName: userData.name,
-            downloadPath: zipPath,
-            filename: zipFilename
-        }));
+        // F. PERSONALIZATION: patterns/hero.php
+        const heroPath = path.join(themeDir, 'patterns', 'hero.php');
+        if (await fs.pathExists(heroPath) && userData.hero_headline) {
+            let heroContent = await fs.readFile(heroPath, 'utf8');
+            heroContent = heroContent.replace('Launch Your Vision with PressPilot', userData.hero_headline);
+            // Also replace subheadline if present
+            if (userData.hero_subheadline) {
+                heroContent = heroContent.replace('A scalable, modern foundation for your next big idea. Generated in seconds, built to last.', userData.hero_subheadline);
+            }
+            await fs.writeFile(heroPath, heroContent);
+            console.log('hero.php pattern updated.');
+        }
+
+        // G. Create ZIP
+        const output = fs.createWriteStream(zipPath);
+        const archive = archiver('zip', { zlib: { level: 9 } });
+
+        output.on('close', function () {
+            console.log(JSON.stringify({
+                status: "success",
+                themeName: themeName,
+                downloadPath: zipPath,
+                filename: `${safeName}-${timestamp}.zip`
+            }));
+        });
+
+        archive.on('error', function (err) {
+            throw err;
+        });
+
+        archive.pipe(output);
+        // Zip the content instructions
+        // We want the zip to contain a folder named [theme-slug], so we use archive.directory with that name
+        archive.directory(themeDir, safeName);
+        await archive.finalize();
 
     } catch (err) {
-        console.error(JSON.stringify({ status: "error", message: err.message }));
+        console.error('Error:', err);
+        console.log(JSON.stringify({ status: "error", message: err.message }));
         process.exit(1);
     }
 }
 
-// HELPER: Zip Logic
-function zipDirectory(source, out) {
-    const archive = archiver('zip', { zlib: { level: 9 } });
-    const stream = fs.createWriteStream(out);
-
-    return new Promise((resolve, reject) => {
-        archive
-            .directory(source, false) // false = zip contents, not the folder itself
-            .on('error', err => reject(err))
-            .pipe(stream);
-
-        stream.on('close', () => resolve());
-        archive.finalize();
-    });
-}
-
-// RUN
 generateTheme();
