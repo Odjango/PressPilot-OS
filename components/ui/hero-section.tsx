@@ -41,7 +41,6 @@ export const HeroSection = () => {
     }, []);
 
     return (
-    return (
         <div ref={containerRef} className="pt-32 pb-20 border-b border-black/10 overflow-hidden relative">
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div className="max-w-2xl relative z-10">
