@@ -1,0 +1,89 @@
+{
+    "name": "spectra-one",
+    "version": "1.0.3",
+    "description": "Spectra One is a beautiful and modern WordPress theme built with the Full Site Editing (FSE) feature. It's a versatile theme that can be used for blogs, portfolios, businesses, and more. Spectra One comes with a sleek and professional design that will make your website stand out from the crowd",
+    "author": "Brainstorm Force",
+    "license": "GPL-2.0-or-later",
+    "keywords": [
+        "spectra-one",
+        "wordpress-theme",
+        "full-site-editing"
+    ],
+    "homepage": "https://github.com/brainstormforce/spectra-one#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/brainstormforce/spectra-one.git"
+    },
+    "bugs": {
+        "url": "https://github.com/brainstormforce/spectra-one/issues"
+    },
+    "engines": {
+        "npm": ">=9.5.0 <10.0.0",
+        "node": ">=18.16.0 <19.0.0"
+    },
+    "volta": {
+        "node": "18.16.0"
+    },
+    "dependencies": {
+        "react": "^18.2.0"
+    },
+    "devDependencies": {
+        "@lodder/grunt-postcss": "^3.1.1",
+        "@wordpress/api-fetch": "^6.31.0",
+        "@wordpress/block-editor": "^12.0.0",
+        "@wordpress/components": "^23.9.0",
+        "@wordpress/compose": "^6.9.0",
+        "@wordpress/data": "^9.2.0",
+        "@wordpress/edit-post": "^7.9.0",
+        "@wordpress/edit-site": "^5.11.0",
+        "@wordpress/env": "^4.9.0",
+        "@wordpress/hooks": "^3.32.0",
+        "@wordpress/i18n": "^4.32.0",
+        "@wordpress/plugins": "^6.0.0",
+        "@wordpress/scripts": "^26.3.0",
+        "autoprefixer": "^10.4.13",
+        "cross-env": "^7.0.3",
+        "grunt": "^1.6.1",
+        "grunt-bumpup": "^0.6.3",
+        "grunt-contrib-clean": "^2.0.1",
+        "grunt-contrib-compress": "^2.0.0",
+        "grunt-contrib-concat": "^2.1.0",
+        "grunt-contrib-copy": "^1.0.0",
+        "grunt-contrib-cssmin": "^4.0.0",
+        "grunt-contrib-sass": "^2.0.0",
+        "grunt-contrib-uglify": "^5.2.2",
+        "grunt-contrib-watch": "^1.1.0",
+        "grunt-rtlcss": "^2.0.2",
+        "grunt-sass": "^3.0.2",
+        "grunt-text-replace": "^0.4.0",
+        "sass": "^1.58.3",
+        "wp-prettier": "^2.8.5"
+    },
+    "scripts": {
+        "start": "wp-scripts start",
+        "build": "wp-scripts build --output-path=assets/js",
+        "minify": "grunt minify",
+        "release": "grunt release",
+        "pot": "wp i18n make-pot ./ ./languages/spectra-one.pot",
+        "pretty": "prettier --check .",
+        "pretty:fix": "prettier --write .",
+        "lint:js": "wp-scripts lint-js",
+        "lint:js:fix": "npm run lint:js -- --fix",
+        "lint:css": "wp-scripts lint-style --allow-empty-input",
+        "lint:css:fix": "npm run lint:css -- --fix",
+        "lint:md:docs": "wp-scripts lint-md-docs",
+        "lint:md:js": "wp-scripts lint-md-js",
+        "lint:pkg-json": "wp-scripts lint-pkg-json",
+        "env:activate-spectra-one": "wp-env run cli wp theme activate spectra-one",
+        "env:rewrite-flush": "wp-env run cli wp rewrite flush",
+        "env:clean": "wp-env clean all",
+        "env:start": "wp-env start && npm run env:activate-spectra-one && npm run env:rewrite-flush",
+        "env:stop": "wp-env stop",
+        "env:destroy": "wp-env destroy",
+        "env": "wp-env",
+        "packages-update": "wp-scripts packages-update",
+        "check-engines": "wp-scripts check-engines",
+        "check-licenses": "wp-scripts check-licenses",
+        "format": "wp-scripts format"
+    }
+}

@@ -1,0 +1,147 @@
+$text-color: #1f2937;
+$text-color-alt: #fff;
+$description : #4b5563;
+$primary-color: #4f46e5;
+$disable-color: #a7aaad;
+$mobile: 782px;
+$tablet: 1199px;
+
+.swt-welcome-notice {
+	position: relative;
+	padding-top: 48px;
+
+	.swt-row {
+		display: flex;
+		flex-wrap: wrap;
+
+		.swt-col {
+			width: 50%;
+
+			&.swt-col-right {
+				align-self: flex-end;
+			}
+
+			.notice-content {
+				max-width: 630px;
+				padding-left: 64px;
+				padding-bottom: 30px;
+
+				@media screen and (max-width: $tablet) {
+					max-width: 100%;
+					padding-right: 2em;
+					padding-left: 2em;
+				}
+
+				@media screen and (max-width: $mobile) {
+					padding: 0;
+				}
+			}
+
+			.sub-notice-title {
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 22px;
+				color: $primary-color;
+				margin-bottom: 10px;
+				margin-top: 0;
+				padding: 0;
+			}
+
+			.notice-title {
+				font-weight: 500;
+				font-size: 36px;
+				line-height: 47px;
+				letter-spacing: -0.5px;
+				color: $text-color;
+				margin-top: 0;
+				margin-bottom: 10px;
+
+				@media screen and (max-width: $mobile) {
+					font-size: 25px;
+					line-height: 30px;
+				}
+			}
+
+			.description {
+				color: $description;
+				margin-bottom: 27px;
+				font-size: 18px;
+				line-height: 29px;
+				font-weight: 400;
+
+				@media screen and (max-width: $mobile) {
+					margin-bottom: 25px;
+					font-size: 16px;
+				}
+			}
+
+			.notice-actions {
+
+				button,
+				a {
+					font-weight: 500;
+					font-size: 16px;
+					line-height: 24px;
+					padding: 10px 16px;
+					border-radius: 6px;
+					margin-top: 5px;
+					margin-bottom: 5px;
+					text-align: center;
+
+					@media screen and (max-width: $mobile) {
+						width: 100%;
+					}
+				}
+
+				button {
+					background: $primary-color;
+					color: $text-color-alt;
+					margin-right: 12px;
+				}
+
+				a {
+					color: $primary-color;
+					border-color: $primary-color;
+					background-color: $text-color-alt;
+
+				}
+			}
+
+			.image-container {
+				padding-right: 2em;
+				padding-left: 2em;
+				margin-bottom: -5px;
+
+				img {
+					width: 100%;
+					height: auto;
+				}
+
+				@media screen and (max-width: $tablet) {
+					display: none;
+				}
+			}
+
+
+			@media screen and (max-width: $tablet) {
+				width: 100%;
+			}
+		}
+
+		@media screen and (max-width: $mobile) {
+			padding: 1em;
+		}
+	}
+
+	@media screen and (max-width: $mobile) {
+		padding-top: 30px;
+		padding-bottom: 30px;
+	}
+}
+
+#swt-install-spectra {
+
+	&.updating-message::before {
+		color: $disable-color;
+	}
+}

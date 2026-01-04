@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 PressPilot<span className="text-neutral-400">OS</span>
               </Link>
               <nav className="hidden md:flex items-center gap-6 text-sm font-mono text-neutral-500">
-                <Link href="#" className="hover:text-black transition-colors">Pricing</Link>
+                <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
                 <Link href="#" className="hover:text-black transition-colors">Docs</Link>
                 <HeaderAuthStatus />
               </nav>
@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </header>
           <main className="flex-1">{children}</main>
           <footer className="py-8 text-center text-xs font-mono text-neutral-400 border-t border-black/5 bg-cream">
-            <p>PRESSPILOT OS v2.0 (ASSEMBLY)</p>
+            <p>PRESSPILOT OS v2.0</p>
           </footer>
         </div>
       </body>

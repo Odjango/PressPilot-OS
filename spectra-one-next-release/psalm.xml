@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<psalm ensureArrayStringOffsetsExist="true" reportMixedIssues="false" errorLevel="1" >
+    <projectFiles>
+        <directory name="./"/>
+        <ignoreFiles>
+            <directory name="vendor/"/>
+            <directory name="node_modules/"/>
+        </ignoreFiles>
+    </projectFiles>
+    <stubs>
+        <file name="vendor/php-stubs/wordpress-stubs/wordpress-stubs.php"/>
+        <file name="psalm/constants.php"/>
+        <file name="psalm/spectra-one-stubs.php"/>
+    </stubs>
+    <globals>
+        <var name="wp_version" type="string"/>
+    </globals>
+	<issueHandlers>
+        <MissingDocblockType>
+            <errorLevel type="suppress">
+                <directory name="psalm/"/>
+            </errorLevel>
+        </MissingDocblockType>
+        <InvalidDocblock>
+            <errorLevel type="suppress">
+                <directory name="psalm/"/>
+            </errorLevel>
+        </InvalidDocblock>
+        <MissingReturnType>
+            <errorLevel type="suppress">
+                <directory name="."/>
+            </errorLevel>
+        </MissingReturnType>
+        <InvalidReturnType>
+            <errorLevel type="suppress">
+                <directory name="."/>
+            </errorLevel>
+        </InvalidReturnType>
+        <UnresolvableInclude>
+            <errorLevel type="suppress">
+                <directory name="."/>
+            </errorLevel>
+        </UnresolvableInclude>
+        <MissingPropertyType>
+            <errorLevel type="suppress">
+                <directory name="."/>
+            </errorLevel>
+        </MissingPropertyType>
+        <PossiblyFalseArgument>
+            <errorLevel type="suppress">
+                <directory name="."/>
+            </errorLevel>
+        </PossiblyFalseArgument>
+    </issueHandlers>
+</psalm>

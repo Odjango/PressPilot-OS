@@ -1,0 +1,7 @@
+.cache
+build
+assets
+node_modules
+vendor
+*.min.js
+tests

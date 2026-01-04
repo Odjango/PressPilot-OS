@@ -1,0 +1,45 @@
+$mobile: 781px;
+$tablet: 1199px;
+
+/*--------------------------------------------------------------
+# Spectra plugin container compatibility
+--------------------------------------------------------------*/
+
+.uagb-is-root-container.alignfull {
+	margin-right: 0;
+	margin-left: 0;
+}
+
+.uagb-is-root-container.alignwide {
+	max-width: var(--wp--style--global--wide-size);
+	width: 100%;
+}
+
+.has-global-padding > .uagb-is-root-container.alignfull {
+	margin-right: calc(var(--wp--style--root--padding-right) * -1);
+	margin-left: calc(var(--wp--style--root--padding-left) * -1);
+}
+
+/*--------------------------------------------------------------
+# Announcement bar compatibility
+--------------------------------------------------------------*/
+
+
+@media screen and (max-width: $mobile) {
+
+	.swt-text-align-center {
+		text-align: center;
+	}
+
+	.swt-responsive-position-left {
+		justify-content: left !important;
+	}
+
+	.swt-responsive-position-center {
+		justify-content: center !important;
+	}
+
+	.swt-responsive-position-right {
+		justify-content: right !important;
+	}
+}
