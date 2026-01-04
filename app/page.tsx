@@ -85,35 +85,39 @@ export default function StudioPage() {
 
       <BlueprintGrid>
         {/* Render Previews if available */}
-        {sitePreviews ? (
-          <div className="pt-32 pb-20">
-            <button onClick={() => setSitePreviews(null)} className="mb-8 text-sm font-mono underline hover:text-black/60">← Back to Generator</button>
-            <SitePreviewDeck previews={sitePreviews} onReset={() => { setSitePreviews(null); setSelectedPreview(null); }} onSelect={(url) => { setSelectedPreview(url); document.getElementById('bento-grid')?.scrollIntoView({ behavior: 'smooth' }); }} />
+        <>
+          <HeroSection />
+          <div id="bento-grid">
+            <BentoFeatures previewUrl={selectedPreview} />
           </div>
-        ) : (
-          <>
-            <HeroSection />
-            <div id="bento-grid">
-              <BentoFeatures previewUrl={selectedPreview} />
-            </div>
 
-            {/* Floating Action Button for Form */}
-            {!showForm && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="fixed bottom-8 right-8 z-40"
+          {/* Show Preview Deck *below* Bento Grid if results exist */}
+          {sitePreviews && (
+            <div className="border-t border-black/10 bg-neutral-50 px-4 py-8">
+              <SitePreviewDeck
+                previews={sitePreviews}
+                onReset={() => { setSitePreviews(null); setSelectedPreview(null); }}
+                onSelect={(url) => { setSelectedPreview(url); document.getElementById('bento-grid')?.scrollIntoView({ behavior: 'smooth' }); }}
+              />
+            </div>
+          )}
+
+          {/* Floating Action Button for Form */}
+          {!showForm && !sitePreviews && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="fixed bottom-8 right-8 z-40"
+            >
+              <button
+                onClick={() => setShowForm(true)}
+                className="bg-black text-cream px-6 py-4 font-mono uppercase tracking-wider shadow-xl hover:bg-neutral-800 transition-colors"
               >
-                <button
-                  onClick={() => setShowForm(true)}
-                  className="bg-black text-cream px-6 py-4 font-mono uppercase tracking-wider shadow-xl hover:bg-neutral-800 transition-colors"
-                >
-                  Initialize Builder
-                </button>
-              </motion.div>
-            )}
-          </>
-        )}
+                Initialize Builder
+              </button>
+            </motion.div>
+          )}
+        </>
       </BlueprintGrid>
 
       {/* Form Overlay (Slide Up) */}
@@ -162,7 +166,7 @@ export default function StudioPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="font-mono text-xs uppercase tracking-wider text-neutral-500">Sector</label>
-                    <CustomSelect value={formData.businessType} onChange={e => setFormData({ ...formData, businessType: e.target.value })}>
+                    <CustomSelect className="text-black bg-white border-black/20 focus:border-black" value={formData.businessType} onChange={e => setFormData({ ...formData, businessType: e.target.value })}>
                       <option value="Restaurant / Food Service">Restaurant / Food Service</option>
                       <option value="Real Estate / Architecture">Real Estate / Architecture</option>
                       <option value="Tech / SaaS">Tech / SaaS</option>
@@ -174,7 +178,7 @@ export default function StudioPage() {
                   </div>
                   <div className="space-y-2">
                     <label className="font-mono text-xs uppercase tracking-wider text-neutral-500">Language</label>
-                    <CustomSelect value={formData.contentLanguage} onChange={e => setFormData({ ...formData, contentLanguage: e.target.value })}>
+                    <CustomSelect className="text-black bg-white border-black/20 focus:border-black" value={formData.contentLanguage} onChange={e => setFormData({ ...formData, contentLanguage: e.target.value })}>
                       <option value="English">English</option>
                       <option value="Spanish">Spanish</option>
                       <option value="French">French</option>
