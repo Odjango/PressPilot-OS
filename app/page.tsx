@@ -31,6 +31,7 @@ export default function StudioPage() {
     logo_base64: '',
   });
   const [sitePreviews, setSitePreviews] = useState<SitePreviews | null>(null);
+  const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
 
   // ... (Logo Handling Logic - Same as before)
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,12 +88,14 @@ export default function StudioPage() {
         {sitePreviews ? (
           <div className="pt-32 pb-20">
             <button onClick={() => setSitePreviews(null)} className="mb-8 text-sm font-mono underline hover:text-black/60">← Back to Generator</button>
-            <SitePreviewDeck previews={sitePreviews} onReset={() => setSitePreviews(null)} />
+            <SitePreviewDeck previews={sitePreviews} onReset={() => { setSitePreviews(null); setSelectedPreview(null); }} onSelect={(url) => { setSelectedPreview(url); document.getElementById('bento-grid')?.scrollIntoView({ behavior: 'smooth' }); }} />
           </div>
         ) : (
           <>
             <HeroSection />
-            <BentoFeatures />
+            <div id="bento-grid">
+              <BentoFeatures previewUrl={selectedPreview} />
+            </div>
 
             {/* Floating Action Button for Form */}
             {!showForm && (

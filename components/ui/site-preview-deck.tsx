@@ -14,9 +14,10 @@ interface SitePreviews {
 interface SitePreviewDeckProps {
     previews: SitePreviews;
     onReset: () => void;
+    onSelect: (url: string) => void;
 }
 
-export function SitePreviewDeck({ previews, onReset }: SitePreviewDeckProps) {
+export function SitePreviewDeck({ previews, onReset, onSelect }: SitePreviewDeckProps) {
     const cards = [
         {
             id: 'original',
@@ -50,15 +51,13 @@ export function SitePreviewDeck({ previews, onReset }: SitePreviewDeckProps) {
         },
     ];
 
-    console.log('Rendering Deck with previews:', previews);
-
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 select-none">
             <div className="text-center space-y-2">
                 <motion.h2
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-2xl font-bold text-white"
+                    className="text-2xl font-bold text-black"
                 >
                     Blueprints Generated
                 </motion.h2>
@@ -66,58 +65,54 @@ export function SitePreviewDeck({ previews, onReset }: SitePreviewDeckProps) {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="text-zinc-400 text-sm"
+                    className="text-neutral-500 text-sm"
                 >
-                    Select a variation to launch the Playground session.
+                    Select a variation to preview in the Live Output.
                 </motion.p>
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto px-6">
                 {cards.map((card, index) => (
                     <motion.div
                         key={card.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 + index * 0.1 }}
                     >
-                        <a
-                            href={card.url || '#'}
-                            target={card.url ? "_blank" : undefined}
-                            rel="noopener noreferrer"
+                        <div
+                            onClick={() => card.url && onSelect(card.url)}
                             className={cn(
-                                "group relative flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-white/5 transition-all duration-300",
-                                card.url ? "hover:bg-white/10 cursor-pointer" : "opacity-50 cursor-not-allowed",
+                                "group relative flex flex-col items-start gap-4 p-6 rounded-none border border-black/10 bg-white hover:border-black transition-all duration-300 h-full",
+                                card.url ? "cursor-pointer" : "opacity-50 cursor-not-allowed",
                                 card.borderColor
                             )}
-                            onClick={(e) => !card.url && e.preventDefault()}
                         >
-                            {/* Background Gradient */}
-                            {card.url && (
-                                <div className={cn("absolute inset-0 rounded-xl bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500", card.color)} />
-                            )}
-
                             {/* Icon */}
-                            <div className="relative z-10 p-3 rounded-lg bg-black/40 border border-white/10">
-                                <card.icon className={cn("w-6 h-6", card.iconColor)} />
+                            <div className="flex items-center justify-between w-full">
+                                <div className="p-2 bg-neutral-100">
+                                    <card.icon className={cn("w-5 h-5 text-black")} />
+                                </div>
+                                {card.url && (
+                                    <a
+                                        href={card.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="text-xs font-mono underline text-neutral-400 hover:text-black"
+                                    >
+                                        New Tab ↗
+                                    </a>
+                                )}
                             </div>
 
                             {/* Content */}
-                            <div className="relative z-10 flex-1">
-                                <h3 className="text-white font-medium flex items-center gap-2">
+                            <div className="mt-4">
+                                <h3 className="text-black font-bold font-mono text-sm uppercase tracking-wider mb-2">
                                     {card.title}
-                                    {card.url && <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" />}
                                 </h3>
-                                <p className="text-xs text-zinc-400">{card.description}</p>
-                                {!card.url && <p className="text-[10px] text-red-400 mt-1">URL Missing</p>}
+                                <p className="text-xs text-neutral-500 leading-relaxed min-h-[40px]">{card.description}</p>
                             </div>
-
-                            {/* Action Arrow */}
-                            {card.url && (
-                                <div className="relative z-10 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                                    <ArrowRight className="w-5 h-5 text-white/70" />
-                                </div>
-                            )}
-                        </a>
+                        </div>
                     </motion.div>
                 ))}
             </div>
@@ -126,13 +121,13 @@ export function SitePreviewDeck({ previews, onReset }: SitePreviewDeckProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
-                className="pt-4 flex justify-center"
+                className="pt-8 flex justify-center pb-20"
             >
                 <button
                     onClick={onReset}
-                    className="text-xs text-zinc-500 hover:text-white transition-colors underline decoration-zinc-700 underline-offset-4"
+                    className="text-sm font-mono text-neutral-500 hover:text-black transition-colors underline underline-offset-4"
                 >
-                    Start New Generation
+                    ← Start New Generation
                 </button>
             </motion.div>
         </div>

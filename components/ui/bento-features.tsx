@@ -14,7 +14,7 @@ const Card = ({ title, children, className = '' }: { title: string, children: Re
     </div>
 );
 
-export const BentoFeatures = () => {
+export const BentoFeatures = ({ previewUrl }: { previewUrl?: string | null }) => {
     const targetRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: targetRef,
