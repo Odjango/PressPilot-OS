@@ -40,6 +40,7 @@ export interface GeneratorData {
     hero_headline?: string;
     hero_subheadline?: string;
     logo?: string; // Path to local logo file
+    images?: string[]; // Array of local image paths from CLI
     pages?: PageData[];
 }
 
