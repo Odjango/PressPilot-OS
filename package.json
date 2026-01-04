@@ -9,7 +9,7 @@
     "lint": "next lint",
     "demo-kits": "npm run build && tsx scripts/demo-kits.ts",
     "verify-supabase": "tsx scripts/verify-supabase.ts",
-    "build-wp-theme": "tsx scripts/buildWpTheme.ts",
+    "build-wp-theme": "tsx src/generator/index.ts",
     "theme:build": "npx tsx scripts/validateGenerator.ts golden-spec && npx tsx scripts/buildWpTheme.ts",
     "validate-theme": "node validator/presspilot-validator.js",
     "test:themes": "node scripts/generate-and-validate-test-themes.js"
@@ -28,6 +28,7 @@
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.26",
     "fs-extra": "^11.3.3",
+    "gsap": "^3.14.2",
     "lucide-react": "^0.562.0",
     "next": "14.2.5",
     "openai": "^4.104.0",

@@ -7,185 +7,296 @@ const fs = require('fs-extra');
 const path = require('path');
 const archiver = require('archiver');
 
-// Helper function to process variables in a string
-function processTemplate(content, data) {
-    return content.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-        return data[key] || match;
-    });
-}
-
-/**
- * Generates HTML for Feature Columns
- * @param {Array} features - Array of feature strings or objects
- * @returns {string} - HTML string for the columns
- */
-function generateFeaturesHTML(features) {
-    if (!features || !Array.isArray(features)) return '';
-
-    let html = '';
-    features.forEach(feature => {
-        const text = typeof feature === 'string' ? feature : feature.text;
-        html += `<!-- wp:column -->
-<div class="wp-block-column">
-    <!-- wp:group {"style":{"border":{"radius":"10px"},"spacing":{"padding":{"top":"30px","bottom":"30px","left":"25px","right":"25px"}},"color":{"background":"#f8f9fa"}}} -->
-    <div class="wp-block-group has-background" style="background-color:#f8f9fa;border-radius:10px;padding-top:30px;padding-bottom:30px;padding-left:25px;padding-right:25px">
-        <!-- wp:paragraph {"align":"center","fontSize":"large","style":{"color":{"text":"var:preset|color|primary"}}} -->
-        <p class="has-text-align-center has-large-font-size" style="color:var(--wp--preset--color--primary)">✓</p>
-        <!-- /wp:paragraph -->
-
-        <!-- wp:heading {"textAlign":"center","level":4} -->
-        <h4 class="wp-block-heading has-text-align-center">${text}</h4>
-        <!-- /wp:heading -->
-
-        <!-- wp:paragraph {"align":"center","fontSize":"small"} -->
-        <p class="has-text-align-center has-small-font-size">Detail about standard feature compliance.</p>
-        <!-- /wp:paragraph -->
-    </div>
-    <!-- /wp:group -->
-</div>
-<!-- /wp:column -->`;
-    });
-    return html;
-}
-
-/**
- * Generates HTML for Testimonials
- * @param {Array} testimonials
- * @returns {string}
- */
-function generateTestimonialsHTML(testimonials) {
-    if (!testimonials || !Array.isArray(testimonials)) {
-        // Default testimonials if none provided
-        testimonials = [
-            { text: "Amazing service! Highly recommended.", author: "Happy Client" },
-            { text: "Professional and reliable.", author: "Satisfied Customer" }
-        ];
+// --- THEME PERSONALITIES ---
+const THEME_PERSONALITIES = {
+    'ollie': {
+        colors: {
+            brand: 'primary',
+            brand_alt: 'main',
+            accent: 'secondary'
+        },
+        patterns: {
+            hero: 'patterns/hero-light.php',
+            hero_search_headline: 'Build your site with clicks, not code.',
+            hero_search_sub: 'Easily create beautiful, fully-customizable websites with the new WordPress Site Editor and the Ollie block theme. No coding skills required.'
+        },
+        home_template: 'templates/home.html'
+    },
+    'frost': {
+        colors: {
+            brand: 'primary',
+            brand_alt: 'contrast',
+            accent: 'secondary'
+        },
+        patterns: {
+            hero: 'patterns/hero-one-column.php',
+            hero_search_headline: 'Welcome to Frost',
+            // Note: Frost splits headline/subheadline into separate blocks or just text.
+            // Our regex replacement in 'pattern' (below) needs to be robust. 
+            // For now, we use the known string.
+            hero_search_sub: 'With its clean, minimal design and powerful feature set, Frost enables agencies to build stylish and sophisticated WordPress websites.'
+        },
+        home_template: 'templates/home.html' // Frost uses home.html
+    },
+    'twentytwentyfour': {
+        colors: {
+            brand: 'accent', // TT4 generally has an 'accent' or we use 'base'/'contrast' logic
+            brand_alt: 'contrast',
+            accent: 'base'
+        },
+        patterns: {
+            hero: 'patterns/hero.php', // Standard TT4 hero
+            hero_search_headline: 'Et magna binilla', // We might need to sniff this or just rely on Heavy Mode injection
+            hero_search_sub: 'Lorem ipsum dolor sit amet'
+        },
+        home_template: 'templates/home.html'
     }
-
-    let html = '';
-    testimonials.forEach(item => {
-        html += `<!-- wp:column -->
- <div class="wp-block-column">
-     <!-- wp:group {"style":{"border":{"radius":"10px"},"spacing":{"padding":{"top":"30px","bottom":"30px","left":"25px","right":"25px"}},"color":{"background":"#ffffff"}}} -->
-     <div class="wp-block-group has-background" style="background-color:#ffffff;border-radius:10px;padding-top:30px;padding-bottom:30px;padding-left:25px;padding-right:25px">
-         <!-- wp:paragraph {"style":{"typography":{"fontSize":"1.125rem","fontStyle":"italic"}}} -->
-         <p style="font-size:1.125rem;font-style:italic">"${item.text}"</p>
-         <!-- /wp:paragraph -->
-
-         <!-- wp:paragraph {"style":{"typography":{"weight":"700"},"color":{"text":"var:preset|color|primary"}}} -->
-         <p style="color:var(--wp--preset--color--primary);font-weight:700">— ${item.author}</p>
-         <!-- /wp:paragraph -->
-     </div>
-     <!-- /wp:group -->
- </div>
- <!-- /wp:column -->`;
-    });
-    return html;
-}
-
+};
 
 async function generateTheme() {
     // 1. SETUP
     const args = process.argv.slice(2);
+
+    // Parse Arguments
     const dataArg = args.find(arg => arg.startsWith('--data='));
+    const baseArg = args.find(arg => arg.startsWith('--base='));
+    const modeArg = args.find(arg => arg.startsWith('--mode='));
+
+    let baseName = 'ollie';
+    if (baseArg) baseName = baseArg.split('=')[1].toLowerCase();
+
+    let mode = 'standard';
+    if (modeArg) mode = modeArg.split('=')[1].toLowerCase();
+
+    // Validation
+    const personality = THEME_PERSONALITIES[baseName];
+    if (!personality) {
+        console.error(`Error: Unknown base theme '${baseName}'.`);
+        process.exit(1);
+    }
+
+    console.log(`Using Base Chassis: ${baseName.toUpperCase()}`);
+    console.log(`Mode: ${mode.toUpperCase()}`);
 
     let userData = {};
     if (dataArg) {
         try {
-            userData = JSON.parse(dataArg.split('=')[1]);
+            const jsonString = dataArg.substring(7);
+            userData = JSON.parse(jsonString);
         } catch (e) {
             console.error("Error parsing JSON data:", e);
             process.exit(1);
         }
     }
 
-    const themeName = userData.name || 'PressPilot Theme';
+    const themeName = userData.name || `PressPilot ${baseName} ${mode}`;
     const safeName = themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
     const timestamp = Date.now();
     const buildDir = path.join(__dirname, 'output', `${safeName}-${timestamp}`);
     const zipPath = path.join(__dirname, 'output', `${safeName}-${timestamp}.zip`);
-    const themeDir = path.join(buildDir, safeName); // Structure: output/ID/theme-slug/
-
-    // Use the new BASE THEME path
-    const BASE_THEME_PATH = path.join(__dirname, 'presspilot-base');
+    const themeDir = path.join(buildDir, safeName);
+    const BASE_THEME_PATH = path.join(__dirname, 'bases', baseName);
 
     console.log(`Starting generation for: ${themeName}`);
 
     try {
-        // A. Create Output Directory
         await fs.ensureDir(themeDir);
 
-        // B. Copy Base Theme
         if (!fs.existsSync(BASE_THEME_PATH)) {
+            // Fallback for Spectra if not present, to avoid crashing if user hasn't downloaded it
+            if (baseName === 'spectra') {
+                console.error(`Spectra base not found at ${BASE_THEME_PATH}. Please ensure it is installed.`);
+                process.exit(1);
+            }
             throw new Error(`Base theme not found at ${BASE_THEME_PATH}`);
         }
         await fs.copy(BASE_THEME_PATH, themeDir);
-        console.log('Base theme copied.');
 
-        // C. Inject Data into theme.json (Colors)
+        // --- DATA INJECTION ---
+        // 1. theme.json Colors
         const themeJsonPath = path.join(themeDir, 'theme.json');
         if (await fs.pathExists(themeJsonPath)) {
             const themeJson = await fs.readJson(themeJsonPath);
+            const palette = themeJson.settings.color.palette;
 
             if (userData.primary) {
-                const palette = themeJson.settings.color.palette;
-                // Upsert Primary
-                let primary = palette.find(c => c.slug === 'primary');
-                if (primary) primary.color = userData.primary;
-                else palette.push({ slug: 'primary', name: 'Primary', color: userData.primary });
+                const brandSlug = personality.colors.brand;
+                let brandColor = palette.find(c => c.slug === brandSlug);
+                if (brandColor) brandColor.color = userData.primary;
 
-                // Upsert Brand Primary
-                let brand = palette.find(c => c.slug === 'brand-primary');
-                if (brand) brand.color = userData.primary;
-                else palette.push({ slug: 'brand-primary', name: 'Brand Primary', color: userData.primary });
+                const altSlug = personality.colors.brand_alt;
+                let altColor = palette.find(c => c.slug === altSlug);
+                if (altColor) altColor.color = userData.primary;
             }
-
             if (userData.secondary) {
-                const palette = themeJson.settings.color.palette;
-                // Upsert Secondary
-                let secondary = palette.find(c => c.slug === 'secondary');
-                if (secondary) secondary.color = userData.secondary;
-                else palette.push({ slug: 'secondary', name: 'Secondary', color: userData.secondary });
-
-                // Upsert Brand Secondary
-                let brand = palette.find(c => c.slug === 'brand-secondary');
-                if (brand) brand.color = userData.secondary;
-                else palette.push({ slug: 'brand-secondary', name: 'Brand Secondary', color: userData.secondary });
+                const accentSlug = personality.colors.accent;
+                let accentColor = palette.find(c => c.slug === accentSlug);
+                if (accentColor) accentColor.color = userData.secondary;
             }
-
             await fs.writeJson(themeJsonPath, themeJson, { spaces: 4 });
-            console.log('theme.json updated.');
         }
 
-        // D. Create site-info.json for Actvator
-        const siteInfo = {
-            name: themeName,
-            description: userData.tagline || 'Just another PressPilot site',
-            logo: userData.logo || ''
-        };
+        // 2. Site Info & Style.css
+        const siteInfo = { name: themeName, base: baseName, mode: mode };
         await fs.writeJson(path.join(themeDir, 'site-info.json'), siteInfo, { spaces: 4 });
-        console.log('site-info.json created.');
 
-        // E. Inject Data into style.css (Theme Name)
         const styleCssPath = path.join(themeDir, 'style.css');
         if (await fs.pathExists(styleCssPath)) {
             let styleContent = await fs.readFile(styleCssPath, 'utf8');
             styleContent = styleContent.replace(/Theme Name:.*$/m, `Theme Name: ${themeName}`);
             await fs.writeFile(styleCssPath, styleContent);
-            console.log('style.css updated.');
         }
 
-        // F. PERSONALIZATION: patterns/hero.php
-        const heroPath = path.join(themeDir, 'patterns', 'hero.php');
-        if (await fs.pathExists(heroPath) && userData.hero_headline) {
-            let heroContent = await fs.readFile(heroPath, 'utf8');
-            heroContent = heroContent.replace('Launch Your Vision with PressPilot', userData.hero_headline);
-            // Also replace subheadline if present
-            if (userData.hero_subheadline) {
-                heroContent = heroContent.replace('A scalable, modern foundation for your next big idea. Generated in seconds, built to last.', userData.hero_subheadline);
+        // --- HEAVY MODE LOGIC ---
+        if (mode === 'heavy') {
+            const heavyPatternSrc = path.join(__dirname, 'assets', 'patterns', 'universal-heavy.php');
+            const heavyPatternDest = path.join(themeDir, 'patterns', 'presspilot-heavy.php');
+
+            // 1. Copy the Pattern
+            if (await fs.pathExists(heavyPatternSrc)) {
+                await fs.copy(heavyPatternSrc, heavyPatternDest);
+                console.log('Injected Universal Heavy Pattern.');
+
+                // 2. Overwrite Home Template to use it
+                // We create a new home.html that wraps the pattern with Header/Footer
+                if (personality.home_template) {
+                    const homeTemplatePath = path.join(themeDir, personality.home_template);
+
+                    // Universal FSE Structure
+                    const homeContent = `
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+<!-- wp:group {"tagName":"main","layout":{"inherit":true}} -->
+<main class="wp-block-group">
+    <!-- wp:pattern {"slug":"presspilot/universal-heavy"} /-->
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
+`;
+                    await fs.writeFile(homeTemplatePath, homeContent.trim());
+                    console.log(`Forced Home Template (${personality.home_template}) to use Heavy Pattern with Header/Footer.`);
+                }
+
+
+
+                // 3. FORCE BLOG TEMPLATES (Universal Blog)
+                // Updated v6: Added correct <ul> wrapper for Post Template Grid to prevent "Attempt Recovery"
+                const blogTemplates = ['home.html', 'index.html'];
+                const blogContent = `
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+<!-- wp:group {"tagName":"main","layout":{"inherit":true}} -->
+<main class="wp-block-group">
+    <!-- wp:heading {"level":1,"align":"wide","style":{"spacing":{"padding":{"top":"4rem","bottom":"2rem"}}}} -->
+    <h1 class="wp-block-heading alignwide" style="padding-top:4rem;padding-bottom:2rem">Latest Updates</h1>
+    <!-- /wp:heading -->
+
+    <!-- wp:query {"query":{"perPage":6,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false},"align":"wide","layout":{"type":"constrained"}} -->
+    <div class="wp-block-query alignwide">
+        <!-- wp:post-template {"align":"wide","style":{"spacing":{"blockGap":"var:preset|spacing|30"}},"layout":{"type":"grid","columnCount":3}} -->
+        <ul class="wp-block-post-template alignwide is-layout-grid wp-block-post-template-is-layout-grid" style="gap:var(--wp--preset--spacing--30)">
+            <!-- wp:post-featured-image {"isLink":true,"aspectRatio":"3/2"} /-->
+            <!-- wp:post-title {"isLink":true,"fontSize":"large"} /-->
+            <!-- wp:post-excerpt /-->
+            <!-- wp:post-date /-->
+        </ul>
+        <!-- /wp:post-template -->
+        
+        <!-- wp:query-pagination -->
+            <!-- wp:query-pagination-previous /-->
+            <!-- wp:query-pagination-numbers /-->
+            <!-- wp:query-pagination-next /-->
+        <!-- /wp:query-pagination -->
+    </div>
+    <!-- /wp:query -->
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
+`;
+                for (const tpl of blogTemplates) {
+                    const tplPath = path.join(themeDir, 'templates', tpl);
+                    await fs.writeFile(tplPath, blogContent.trim());
+                    console.log(`Forced ${tpl} to use Universal Blog Pattern (v6 Fixed).`);
+                }
+
+                // 4. UNIVERSAL FOOTER INJECTION
+                // Updated v6: Uses Dynamic Name + "Powered by PressPilot"
+                const footerPath = path.join(themeDir, 'parts', 'footer.html');
+                const footerName = userData.name || 'PressPilot Site';
+                const universalFooter = `
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
+    <!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between"}} -->
+    <div class="wp-block-group alignwide">
+        <!-- wp:paragraph {"fontSize":"small"} -->
+        <p class="has-small-font-size">© ${new Date().getFullYear()} ${footerName} · Powered by PressPilot</p>
+        <!-- /wp:paragraph -->
+        
+        <!-- wp:paragraph {"fontSize":"small"} -->
+        <p class="has-small-font-size"><a href="#">Facebook</a> · <a href="#">LinkedIn</a></p>
+        <!-- /wp:paragraph -->
+    </div>
+    <!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+`;
+                await fs.ensureDir(path.dirname(footerPath));
+                await fs.writeFile(footerPath, universalFooter.trim());
+                console.log('Forced Universal Footer into parts/footer.html.');
+
+                // 5. Overwrite Archive & Search Templates to be universal
+                // These often reference theme-specific patterns that fail. We replace them with standard FSE structures.
+                const patternsToSafe = ['archive.html', 'search.html'];
+                for (const tmpl of patternsToSafe) {
+                    const tmplPath = path.join(themeDir, 'templates', tmpl);
+                    if (await fs.pathExists(tmplPath)) {
+                        const titleBlock = tmpl === 'search.html' ?
+                            '<!-- wp:heading {"level":1,"align":"wide","style":{"spacing":{"padding":{"top":"4rem","bottom":"2rem"}}}} --><h1 class="wp-block-heading alignwide" style="padding-top:4rem;padding-bottom:2rem">Search Results</h1><!-- /wp:heading -->' :
+                            '<!-- wp:query-title {"type":"archive","align":"wide","style":{"spacing":{"padding":{"top":"4rem","bottom":"2rem"}}}} /-->';
+
+                        const safeContent = `
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+<!-- wp:group {"tagName":"main","layout":{"inherit":true}} -->
+<main class="wp-block-group">
+    ${titleBlock}
+    <!-- wp:query {"query":{"perPage":6,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true},"align":"wide","layout":{"type":"constrained"}} -->
+    <div class="wp-block-query alignwide">
+        <!-- wp:post-template {"align":"wide","layout":{"type":"grid","columnCount":3}} -->
+            <!-- wp:post-featured-image {"isLink":true,"aspectRatio":"3/2"} /-->
+            <!-- wp:post-title {"isLink":true,"fontSize":"large"} /-->
+            <!-- wp:post-excerpt /-->
+            <!-- wp:post-date /-->
+        <!-- /wp:post-template -->
+        <!-- wp:query-pagination -->
+            <!-- wp:query-pagination-previous /-->
+            <!-- wp:query-pagination-numbers /-->
+            <!-- wp:query-pagination-next /-->
+        <!-- /wp:query-pagination -->
+    </div>
+    <!-- /wp:query -->
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
+`;
+                        await fs.writeFile(tmplPath, safeContent.trim());
+                        console.log(`Forced ${tmpl} to use Universal Pattern.`);
+                    }
+                }
+            } else {
+                console.error("Universal Heavy Pattern asset missing!");
             }
-            await fs.writeFile(heroPath, heroContent);
-            console.log('hero.php pattern updated.');
+        }
+        else {
+            // Standard Linear logic (Hero Replacement)
+            if (personality.patterns.hero && userData.hero_headline) {
+                const heroPath = path.join(themeDir, personality.patterns.hero);
+                if (await fs.pathExists(heroPath)) {
+                    let heroContent = await fs.readFile(heroPath, 'utf8');
+                    heroContent = heroContent.replace(personality.patterns.hero_search_headline, userData.hero_headline);
+                    if (userData.hero_subheadline && personality.patterns.hero_search_sub) {
+                        heroContent = heroContent.replace(personality.patterns.hero_search_sub, userData.hero_subheadline);
+                    }
+                    await fs.writeFile(heroPath, heroContent);
+                }
+            }
         }
 
         // G. Create ZIP
@@ -200,20 +311,13 @@ async function generateTheme() {
                 filename: `${safeName}-${timestamp}.zip`
             }));
         });
-
-        archive.on('error', function (err) {
-            throw err;
-        });
-
+        archive.on('error', err => { throw err; });
         archive.pipe(output);
-        // Zip the content instructions
-        // We want the zip to contain a folder named [theme-slug], so we use archive.directory with that name
         archive.directory(themeDir, safeName);
         await archive.finalize();
 
     } catch (err) {
         console.error('Error:', err);
-        console.log(JSON.stringify({ status: "error", message: err.message }));
         process.exit(1);
     }
 }
