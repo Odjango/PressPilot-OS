@@ -198,7 +198,7 @@ async function generateTheme() {
                 // 7. Auto-Content Loader (PHP Injection)
                 // We generate a PHP file that runs on theme activation to create the DB entries.
                 const { generateContentLoader } = await import('./utils/content-loader-generator');
-                const loaderPhp = generateContentLoader(userData.pages);
+                const loaderPhp = generateContentLoader(userData.pages, userData.name || 'My Site', userData.hero_subheadline || '');
                 const loaderPath = path.join(themeDir, 'inc', 'content-loader.php');
                 await fs.ensureDir(path.dirname(loaderPath));
                 await fs.writeFile(loaderPath, loaderPhp);
