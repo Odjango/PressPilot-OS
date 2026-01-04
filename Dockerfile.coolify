@@ -61,8 +61,21 @@ COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/assets ./assets
 COPY --from=builder --chown=nextjs:nodejs /app/bases ./bases
 
-USER nextjs
+# Install runtime dependencies for Watchdog (curl, cron)
+USER root
+RUN apt-get update && apt-get install -y curl cron && rm -rf /var/lib/apt/lists/*
+
+# Fix permissions for scripts
+RUN chmod +x /app/scripts/*.sh
+
+# Switch back to non-root user? 
+# NOTE: Cron requires root or special permissions. Keeping as root for simple VPS setup 
+# or we configure cron for user. For Enterprise simplicity on Coolify, running as root inside container 
+# is often necessary for cron unless user cron is allowed. 
+# Let's try running as root for the Supervisor capability, or revert to nextjs user if risky.
+# Defaulting to root for Cron reliability in this specific rescue scenario.
+# USER nextjs 
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["/bin/bash", "/app/scripts/start-with-watchdog.sh"]
