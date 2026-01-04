@@ -17,7 +17,7 @@ const nextConfig = {
       '@wordpress/data',
       '@wordpress/element',
       '@wordpress/hooks',
-      'canvas',
+
       'jsdom',
     ],
   },
