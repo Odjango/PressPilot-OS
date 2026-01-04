@@ -60,6 +60,11 @@ COPY --from=builder /app/package.json ./package.json
 # Copy themes folder as it is required by PressPilot
 COPY --from=builder --chown=nextjs:nodejs /app/themes ./themes
 
+# Copy Generator Source and Assets (Required for n8n/CLI generation)
+COPY --from=builder --chown=nextjs:nodejs /app/src ./src
+COPY --from=builder --chown=nextjs:nodejs /app/assets ./assets
+COPY --from=builder --chown=nextjs:nodejs /app/bases ./bases
+
 USER nextjs
 
 EXPOSE 3000
