@@ -109,7 +109,8 @@
         <div class="wp-block-group has-black-color has-white-background-color has-text-color has-background"
             style="border-radius:12px;padding-top:40px;padding-right:40px;padding-bottom:40px;padding-left:40px">
             <!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"large","fontStyle":"italic"}}} -->
-            <p class="has-text-align-center has-large-font-size" style="font-style:italic">"This is the best service I
+            <p class="has-text-align-center has-large-font-size" style="font-style:italic;color:#000000 !important">
+                "This is the best service I
                 have ever used. Highly recommended!"</p>
             <!-- /wp:paragraph -->
             <!-- wp:paragraph {"align":"center","fontSize":"small"} -->

@@ -101,6 +101,6 @@ function presspilot_auto_setup() {
         set_theme_mod('nav_menu_locations', $locations);
     }
 }
-add_action('after_switch_theme', 'presspilot_auto_setup');
+add_action('init', 'presspilot_auto_setup');
 `;
 };
