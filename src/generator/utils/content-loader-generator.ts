@@ -11,20 +11,23 @@ export const generateContentLoader = (pages: PageData[], businessName: string, t
                 'content' => '', // Content is in the template: page-${p.slug}.html
             ]`).join(',') : '';
 
-    return `<?php
+    const timestamp = Date.now();
+    const funcName = \`presspilot_setup_\${timestamp}\`;
+
+    return \`<?php
 /**
  * Auto-Content Loader
  * 
  * Automatically creates pages, assigns menus, and sets site identity upon theme activation.
  */
 
-function presspilot_auto_setup() {
+function \${funcName}() {
     // 1. Set Site Identity
-    update_option('blogname', '${businessName.replace(/'/g, "\\'")}');
-    update_option('blogdescription', '${tagline.replace(/'/g, "\\'")}');
+    update_option('blogname', '\${businessName.replace(/'/g, "\\'")}' );
+    update_option('blogdescription', '\${tagline.replace(/'/g, "\\'")}' );
 
     // 2. Create Pages
-    $pages = [${pagesArrayPhp}
+    $pages = [\${pagesArrayPhp}
     ];
 
     $created_page_ids = [];
@@ -66,41 +69,44 @@ function presspilot_auto_setup() {
 
     // 3. Create & Assign Menu
     $menu_name = 'Primary Menu';
+    
+    // FORCE RESET: Delete existing menu if it exists to ensure order is corrected
     $menu_exists = wp_get_nav_menu_object($menu_name);
+    if ($menu_exists) {
+        wp_delete_nav_menu($menu_name);
+    }
 
-    if (!$menu_exists) {
-        $menu_id = wp_create_nav_menu($menu_name);
+    $menu_id = wp_create_nav_menu($menu_name);
 
-        // Add Home Link
-        if (isset($created_page_ids['Home'])) {
+    // Add Home Link
+    if (isset($created_page_ids['Home'])) {
+        wp_update_nav_menu_item($menu_id, 0, [
+            'menu-item-title'  => 'Home',
+            'menu-item-object-id' => $created_page_ids['Home'],
+            'menu-item-object' => 'page',
+            'menu-item-status' => 'publish',
+            'menu-item-type'   => 'post_type',
+        ]);
+    }
+
+    // Add Custom Pages
+    foreach ($pages as $page) {
+        if (isset($created_page_ids[$page['title']])) {
             wp_update_nav_menu_item($menu_id, 0, [
-                'menu-item-title'  => 'Home',
-                'menu-item-object-id' => $created_page_ids['Home'],
+                'menu-item-title'  => $page['title'],
+                'menu-item-object-id' => $created_page_ids[$page['title']],
                 'menu-item-object' => 'page',
                 'menu-item-status' => 'publish',
                 'menu-item-type'   => 'post_type',
             ]);
         }
-
-        // Add Custom Pages
-        foreach ($pages as $page) {
-            if (isset($created_page_ids[$page['title']])) {
-                wp_update_nav_menu_item($menu_id, 0, [
-                    'menu-item-title'  => $page['title'],
-                    'menu-item-object-id' => $created_page_ids[$page['title']],
-                    'menu-item-object' => 'page',
-                    'menu-item-status' => 'publish',
-                    'menu-item-type'   => 'post_type',
-                ]);
-            }
-        }
-
-        // Assign to Theme Location 'primary' (Common standard)
-        $locations = get_theme_mod('nav_menu_locations');
-        $locations['primary'] = $menu_id;
-        set_theme_mod('nav_menu_locations', $locations);
     }
+
+    // Assign to Theme Location 'primary' (Common standard)
+    $locations = get_theme_mod('nav_menu_locations');
+    $locations['primary'] = $menu_id;
+    set_theme_mod('nav_menu_locations', $locations);
 }
-add_action('init', 'presspilot_auto_setup');
-`;
+add_action('init', '\${funcName}');
+\`;
 };
