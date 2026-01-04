@@ -26,8 +26,8 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the application
-# INCREASE BUILD MEMORY: Force Node to use up to 4GB if available
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+# OPTIMIZE MEMORY: Set to 2GB to prevent OOM on standard VPS (Enterprise Safe Limit)
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 RUN npm run build
 
 # 4. Runner
