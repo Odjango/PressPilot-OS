@@ -35,11 +35,10 @@ export async function POST(request: Request) {
             data = {
                 status: 'success',
                 message: 'Workflow started successfully.',
-                // Provide placeholder URLs to prevent UI confusing "empty" with "error"
-                // The actual ZIP is likely in the n8n execution binary data, not here.
-                original: '#processing',
-                high_contrast: '#processing',
-                inverted: '#processing'
+                // Provide REAL URLs for the Iframe
+                original: 'https://factory.presspilotapp.com',
+                high_contrast: 'https://factory.presspilotapp.com',
+                inverted: 'https://factory.presspilotapp.com'
             };
         }
 
