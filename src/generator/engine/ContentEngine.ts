@@ -15,18 +15,25 @@ export class ContentEngine {
 
         const loaderPhp = generateContentLoader(userData.pages || [], siteTitle, tagline);
 
-        const loaderPath = path.join(themeDir, 'inc', 'content-loader.php');
-        await fs.ensureDir(path.dirname(loaderPath));
-        await fs.writeFile(loaderPath, loaderPhp);
-
-        // 2. Hook into functions.php
+        // 2. Direct Injection into functions.php (Permanent Fix)
         const functionsPath = path.join(themeDir, 'functions.php');
         if (await fs.pathExists(functionsPath)) {
             let funcs = await fs.readFile(functionsPath, 'utf8');
-            if (!funcs.includes('content-loader.php')) {
-                funcs += `\n// PressPilot Auto-Loader (Generated)\nrequire_once get_theme_file_path( 'inc/content-loader.php' );\n`;
+
+            // Avoid duplicate injection
+            if (!funcs.includes('PressPilot Auto-Loader')) {
+                // Strip the opening <?php from the loader string since functions.php is already PHP
+                // But wait, generateContentLoader returns a string starting with <?php.
+                // We need to be careful. function.php usually starts with <?php but might end with ?>.
+                // Safer to just append it. If functions.php is open, we can't just paste <?php inside.
+                // However, standard WordPress functions.php do NOT have closing tags.
+                // So we can just append, but we must remove the '<?php' from our generated string.
+
+                const cleanLoaderPhp = loaderPhp.replace('<?php', '').trim();
+
+                funcs += `\n\n// PressPilot Auto-Loader (Direct Injection)\n${cleanLoaderPhp}\n`;
                 await fs.writeFile(functionsPath, funcs);
-                console.log('[Content] Injected Auto-Loader hook into functions.php');
+                console.log('[Content] DIRECTLY Injected Auto-Loader into functions.php');
             }
         }
     }
