@@ -159,21 +159,43 @@ export default function StudioPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="font-mono text-xs uppercase tracking-wider text-neutral-500">Sector</label>
-                    <CustomSelect value={formData.businessType} onChange={e => setFormData({ ...formData, businessType: e.target.value })} />
+                    <CustomSelect value={formData.businessType} onChange={e => setFormData({ ...formData, businessType: e.target.value })}>
+                      <option value="Restaurant / Food Service">Restaurant / Food Service</option>
+                      <option value="Real Estate / Architecture">Real Estate / Architecture</option>
+                      <option value="Tech / SaaS">Tech / SaaS</option>
+                      <option value="Health / Wellness">Health / Wellness</option>
+                      <option value="Creative Agency">Creative Agency</option>
+                      <option value="E-commerce">E-commerce</option>
+                      <option value="Personal Portfolio">Personal Portfolio</option>
+                    </CustomSelect>
                   </div>
                   <div className="space-y-2">
                     <label className="font-mono text-xs uppercase tracking-wider text-neutral-500">Language</label>
-                    <CustomSelect value={formData.contentLanguage} onChange={e => setFormData({ ...formData, contentLanguage: e.target.value })} />
+                    <CustomSelect value={formData.contentLanguage} onChange={e => setFormData({ ...formData, contentLanguage: e.target.value })}>
+                      <option value="English">English</option>
+                      <option value="Spanish">Spanish</option>
+                      <option value="French">French</option>
+                      <option value="German">German</option>
+                      <option value="Japanese">Japanese</option>
+                    </CustomSelect>
                   </div>
                 </div>
 
                 {/* Simplified Logo Input for Blueprint Aesthetic */}
-                <div className="border border-dashed border-black/20 p-6 text-center hover:bg-cream transition-colors cursor-pointer relative">
-                  <input type="file" accept="image/*" onChange={handleLogoChange} className="absolute inset-0 opacity-0 cursor-pointer" />
-                  <Paperclip className="w-5 h-5 mx-auto mb-2 text-neutral-400" />
-                  <p className="font-mono text-xs text-neutral-500">
-                    {formData.logo_base64 ? "Logo Loaded" : "Upload Vector/IMG"}
-                  </p>
+                <div className="border border-dashed border-black/20 p-6 text-center hover:bg-cream transition-colors cursor-pointer relative group">
+                  <input type="file" accept="image/*" onChange={handleLogoChange} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    {formData.logo_base64 && (
+                      <div className="w-12 h-12 object-contain bg-white border border-black/10 p-1 mb-2 rounded-sm shadow-sm overflow-hidden flex items-center justify-center">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={formData.logo_base64} alt="Logo Preview" className="max-w-full max-h-full" />
+                      </div>
+                    )}
+                    <Paperclip className={`w-5 h-5 ${formData.logo_base64 ? 'text-green-600' : 'text-neutral-400'}`} />
+                    <p className="font-mono text-xs text-neutral-500 group-hover:text-black transition-colors">
+                      {formData.logo_base64 ? "Logo Attached (Click to Change)" : "Upload Logo (Vector/PNG)"}
+                    </p>
+                  </div>
                 </div>
 
                 <button type="submit" disabled={loading} className="w-full bg-black text-cream py-4 font-mono uppercase tracking-widest hover:bg-neutral-800 disabled:opacity-50">
