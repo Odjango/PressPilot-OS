@@ -55,8 +55,13 @@ export class StyleEngine {
         if (await fs.pathExists(styleCssPath)) {
             let styleContent = await fs.readFile(styleCssPath, 'utf8');
             styleContent = styleContent.replace(/Theme Name:.*$/m, `Theme Name: ${themeName}`);
+
+            // Cache Busting: Update Version
+            const timestamp = Math.floor(Date.now() / 1000);
+            styleContent = styleContent.replace(/Version:.*$/m, `Version: 1.0.${timestamp}`);
+
             await fs.writeFile(styleCssPath, styleContent);
-            console.log(`[Style] Updated style.css metadata.`);
+            console.log(`[Style] Updated style.css metadata (Version: 1.0.${timestamp}).`);
         }
     }
 }
