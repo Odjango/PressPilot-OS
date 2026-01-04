@@ -86,21 +86,33 @@ export const BentoFeatures = ({ previewUrl }: { previewUrl?: string | null }) =>
                             <span className="font-mono text-xs uppercase tracking-wider text-neutral-400">Live Preview</span>
                         </div>
 
-                        {/* Browser Window Placeholder */}
-                        <div className="w-full h-40 bg-white border border-black/10 rounded-lg shadow-sm mt-2 flex flex-col overflow-hidden">
+                        {/* Browser Window Placeholder or Iframe */}
+                        <div className="w-full h-40 bg-white border border-black/10 rounded-lg shadow-sm mt-2 flex flex-col overflow-hidden relative">
                             {/* Browser Bar */}
-                            <div className="h-6 bg-neutral-50 border-b border-black/5 flex items-center px-2 gap-1.5">
+                            <div className="h-6 bg-neutral-50 border-b border-black/5 flex items-center px-2 gap-1.5 shrink-0">
                                 <div className="w-2 h-2 rounded-full bg-red-400/50" />
                                 <div className="w-2 h-2 rounded-full bg-yellow-400/50" />
                                 <div className="w-2 h-2 rounded-full bg-green-400/50" />
                                 <div className="ml-2 w-full h-3 bg-white border border-black/5 rounded-sm" />
                             </div>
+
                             {/* Browser Content */}
-                            <div className="flex-1 flex items-center justify-center p-4">
-                                <div className="text-center space-y-2">
-                                    <div className="w-8 h-8 border-2 border-black/10 border-t-black rounded-full animate-spin mx-auto" />
-                                    <p className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider">Waiting for Generation...</p>
-                                </div>
+                            <div className="flex-1 flex items-center justify-center p-0 bg-white relative">
+                                {previewUrl ? (
+                                    <iframe
+                                        src={previewUrl}
+                                        className="w-full h-full border-0"
+                                        title="Live Preview"
+                                        key={previewUrl} // Force refresh
+                                    />
+                                ) : (
+                                    <div className="text-center space-y-2 p-4">
+                                        <div className="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center mx-auto text-neutral-400">
+                                            <div className="w-2 h-2 bg-neutral-300 rounded-full" />
+                                        </div>
+                                        <p className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider">Ready for Generation</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
