@@ -22,6 +22,9 @@ export const generateContentLoader = (pages: PageData[], businessName: string, t
  */
 
 function \${funcName}() {
+    // 0. FLUSH CACHE (Critical for persistence)
+    wp_cache_flush();
+
     // 1. Set Site Identity
     update_option('blogname', '\${businessName.replace(/'/g, "\\'")}' );
     update_option('blogdescription', '\${tagline.replace(/'/g, "\\'")}' );
