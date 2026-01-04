@@ -117,13 +117,20 @@ export default function StudioPage() {
       <AnimatePresence>
         {showForm && !sitePreviews && (
           <motion.div
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-50 flex items-end justify-center pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-end justify-center bg-black/20 backdrop-blur-sm p-4 md:p-8"
+            onClick={() => setShowForm(false)}
           >
-            <div className="w-full max-w-2xl bg-white border-t border-l border-r border-black/10 shadow-2xl pointer-events-auto p-8 pb-12 max-h-[90vh] overflow-y-auto">
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="w-full max-w-2xl bg-white border border-black/10 shadow-2xl p-8 pb-12 max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="flex justify-between items-center mb-8">
                 <h2 className="text-2xl font-bold tracking-tight">System Input</h2>
                 <button onClick={() => setShowForm(false)} className="p-2 hover:bg-neutral-100 rounded-full">
@@ -136,17 +143,17 @@ export default function StudioPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="font-mono text-xs uppercase tracking-wider text-neutral-500">Business Name</label>
-                    <Input required value={formData.businessName} onChange={e => setFormData({ ...formData, businessName: e.target.value })} className="rounded-none border-black/20 focus:border-black" />
+                    <Input required value={formData.businessName} onChange={e => setFormData({ ...formData, businessName: e.target.value })} className="rounded-none border-black/20 focus:border-black text-black bg-white placeholder:text-neutral-400" />
                   </div>
                   <div className="space-y-2">
                     <label className="font-mono text-xs uppercase tracking-wider text-neutral-500">Tagline</label>
-                    <Input value={formData.businessTagline} onChange={e => setFormData({ ...formData, businessTagline: e.target.value })} className="rounded-none border-black/20 focus:border-black" />
+                    <Input value={formData.businessTagline} onChange={e => setFormData({ ...formData, businessTagline: e.target.value })} className="rounded-none border-black/20 focus:border-black text-black bg-white placeholder:text-neutral-400" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <label className="font-mono text-xs uppercase tracking-wider text-neutral-500">Description</label>
-                  <Textarea required value={formData.businessDescription} onChange={e => setFormData({ ...formData, businessDescription: e.target.value })} className="rounded-none border-black/20 focus:border-black min-h-[100px]" />
+                  <Textarea required value={formData.businessDescription} onChange={e => setFormData({ ...formData, businessDescription: e.target.value })} className="rounded-none border-black/20 focus:border-black min-h-[100px] text-black bg-white placeholder:text-neutral-400" />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
