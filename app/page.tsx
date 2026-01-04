@@ -180,7 +180,7 @@ export default function StudioPage() {
                   {loading ? "Constructing..." : "Generate Structure"}
                 </button>
               </form>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
