@@ -78,4 +78,5 @@ RUN chmod +x /app/scripts/*.sh
 
 EXPOSE 3000
 
-CMD ["/bin/bash", "/app/scripts/start-with-watchdog.sh"]
+# CMD ["/bin/bash", "/app/scripts/start-with-watchdog.sh"]
+CMD ["npm", "start"]
