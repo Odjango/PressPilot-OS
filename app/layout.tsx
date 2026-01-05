@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Inter, JetBrains_Mono } from "next/font/google";
+// import { Inter, JetBrains_Mono } from "next/font/google"; // Removed to fix build timeout
 
 import HeaderAuthStatus from "@/components/HeaderAuthStatus";
 
@@ -11,6 +11,8 @@ export const metadata = {
   description: "Structure Your Vision.",
 };
 
+/* 
+// Fonts removed to prevent Google API timeouts during build
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -22,12 +24,13 @@ const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
   display: "swap",
 });
+*/
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${jetbrains.variable} font-sans bg-cream text-black antialiased selection:bg-black selection:text-cream`}
+        className={`font-sans bg-cream text-black antialiased selection:bg-black selection:text-cream`}
       >
         <div className="flex min-h-screen flex-col">
           <header className="border-b border-black/10 bg-cream/80 backdrop-blur sticky top-0 z-50">

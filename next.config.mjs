@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Prevent build hangs due to Google Fonts timeouts
-  optimizeFonts: false,
   eslint: {
     // Skip lint errors in Coolify CI
     ignoreDuringBuilds: true,
