@@ -20,21 +20,35 @@ export class ContentEngine {
         if (await fs.pathExists(functionsPath)) {
             let funcs = await fs.readFile(functionsPath, 'utf8');
 
-            // Avoid duplicate injection
-            if (!funcs.includes('PressPilot Auto-Loader')) {
-                // Strip the opening <?php from the loader string since functions.php is already PHP
-                // But wait, generateContentLoader returns a string starting with <?php.
-                // We need to be careful. function.php usually starts with <?php but might end with ?>.
-                // Safer to just append it. If functions.php is open, we can't just paste <?php inside.
-                // However, standard WordPress functions.php do NOT have closing tags.
-                // So we can just append, but we must remove the '<?php' from our generated string.
+            const cleanLoaderPhp = loaderPhp.replace('<?php', '').trim();
+            const newLoaderBlock = `\n\n// PressPilot Auto-Loader (Direct Injection)\n${cleanLoaderPhp}\n`;
 
-                const cleanLoaderPhp = loaderPhp.replace('<?php', '').trim();
+            // Regex to find existing PressPilot Auto-Loader block + everything after it until end of function or similar marker
+            // Simpler approach: If it exists, replace it. If not, append it.
+            // We look for the comment // PressPilot Auto-Loader (Direct Injection) and capture until the next function definition or end of file? 
+            // Actually, the previous code just appended. So it's likely at the end. 
+            // We can search for the start marker and replace everything after it, OR use a precise block replacement if we can delineate it.
+            // For robustness, let's use a known start/end marker in the future, but for now, we'll replace the checks.
 
-                funcs += `\n\n// PressPilot Auto-Loader (Direct Injection)\n${cleanLoaderPhp}\n`;
-                await fs.writeFile(functionsPath, funcs);
-                console.log('[Content] DIRECTLY Injected Auto-Loader into functions.php');
+            if (funcs.includes('// PressPilot Auto-Loader (Direct Injection)')) {
+                // Replace existing block. We assume checking from the marker to the end of the appended string.
+                // Since we can't easily know where it ends without parsing, and we know we appended it to the end before...
+                // Let's try to match the specific function signature if possible, OR, simpler:
+                // We will add a logical START and END marker in future, but for now to fix the "Test Pizza" bug:
+                // We'll replace the ENTIRE file content if we can regenerate it? No, that destroys other things.
+
+                // STRATEGY: Use a split.
+                const parts = funcs.split('// PressPilot Auto-Loader (Direct Injection)');
+                // Keep the part BEFORE the marker. Discard the part AFTER (which is the old loader).
+                // This assumes the loader was always appended at the end.
+                funcs = parts[0].trim();
             }
+
+            // Append the new loader
+            funcs += newLoaderBlock;
+
+            await fs.writeFile(functionsPath, funcs);
+            console.log('[Content] DIRECTLY Injected Auto-Loader into functions.php (Overwrote previous)');
         }
     }
 

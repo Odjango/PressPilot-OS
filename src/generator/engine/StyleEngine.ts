@@ -60,8 +60,28 @@ export class StyleEngine {
             const timestamp = Math.floor(Date.now() / 1000);
             styleContent = styleContent.replace(/Version:.*$/m, `Version: 1.0.${timestamp}`);
 
+            // Safety Patch for Testimonial Visibility (Fixes white-on-white issue)
+            const safetyCss = `
+/* PressPilot Safety Patch */
+.wp-block-quote, .wp-block-pullquote {
+    color: #111827 !important; /* Dark Grey */
+    background-color: #F3F4F6 !important; /* Light Grey */
+    padding: 2rem !important;
+    border-radius: 8px !important;
+    border-left: 4px solid var(--wp--preset--color--primary) !important;
+}
+.wp-block-quote p {
+    color: #111827 !important;
+}
+.wp-block-quote cite {
+    color: #4B5563 !important;
+    font-style: normal !important;
+}
+`;
+            styleContent += safetyCss;
+
             await fs.writeFile(styleCssPath, styleContent);
-            console.log(`[Style] Updated style.css metadata (Version: 1.0.${timestamp}).`);
+            console.log(`[Style] Updated style.css metadata and applied safety CSS (Version: 1.0.${timestamp}).`);
         }
     }
 }
