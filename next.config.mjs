@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Explicitly disable font optimization to prevent runtime crash (ENOENT font-manifest)
+  optimizeFonts: false,
   eslint: {
     // Skip lint errors in Coolify CI
     ignoreDuringBuilds: true,
