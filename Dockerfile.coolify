@@ -59,6 +59,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/assets ./assets
 COPY --from=builder --chown=nextjs:nodejs /app/bases ./bases
 
+# Copy Scripts (Critical: was missing before)
+COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
+
 USER nextjs
 
 EXPOSE 3000
@@ -66,4 +69,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+# Use Safe Boot script to prevent restart loops
+CMD ["/bin/bash", "/app/scripts/boot_safe.sh"]
