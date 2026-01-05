@@ -47,11 +47,9 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/static ./.next/static
 
-# We are using the standard "npm start" (next start) so we need node_modules and the built .next folder
-# (If we used "output: standalone" in next.config.mjs, we would copy .next/standalone instead)
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# We are using "output: standalone" for stability
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Copy themes folder as it is required by PressPilot
 COPY --from=builder --chown=nextjs:nodejs /app/themes ./themes
@@ -61,22 +59,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/assets ./assets
 COPY --from=builder --chown=nextjs:nodejs /app/bases ./bases
 
-# Install runtime dependencies for Watchdog (curl, cron)
-USER root
-RUN apt-get update && apt-get install -y curl cron && rm -rf /var/lib/apt/lists/*
-
-# Fix permissions for scripts
-RUN chmod +x /app/scripts/*.sh
-
-# Switch back to non-root user? 
-# NOTE: Cron requires root or special permissions. Keeping as root for simple VPS setup 
-# or we configure cron for user. For Enterprise simplicity on Coolify, running as root inside container 
-# is often necessary for cron unless user cron is allowed. 
-# Let's try running as root for the Supervisor capability, or revert to nextjs user if risky.
-# Defaulting to root for Cron reliability in this specific rescue scenario.
-# USER nextjs 
+USER nextjs
 
 EXPOSE 3000
 
-# CMD ["/bin/bash", "/app/scripts/start-with-watchdog.sh"]
-CMD ["npm", "start"]
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["node", "server.js"]

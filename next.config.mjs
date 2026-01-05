@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Standalone output for robust Docker deployment
+  output: "standalone",
   // Explicitly disable font optimization to prevent runtime crash (ENOENT font-manifest)
   optimizeFonts: false,
   eslint: {
