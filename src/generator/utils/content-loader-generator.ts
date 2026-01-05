@@ -70,19 +70,12 @@ function \${funcName}() {
         }
     }
 
-    // 3. CLEAN SLATE: Delete customized Template Parts (Header/Footer)
-    // This removes "User Customizations" stored in DB, forcing WP to use our generated .html files.
+    // 3. CLEAN SLATE: Delete ALL customized Template Parts (Nuclear Option)
+    // We remove the tax_query to ensure we catch ANY 'ghost' parts, regardless of theme slug.
     $parts = get_posts([
         'post_type' => 'wp_template_part',
-        'post_status' => ['publish', 'draft', 'auto-draft'],
+        'post_status' => ['publish', 'draft', 'auto-draft', 'trash'], // Include trash too
         'numberposts' => -1,
-        'tax_query' => [
-            [
-                'taxonomy' => 'wp_theme',
-                'field' => 'name',
-                'terms' => get_stylesheet(), // Current theme
-            ]
-        ]
     ]);
 
     foreach ($parts as $part) {
