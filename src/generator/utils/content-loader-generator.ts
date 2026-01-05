@@ -70,7 +70,28 @@ function \${funcName}() {
         }
     }
 
-    // 3. Create & Assign Menu
+    // 3. CLEAN SLATE: Delete customized Template Parts (Header/Footer)
+    // This removes "User Customizations" stored in DB, forcing WP to use our generated .html files.
+    $parts = get_posts([
+        'post_type' => 'wp_template_part',
+        'post_status' => ['publish', 'draft', 'auto-draft'],
+        'numberposts' => -1,
+        'tax_query' => [
+            [
+                'taxonomy' => 'wp_theme',
+                'field' => 'name',
+                'terms' => get_stylesheet(), // Current theme
+            ]
+        ]
+    ]);
+
+    foreach ($parts as $part) {
+        // Only delete header and footer customizations to be safe, or just zap all for a clean generation.
+        // Let's zap all to ensure the fresh site is 100% fresh.
+        wp_delete_post($part->ID, true);
+    }
+
+    // 4. Create & Assign Menu
     $menu_name = 'Primary Menu';
     
     // FORCE RESET: Delete existing menu if it exists to ensure order is corrected
