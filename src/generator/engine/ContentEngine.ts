@@ -44,6 +44,9 @@ export class ContentEngine {
                 funcs = parts[0].trim();
             }
 
+            // Safety: Remove closing PHP tag if present to prevent code printing as text
+            funcs = funcs.replace(/\?>\s*$/, '').trim();
+
             // Append the new loader
             funcs += newLoaderBlock;
 
