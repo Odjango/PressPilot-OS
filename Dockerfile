@@ -1,8 +1,6 @@
 # Dockerfile for PressPilot-OS (YT Summarizer) on Coolify
 # Uses npm (since package-lock.json is present) and multi-stage build.
-# SECURITY: Runtime secrets only. No secret ARGs.
 
-# 1. Base image
 # 1. Base image
 FROM node:20-bookworm-slim AS base
 WORKDIR /app
@@ -15,10 +13,6 @@ RUN apt-get update && apt-get install -y \
     make \
     g++ \
     && rm -rf /var/lib/apt/lists/*
-
-# Fix: Set PYTHON for node-gyp
-ENV PYTHON=/usr/bin/python3
-
 COPY package.json package-lock.json ./
 # Install dependencies based on lockfile
 RUN npm install
@@ -32,6 +26,8 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the application
+# OPTIMIZE MEMORY: Set to 2GB to prevent OOM on standard VPS (Enterprise Safe Limit)
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 RUN npm run build
 
 # 4. Runner
@@ -51,11 +47,9 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/static ./.next/static
 
-# We are using the standard "npm start" (next start) so we need node_modules and the built .next folder
-# (If we used "output: standalone" in next.config.mjs, we would copy .next/standalone instead)
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# We are using "output: standalone" for stability
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Copy themes folder as it is required by PressPilot
 COPY --from=builder --chown=nextjs:nodejs /app/themes ./themes
@@ -65,8 +59,15 @@ COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/assets ./assets
 COPY --from=builder --chown=nextjs:nodejs /app/bases ./bases
 
+# Copy Scripts (Critical: was missing before)
+COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
+
 USER nextjs
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Use Safe Boot script to prevent restart loops
+CMD ["/bin/bash", "/app/scripts/boot_safe.sh"]
