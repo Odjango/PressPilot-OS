@@ -21,7 +21,7 @@ export class ContentEngine {
             let funcs = await fs.readFile(functionsPath, 'utf8');
 
             const cleanLoaderPhp = loaderPhp.replace('<?php', '').trim();
-            const newLoaderBlock = `\n\n// PressPilot Auto-Loader (Direct Injection)\n${cleanLoaderPhp}\n`;
+            const newLoaderBlock = `\n\n// PressPilot Auto-Loader (Direct Injection - 1.1.0 NUCLEAR)\n${cleanLoaderPhp}\n`;
 
             // Regex to find existing PressPilot Auto-Loader block + everything after it until end of function or similar marker
             // Simpler approach: If it exists, replace it. If not, append it.
