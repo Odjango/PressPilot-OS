@@ -84,9 +84,29 @@ function presspilot_handle_baking_child($request)
         wp_delete_post($template->ID, true);
     }
 
-    // D. Reset 'show_on_front' to ensure templates take over
-    update_option('show_on_front', 'posts');
-    update_option('page_on_front', 0);
+    // D. [REMOVED] Reset 'show_on_front' - We will set it dynamically below
+    // update_option('show_on_front', 'posts');
+    // update_option('page_on_front', 0);
+
+    // 4. INJECT HOME PAGE CONTENT (The "Hydration" Step)
+    if (isset($recipe['full_site_content']) && !empty($recipe['full_site_content'])) {
+        $home_page_id = wp_insert_post([
+            'post_type' => 'page',
+            'post_title' => isset($recipe['site_title']) ? $recipe['site_title'] : 'Home',
+            'post_content' => $recipe['full_site_content'],
+            'post_status' => 'publish',
+            'post_slug' => 'home',
+        ]);
+
+        if ($home_page_id) {
+            update_option('show_on_front', 'page');
+            update_option('page_on_front', $home_page_id);
+        }
+    } else {
+        // Fallback if no content provided: Show Posts
+        update_option('show_on_front', 'posts');
+        update_option('page_on_front', 0);
+    }
 
     // 1. Update Site Title
     if (isset($recipe['site_title'])) {

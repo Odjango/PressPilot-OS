@@ -29,7 +29,7 @@
           "genericAuthType": "httpHeaderAuth",
           "sendBody": true,
           "specifyBody": "json",
-          "jsonBody": "={\n  \"business_name\": \"{{ $node[\"Code in JavaScript\"].json[\"business_name\"] }}\",\n  \"business_type\": \"{{ $node[\"Code in JavaScript\"].json[\"industry\"] }}\",\n  \"strategy\": \"pattern_assembly\"\n}",
+          "jsonBody": "={{ JSON.stringify($json.api_payload) }}",
           "options": {}
         },
         "type": "n8n-nodes-base.httpRequest",
