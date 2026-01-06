@@ -31,7 +31,10 @@ add_action('init', 'presspilot_register_pattern_categories');
 /**
  * Site Identity Setup (Generates Title/Logo on activation)
  */
-require_once get_stylesheet_directory() . '/inc/activator.php';
+$presspilot_activator = get_stylesheet_directory() . '/inc/activator.php';
+if (file_exists($presspilot_activator)) {
+    require_once $presspilot_activator;
+}
 
 /**
  * PRESSPILOT OVEN INTAKE (Ported from FSE v2)
