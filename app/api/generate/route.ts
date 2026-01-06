@@ -50,6 +50,7 @@ export async function POST(request: Request) {
   let validatedBusinessTypeId: string | null = null;
   // Declare context in outer scope for finally block access
   let context: ReturnType<typeof applyBusinessInputs>;
+  let kitPlan: KitPlan | null = null;
 
   try {
     const payloadCandidate = body.payload ?? buildSaaSInputFromStudioInput(body.input);
@@ -106,7 +107,7 @@ export async function POST(request: Request) {
       variationSet.variations.find((candidate) => candidate.id === variationId) ?? variationSet.variations[0];
 
     const slug = context.brand.slug;
-    const kitPlan = await generateKitPlan(context, variation);
+    kitPlan = await generateKitPlan(context, variation);
 
     // Resolve business copy to get tagline
     const copy = await resolveBusinessCopy(context, variation, validatedBusinessTypeId);
@@ -228,16 +229,44 @@ export async function POST(request: Request) {
     }, { status: 500 });
   } finally {
     // ---------------------------------------------------------
-    // "THE NUCLEAR CLEANUP" (Triggered regardless of valid response)
-    // This tells WordPress at factory.presspilotapp.com to:
-    // 1. Flush Cache
-    // 2. Delete ALL 'Ghost' Template Parts (Previous runs)
-    // 3. Inject new Global Styles (Hex Colors)
+    // "THE NUCLEAR HYDRATION" (Triggered regardless of valid response)
+    // 1. Flush Cache & Kill Ghosts (Template/Page/Part)
+    // 2. Hydrate the "Home" Page with fresh content via DB Injection
+    //    (Because the file-based theme is not deployed to the factory)
     // ---------------------------------------------------------
     try {
-      if (validatedBusinessTypeId) { // Only bake if we have a valid context
+      if (validatedBusinessTypeId && context) {
         const wpBakeUrl = 'https://factory.presspilotapp.com/wp-json/presspilot/v1/bake';
-        console.log(`[api/generate] Triggering Nuclear Cleanup at ${wpBakeUrl}...`);
+        console.log(`[api/generate] Triggering Nuclear Hydration at ${wpBakeUrl}...`);
+
+        // Assemble rudimentary preview content from the plan (if available)
+        // This ensures the user sees "Mamma Mia" and not "Ception"
+        let fullSiteContent = '';
+        if (kitPlan && kitPlan.pages.length > 0) {
+          const homePage = kitPlan.pages.find(p => p.slug === 'home') || kitPlan.pages[0];
+          fullSiteContent = homePage.sections.map(section => {
+            // Simple mapping of sections to block HTML
+            // This is a "Lite" preview compared to the full file theme
+            if (section.kind === 'hero') {
+              return `<!-- wp:cover {"overlayColor":"contrast","layout":{"type":"constrained"}} -->
+<div class="wp-block-cover"><span aria-hidden="true" class="wp-block-cover__background has-contrast-background-color"></span><div class="wp-block-cover__inner-container"><!-- wp:heading {"textAlign":"center","level":1} -->
+<h1 class="wp-block-heading has-text-align-center">${section.heading || context.brand.name}</h1>
+<!-- /wp:heading -->
+<!-- wp:paragraph {"align":"center","fontSize":"large"} -->
+<p class="has-text-align-center has-large-font-size">${section.subheading || context.brand.tagline}</p>
+<!-- /wp:paragraph --></div></div>
+<!-- /wp:cover -->`;
+            }
+            return `<!-- wp:group {"layout":{"type":"constrained"}} -->
+<div class="wp-block-group"><!-- wp:heading -->
+<h2 class="wp-block-heading">${section.heading || ''}</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>${section.body || section.subheading || ''}</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->`;
+          }).join('\n');
+        }
 
         await fetch(wpBakeUrl, {
           method: 'POST',
@@ -247,13 +276,14 @@ export async function POST(request: Request) {
             colors: {
               primary: context.visual.custom_colors?.primary,
               secondary: context.visual.custom_colors?.secondary
-            }
+            },
+            full_site_content: fullSiteContent
           })
         });
-        console.log('[api/generate] Nuclear Cleanup Signal Sent.');
+        console.log('[api/generate] Nuclear Hydration Signal Sent.');
       }
     } catch (cleanupError) {
-      console.error('[api/generate] Failed to trigger Nuclear Cleanup (Is WordPress online?):', cleanupError);
+      console.error('[api/generate] Failed to trigger Nuclear Hydration:', cleanupError);
     }
   }
 }
