@@ -4,8 +4,8 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        // Send data to n8n Production Webhook
-        const n8nResponse = await fetch('https://n8n.presspilotapp.com/webhook/build-site', {
+        // Send data to n8n Test Webhook (for Editor Debugging)
+        const n8nResponse = await fetch('https://n8n.presspilotapp.com/webhook-test/build-site', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
