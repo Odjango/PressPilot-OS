@@ -30,8 +30,9 @@ export async function applyStyleVariationToThemeJson(opts: {
   businessTypeId: string | null | undefined;
   styleVariation?: string | null;
   kitVersion?: string | null;
+  customColors?: { primary?: string; secondary?: string };
 }) {
-  const { themeDir, businessTypeId, styleVariation: overrideStyleVariation, kitVersion: overrideKitVersion } = opts;
+  const { themeDir, businessTypeId, styleVariation: overrideStyleVariation, kitVersion: overrideKitVersion, customColors } = opts;
   const { kit, styleVariation: resolvedStyleVariation, variation } = await resolveBusinessTypeStyle(businessTypeId);
   const styleVariation = overrideStyleVariation ?? resolvedStyleVariation;
 
@@ -109,6 +110,24 @@ export async function applyStyleVariationToThemeJson(opts: {
   // Enforce WP 6.4+ FSE Standards
   merged.version = 2;
   const existingSettings = (merged.settings as Record<string, JsonValue>) || {};
+
+  // CUSTOM COLOR OVERRIDE
+  if (customColors && existingSettings.color) {
+    const colorSettings = existingSettings.color as Record<string, JsonValue>;
+    if (Array.isArray(colorSettings.palette)) {
+      colorSettings.palette = colorSettings.palette.map((swatch: any) => {
+        if (customColors.primary && (swatch.slug === 'primary' || swatch.slug === 'brand')) {
+          return { ...swatch, color: customColors.primary };
+        }
+        if (customColors.secondary && (swatch.slug === 'secondary' || swatch.slug === 'brand-alt')) {
+          return { ...swatch, color: customColors.secondary };
+        }
+        return swatch;
+      });
+      console.log('[PressPilot] Injected Custom Brand Colors:', customColors);
+    }
+  }
+
   merged.settings = {
     ...existingSettings,
     appearanceTools: true,

@@ -59,6 +59,7 @@ export function applyBusinessInputs(payload: PressPilotSaaSInput): PressPilotNor
       image_source_preference: payload.visualAssets.image_source_preference,
       image_keywords: payload.visualAssets.image_keywords,
       palette_id: payload.visualControls.palette_id,
+      custom_colors: payload.visualControls.custom_colors,
       font_pair_id: payload.visualControls.font_pair_id,
       layout_density: payload.visualControls.layout_density,
       corner_style: payload.visualControls.corner_style,

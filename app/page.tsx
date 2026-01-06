@@ -67,7 +67,15 @@ export default function StudioPage() {
 
       if (response.ok) {
         const data = await response.json();
-        setSitePreviews(data);
+        const fallbackUrl = 'https://factory.presspilotapp.com';
+
+        // Robust Fallback: Ensure buttons are NEVER disabled due to missing URLs
+        setSitePreviews({
+          original: data.original || fallbackUrl,
+          high_contrast: data.high_contrast || fallbackUrl,
+          inverted: data.inverted || fallbackUrl
+        });
+
         setShowForm(false); // Close form on success to show previews
       } else {
         throw new Error('Signal failed');

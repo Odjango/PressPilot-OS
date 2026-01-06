@@ -43,6 +43,10 @@ const BUSINESS_CATEGORY_MAP: Record<string, BusinessCategory> = {
   local: 'local_store',
   local_store: 'local_store',
   'local-store': 'local_store',
+  'tech / saas': 'saas_product',
+  'tech_startup': 'saas_product',
+  'saas': 'saas_product',
+  'saas_product': 'saas_product',
   nonprofit: 'other',
   other: 'other'
 };

@@ -70,7 +70,8 @@ async function generateTheme() {
             await contentEngine.generatePages(themeDir, userData);
             await contentEngine.injectContentLoader(themeDir, userData);
         } else {
-            // Standard Linear logic (Hero Replacement) - kept for legacy compat
+            // STANDARD / NATIVE MODE (The "Smart Selection" Logic)
+            // 1. Use Native Patterns (Ollie, Frost, etc.)
             if (personality.patterns.hero && userData.hero_headline) {
                 const heroPath = path.join(themeDir, personality.patterns.hero);
                 if (await fs.pathExists(heroPath)) {
@@ -80,8 +81,15 @@ async function generateTheme() {
                         heroContent = heroContent.replace(personality.patterns.hero_search_sub, userData.hero_subheadline);
                     }
                     await fs.writeFile(heroPath, heroContent);
+                    console.log(`[Pattern] Injected content into Native Hero: ${personality.patterns.hero}`);
                 }
             }
+
+            // 2. Generate Pages (Restored Feature)
+            await contentEngine.generatePages(themeDir, userData);
+
+            // 3. Inject Nuclear Loader (Required for "Test Pizza" Fix)
+            await contentEngine.injectContentLoader(themeDir, userData);
         }
 
         // 4. FINALIZE (ZIP)

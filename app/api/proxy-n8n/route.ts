@@ -4,8 +4,8 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        // Send data to n8n Production Webhook
-        const n8nResponse = await fetch('https://n8n.presspilotapp.com/webhook/build-site', {
+        // Send data to n8n Test Webhook (for Editor Debugging)
+        const n8nResponse = await fetch('https://n8n.presspilotapp.com/webhook-test/build-site', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -29,18 +29,14 @@ export async function POST(request: Request) {
         if (contentType && contentType.includes('application/json')) {
             data = await n8nResponse.json();
         } else {
-            // If n8n returns binary (ZIP) or text, we assume success but can't pass it as JSON directly yet
-            // We return a success signal so the UI transitions
             console.log('n8n returned non-JSON:', contentType);
-            data = {
-                status: 'success',
-                message: 'Workflow started successfully.',
-                // Provide REAL URLs for the Iframe
-                original: 'https://factory.presspilotapp.com',
-                high_contrast: 'https://factory.presspilotapp.com',
-                inverted: 'https://factory.presspilotapp.com'
-            };
+            data = { status: 'success' };
         }
+
+        // Enforce Preview URLs (Fix for "Dimmed" buttons if n8n doesn't return them)
+        if (!data.original) data.original = 'https://factory.presspilotapp.com';
+        if (!data.high_contrast) data.high_contrast = 'https://factory.presspilotapp.com';
+        if (!data.inverted) data.inverted = 'https://factory.presspilotapp.com';
 
         return NextResponse.json(data);
     } catch (error) {

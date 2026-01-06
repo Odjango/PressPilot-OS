@@ -5,8 +5,14 @@ export type BusinessCategory =
   | 'ecommerce'
   | 'service'
   | 'fitness'
+  | 'health_fitness'
+  | 'beauty_salon'
   | 'corporate'
+  | 'professional_services'
+  | 'online_coach'
+  | 'saas_product'
   | 'local_store'
+  | 'local_service'
   | 'portfolio'
   | 'other';
 
@@ -65,6 +71,10 @@ export interface PressPilotSaaSInput {
   };
   visualControls: {
     palette_id: string;
+    custom_colors?: {
+      primary?: string;
+      secondary?: string;
+    };
     font_pair_id: string;
     layout_density: 'cozy' | 'balanced' | 'spacious';
     corner_style: 'rounded' | 'mixed' | 'sharp';
@@ -133,6 +143,11 @@ export interface PressPilotNormalizedContext {
     image_source_preference: 'stock-only' | 'ai-only' | 'mixed';
     image_keywords?: string[];
     palette_id: string;
+    // New: Allow direct hex overrides
+    custom_colors?: {
+      primary?: string;
+      secondary?: string;
+    };
     font_pair_id: string;
     layout_density: 'cozy' | 'balanced' | 'spacious';
     corner_style: 'rounded' | 'mixed' | 'sharp';

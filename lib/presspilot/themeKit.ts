@@ -22,16 +22,32 @@ const FOUNDATION_THEME_DIR = path.join(process.cwd(), 'themes', FOUNDATION_THEME
 export async function buildWordPressTheme(
   context: PressPilotNormalizedContext,
   variation: PressPilotVariationManifest,
-  options?: { businessTypeId?: string | null; styleVariation?: string | null; kitSummary?: KitSummary | null }
+  options?: { businessTypeId?: string | null; styleVariation?: string | null; kitSummary?: KitSummary | null; baseTheme?: string | null }
 ): Promise<ThemeBuildResult> {
   await fs.mkdir(BUILD_ROOT, { recursive: true });
   await fs.mkdir(THEMES_ROOT, { recursive: true });
 
   await ensureFoundationThemeExists();
 
+  // DYNAMIC BASE THEME RESOLUTION
+  const selectedBase = options?.baseTheme || FOUNDATION_THEME_SLUG;
+  let sourceDir = FOUNDATION_THEME_DIR;
+
+  if (selectedBase !== FOUNDATION_THEME_SLUG) {
+    // Look in 'bases/' for 'ollie', 'frost', etc.
+    // Note: 'bases' is at project root.
+    const basesRoot = path.join(process.cwd(), 'bases');
+    sourceDir = path.join(basesRoot, selectedBase);
+  }
+
   const themeDir = path.join(THEMES_ROOT, context.brand.slug);
+  // Ensure source exists before likely confusing error
+  await fs.access(sourceDir).catch(() => {
+    throw new Error(`Base theme not found at ${sourceDir}`);
+  });
+
   await fs.rm(themeDir, { recursive: true, force: true });
-  await fs.cp(FOUNDATION_THEME_DIR, themeDir, { recursive: true });
+  await fs.cp(sourceDir, themeDir, { recursive: true });
 
   const { kit, styleVariation: resolvedStyleVariation } = await resolveBusinessTypeStyle(options?.businessTypeId ?? null);
   const appliedStyleVariation = options?.styleVariation ?? resolvedStyleVariation;
@@ -40,7 +56,8 @@ export async function buildWordPressTheme(
     themeDir,
     businessTypeId: options?.businessTypeId ?? null,
     styleVariation: appliedStyleVariation,
-    kitVersion: kit.version
+    kitVersion: kit.version,
+    customColors: context.visual.custom_colors
   });
 
   const copy = await resolveBusinessCopy(context, variation, options?.businessTypeId ?? null);
@@ -57,9 +74,14 @@ export async function buildWordPressTheme(
     console.log('[WPImport] wrote theme demo XML:', importerPath);
   }
 
-  // Inject FSE Parts
-  await injectHeaderContent(themeDir, context.navShell);
-  await injectFooterContent(themeDir, context.brand.name, context.navShell);
+  // Inject FSE Parts (ONLY IF UNIVERSAL)
+  // If we utilize a dedicated base (Ollie/Frost), we respect their native design.
+  if (selectedBase === FOUNDATION_THEME_SLUG) {
+    await injectHeaderContent(themeDir, context.navShell);
+    await injectFooterContent(themeDir, context.brand.name, context.navShell);
+  } else {
+    console.log(`[themeKit] Skipping Universal Header/Footer injection for Native Theme: ${selectedBase}`);
+  }
 
   await writeThemeStyleHeader(themeDir, context, variation, kit.version);
   await injectThemeConfig(themeDir, options?.businessTypeId);

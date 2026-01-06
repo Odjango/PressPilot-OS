@@ -166,11 +166,25 @@ export async function POST(request: Request) {
       },
       wpImport,
     };
+    const resolveBaseTheme = (typeId: string | null): string => {
+      // "Smarter" Selection Logic (Restoring Plugin Logic)
+      if (typeId === 'restaurant_cafe') return 'ollie';
+      if (typeId === 'saas_product' || typeId === 'professional_services') return 'frost';
+      if (typeId === 'ecommerce_store') return 'ollie';
+      if (typeId === 'local_service') return 'ollie';
+      if (typeId === 'health_fitness' || typeId === 'beauty_salon') return 'frost'; // Clean look
+      if (typeId === 'online_coach') return 'twentytwentyfour';
+      return 'ollie'; // Default upgrade from 'universal'
+    };
+
+    const selectedBaseTheme = resolveBaseTheme(validatedBusinessTypeId);
+
     const [themeResult, staticResult] = await Promise.all([
       buildWordPressTheme(context, variation, {
         businessTypeId: validatedBusinessTypeId,
         styleVariation: appliedStyleVariation,
-        kitSummary
+        kitSummary,
+        baseTheme: selectedBaseTheme
       }).catch(err => {
         console.error('[api/generate] buildWordPressTheme failed', err);
         throw new Error(`Theme generation failed: ${err.message}`);
