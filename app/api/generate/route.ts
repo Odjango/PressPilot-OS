@@ -47,6 +47,9 @@ export async function POST(request: Request) {
   let payload: PressPilotSaaSInput;
   let variationId: VariationId;
   const businessTypeId = body.businessTypeId ?? null;
+  let validatedBusinessTypeId: string | null = null;
+  // Declare context in outer scope for finally block access
+  let context: ReturnType<typeof applyBusinessInputs>;
 
   try {
     const payloadCandidate = body.payload ?? buildSaaSInputFromStudioInput(body.input);
@@ -64,7 +67,7 @@ export async function POST(request: Request) {
         ? body.styleVariation.trim()
         : null;
     const appliedStyleVariation = requestedStyleVariation ?? styleVariation ?? null;
-    let validatedBusinessTypeId: string | null = null;
+
     if (businessTypeId) {
       if (!styleVariation) {
         return NextResponse.json({ error: 'Invalid businessTypeId' }, { status: 400 });
@@ -72,7 +75,8 @@ export async function POST(request: Request) {
       validatedBusinessTypeId = businessTypeId;
     }
 
-    const context = applyBusinessInputs(payload);
+    context = applyBusinessInputs(payload);
+
     let variationSet;
     try {
       const aiResponse = (await callPressPilotJson({
@@ -222,6 +226,35 @@ export async function POST(request: Request) {
       error: 'Failed to generate exports',
       details: errorMessage
     }, { status: 500 });
+  } finally {
+    // ---------------------------------------------------------
+    // "THE NUCLEAR CLEANUP" (Triggered regardless of valid response)
+    // This tells WordPress at factory.presspilotapp.com to:
+    // 1. Flush Cache
+    // 2. Delete ALL 'Ghost' Template Parts (Previous runs)
+    // 3. Inject new Global Styles (Hex Colors)
+    // ---------------------------------------------------------
+    try {
+      if (validatedBusinessTypeId) { // Only bake if we have a valid context
+        const wpBakeUrl = 'https://factory.presspilotapp.com/wp-json/presspilot/v1/bake';
+        console.log(`[api/generate] Triggering Nuclear Cleanup at ${wpBakeUrl}...`);
+
+        await fetch(wpBakeUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            site_title: context.brand.name,
+            colors: {
+              primary: context.visual.custom_colors?.primary,
+              secondary: context.visual.custom_colors?.secondary
+            }
+          })
+        });
+        console.log('[api/generate] Nuclear Cleanup Signal Sent.');
+      }
+    } catch (cleanupError) {
+      console.error('[api/generate] Failed to trigger Nuclear Cleanup (Is WordPress online?):', cleanupError);
+    }
   }
 }
 
