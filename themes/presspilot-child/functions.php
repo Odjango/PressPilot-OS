@@ -49,9 +49,11 @@ function presspilot_handle_baking_child($request)
 {
     $recipe = $request->get_json_params();
 
-    // 0. NUCLEAR CLEANUP: Remove ALL ghost template parts
+    // 0. NUCLEAR CLEANUP: Remove ALL ghost template parts AND Pages
     // This runs on the Active Theme (PressPilot Child) to kill 'Test Pizza' ghosts.
     wp_cache_flush();
+
+    // A. Delete Template Parts (Headers/Footers)
     $ghost_parts = get_posts([
         'post_type' => 'wp_template_part',
         'post_status' => ['publish', 'draft', 'auto-draft', 'trash'],
@@ -60,6 +62,20 @@ function presspilot_handle_baking_child($request)
     foreach ($ghost_parts as $part) {
         wp_delete_post($part->ID, true);
     }
+
+    // B. Delete Pages (Home/About/etc) - Force Fallback to FSE Templates
+    $ghost_pages = get_posts([
+        'post_type' => 'page',
+        'post_status' => ['publish', 'draft', 'auto-draft', 'trash'],
+        'numberposts' => -1,
+    ]);
+    foreach ($ghost_pages as $page) {
+        wp_delete_post($page->ID, true);
+    }
+
+    // C. Reset 'show_on_front' to ensure templates take over
+    update_option('show_on_front', 'posts');
+    update_option('page_on_front', 0);
 
     // 1. Update Site Title
     if (isset($recipe['site_title'])) {
