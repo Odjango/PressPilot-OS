@@ -73,7 +73,18 @@ function presspilot_handle_baking_child($request)
         wp_delete_post($page->ID, true);
     }
 
-    // C. Reset 'show_on_front' to ensure templates take over
+    // C. Delete Customized Templates (The "Ception" Killer)
+    // If a template was edited in Site Editor, it lives here and blocks file changes.
+    $ghost_templates = get_posts([
+        'post_type' => 'wp_template',
+        'post_status' => ['publish', 'draft', 'auto-draft', 'trash'],
+        'numberposts' => -1,
+    ]);
+    foreach ($ghost_templates as $template) {
+        wp_delete_post($template->ID, true);
+    }
+
+    // D. Reset 'show_on_front' to ensure templates take over
     update_option('show_on_front', 'posts');
     update_option('page_on_front', 0);
 
