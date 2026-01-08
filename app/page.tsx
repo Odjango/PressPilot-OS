@@ -1,5 +1,6 @@
 'use client';
 
+// Force Re-Deploy: Restore Dec 25 UI State
 import { useState } from 'react';
 import { toast, Toaster } from 'sonner';
 import { BlueprintGrid } from '@/components/ui/blueprint-grid';
