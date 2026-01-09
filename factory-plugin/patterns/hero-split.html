@@ -1,0 +1,39 @@
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--80);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--80);padding-left:var(--wp--preset--spacing--50)">
+    <!-- wp:columns {"verticalAlignment":"center","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|60"}}}} -->
+    <div class="wp-block-columns are-vertically-aligned-center">
+        <!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
+        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%">
+            <!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(2rem, 4vw, 3.5rem)","fontWeight":"700","lineHeight":"1.2"}},"textColor":"contrast"} -->
+            <h1 class="wp-block-heading has-contrast-color has-text-color" style="font-size:clamp(2rem, 4vw, 3.5rem);font-weight:700;line-height:1.2">{{headline}}</h1>
+            <!-- /wp:heading -->
+
+            <!-- wp:paragraph {"style":{"typography":{"fontSize":"1.125rem","lineHeight":"1.7"},"spacing":{"margin":{"top":"var:preset|spacing|30"}}},"textColor":"secondary"} -->
+            <p class="has-secondary-color has-text-color" style="margin-top:var(--wp--preset--spacing--30);font-size:1.125rem;line-height:1.7">{{subheadline}}</p>
+            <!-- /wp:paragraph -->
+
+            <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
+            <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
+                <!-- wp:button {"backgroundColor":"primary","textColor":"base","style":{"typography":{"fontWeight":"600"},"border":{"radius":"6px"},"spacing":{"padding":{"top":"1rem","bottom":"1rem","left":"2rem","right":"2rem"}}}} -->
+                <div class="wp-block-button" style="font-weight:600"><a class="wp-block-button__link has-base-color has-primary-background-color has-text-color has-background wp-element-button" style="border-radius:6px;padding-top:1rem;padding-right:2rem;padding-bottom:1rem;padding-left:2rem">{{cta_text}}</a></div>
+                <!-- /wp:button -->
+
+                <!-- wp:button {"className":"is-style-outline","style":{"typography":{"fontWeight":"600"},"border":{"radius":"6px"},"spacing":{"padding":{"top":"1rem","bottom":"1rem","left":"2rem","right":"2rem"}}}} -->
+                <div class="wp-block-button is-style-outline" style="font-weight:600"><a class="wp-block-button__link wp-element-button" style="border-radius:6px;padding-top:1rem;padding-right:2rem;padding-bottom:1rem;padding-left:2rem">{{secondary_cta}}</a></div>
+                <!-- /wp:button -->
+            </div>
+            <!-- /wp:buttons -->
+        </div>
+        <!-- /wp:column -->
+
+        <!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
+        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%">
+            <!-- wp:image {"sizeSlug":"large","linkDestination":"none","style":{"border":{"radius":"12px"}}} -->
+            <figure class="wp-block-image size-large has-custom-border"><img src="{{hero_image}}" alt="{{business_name}}" style="border-radius:12px"/></figure>
+            <!-- /wp:image -->
+        </div>
+        <!-- /wp:column -->
+    </div>
+    <!-- /wp:columns -->
+</div>
+<!-- /wp:group -->
