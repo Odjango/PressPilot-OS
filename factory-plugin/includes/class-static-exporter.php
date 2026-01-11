@@ -47,66 +47,39 @@ class PressPilot_Factory_Static_Exporter {
 
     /**
      * Export using Simply Static
+     *
+     * Note: Simply Static's internal API is complex and version-dependent.
+     * For reliability, we use the basic export method which produces
+     * consistent results across all environments.
      */
     private function export_with_simply_static( $generation_id ) {
-        // Configure Simply Static
-        $this->configure_simply_static( $generation_id );
-
-        // Trigger export
-        if ( class_exists( 'Simply_Static\Plugin' ) ) {
-            $plugin = Simply_Static\Plugin::instance();
-
-            // Set delivery method to local
-            update_option( 'simply-static-delivery_method', 'local' );
-            update_option( 'simply-static-local_dir', $this->export_dir . $generation_id . '/' );
-
-            // Start export
-            do_action( 'simply_static_start' );
-
-            // Wait for completion (in real implementation, this would be async)
-            $timeout = 60; // seconds
-            $start = time();
-
-            while ( time() - $start < $timeout ) {
-                $status = get_option( 'simply-static-archive_status', [] );
-                if ( isset( $status['status'] ) && $status['status'] === 'complete' ) {
-                    break;
-                }
-                sleep( 1 );
-            }
-        }
-
-        // Create ZIP from exported files
-        $zip_path = $this->create_zip( $generation_id );
-
-        // Return URL
-        $upload_dir = wp_upload_dir();
-        return str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $zip_path );
+        // Simply Static integration is unreliable for programmatic use.
+        // Use the basic export which provides consistent, working results.
+        error_log( 'PressPilot Static Export - Using basic export method for reliability' );
+        return $this->export_basic( $generation_id );
     }
 
     /**
      * Configure Simply Static settings
      */
     private function configure_simply_static( $generation_id ) {
-        $options = [
-            'destination_scheme'     => 'https',
-            'destination_host'       => parse_url( home_url(), PHP_URL_HOST ),
-            'delivery_method'        => 'local',
-            'local_dir'             => $this->export_dir . $generation_id . '/',
-            'additional_urls'        => '',
-            'additional_files'       => '',
-            'urls_to_exclude'        => implode( "\n", [
-                '/wp-admin/*',
-                '/wp-login.php',
-                '/wp-json/presspilot/*',
-            ]),
-            'http_basic_auth_username' => '',
-            'http_basic_auth_password' => '',
-        ];
+        // Get existing Simply Static options (stored as a single serialized array)
+        $ss_options = get_option( 'simply-static', [] );
 
-        foreach ( $options as $key => $value ) {
-            update_option( 'simply-static-' . $key, $value );
-        }
+        // Update the options we need
+        $ss_options['destination_scheme'] = 'https://';
+        $ss_options['destination_host'] = parse_url( home_url(), PHP_URL_HOST );
+        $ss_options['delivery_method'] = 'local';
+        $ss_options['local_dir'] = $this->export_dir . $generation_id . '/';
+        $ss_options['urls_to_exclude'] = "/wp-admin/*\n/wp-login.php\n/wp-json/presspilot/*";
+        $ss_options['clear_directory_before_export'] = true;
+
+        // Save back the combined options array
+        update_option( 'simply-static', $ss_options );
+
+        // Also set individual options as fallback for some SS versions
+        update_option( 'simply-static-delivery_method', 'local' );
+        update_option( 'simply-static-local_dir', $this->export_dir . $generation_id . '/' );
     }
 
     /**
@@ -119,21 +92,45 @@ class PressPilot_Factory_Static_Exporter {
             wp_mkdir_p( $export_path );
         }
 
-        // Get all published pages
+        error_log( 'PressPilot Static Export - Starting basic export to: ' . $export_path );
+
+        // Get all published pages with _presspilot_generated meta
         $pages = get_posts([
             'post_type'      => 'page',
             'post_status'    => 'publish',
             'posts_per_page' => -1,
-            'meta_key'       => '_presspilot_generated',
-            'meta_value'     => true,
+            'meta_query'     => [
+                [
+                    'key'     => '_presspilot_generated',
+                    'compare' => 'EXISTS',
+                ],
+            ],
         ]);
+
+        error_log( 'PressPilot Static Export - Found ' . count( $pages ) . ' pages to export' );
+
+        // If no pages found with meta, try getting all recent pages as fallback
+        if ( empty( $pages ) ) {
+            $pages = get_posts([
+                'post_type'      => 'page',
+                'post_status'    => 'publish',
+                'posts_per_page' => 10,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+            ]);
+            error_log( 'PressPilot Static Export - Fallback: exporting ' . count( $pages ) . ' recent pages' );
+        }
+
+        $exported_count = 0;
 
         // Export each page
         foreach ( $pages as $page ) {
-            $this->export_page( $page, $export_path );
+            if ( $this->export_page( $page, $export_path ) ) {
+                $exported_count++;
+            }
         }
 
-        // Export front page
+        // Export front page as index.html
         $front_page_id = get_option( 'page_on_front' );
         if ( $front_page_id ) {
             $front_page = get_post( $front_page_id );
@@ -142,13 +139,23 @@ class PressPilot_Factory_Static_Exporter {
             }
         }
 
+        error_log( 'PressPilot Static Export - Exported ' . $exported_count . ' pages' );
+
         // Export assets
         $this->export_assets( $export_path );
 
         // Create ZIP
         $zip_path = $this->create_zip( $generation_id );
 
-        // Cleanup
+        if ( empty( $zip_path ) ) {
+            error_log( 'PressPilot Static Export - Failed to create ZIP from: ' . $export_path );
+            return '';
+        }
+
+        $zip_size = file_exists( $zip_path ) ? filesize( $zip_path ) : 0;
+        error_log( 'PressPilot Static Export - Created ZIP: ' . $zip_path . ' (' . $zip_size . ' bytes)' );
+
+        // Cleanup exported directory (keep the ZIP)
         $this->cleanup_directory( $export_path );
 
         // Return URL

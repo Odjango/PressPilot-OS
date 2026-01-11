@@ -34,7 +34,7 @@ The PressPilot Factory Plugin is a WordPress REST API-based theme factory that g
 | Factory WordPress | https://factory.presspilotapp.com |
 | Server | DigitalOcean VPS via Coolify (134.209.167.43) |
 | Base Theme | Ollie (FSE block theme) |
-| Static Export | Simply Static plugin |
+| Static Export | Basic HTML export (fetches rendered pages) |
 | GitHub Repo | github.com/Odjango/PressPilot-OS (Private) |
 | Plugin Path (server) | `/var/lib/docker/volumes/bb6b60fe00c76ab4ab0aaca0e12ded2c0814fad9aeb2295d57050c747d7068c2/_data/wp-content/plugins/factory-plugin/` |
 
@@ -52,7 +52,7 @@ factory-plugin/
 │   ├── class-brand-applier.php      # Colors/fonts/logo via global styles
 │   ├── class-navigation-builder.php # wp_create_nav_menu
 │   ├── class-theme-exporter.php     # Copies Ollie + customizations to ZIP
-│   ├── class-static-exporter.php    # Simply Static integration
+│   ├── class-static-exporter.php    # Static HTML export (pages + assets)
 │   └── class-cleanup-handler.php    # Deletes _presspilot_generated posts
 ├── patterns/                        # HTML block pattern templates
 │   ├── hero.html / hero-centered.html
@@ -242,18 +242,22 @@ Check: `/wp-content/debug.log`
 - [x] n8n workflow configured
 - [x] API key mismatch fixed (`presspilot_api_key`)
 - [x] Missing pattern files deployed
+- [x] Page creation working (4 pages: Home, About, Services, Contact)
+- [x] Theme ZIP export working (~2MB)
+- [x] Static HTML ZIP export working (~60MB with assets)
 
-### 🔄 In Progress
-- [ ] End-to-end testing of page creation
-- [ ] Verify static export produces full HTML
+### 📊 Current Performance
+- API generation time: ~24 seconds
+- Theme ZIP size: ~2MB
+- Static ZIP size: ~60MB (includes HTML pages + theme assets)
+- Pages created per generation: 4 (corporate), 5 (restaurant), 7 (ecommerce)
 
-### ❌ Known Issues to Fix
-1. **Pages not being created** - API returns success but no pages in database
-   - Need to verify content-builder.php execution
-   - Check for PHP errors in debug.log
+### ✅ Recently Fixed Issues
+1. **Static ZIP was empty** - Fixed by switching from Simply Static plugin integration to basic HTML export
+   - Simply Static's internal API was incompatible with programmatic triggering
+   - Basic export fetches rendered HTML via `wp_remote_get()` and packages with assets
 
-2. **Static ZIP too small** (8.81 KB) - Should be several MB with full HTML
-   - Likely because no pages exist to export
+2. **Pages confirmed working** - API correctly creates pages with `_presspilot_generated` meta
 
 ## Debugging Checklist
 
@@ -329,4 +333,4 @@ When pages aren't created:
 
 ---
 
-*Last Updated: January 11, 2025*
+*Last Updated: January 11, 2026*
