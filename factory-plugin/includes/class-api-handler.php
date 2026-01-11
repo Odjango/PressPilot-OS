@@ -60,7 +60,7 @@ class PressPilot_Factory_Api_Handler {
     public function check_permission( WP_REST_Request $request ) {
         // Check for API key in header
         $api_key = $request->get_header( 'X-PressPilot-Key' );
-        $stored_key = get_option( 'presspilot_factory_api_key' );
+        $stored_key = get_option( 'presspilot_api_key' );
 
         if ( $stored_key && $api_key === $stored_key ) {
             return true;
