@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json ./
 # Install dependencies based on lockfile
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # 3. Builder
 FROM base AS builder
