@@ -192,13 +192,34 @@ Patterns use Mustache-style placeholders:
 
 ## n8n Workflow Integration
 
-The n8n workflow:
+### CRITICAL: Correct Endpoint Configuration
+
+**DO NOT USE:** `https://presspilotapp.com/api/generate` (Next.js - BROKEN)
+
+**USE THIS:** `https://factory.presspilotapp.com/wp-json/presspilot/v1/generate` (WordPress Factory - WORKING)
+
+The Next.js serverless environment cannot render WordPress blocks. The Factory Plugin at factory.presspilotapp.com was built specifically for this purpose.
+
+### n8n HTTP Request Node Configuration
+```
+Method: POST
+URL: https://factory.presspilotapp.com/wp-json/presspilot/v1/generate
+Headers:
+  Content-Type: application/json
+  X-PressPilot-Key: <api_key_from_wordpress>
+Body: JSON (from AI content generation step)
+```
+
+### Workflow Steps
 1. Receives webhook with business info
 2. Calls AI (Claude/GPT) to generate content JSON
 3. Transforms AI output to API format (Code node)
-4. POSTs to `/wp-json/presspilot/v1/generate`
-5. Downloads resulting ZIPs
+4. POSTs to `https://factory.presspilotapp.com/wp-json/presspilot/v1/generate`
+5. Downloads resulting ZIPs from response URLs
 6. Delivers to user
+
+### Test Script
+Run `./scripts/test-factory-api.sh` to verify the factory endpoint is working.
 
 ## Development Workflow
 

@@ -47,8 +47,11 @@ class PressPilot_Factory_Theme_Exporter {
         // Generate style.css header
         $this->update_style_css( $theme_dir, $params );
 
-        // Export templates
-        $this->export_templates( $theme_dir, $params );
+        // Export templates WITH page content embedded
+        $this->export_templates_with_content( $theme_dir, $params );
+
+        // Create starter content JSON for theme activation
+        $this->create_starter_content( $theme_dir, $params );
 
         // Create ZIP
         $zip_path = $this->create_zip( $theme_dir, $theme_slug, $generation_id );
@@ -59,6 +62,25 @@ class PressPilot_Factory_Theme_Exporter {
         // Return URL to ZIP
         $upload_dir = wp_upload_dir();
         return str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $zip_path );
+    }
+
+    /**
+     * Get generated pages from database
+     */
+    private function get_generated_pages() {
+        return get_posts([
+            'post_type'      => 'page',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'orderby'        => 'menu_order',
+            'order'          => 'ASC',
+            'meta_query'     => [
+                [
+                    'key'     => '_presspilot_generated',
+                    'compare' => 'EXISTS',
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -359,31 +381,57 @@ PHP;
     }
 
     /**
-     * Export templates
+     * Export templates with actual page content embedded
      */
-    private function export_templates( $theme_dir, $params ) {
+    private function export_templates_with_content( $theme_dir, $params ) {
         $templates_dir = $theme_dir . '/templates';
 
         if ( ! file_exists( $templates_dir ) ) {
             wp_mkdir_p( $templates_dir );
         }
 
-        // Export basic templates
-        $this->create_front_page_template( $templates_dir, $params );
+        // Get generated pages
+        $pages = $this->get_generated_pages();
+
+        // Create front-page template with home content
+        $home_content = '';
+        foreach ( $pages as $page ) {
+            if ( $page->post_name === 'home' || $page->ID === (int) get_option( 'page_on_front' ) ) {
+                $home_content = $page->post_content;
+                break;
+            }
+        }
+        $this->create_front_page_template_with_content( $templates_dir, $home_content );
+
+        // Create individual page templates for each generated page
+        foreach ( $pages as $page ) {
+            if ( $page->post_name !== 'home' ) {
+                $this->create_custom_page_template( $templates_dir, $page );
+            }
+        }
+
+        // Create fallback page template
         $this->create_page_template( $templates_dir );
+
+        // Create index template
         $this->create_index_template( $templates_dir );
     }
 
     /**
-     * Create front-page template
+     * Create front-page template with embedded content
      */
-    private function create_front_page_template( $templates_dir, $params ) {
+    private function create_front_page_template_with_content( $templates_dir, $content ) {
+        // If no content, create a placeholder
+        if ( empty( $content ) ) {
+            $content = '<!-- wp:paragraph --><p>Welcome to your new website!</p><!-- /wp:paragraph -->';
+        }
+
         $template = <<<HTML
 <!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
 <!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"0","bottom":"0"}}},"layout":{"type":"default"}} -->
 <main class="wp-block-group" style="margin-top:0;margin-bottom:0">
-    <!-- wp:post-content {"layout":{"type":"default"}} /-->
+{$content}
 </main>
 <!-- /wp:group -->
 
@@ -394,7 +442,38 @@ HTML;
     }
 
     /**
-     * Create page template
+     * Create custom page template with embedded content
+     */
+    private function create_custom_page_template( $templates_dir, $page ) {
+        $slug = $page->post_name;
+        $title = $page->post_title;
+        $content = $page->post_content;
+
+        // If no content, use placeholder
+        if ( empty( $content ) ) {
+            $content = '<!-- wp:paragraph --><p>Page content goes here.</p><!-- /wp:paragraph -->';
+        }
+
+        $template = <<<HTML
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained"}} -->
+<main class="wp-block-group" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:heading {"level":1} -->
+    <h1 class="wp-block-heading">{$title}</h1>
+    <!-- /wp:heading -->
+{$content}
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
+HTML;
+
+        file_put_contents( $templates_dir . '/page-' . $slug . '.html', $template );
+    }
+
+    /**
+     * Create fallback page template (for pages not explicitly generated)
      */
     private function create_page_template( $templates_dir ) {
         $template = <<<HTML
@@ -442,6 +521,137 @@ HTML;
 HTML;
 
         file_put_contents( $templates_dir . '/index.html', $template );
+    }
+
+    /**
+     * Create starter content JSON for theme activation auto-import
+     */
+    private function create_starter_content( $theme_dir, $params ) {
+        $pages = $this->get_generated_pages();
+        $starter_content = [
+            'version' => '1.0',
+            'theme' => $params['business_name'] ?? 'PressPilot Theme',
+            'generated_at' => current_time( 'mysql' ),
+            'pages' => [],
+            'options' => [
+                'show_on_front' => 'page',
+                'page_on_front' => 'home',
+            ],
+        ];
+
+        foreach ( $pages as $page ) {
+            $starter_content['pages'][] = [
+                'title' => $page->post_title,
+                'slug' => $page->post_name,
+                'content' => $page->post_content,
+                'template' => 'page-' . $page->post_name,
+                'is_front_page' => ( $page->post_name === 'home' ),
+            ];
+        }
+
+        // Write starter content JSON
+        file_put_contents(
+            $theme_dir . '/starter-content.json',
+            json_encode( $starter_content, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE )
+        );
+
+        // Update functions.php to handle starter content import
+        $this->add_starter_content_importer( $theme_dir );
+    }
+
+    /**
+     * Add starter content importer to functions.php
+     */
+    private function add_starter_content_importer( $theme_dir ) {
+        $functions_file = $theme_dir . '/functions.php';
+
+        $importer_code = <<<'PHP'
+
+
+// PressPilot Starter Content Importer
+add_action( 'after_switch_theme', 'presspilot_import_starter_content' );
+
+function presspilot_import_starter_content() {
+    // Only import once
+    if ( get_option( 'presspilot_starter_content_imported' ) ) {
+        return;
+    }
+
+    $starter_file = get_stylesheet_directory() . '/starter-content.json';
+    if ( ! file_exists( $starter_file ) ) {
+        return;
+    }
+
+    $content = json_decode( file_get_contents( $starter_file ), true );
+    if ( empty( $content['pages'] ) ) {
+        return;
+    }
+
+    $front_page_id = 0;
+
+    foreach ( $content['pages'] as $page_data ) {
+        // Check if page already exists
+        $existing = get_page_by_path( $page_data['slug'] );
+        if ( $existing ) {
+            continue;
+        }
+
+        // Create page
+        $page_id = wp_insert_post([
+            'post_title'   => $page_data['title'],
+            'post_name'    => $page_data['slug'],
+            'post_content' => $page_data['content'],
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+        ]);
+
+        if ( $page_id && ! is_wp_error( $page_id ) ) {
+            // Set page template if exists
+            if ( ! empty( $page_data['template'] ) ) {
+                update_post_meta( $page_id, '_wp_page_template', $page_data['template'] );
+            }
+
+            // Track front page
+            if ( ! empty( $page_data['is_front_page'] ) ) {
+                $front_page_id = $page_id;
+            }
+        }
+    }
+
+    // Set front page
+    if ( $front_page_id ) {
+        update_option( 'show_on_front', 'page' );
+        update_option( 'page_on_front', $front_page_id );
+    }
+
+    // Mark as imported
+    update_option( 'presspilot_starter_content_imported', true );
+}
+
+// Allow re-import via admin
+add_action( 'admin_init', function() {
+    if ( isset( $_GET['presspilot_reimport'] ) && current_user_can( 'manage_options' ) ) {
+        delete_option( 'presspilot_starter_content_imported' );
+        presspilot_import_starter_content();
+        wp_redirect( admin_url( 'themes.php?presspilot_imported=1' ) );
+        exit;
+    }
+});
+
+add_action( 'admin_notices', function() {
+    if ( isset( $_GET['presspilot_imported'] ) ) {
+        echo '<div class="notice notice-success"><p>PressPilot starter content has been imported!</p></div>';
+    }
+});
+PHP;
+
+        if ( file_exists( $functions_file ) ) {
+            $existing_content = file_get_contents( $functions_file );
+            // Don't add twice
+            if ( strpos( $existing_content, 'presspilot_import_starter_content' ) === false ) {
+                file_put_contents( $functions_file, $existing_content . $importer_code );
+            }
+        }
     }
 
     /**
