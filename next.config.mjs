@@ -2,16 +2,10 @@
 const nextConfig = {
   // Standalone output for robust Docker deployment
   output: "standalone",
-  // Explicitly disable font optimization to prevent runtime crash (ENOENT font-manifest)
-  optimizeFonts: false,
-  eslint: {
-    // Skip lint errors in Coolify CI
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    // Skip TS errors in Coolify CI
-    ignoreBuildErrors: true,
-  },
+  
+  // Use Turbopack (default in Next.js 16) with empty config to silence warning
+  turbopack: {},
+  
   // Externalize WordPress packages to avoid module resolution issues
   serverExternalPackages: [
     '@wordpress/block-library',
@@ -28,6 +22,12 @@ const nextConfig = {
     '@wordpress/icons',
     'jsdom',
   ],
+  
+  // Skip TypeScript errors during build
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  
   // Webpack config to handle WordPress package ESM/CJS issues
   webpack: (config, { isServer }) => {
     if (isServer) {
