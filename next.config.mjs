@@ -12,20 +12,34 @@ const nextConfig = {
     // Skip TS errors in Coolify CI
     ignoreBuildErrors: true,
   },
-  experimental: {
-    serverComponentsExternalPackages: [
-      '@wordpress/block-library',
-      '@wordpress/blocks',
-      '@wordpress/block-serialization-default-parser',
-      '@wordpress/components',
-      '@wordpress/data',
-      '@wordpress/element',
-      '@wordpress/hooks',
-
-      'jsdom',
-    ],
+  // Externalize WordPress packages to avoid module resolution issues
+  serverExternalPackages: [
+    '@wordpress/block-library',
+    '@wordpress/blocks',
+    '@wordpress/block-serialization-default-parser',
+    '@wordpress/components',
+    '@wordpress/data',
+    '@wordpress/element',
+    '@wordpress/hooks',
+    '@wordpress/i18n',
+    '@wordpress/compose',
+    '@wordpress/redux-routine',
+    '@wordpress/primitives',
+    '@wordpress/icons',
+    'jsdom',
+  ],
+  // Webpack config to handle WordPress package ESM/CJS issues
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push({
+        '@wordpress/data': 'commonjs @wordpress/data',
+        '@wordpress/blocks': 'commonjs @wordpress/blocks',
+        '@wordpress/block-library': 'commonjs @wordpress/block-library',
+      });
+    }
+    return config;
   },
 };
 
 export default nextConfig;
-
