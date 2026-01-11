@@ -565,13 +565,14 @@ HTML;
     private function add_starter_content_importer( $theme_dir ) {
         $functions_file = $theme_dir . '/functions.php';
 
+        // Use anonymous functions to avoid namespace issues with Ollie theme
+        // which uses `namespace Ollie;` - named functions would be scoped to that namespace
         $importer_code = <<<'PHP'
 
 
 // PressPilot Starter Content Importer
-add_action( 'after_switch_theme', 'presspilot_import_starter_content' );
-
-function presspilot_import_starter_content() {
+// Using anonymous function to avoid namespace scoping issues
+add_action( 'after_switch_theme', function() {
     // Only import once
     if ( get_option( 'presspilot_starter_content_imported' ) ) {
         return;
@@ -626,13 +627,48 @@ function presspilot_import_starter_content() {
 
     // Mark as imported
     update_option( 'presspilot_starter_content_imported', true );
-}
+});
 
 // Allow re-import via admin
 add_action( 'admin_init', function() {
     if ( isset( $_GET['presspilot_reimport'] ) && current_user_can( 'manage_options' ) ) {
         delete_option( 'presspilot_starter_content_imported' );
-        presspilot_import_starter_content();
+
+        // Re-run import inline
+        $starter_file = get_stylesheet_directory() . '/starter-content.json';
+        if ( file_exists( $starter_file ) ) {
+            $content = json_decode( file_get_contents( $starter_file ), true );
+            if ( ! empty( $content['pages'] ) ) {
+                $front_page_id = 0;
+                foreach ( $content['pages'] as $page_data ) {
+                    $existing = get_page_by_path( $page_data['slug'] );
+                    if ( $existing ) continue;
+
+                    $page_id = wp_insert_post([
+                        'post_title'   => $page_data['title'],
+                        'post_name'    => $page_data['slug'],
+                        'post_content' => $page_data['content'],
+                        'post_status'  => 'publish',
+                        'post_type'    => 'page',
+                    ]);
+
+                    if ( $page_id && ! is_wp_error( $page_id ) ) {
+                        if ( ! empty( $page_data['template'] ) ) {
+                            update_post_meta( $page_id, '_wp_page_template', $page_data['template'] );
+                        }
+                        if ( ! empty( $page_data['is_front_page'] ) ) {
+                            $front_page_id = $page_id;
+                        }
+                    }
+                }
+                if ( $front_page_id ) {
+                    update_option( 'show_on_front', 'page' );
+                    update_option( 'page_on_front', $front_page_id );
+                }
+                update_option( 'presspilot_starter_content_imported', true );
+            }
+        }
+
         wp_redirect( admin_url( 'themes.php?presspilot_imported=1' ) );
         exit;
     }
