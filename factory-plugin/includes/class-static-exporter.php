@@ -1,6 +1,6 @@
 <?php
 /**
- * Static Exporter - Integration with Simply Static plugin
+ * Static Exporter - Builds static HTML from generated content
  *
  * @package PressPilot_Factory
  */
@@ -27,72 +27,30 @@ class PressPilot_Factory_Static_Exporter {
             wp_mkdir_p( $this->export_dir );
         }
 
-        // Check if Simply Static is available
-        if ( $this->is_simply_static_available() ) {
-            return $this->export_with_simply_static( $generation_id );
-        }
-
-        // Fallback to basic static export
-        return $this->export_basic( $generation_id );
+        return $this->export_direct( $generation_id );
     }
 
     /**
-     * Check if Simply Static plugin is available
+     * Export by building HTML directly (not fetching from WP)
+     * This ensures we use the generated header/footer, not the factory site's
      */
-    private function is_simply_static_available() {
-        return class_exists( 'Simply_Static\Plugin' ) ||
-               class_exists( 'Simply_Static_Plugin' ) ||
-               function_exists( 'simply_static_run_static_export' );
-    }
-
-    /**
-     * Export using Simply Static
-     *
-     * Note: Simply Static's internal API is complex and version-dependent.
-     * For reliability, we use the basic export method which produces
-     * consistent results across all environments.
-     */
-    private function export_with_simply_static( $generation_id ) {
-        // Simply Static integration is unreliable for programmatic use.
-        // Use the basic export which provides consistent, working results.
-        error_log( 'PressPilot Static Export - Using basic export method for reliability' );
-        return $this->export_basic( $generation_id );
-    }
-
-    /**
-     * Configure Simply Static settings
-     */
-    private function configure_simply_static( $generation_id ) {
-        // Get existing Simply Static options (stored as a single serialized array)
-        $ss_options = get_option( 'simply-static', [] );
-
-        // Update the options we need
-        $ss_options['destination_scheme'] = 'https://';
-        $ss_options['destination_host'] = parse_url( home_url(), PHP_URL_HOST );
-        $ss_options['delivery_method'] = 'local';
-        $ss_options['local_dir'] = $this->export_dir . $generation_id . '/';
-        $ss_options['urls_to_exclude'] = "/wp-admin/*\n/wp-login.php\n/wp-json/presspilot/*";
-        $ss_options['clear_directory_before_export'] = true;
-
-        // Save back the combined options array
-        update_option( 'simply-static', $ss_options );
-
-        // Also set individual options as fallback for some SS versions
-        update_option( 'simply-static-delivery_method', 'local' );
-        update_option( 'simply-static-local_dir', $this->export_dir . $generation_id . '/' );
-    }
-
-    /**
-     * Basic static export fallback
-     */
-    private function export_basic( $generation_id ) {
+    private function export_direct( $generation_id ) {
         $export_path = $this->export_dir . $generation_id;
 
         if ( ! file_exists( $export_path ) ) {
             wp_mkdir_p( $export_path );
         }
 
-        error_log( 'PressPilot Static Export - Starting basic export to: ' . $export_path );
+        error_log( 'PressPilot Static Export - Starting direct build to: ' . $export_path );
+
+        // Get generation params
+        $last_gen = get_option( 'presspilot_last_generation' );
+        $params = $last_gen['params'] ?? [];
+
+        // Build header and footer HTML
+        $header_html = $this->build_header_html( $params );
+        $footer_html = $this->build_footer_html( $params );
+        $head_css = $this->get_head_css( $params );
 
         // Get all published pages with _presspilot_generated meta
         $pages = get_posts([
@@ -109,51 +67,44 @@ class PressPilot_Factory_Static_Exporter {
 
         error_log( 'PressPilot Static Export - Found ' . count( $pages ) . ' pages to export' );
 
-        // If no pages found with meta, try getting all recent pages as fallback
-        if ( empty( $pages ) ) {
-            $pages = get_posts([
-                'post_type'      => 'page',
-                'post_status'    => 'publish',
-                'posts_per_page' => 10,
-                'orderby'        => 'date',
-                'order'          => 'DESC',
-            ]);
-            error_log( 'PressPilot Static Export - Fallback: exporting ' . count( $pages ) . ' recent pages' );
-        }
-
         $exported_count = 0;
+        $home_page = null;
 
         // Export each page
         foreach ( $pages as $page ) {
-            if ( $this->export_page( $page, $export_path ) ) {
-                $exported_count++;
+            // Track home page for index.html
+            if ( $page->post_name === 'home' ) {
+                $home_page = $page;
             }
+
+            $page_dir = $export_path . '/' . $page->post_name;
+            wp_mkdir_p( $page_dir );
+
+            $html = $this->build_page_html( $page, $header_html, $footer_html, $head_css, false );
+            file_put_contents( $page_dir . '/index.html', $html );
+            error_log( 'PressPilot Static Export - Built: ' . $page->post_name . '/index.html' );
+            $exported_count++;
         }
 
-        // Export front page as index.html
-        $front_page_id = get_option( 'page_on_front' );
-        if ( $front_page_id ) {
-            $front_page = get_post( $front_page_id );
-            if ( $front_page ) {
-                $this->export_page( $front_page, $export_path, 'index.html' );
-            }
+        // Export home as index.html at root
+        if ( $home_page ) {
+            $html = $this->build_page_html( $home_page, $header_html, $footer_html, $head_css, true );
+            file_put_contents( $export_path . '/index.html', $html );
+            error_log( 'PressPilot Static Export - Built: index.html' );
         }
 
         error_log( 'PressPilot Static Export - Exported ' . $exported_count . ' pages' );
 
         // Export assets
-        $this->export_assets( $export_path );
+        $this->export_assets( $export_path, $params );
 
         // Create ZIP
         $zip_path = $this->create_zip( $generation_id );
 
         if ( empty( $zip_path ) ) {
-            error_log( 'PressPilot Static Export - Failed to create ZIP from: ' . $export_path );
+            error_log( 'PressPilot Static Export - Failed to create ZIP' );
             return '';
         }
-
-        $zip_size = file_exists( $zip_path ) ? filesize( $zip_path ) : 0;
-        error_log( 'PressPilot Static Export - Created ZIP: ' . $zip_path . ' (' . $zip_size . ' bytes)' );
 
         // Cleanup exported directory (keep the ZIP)
         $this->cleanup_directory( $export_path );
@@ -164,142 +115,125 @@ class PressPilot_Factory_Static_Exporter {
     }
 
     /**
-     * Export a single page
+     * Build complete HTML page from parts
      */
-    private function export_page( $page, $export_path, $filename = null ) {
-        // Get rendered HTML
-        $url = get_permalink( $page->ID );
-        $html = $this->fetch_page_html( $url );
+    private function build_page_html( $page, $header_html, $footer_html, $head_css, $is_root = false ) {
+        $title = esc_html( $page->post_title );
+        $content = $page->post_content;
 
-        if ( empty( $html ) ) {
-            error_log( 'PressPilot Static Export - Failed to fetch: ' . $url );
-            return false;
-        }
+        // Process Gutenberg blocks to HTML
+        $content_html = do_blocks( $content );
+        $content_html = wptexturize( $content_html );
+        $content_html = wpautop( $content_html );
 
-        // Determine if this is the index page (affects relative path calculation)
-        $is_index = ( $filename === 'index.html' );
+        // Adjust asset paths based on page depth
+        $asset_prefix = $is_root ? './' : '../';
 
-        // Process HTML for static export
-        $html = $this->process_html_for_static( $html, $is_index );
+        // Build full HTML document
+        $html = <<<HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{$title}</title>
+    <link rel="stylesheet" href="{$asset_prefix}assets/wp-content/themes/ollie/style.css">
+    <link rel="stylesheet" href="{$asset_prefix}assets/global-styles.css">
+    <link rel="stylesheet" href="{$asset_prefix}assets/fallback-colors.css">
+    <style id="presspilot-inline-css">
+{$head_css}
+    </style>
+</head>
+<body class="wp-site-blocks">
+    <header class="wp-block-template-part">
+{$header_html}
+    </header>
 
-        // Determine filename
-        if ( ! $filename ) {
-            $slug = $page->post_name;
-            $page_dir = $export_path . '/' . $slug;
-            wp_mkdir_p( $page_dir );
-            $filename = $page_dir . '/index.html';
-        } else {
-            $filename = $export_path . '/' . $filename;
-        }
+    <main class="wp-block-group" style="margin-top:0;margin-bottom:0">
+{$content_html}
+    </main>
 
-        file_put_contents( $filename, $html );
-        error_log( 'PressPilot Static Export - Exported: ' . $filename );
+    <footer class="wp-block-template-part">
+{$footer_html}
+    </footer>
+</body>
+</html>
+HTML;
 
-        return true;
-    }
-
-    /**
-     * Fetch page HTML
-     */
-    private function fetch_page_html( $url ) {
-        $response = wp_remote_get( $url, [
-            'timeout'   => 30,
-            'sslverify' => false,
-        ]);
-
-        if ( is_wp_error( $response ) ) {
-            return '';
-        }
-
-        return wp_remote_retrieve_body( $response );
-    }
-
-    /**
-     * Process HTML for static export
-     */
-    private function process_html_for_static( $html, $is_index = false ) {
-        $site_url = home_url();
-        $site_host = parse_url( $site_url, PHP_URL_HOST );
-
-        // Determine relative path prefix based on page depth
-        // Index pages are at root, other pages are in subdirectories
-        $asset_prefix = $is_index ? './' : '../';
-
-        // Step 0: Inject critical CSS into head to ensure styles work offline
-        $critical_css = $this->get_critical_css();
-        if ( ! empty( $critical_css ) ) {
-            $html = preg_replace(
-                '/<\/head>/i',
-                '<style id="presspilot-critical-css">' . $critical_css . '</style></head>',
-                $html
-            );
-        }
-
-        // Step 1: Fix asset URLs FIRST (before making URLs relative)
-        // Replace wp-content paths with local asset paths
-        $html = preg_replace(
-            '/(href|src)="' . preg_quote( $site_url, '/' ) . '\/wp-content\//',
-            '$1="' . $asset_prefix . 'assets/wp-content/',
-            $html
-        );
-        $html = preg_replace(
-            '/(href|src)="\/wp-content\//',
-            '$1="' . $asset_prefix . 'assets/wp-content/',
-            $html
-        );
-
-        // Step 2: Fix wp-includes paths (for block library CSS, etc)
-        $html = preg_replace(
-            '/(href|src)="' . preg_quote( $site_url, '/' ) . '\/wp-includes\//',
-            '$1="' . $asset_prefix . 'assets/wp-includes/',
-            $html
-        );
-        $html = preg_replace(
-            '/(href|src)="\/wp-includes\//',
-            '$1="' . $asset_prefix . 'assets/wp-includes/',
-            $html
-        );
-
-        // Step 3: Fix navigation links (internal pages)
-        // Keep navigation links working between pages
-        $html = preg_replace( '/href="' . preg_quote( $site_url, '/' ) . '\/([^"]*)"/', 'href="' . $asset_prefix . '$1"', $html );
-        $html = preg_replace( '/href="\/([a-zA-Z][^"]*)"/', 'href="' . $asset_prefix . '$1/"', $html );
-
-        // Step 4: Fix root home links
-        $html = str_replace( 'href="/"', 'href="' . $asset_prefix . '"', $html );
-        $html = str_replace( 'href="' . $site_url . '"', 'href="' . $asset_prefix . '"', $html );
-        $html = str_replace( 'href="' . $site_url . '/"', 'href="' . $asset_prefix . '"', $html );
-
-        // Step 5: Remove WordPress-specific elements (REST API, etc)
-        $html = preg_replace( '/<link[^>]*wp-json[^>]*>/', '', $html );
-        $html = preg_replace( '/<link[^>]*xmlrpc[^>]*>/', '', $html );
-        $html = preg_replace( '/<link[^>]*wlwmanifest[^>]*>/', '', $html );
-        $html = preg_replace( '/<link[^>]*oembed[^>]*>/', '', $html );
-        $html = preg_replace( '/<link[^>]*pingback[^>]*>/', '', $html );
-        $html = preg_replace( '/<link[^>]*EditURI[^>]*>/', '', $html );
-
-        // Step 6: Remove admin bar if present
-        $html = preg_replace( '/<style[^>]*id="admin-bar-[^"]*"[^>]*>.*?<\/style>/s', '', $html );
-        $html = preg_replace( '/<div[^>]*id="wpadminbar"[^>]*>.*?<\/div>/s', '', $html );
+        // Fix internal links for static site
+        $html = $this->fix_links( $html, $is_root );
 
         return $html;
     }
 
     /**
-     * Get critical CSS for static export
+     * Build header HTML from params
      */
-    private function get_critical_css() {
-        $last_gen = get_option( 'presspilot_last_generation' );
-        $colors = $last_gen['params']['colors'] ?? [];
+    private function build_header_html( $params ) {
+        $business_name = esc_html( $params['business_name'] ?? 'My Business' );
+        $logo_url = esc_url( $params['logo'] ?? '' );
+        $category = $params['category'] ?? 'corporate';
+        $bg_color = $params['colors']['background'] ?? '#ffffff';
+        $text_color = $params['colors']['text'] ?? '#1f2937';
 
+        // Logo block
+        $logo_block = '';
+        if ( ! empty( $logo_url ) ) {
+            $logo_block = '<img src="' . $logo_url . '" alt="' . $business_name . ' Logo" style="width:50px;height:50px;object-fit:contain">';
+        }
+
+        // Navigation links based on category
+        $nav_links = '<a href="./" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Home</a>';
+        if ( $category === 'restaurant' ) {
+            $nav_links .= '<a href="./menu/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Menu</a>';
+        } else {
+            $nav_links .= '<a href="./services/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Services</a>';
+        }
+        $nav_links .= '<a href="./about/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">About</a>';
+        $nav_links .= '<a href="./contact/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Contact</a>';
+
+        return <<<HTML
+<div class="wp-block-group has-background" style="background-color:{$bg_color};padding:1rem 2rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;flex-wrap:wrap;gap:1rem">
+        <div style="display:flex;align-items:center;gap:1rem">
+            {$logo_block}
+            <a href="./" style="font-size:1.5rem;font-weight:700;text-decoration:none;color:{$text_color}">{$business_name}</a>
+        </div>
+        <nav style="display:flex;gap:0.5rem;flex-wrap:wrap">
+            {$nav_links}
+        </nav>
+    </div>
+</div>
+HTML;
+    }
+
+    /**
+     * Build footer HTML from params
+     */
+    private function build_footer_html( $params ) {
+        $business_name = esc_html( $params['business_name'] ?? 'My Business' );
+        $year = date( 'Y' );
+        $primary_color = $params['colors']['primary'] ?? '#1e40af';
+
+        return <<<HTML
+<div class="wp-block-group alignfull" style="background-color:{$primary_color};color:#ffffff;padding:24px;text-align:center">
+    <p style="color:#ffffff;font-size:0.9rem;margin:0">© {$year} {$business_name}. All rights reserved. · Powered by <a href="https://presspilot.io" target="_blank" rel="noopener" style="color:#ffffff;text-decoration:underline;">PressPilot</a></p>
+</div>
+HTML;
+    }
+
+    /**
+     * Get head CSS for inline styles
+     */
+    private function get_head_css( $params ) {
+        $colors = $params['colors'] ?? [];
         $primary = $colors['primary'] ?? '#1e40af';
         $secondary = $colors['secondary'] ?? '#64748b';
         $accent = $colors['accent'] ?? '#f59e0b';
         $background = $colors['background'] ?? '#ffffff';
         $text = $colors['text'] ?? '#1f2937';
 
-        // Generate critical CSS with all necessary variables and fallbacks
-        $css = "
+        return <<<CSS
 :root {
     --wp--preset--color--base: {$background};
     --wp--preset--color--contrast: {$text};
@@ -315,29 +249,34 @@ class PressPilot_Factory_Static_Exporter {
     --wp--preset--spacing--70: clamp(3rem, 7vw, 4rem);
     --wp--preset--spacing--80: clamp(4rem, 8vw, 6rem);
 }
-body { background-color: {$background}; color: {$text}; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-.has-primary-color { color: {$primary}; }
-.has-primary-background-color { background-color: {$primary}; }
-.has-secondary-color { color: {$secondary}; }
-.has-secondary-background-color { background-color: {$secondary}; }
-.has-accent-color { color: {$accent}; }
-.has-accent-background-color { background-color: {$accent}; }
-.has-base-color { color: {$background}; }
-.has-base-background-color { background-color: {$background}; }
-.has-contrast-color { color: {$text}; }
-.has-contrast-background-color { background-color: {$text}; }
-.has-surface-background-color { background-color: #f8fafc; }
+* { box-sizing: border-box; }
+body { background-color: {$background}; color: {$text}; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; }
+img { max-width: 100%; height: auto; }
+.has-primary-color { color: {$primary} !important; }
+.has-primary-background-color { background-color: {$primary} !important; }
+.has-secondary-color { color: {$secondary} !important; }
+.has-secondary-background-color { background-color: {$secondary} !important; }
+.has-accent-color { color: {$accent} !important; }
+.has-accent-background-color { background-color: {$accent} !important; }
+.has-base-color { color: {$background} !important; }
+.has-base-background-color { background-color: {$background} !important; }
+.has-contrast-color { color: {$text} !important; }
+.has-contrast-background-color { background-color: {$text} !important; }
+.has-surface-background-color { background-color: #f8fafc !important; }
 .has-text-color { }
 .has-background { }
 .has-text-align-center { text-align: center; }
+.has-text-align-left { text-align: left; }
+.has-text-align-right { text-align: right; }
 .alignfull { width: 100%; max-width: 100%; margin-left: 0; margin-right: 0; }
+.alignwide { max-width: 1200px; margin-left: auto; margin-right: auto; }
 .wp-block-group { box-sizing: border-box; }
 .wp-block-columns { display: flex; flex-wrap: wrap; gap: 2em; }
-.wp-block-column { flex: 1; min-width: 0; }
-.wp-block-cover { position: relative; display: flex; align-items: center; justify-content: center; }
+.wp-block-column { flex: 1; min-width: 250px; }
+.wp-block-cover { position: relative; display: flex; align-items: center; justify-content: center; min-height: 300px; }
 .wp-block-cover__background { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
 .wp-block-cover__inner-container { position: relative; z-index: 1; width: 100%; }
-.wp-block-button__link { display: inline-block; text-decoration: none; padding: 0.75rem 1.5rem; cursor: pointer; }
+.wp-block-button__link { display: inline-block; text-decoration: none; padding: 0.75rem 1.5rem; cursor: pointer; border-radius: 6px; }
 .wp-block-buttons { display: flex; flex-wrap: wrap; gap: 0.5em; }
 .wp-block-navigation { display: flex; gap: 1rem; }
 .wp-element-button { border: none; cursor: pointer; }
@@ -346,152 +285,84 @@ body { background-color: {$background}; color: {$text}; margin: 0; font-family: 
 .is-content-justification-center { justify-content: center; }
 .is-content-justification-space-between { justify-content: space-between; }
 .is-nowrap { flex-wrap: nowrap; }
+.is-vertically-aligned-center { align-items: center; }
+.wp-block-heading { margin-top: 0; }
+figure { margin: 0; }
 @media (max-width: 781px) {
     .wp-block-columns { flex-direction: column; }
-    .wp-block-column { flex-basis: 100% !important; }
+    .wp-block-column { flex-basis: 100% !important; min-width: 100%; }
 }
-";
+CSS;
+    }
 
-        return $css;
+    /**
+     * Fix internal links for static site
+     */
+    private function fix_links( $html, $is_root ) {
+        $site_url = home_url();
+        $prefix = $is_root ? './' : '../';
+
+        // Fix absolute URLs to relative
+        $html = str_replace( 'href="' . $site_url . '/"', 'href="' . $prefix . '"', $html );
+        $html = str_replace( 'href="' . $site_url . '"', 'href="' . $prefix . '"', $html );
+        $html = preg_replace( '/href="' . preg_quote( $site_url, '/' ) . '\/([^"]+)"/', 'href="' . $prefix . '$1/"', $html );
+
+        // Fix root links
+        $html = preg_replace( '/href="\/([a-z][^"]*)"/', 'href="' . $prefix . '$1/"', $html );
+        $html = str_replace( 'href="/"', 'href="' . $prefix . '"', $html );
+
+        // Fix mailto and tel links (don't add trailing slash)
+        $html = preg_replace( '/href="(mailto:[^"]+)\/"/', 'href="$1"', $html );
+        $html = preg_replace( '/href="(tel:[^"]+)\/"/', 'href="$1"', $html );
+
+        return $html;
     }
 
     /**
      * Export static assets
      */
-    private function export_assets( $export_path ) {
+    private function export_assets( $export_path, $params ) {
         $assets_dir = $export_path . '/assets';
-        wp_mkdir_p( $assets_dir . '/wp-content' );
-        wp_mkdir_p( $assets_dir . '/wp-includes/css' );
+        wp_mkdir_p( $assets_dir . '/wp-content/themes/ollie' );
 
-        // Copy theme assets (only essential files)
-        $theme_dir = get_stylesheet_directory();
-        $this->copy_assets_limited( $theme_dir, $assets_dir . '/wp-content/themes/' . get_stylesheet() );
-
-        // Copy parent theme if using child theme
-        if ( get_template_directory() !== $theme_dir ) {
-            $this->copy_assets_limited( get_template_directory(), $assets_dir . '/wp-content/themes/' . get_template() );
+        // Copy essential theme files
+        $theme_dir = get_theme_root() . '/ollie';
+        if ( file_exists( $theme_dir . '/style.css' ) ) {
+            copy( $theme_dir . '/style.css', $assets_dir . '/wp-content/themes/ollie/style.css' );
         }
 
-        // Copy only essential WordPress CSS files (not entire blocks directory)
-        $wp_includes = ABSPATH . 'wp-includes';
-        $essential_css = [
-            'css/dist/block-library/style.min.css',
-            'css/dist/block-library/theme.min.css',
-        ];
-        foreach ( $essential_css as $css_file ) {
-            $src = $wp_includes . '/' . $css_file;
-            if ( file_exists( $src ) ) {
-                $dst_dir = $assets_dir . '/wp-includes/' . dirname( $css_file );
-                wp_mkdir_p( $dst_dir );
-                copy( $src, $assets_dir . '/wp-includes/' . $css_file );
-            }
-        }
+        // Generate global styles and fallback colors
+        $this->generate_global_styles_css( $export_path, $params );
 
-        // Generate the global styles CSS (this captures all the theme.json styles)
-        $this->generate_global_styles_css( $export_path );
-
-        error_log( 'PressPilot Static Export - Assets copied to: ' . $assets_dir );
+        error_log( 'PressPilot Static Export - Assets created at: ' . $assets_dir );
     }
 
     /**
-     * Copy assets with file limit to prevent timeout
+     * Generate global styles CSS
      */
-    private function copy_assets_limited( $src, $dst, $max_files = 200 ) {
-        if ( ! file_exists( $src ) ) {
-            return;
-        }
+    private function generate_global_styles_css( $export_path, $params ) {
+        $colors = $params['colors'] ?? [];
 
-        if ( ! file_exists( $dst ) ) {
-            wp_mkdir_p( $dst );
-        }
-
-        $file_count = 0;
-        $this->copy_assets_recursive( $src, $dst, $file_count, $max_files );
-    }
-
-    /**
-     * Recursive copy with counter
-     */
-    private function copy_assets_recursive( $src, $dst, &$file_count, $max_files ) {
-        if ( $file_count >= $max_files ) {
-            return;
-        }
-
-        $dir = opendir( $src );
-        while ( ( $file = readdir( $dir ) ) !== false ) {
-            if ( $file === '.' || $file === '..' ) {
-                continue;
-            }
-
-            if ( $file_count >= $max_files ) {
-                break;
-            }
-
-            $src_path = $src . '/' . $file;
-            $dst_path = $dst . '/' . $file;
-
-            // Skip node_modules, .git, and other dev directories
-            if ( in_array( $file, [ 'node_modules', '.git', 'vendor', 'tests' ] ) ) {
-                continue;
-            }
-
-            $ext = pathinfo( $file, PATHINFO_EXTENSION );
-            $allowed = [ 'css', 'js', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'woff', 'woff2', 'ttf', 'eot', 'json' ];
-
-            if ( is_dir( $src_path ) ) {
-                if ( ! file_exists( $dst_path ) ) {
-                    wp_mkdir_p( $dst_path );
-                }
-                $this->copy_assets_recursive( $src_path, $dst_path, $file_count, $max_files );
-            } elseif ( in_array( strtolower( $ext ), $allowed ) ) {
-                copy( $src_path, $dst_path );
-                $file_count++;
-            }
-        }
-        closedir( $dir );
-    }
-
-    /**
-     * Generate global styles CSS from WordPress
-     */
-    private function generate_global_styles_css( $export_path ) {
-        // Get the global styles CSS that WordPress generates
+        // Global styles
         if ( function_exists( 'wp_get_global_stylesheet' ) ) {
             $global_css = wp_get_global_stylesheet();
             if ( ! empty( $global_css ) ) {
                 file_put_contents( $export_path . '/assets/global-styles.css', $global_css );
             }
+        } else {
+            file_put_contents( $export_path . '/assets/global-styles.css', '/* Global styles */' );
         }
 
-        // Get custom CSS if any
-        $custom_css = get_option( 'presspilot_custom_css', '' );
-        if ( ! empty( $custom_css ) ) {
-            file_put_contents( $export_path . '/assets/custom.css', $custom_css );
-        }
+        // Fallback colors
+        $fallback_css = ":root {\n";
+        $fallback_css .= "  --wp--preset--color--base: " . ( $colors['background'] ?? '#ffffff' ) . ";\n";
+        $fallback_css .= "  --wp--preset--color--contrast: " . ( $colors['text'] ?? '#1f2937' ) . ";\n";
+        $fallback_css .= "  --wp--preset--color--primary: " . ( $colors['primary'] ?? '#1e40af' ) . ";\n";
+        $fallback_css .= "  --wp--preset--color--secondary: " . ( $colors['secondary'] ?? '#64748b' ) . ";\n";
+        $fallback_css .= "  --wp--preset--color--accent: " . ( $colors['accent'] ?? '#f59e0b' ) . ";\n";
+        $fallback_css .= "}\n";
 
-        // Get the generated theme's colors and create a fallback CSS
-        $last_gen = get_option( 'presspilot_last_generation' );
-        if ( $last_gen && ! empty( $last_gen['params']['colors'] ) ) {
-            $colors = $last_gen['params']['colors'];
-            $fallback_css = ":root {\n";
-            $fallback_css .= "  --wp--preset--color--base: " . ( $colors['background'] ?? '#ffffff' ) . ";\n";
-            $fallback_css .= "  --wp--preset--color--contrast: " . ( $colors['text'] ?? '#1f2937' ) . ";\n";
-            $fallback_css .= "  --wp--preset--color--primary: " . ( $colors['primary'] ?? '#1e40af' ) . ";\n";
-            $fallback_css .= "  --wp--preset--color--secondary: " . ( $colors['secondary'] ?? '#64748b' ) . ";\n";
-            $fallback_css .= "  --wp--preset--color--accent: " . ( $colors['accent'] ?? '#f59e0b' ) . ";\n";
-            $fallback_css .= "}\n";
-            $fallback_css .= "body { background-color: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); }\n";
-            $fallback_css .= ".has-primary-color { color: var(--wp--preset--color--primary); }\n";
-            $fallback_css .= ".has-primary-background-color { background-color: var(--wp--preset--color--primary); }\n";
-            $fallback_css .= ".has-secondary-color { color: var(--wp--preset--color--secondary); }\n";
-            $fallback_css .= ".has-secondary-background-color { background-color: var(--wp--preset--color--secondary); }\n";
-            $fallback_css .= ".has-base-color { color: var(--wp--preset--color--base); }\n";
-            $fallback_css .= ".has-base-background-color { background-color: var(--wp--preset--color--base); }\n";
-            $fallback_css .= ".has-contrast-color { color: var(--wp--preset--color--contrast); }\n";
-            $fallback_css .= ".has-contrast-background-color { background-color: var(--wp--preset--color--contrast); }\n";
-
-            file_put_contents( $export_path . '/assets/fallback-colors.css', $fallback_css );
-        }
+        file_put_contents( $export_path . '/assets/fallback-colors.css', $fallback_css );
     }
 
     /**
@@ -502,7 +373,6 @@ body { background-color: {$background}; color: {$text}; margin: 0; font-family: 
         $zip_file = $this->export_dir . 'static-' . $generation_id . '.zip';
 
         if ( ! file_exists( $source_dir ) ) {
-            // If Simply Static was used, the export might be in a different location
             return '';
         }
 
