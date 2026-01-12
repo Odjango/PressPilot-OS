@@ -262,9 +262,17 @@ class PressPilot_Factory_Pattern_Loader {
      * Replace simple placeholders
      */
     private function replace_placeholders( $template, $data ) {
+        // Keys that should not be escaped (like color values)
+        $raw_keys = [ 'color_primary', 'color_secondary', 'color_accent', 'color_background', 'color_text' ];
+
         foreach ( $data as $key => $value ) {
             if ( is_string( $value ) || is_numeric( $value ) ) {
-                $template = str_replace( '{{' . $key . '}}', esc_html( $value ), $template );
+                // Don't escape color values (they contain # which would be escaped)
+                if ( in_array( $key, $raw_keys, true ) ) {
+                    $template = str_replace( '{{' . $key . '}}', $value, $template );
+                } else {
+                    $template = str_replace( '{{' . $key . '}}', esc_html( $value ), $template );
+                }
             }
         }
 

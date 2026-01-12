@@ -225,6 +225,16 @@ class PressPilot_Factory_Static_Exporter {
         // Index pages are at root, other pages are in subdirectories
         $asset_prefix = $is_index ? './' : '../';
 
+        // Step 0: Inject critical CSS into head to ensure styles work offline
+        $critical_css = $this->get_critical_css();
+        if ( ! empty( $critical_css ) ) {
+            $html = preg_replace(
+                '/<\/head>/i',
+                '<style id="presspilot-critical-css">' . $critical_css . '</style></head>',
+                $html
+            );
+        }
+
         // Step 1: Fix asset URLs FIRST (before making URLs relative)
         // Replace wp-content paths with local asset paths
         $html = preg_replace(
@@ -273,6 +283,76 @@ class PressPilot_Factory_Static_Exporter {
         $html = preg_replace( '/<div[^>]*id="wpadminbar"[^>]*>.*?<\/div>/s', '', $html );
 
         return $html;
+    }
+
+    /**
+     * Get critical CSS for static export
+     */
+    private function get_critical_css() {
+        $last_gen = get_option( 'presspilot_last_generation' );
+        $colors = $last_gen['params']['colors'] ?? [];
+
+        $primary = $colors['primary'] ?? '#1e40af';
+        $secondary = $colors['secondary'] ?? '#64748b';
+        $accent = $colors['accent'] ?? '#f59e0b';
+        $background = $colors['background'] ?? '#ffffff';
+        $text = $colors['text'] ?? '#1f2937';
+
+        // Generate critical CSS with all necessary variables and fallbacks
+        $css = "
+:root {
+    --wp--preset--color--base: {$background};
+    --wp--preset--color--contrast: {$text};
+    --wp--preset--color--primary: {$primary};
+    --wp--preset--color--secondary: {$secondary};
+    --wp--preset--color--accent: {$accent};
+    --wp--preset--color--surface: #f8fafc;
+    --wp--preset--spacing--20: clamp(0.5rem, 2vw, 0.75rem);
+    --wp--preset--spacing--30: clamp(1rem, 3vw, 1.5rem);
+    --wp--preset--spacing--40: clamp(1.5rem, 4vw, 2rem);
+    --wp--preset--spacing--50: clamp(2rem, 5vw, 2.5rem);
+    --wp--preset--spacing--60: clamp(2.5rem, 6vw, 3rem);
+    --wp--preset--spacing--70: clamp(3rem, 7vw, 4rem);
+    --wp--preset--spacing--80: clamp(4rem, 8vw, 6rem);
+}
+body { background-color: {$background}; color: {$text}; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+.has-primary-color { color: {$primary}; }
+.has-primary-background-color { background-color: {$primary}; }
+.has-secondary-color { color: {$secondary}; }
+.has-secondary-background-color { background-color: {$secondary}; }
+.has-accent-color { color: {$accent}; }
+.has-accent-background-color { background-color: {$accent}; }
+.has-base-color { color: {$background}; }
+.has-base-background-color { background-color: {$background}; }
+.has-contrast-color { color: {$text}; }
+.has-contrast-background-color { background-color: {$text}; }
+.has-surface-background-color { background-color: #f8fafc; }
+.has-text-color { }
+.has-background { }
+.has-text-align-center { text-align: center; }
+.alignfull { width: 100%; max-width: 100%; margin-left: 0; margin-right: 0; }
+.wp-block-group { box-sizing: border-box; }
+.wp-block-columns { display: flex; flex-wrap: wrap; gap: 2em; }
+.wp-block-column { flex: 1; min-width: 0; }
+.wp-block-cover { position: relative; display: flex; align-items: center; justify-content: center; }
+.wp-block-cover__background { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+.wp-block-cover__inner-container { position: relative; z-index: 1; width: 100%; }
+.wp-block-button__link { display: inline-block; text-decoration: none; padding: 0.75rem 1.5rem; cursor: pointer; }
+.wp-block-buttons { display: flex; flex-wrap: wrap; gap: 0.5em; }
+.wp-block-navigation { display: flex; gap: 1rem; }
+.wp-element-button { border: none; cursor: pointer; }
+.is-layout-flex { display: flex; }
+.is-layout-grid { display: grid; }
+.is-content-justification-center { justify-content: center; }
+.is-content-justification-space-between { justify-content: space-between; }
+.is-nowrap { flex-wrap: nowrap; }
+@media (max-width: 781px) {
+    .wp-block-columns { flex-direction: column; }
+    .wp-block-column { flex-basis: 100% !important; }
+}
+";
+
+        return $css;
     }
 
     /**

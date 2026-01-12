@@ -165,16 +165,7 @@ class PressPilot_Factory_Api_Handler {
             // Step 4: Create navigation menu
             $menu_id = $this->navigation_builder->create_menu( $params['business_name'], $pages, $params['category'] );
 
-            // Step 5: Export theme ZIP
-            $theme_zip = $this->theme_exporter->export( $params, $generation_id );
-
-            // Step 6: Export static site via Simply Static
-            $static_zip = $this->static_exporter->export( $generation_id );
-
-            // Calculate duration
-            $duration = round( microtime( true ) - $start_time, 2 );
-
-            // Store generation metadata
+            // Step 5: Store generation metadata BEFORE exporting (needed for static export colors)
             update_option( 'presspilot_last_generation', [
                 'id'        => $generation_id,
                 'timestamp' => current_time( 'mysql' ),
@@ -182,6 +173,15 @@ class PressPilot_Factory_Api_Handler {
                 'pages'     => $pages,
                 'menu_id'   => $menu_id,
             ]);
+
+            // Step 6: Export theme ZIP
+            $theme_zip = $this->theme_exporter->export( $params, $generation_id );
+
+            // Step 7: Export static site via Simply Static
+            $static_zip = $this->static_exporter->export( $generation_id );
+
+            // Calculate duration
+            $duration = round( microtime( true ) - $start_time, 2 );
 
             return new WP_REST_Response([
                 'success'       => true,
