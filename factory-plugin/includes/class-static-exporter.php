@@ -80,7 +80,7 @@ class PressPilot_Factory_Static_Exporter {
             $page_dir = $export_path . '/' . $page->post_name;
             wp_mkdir_p( $page_dir );
 
-            $html = $this->build_page_html( $page, $header_html, $footer_html, $head_css, false );
+            $html = $this->build_page_html( $page, $header_html, $footer_html, $head_css );
             file_put_contents( $page_dir . '/index.html', $html );
             error_log( 'PressPilot Static Export - Built: ' . $page->post_name . '/index.html' );
             $exported_count++;
@@ -88,7 +88,7 @@ class PressPilot_Factory_Static_Exporter {
 
         // Export home as index.html at root
         if ( $home_page ) {
-            $html = $this->build_page_html( $home_page, $header_html, $footer_html, $head_css, true );
+            $html = $this->build_page_html( $home_page, $header_html, $footer_html, $head_css );
             file_put_contents( $export_path . '/index.html', $html );
             error_log( 'PressPilot Static Export - Built: index.html' );
         }
@@ -117,19 +117,16 @@ class PressPilot_Factory_Static_Exporter {
     /**
      * Build complete HTML page from parts
      */
-    private function build_page_html( $page, $header_html, $footer_html, $head_css, $is_root = false ) {
+    private function build_page_html( $page, $header_html, $footer_html, $head_css ) {
         $title = esc_html( $page->post_title );
         $content = $page->post_content;
 
         // Process Gutenberg blocks to HTML
         $content_html = do_blocks( $content );
         $content_html = wptexturize( $content_html );
-        $content_html = wpautop( $content_html );
+        // Note: wpautop() removed - it breaks block HTML structure by adding extra </p> tags
 
-        // Adjust asset paths based on page depth
-        $asset_prefix = $is_root ? './' : '../';
-
-        // Build full HTML document
+        // Build full HTML document - fully self-contained, no external dependencies
         $html = <<<HTML
 <!DOCTYPE html>
 <html lang="en">
@@ -137,9 +134,7 @@ class PressPilot_Factory_Static_Exporter {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{$title}</title>
-    <link rel="stylesheet" href="{$asset_prefix}assets/wp-content/themes/ollie/style.css">
-    <link rel="stylesheet" href="{$asset_prefix}assets/global-styles.css">
-    <link rel="stylesheet" href="{$asset_prefix}assets/fallback-colors.css">
+    <link rel="stylesheet" href="/assets/styles.css">
     <style id="presspilot-inline-css">
 {$head_css}
     </style>
@@ -161,7 +156,7 @@ class PressPilot_Factory_Static_Exporter {
 HTML;
 
         // Fix internal links for static site
-        $html = $this->fix_links( $html, $is_root );
+        $html = $this->fix_links( $html );
 
         return $html;
     }
@@ -182,22 +177,22 @@ HTML;
             $logo_block = '<img src="' . $logo_url . '" alt="' . $business_name . ' Logo" style="width:50px;height:50px;object-fit:contain">';
         }
 
-        // Navigation links based on category
-        $nav_links = '<a href="./" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Home</a>';
+        // Navigation links based on category (use root-relative paths for static site)
+        $nav_links = '<a href="/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Home</a>';
         if ( $category === 'restaurant' ) {
-            $nav_links .= '<a href="./menu/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Menu</a>';
+            $nav_links .= '<a href="/menu/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Menu</a>';
         } else {
-            $nav_links .= '<a href="./services/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Services</a>';
+            $nav_links .= '<a href="/services/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Services</a>';
         }
-        $nav_links .= '<a href="./about/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">About</a>';
-        $nav_links .= '<a href="./contact/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Contact</a>';
+        $nav_links .= '<a href="/about/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">About</a>';
+        $nav_links .= '<a href="/contact/" style="text-decoration:none;color:inherit;padding:0.5rem 1rem">Contact</a>';
 
         return <<<HTML
 <div class="wp-block-group has-background" style="background-color:{$bg_color};padding:1rem 2rem">
     <div style="display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;flex-wrap:wrap;gap:1rem">
         <div style="display:flex;align-items:center;gap:1rem">
             {$logo_block}
-            <a href="./" style="font-size:1.5rem;font-weight:700;text-decoration:none;color:{$text_color}">{$business_name}</a>
+            <a href="/" style="font-size:1.5rem;font-weight:700;text-decoration:none;color:{$text_color}">{$business_name}</a>
         </div>
         <nav style="display:flex;gap:0.5rem;flex-wrap:wrap">
             {$nav_links}
@@ -223,9 +218,78 @@ HTML;
     }
 
     /**
-     * Get head CSS for inline styles
+     * Get page-specific inline CSS (minimal - main styles are in external file)
      */
     private function get_head_css( $params ) {
+        // Main styles are in /assets/styles.css
+        // This is only for page-specific overrides if needed
+        return '/* Page-specific styles loaded from /assets/styles.css */';
+    }
+
+    /**
+     * Fix internal links for static site (use root-relative paths)
+     */
+    private function fix_links( $html ) {
+        $site_url = home_url();
+
+        // Convert WordPress absolute URLs to root-relative paths
+        $html = str_replace( 'href="' . $site_url . '/"', 'href="/"', $html );
+        $html = str_replace( 'href="' . $site_url . '"', 'href="/"', $html );
+        $html = preg_replace( '/href="' . preg_quote( $site_url, '/' ) . '\/([^"]+)"/', 'href="/$1/"', $html );
+
+        // Ensure internal page links have trailing slashes and are root-relative
+        // Match links that start with / but don't have trailing slash (exclude assets, mailto, tel, #)
+        $html = preg_replace( '/href="\/([a-z][a-z0-9-]*)"(?![\/#])/', 'href="/$1/"', $html );
+
+        // Fix mailto and tel links (don't add trailing slash)
+        $html = preg_replace( '/href="(mailto:[^"]+)\/"/', 'href="$1"', $html );
+        $html = preg_replace( '/href="(tel:[^"]+)\/"/', 'href="$1"', $html );
+
+        return $html;
+    }
+
+    /**
+     * Export static assets - generates a single self-contained styles.css with fonts
+     */
+    private function export_assets( $export_path, $params ) {
+        $assets_dir = $export_path . '/assets';
+        $fonts_dir = $assets_dir . '/fonts';
+        wp_mkdir_p( $fonts_dir );
+
+        // Copy Mona Sans font from Ollie theme
+        $this->copy_fonts( $fonts_dir );
+
+        // Generate single self-contained CSS file
+        $css = $this->generate_complete_css( $params );
+        file_put_contents( $assets_dir . '/styles.css', $css );
+
+        error_log( 'PressPilot Static Export - Generated self-contained styles.css with Mona Sans font' );
+    }
+
+    /**
+     * Copy fonts from Ollie theme to static export
+     */
+    private function copy_fonts( $fonts_dir ) {
+        // Path to Ollie theme fonts
+        $ollie_fonts_dir = get_template_directory() . '/assets/fonts/mona-sans/';
+
+        if ( file_exists( $ollie_fonts_dir ) ) {
+            // Copy all font files
+            $font_files = glob( $ollie_fonts_dir . '*' );
+            foreach ( $font_files as $font_file ) {
+                $filename = basename( $font_file );
+                copy( $font_file, $fonts_dir . '/' . $filename );
+            }
+            error_log( 'PressPilot Static Export - Copied Mona Sans fonts from Ollie theme' );
+        } else {
+            error_log( 'PressPilot Static Export - Ollie fonts not found at: ' . $ollie_fonts_dir );
+        }
+    }
+
+    /**
+     * Generate complete self-contained CSS (no WordPress dependencies)
+     */
+    private function generate_complete_css( $params ) {
         $colors = $params['colors'] ?? [];
         $primary = $colors['primary'] ?? '#1e40af';
         $secondary = $colors['secondary'] ?? '#64748b';
@@ -233,7 +297,20 @@ HTML;
         $background = $colors['background'] ?? '#ffffff';
         $text = $colors['text'] ?? '#1f2937';
 
-        return <<<CSS
+        $css = <<<CSS
+/* PressPilot Generated Styles - Fully Self-Contained */
+
+/* Mona Sans Font - Variable Font from Ollie Theme */
+@font-face {
+    font-family: 'Mona Sans';
+    font-style: normal;
+    font-weight: 300 900;
+    font-stretch: 75% 125%;
+    font-display: swap;
+    src: url('/assets/fonts/Mona-Sans.woff2') format('woff2');
+}
+
+/* CSS Variables */
 :root {
     --wp--preset--color--base: {$background};
     --wp--preset--color--contrast: {$text};
@@ -241,6 +318,7 @@ HTML;
     --wp--preset--color--secondary: {$secondary};
     --wp--preset--color--accent: {$accent};
     --wp--preset--color--surface: #f8fafc;
+    --wp--preset--font-family--primary: 'Mona Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --wp--preset--spacing--20: clamp(0.5rem, 2vw, 0.75rem);
     --wp--preset--spacing--30: clamp(1rem, 3vw, 1.5rem);
     --wp--preset--spacing--40: clamp(1.5rem, 4vw, 2rem);
@@ -249,9 +327,102 @@ HTML;
     --wp--preset--spacing--70: clamp(3rem, 7vw, 4rem);
     --wp--preset--spacing--80: clamp(4rem, 8vw, 6rem);
 }
-* { box-sizing: border-box; }
-body { background-color: {$background}; color: {$text}; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; }
-img { max-width: 100%; height: auto; }
+
+/* Reset & Base */
+*, *::before, *::after { box-sizing: border-box; }
+html { line-height: 1.6; -webkit-text-size-adjust: 100%; }
+body {
+    margin: 0;
+    padding: 0;
+    background-color: {$background};
+    color: {$text};
+    font-family: var(--wp--preset--font-family--primary);
+    font-size: 1rem;
+    font-weight: 430;
+    line-height: 1.6;
+}
+
+/* Typography - Matching Ollie Theme */
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    font-family: var(--wp--preset--font-family--primary);
+    font-weight: 600;
+    line-height: 1.2;
+}
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.875rem; }
+p { margin-top: 0; margin-bottom: 1rem; }
+a { color: {$primary}; text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { max-width: 100%; height: auto; display: block; }
+figure { margin: 0; }
+
+/* WordPress Block Classes */
+.wp-site-blocks { min-height: 100vh; display: flex; flex-direction: column; }
+.wp-site-blocks > main { flex: 1; }
+.wp-block-group { box-sizing: border-box; }
+.wp-block-heading { margin-top: 0; }
+
+/* Layout */
+.alignfull { width: 100%; max-width: 100%; margin-left: 0; margin-right: 0; }
+.alignwide { max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+/* Columns */
+.wp-block-columns { display: flex; flex-wrap: wrap; gap: 2em; }
+.wp-block-column { flex: 1; min-width: 280px; }
+@media (max-width: 781px) {
+    .wp-block-columns { flex-direction: column; }
+    .wp-block-column { flex-basis: 100% !important; min-width: 100%; }
+}
+
+/* Cover Block */
+.wp-block-cover {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    padding: 2rem;
+    background-size: cover;
+    background-position: center;
+}
+.wp-block-cover__background {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+}
+.wp-block-cover__inner-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Buttons */
+.wp-block-buttons { display: flex; flex-wrap: wrap; gap: 0.75em; }
+.wp-block-button__link, .wp-element-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.wp-block-button__link:hover, .wp-element-button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+/* Color Classes */
 .has-primary-color { color: {$primary} !important; }
 .has-primary-background-color { background-color: {$primary} !important; }
 .has-secondary-color { color: {$secondary} !important; }
@@ -263,106 +434,121 @@ img { max-width: 100%; height: auto; }
 .has-contrast-color { color: {$text} !important; }
 .has-contrast-background-color { background-color: {$text} !important; }
 .has-surface-background-color { background-color: #f8fafc !important; }
-.has-text-color { }
-.has-background { }
+.has-white-color { color: #ffffff !important; }
+.has-white-background-color { background-color: #ffffff !important; }
+
+/* Text Alignment */
 .has-text-align-center { text-align: center; }
 .has-text-align-left { text-align: left; }
 .has-text-align-right { text-align: right; }
-.alignfull { width: 100%; max-width: 100%; margin-left: 0; margin-right: 0; }
-.alignwide { max-width: 1200px; margin-left: auto; margin-right: auto; }
-.wp-block-group { box-sizing: border-box; }
-.wp-block-columns { display: flex; flex-wrap: wrap; gap: 2em; }
-.wp-block-column { flex: 1; min-width: 250px; }
-.wp-block-cover { position: relative; display: flex; align-items: center; justify-content: center; min-height: 300px; }
-.wp-block-cover__background { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
-.wp-block-cover__inner-container { position: relative; z-index: 1; width: 100%; }
-.wp-block-button__link { display: inline-block; text-decoration: none; padding: 0.75rem 1.5rem; cursor: pointer; border-radius: 6px; }
-.wp-block-buttons { display: flex; flex-wrap: wrap; gap: 0.5em; }
-.wp-block-navigation { display: flex; gap: 1rem; }
-.wp-element-button { border: none; cursor: pointer; }
-.is-layout-flex { display: flex; }
-.is-layout-grid { display: grid; }
+
+/* WordPress Layout Classes - CRITICAL for columns/flex layouts */
+.is-layout-flex { display: flex; flex-wrap: wrap; gap: 2em; align-items: stretch; }
+.is-layout-flow > * { margin-top: 0; margin-bottom: 0; }
+.is-layout-flow > * + * { margin-top: 1.25em; }
+.is-layout-constrained { max-width: 1200px; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }
+.is-layout-grid { display: grid; gap: 2em; }
+
+/* WordPress dynamic layout classes (generated by do_blocks) */
+.wp-block-columns-is-layout-flex { display: flex; flex-wrap: wrap; gap: 2em; }
+.wp-block-column-is-layout-flow { flex: 1; min-width: 280px; }
+.wp-block-buttons-is-layout-flex { display: flex; flex-wrap: wrap; gap: 0.75em; }
+.wp-block-group-is-layout-flex { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+.wp-block-group-is-layout-constrained { max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+/* Content justification */
 .is-content-justification-center { justify-content: center; }
 .is-content-justification-space-between { justify-content: space-between; }
+.is-content-justification-left { justify-content: flex-start; }
+.is-content-justification-right { justify-content: flex-end; }
+
+/* Flex modifiers */
 .is-nowrap { flex-wrap: nowrap; }
 .is-vertically-aligned-center { align-items: center; }
-.wp-block-heading { margin-top: 0; }
-figure { margin: 0; }
-@media (max-width: 781px) {
-    .wp-block-columns { flex-direction: column; }
-    .wp-block-column { flex-basis: 100% !important; min-width: 100%; }
+.is-vertically-aligned-top { align-items: flex-start; }
+.is-vertically-aligned-bottom { align-items: flex-end; }
+
+/* Global padding for constrained layouts */
+.has-global-padding { padding-left: 1rem; padding-right: 1rem; }
+
+/* Navigation */
+.wp-block-navigation { display: flex; gap: 1rem; flex-wrap: wrap; }
+.wp-block-navigation a { color: inherit; text-decoration: none; padding: 0.5rem 1rem; }
+.wp-block-navigation a:hover { opacity: 0.8; }
+
+/* Spacer */
+.wp-block-spacer { display: block; }
+
+/* Separator */
+.wp-block-separator {
+    border: none;
+    border-top: 1px solid {$secondary};
+    margin: 2rem 0;
+}
+
+/* Quote */
+.wp-block-quote {
+    border-left: 4px solid {$primary};
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+}
+
+/* List */
+.wp-block-list { padding-left: 1.5rem; }
+.wp-block-list li { margin-bottom: 0.5rem; }
+
+/* Image */
+.wp-block-image { margin: 0; }
+.wp-block-image img { border-radius: 8px; }
+.wp-block-image.is-style-rounded img { border-radius: 50%; }
+
+/* Form Elements */
+input, textarea, select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #ffffff;
+    color: {$text};
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: {$primary};
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+/* Utility Classes */
+.has-background { padding: 1.5rem; }
+.has-text-color { }
+.screen-reader-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Print Styles */
+@media print {
+    body { background: white; color: black; }
+    a { color: black; text-decoration: underline; }
+    .wp-block-button, nav { display: none; }
 }
 CSS;
-    }
 
-    /**
-     * Fix internal links for static site
-     */
-    private function fix_links( $html, $is_root ) {
-        $site_url = home_url();
-        $prefix = $is_root ? './' : '../';
-
-        // Fix absolute URLs to relative
-        $html = str_replace( 'href="' . $site_url . '/"', 'href="' . $prefix . '"', $html );
-        $html = str_replace( 'href="' . $site_url . '"', 'href="' . $prefix . '"', $html );
-        $html = preg_replace( '/href="' . preg_quote( $site_url, '/' ) . '\/([^"]+)"/', 'href="' . $prefix . '$1/"', $html );
-
-        // Fix root links
-        $html = preg_replace( '/href="\/([a-z][^"]*)"/', 'href="' . $prefix . '$1/"', $html );
-        $html = str_replace( 'href="/"', 'href="' . $prefix . '"', $html );
-
-        // Fix mailto and tel links (don't add trailing slash)
-        $html = preg_replace( '/href="(mailto:[^"]+)\/"/', 'href="$1"', $html );
-        $html = preg_replace( '/href="(tel:[^"]+)\/"/', 'href="$1"', $html );
-
-        return $html;
-    }
-
-    /**
-     * Export static assets
-     */
-    private function export_assets( $export_path, $params ) {
-        $assets_dir = $export_path . '/assets';
-        wp_mkdir_p( $assets_dir . '/wp-content/themes/ollie' );
-
-        // Copy essential theme files
-        $theme_dir = get_theme_root() . '/ollie';
-        if ( file_exists( $theme_dir . '/style.css' ) ) {
-            copy( $theme_dir . '/style.css', $assets_dir . '/wp-content/themes/ollie/style.css' );
-        }
-
-        // Generate global styles and fallback colors
-        $this->generate_global_styles_css( $export_path, $params );
-
-        error_log( 'PressPilot Static Export - Assets created at: ' . $assets_dir );
-    }
-
-    /**
-     * Generate global styles CSS
-     */
-    private function generate_global_styles_css( $export_path, $params ) {
-        $colors = $params['colors'] ?? [];
-
-        // Global styles
-        if ( function_exists( 'wp_get_global_stylesheet' ) ) {
-            $global_css = wp_get_global_stylesheet();
-            if ( ! empty( $global_css ) ) {
-                file_put_contents( $export_path . '/assets/global-styles.css', $global_css );
-            }
-        } else {
-            file_put_contents( $export_path . '/assets/global-styles.css', '/* Global styles */' );
-        }
-
-        // Fallback colors
-        $fallback_css = ":root {\n";
-        $fallback_css .= "  --wp--preset--color--base: " . ( $colors['background'] ?? '#ffffff' ) . ";\n";
-        $fallback_css .= "  --wp--preset--color--contrast: " . ( $colors['text'] ?? '#1f2937' ) . ";\n";
-        $fallback_css .= "  --wp--preset--color--primary: " . ( $colors['primary'] ?? '#1e40af' ) . ";\n";
-        $fallback_css .= "  --wp--preset--color--secondary: " . ( $colors['secondary'] ?? '#64748b' ) . ";\n";
-        $fallback_css .= "  --wp--preset--color--accent: " . ( $colors['accent'] ?? '#f59e0b' ) . ";\n";
-        $fallback_css .= "}\n";
-
-        file_put_contents( $export_path . '/assets/fallback-colors.css', $fallback_css );
+        return $css;
     }
 
     /**

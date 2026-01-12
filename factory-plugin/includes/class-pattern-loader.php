@@ -13,9 +13,11 @@ class PressPilot_Factory_Pattern_Loader {
 
     private $patterns_dir;
     private $cache = [];
+    private $image_provider;
 
-    public function __construct() {
+    public function __construct( $image_provider = null ) {
         $this->patterns_dir = PRESSPILOT_FACTORY_PATTERNS;
+        $this->image_provider = $image_provider;
     }
 
     /**
@@ -89,6 +91,10 @@ class PressPilot_Factory_Pattern_Loader {
      */
     private function prepare_render_data( $params ) {
         $page_content = $params['page_content'] ?? [];
+        $category = $params['category'] ?? 'corporate';
+
+        // Get contextual images from image provider
+        $images = $this->get_contextual_images( $category, $params );
 
         return [
             // Business info
@@ -96,18 +102,32 @@ class PressPilot_Factory_Pattern_Loader {
             'tagline'        => $params['tagline'] ?? 'Your tagline here',
             'description'    => $params['description'] ?? 'Your business description.',
 
-            // Page content
-            'headline'       => $page_content['headline'] ?? $params['business_name'] ?? 'Welcome',
-            'subheadline'    => $page_content['subheadline'] ?? $params['tagline'] ?? '',
-            'cta_text'       => $page_content['cta_text'] ?? 'Get Started',
-            'cta_url'        => $page_content['cta_url'] ?? '/contact',
-            'secondary_cta'  => $page_content['secondary_cta'] ?? 'Learn More',
-            'secondary_url'  => $page_content['secondary_url'] ?? '/about',
+            // Page content (hero section - check page_content first, then content.hero, then fallback)
+            'headline'       => $page_content['headline']
+                                ?? $params['content']['hero']['headline']
+                                ?? $params['business_name']
+                                ?? 'Welcome',
+            'subheadline'    => $page_content['subheadline']
+                                ?? $params['content']['hero']['subheadline']
+                                ?? $params['tagline']
+                                ?? '',
+            'cta_text'       => $page_content['cta_text']
+                                ?? $params['content']['hero']['cta_text']
+                                ?? 'Get Started',
+            'cta_url'        => $page_content['cta_url']
+                                ?? $params['content']['hero']['cta_url']
+                                ?? '/contact',
+            'secondary_cta'  => $page_content['secondary_cta']
+                                ?? $params['content']['hero']['secondary_cta']
+                                ?? 'Learn More',
+            'secondary_url'  => $page_content['secondary_url']
+                                ?? $params['content']['hero']['secondary_url']
+                                ?? '/about',
 
             // About content
             'about_title'    => $page_content['about_title'] ?? 'About Us',
             'about_text'     => $page_content['about_text'] ?? $params['description'] ?? '',
-            'about_image'    => $page_content['about_image'] ?? 'https://placehold.co/600x400',
+            'about_image'    => $page_content['about_image'] ?? $images['about_image'],
 
             // Features
             'features_title' => $page_content['features_title'] ?? $page_content['title'] ?? 'Our Features',
@@ -120,10 +140,13 @@ class PressPilot_Factory_Pattern_Loader {
             'values_subtitle' => $params['content']['values']['subtitle'] ?? $page_content['values_subtitle'] ?? 'What we stand for',
             'values_items'    => $params['content']['values']['items'] ?? $page_content['values_items'] ?? $this->get_default_values(),
 
-            // Testimonials
-            'testimonials'   => $page_content['testimonials']
-                                ?? $params['content']['testimonials']['items']
-                                ?? $this->get_default_testimonials(),
+            // Testimonials (with avatars)
+            'testimonials'   => $this->prepare_testimonials_with_avatars(
+                                    $page_content['testimonials']
+                                    ?? $params['content']['testimonials']['items']
+                                    ?? $this->get_default_testimonials(),
+                                    $images
+                                ),
 
             // Contact
             'contact_title'  => $page_content['contact_title'] ?? 'Contact Us',
@@ -137,8 +160,10 @@ class PressPilot_Factory_Pattern_Loader {
             'menu_subtitle'   => $page_content['menu_subtitle'] ?? $params['content']['menu']['subtitle'] ?? 'Delicious dishes made fresh daily',
             'menu_categories' => $page_content['menu_categories'] ?? $params['content']['menu']['categories'] ?? $this->get_default_menu_categories(),
 
-            // Hero image
-            'hero_image'     => $page_content['hero_image'] ?? 'https://placehold.co/1920x1080',
+            // Hero image - API provided, then content.hero, then generated
+            'hero_image'     => $page_content['hero_image']
+                                ?? $params['content']['hero']['hero_image']
+                                ?? $images['hero_image'],
 
             // Logo
             'logo'           => $params['logo'] ?? '',
@@ -149,7 +174,59 @@ class PressPilot_Factory_Pattern_Loader {
             'color_accent'    => $params['colors']['accent'] ?? '#f59e0b',
             'color_background'=> $params['colors']['background'] ?? '#ffffff',
             'color_text'      => $params['colors']['text'] ?? '#1f2937',
+
+            // Auto-calculated contrast-safe text colors (WCAG AA compliant)
+            'color_primary_text'   => PressPilot_Factory_Color_Utils::get_contrast_color( $params['colors']['primary'] ?? '#1e40af' ),
+            'color_secondary_text' => PressPilot_Factory_Color_Utils::get_contrast_color( $params['colors']['secondary'] ?? '#64748b' ),
+            'color_accent_text'    => PressPilot_Factory_Color_Utils::get_contrast_color( $params['colors']['accent'] ?? '#f59e0b' ),
+
+            // Color variants
+            'color_primary_light'  => PressPilot_Factory_Color_Utils::lighten( $params['colors']['primary'] ?? '#1e40af', 20 ),
+            'color_primary_dark'   => PressPilot_Factory_Color_Utils::darken( $params['colors']['primary'] ?? '#1e40af', 20 ),
         ];
+    }
+
+    /**
+     * Get contextual images based on category
+     */
+    private function get_contextual_images( $category, $params ) {
+        // If image provider is available, use it
+        if ( $this->image_provider ) {
+            return $this->image_provider->get_all_images( $category );
+        }
+
+        // Fallback to placeholder images
+        return [
+            'hero_image'  => 'https://placehold.co/1920x1080',
+            'about_image' => 'https://placehold.co/800x600',
+            'feature_1'   => 'https://placehold.co/600x400',
+            'feature_2'   => 'https://placehold.co/600x400',
+            'feature_3'   => 'https://placehold.co/600x400',
+            'avatar_1'    => 'https://placehold.co/150x150',
+            'avatar_2'    => 'https://placehold.co/150x150',
+            'avatar_3'    => 'https://placehold.co/150x150',
+        ];
+    }
+
+    /**
+     * Prepare testimonials with avatar images
+     */
+    private function prepare_testimonials_with_avatars( $testimonials, $images ) {
+        if ( ! is_array( $testimonials ) ) {
+            return $testimonials;
+        }
+
+        $avatar_keys = [ 'avatar_1', 'avatar_2', 'avatar_3' ];
+
+        foreach ( $testimonials as $index => &$testimonial ) {
+            // Only add avatar if not already set or using placeholder
+            if ( empty( $testimonial['avatar'] ) || strpos( $testimonial['avatar'], 'placehold' ) !== false ) {
+                $avatar_key = $avatar_keys[ $index % 3 ];
+                $testimonial['avatar'] = $images[ $avatar_key ] ?? 'https://placehold.co/150x150';
+            }
+        }
+
+        return $testimonials;
     }
 
     /**
@@ -265,7 +342,11 @@ class PressPilot_Factory_Pattern_Loader {
      */
     private function replace_placeholders( $template, $data ) {
         // Keys that should not be escaped (like color values)
-        $raw_keys = [ 'color_primary', 'color_secondary', 'color_accent', 'color_background', 'color_text' ];
+        $raw_keys = [
+            'color_primary', 'color_secondary', 'color_accent', 'color_background', 'color_text',
+            'color_primary_text', 'color_secondary_text', 'color_accent_text',
+            'color_primary_light', 'color_primary_dark',
+        ];
 
         foreach ( $data as $key => $value ) {
             if ( is_string( $value ) || is_numeric( $value ) ) {

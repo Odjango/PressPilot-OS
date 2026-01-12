@@ -12,9 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PressPilot_Factory_Content_Builder {
 
     private $pattern_loader;
+    private $layout_manager;
 
     public function __construct( PressPilot_Factory_Pattern_Loader $pattern_loader ) {
         $this->pattern_loader = $pattern_loader;
+        $this->layout_manager = new PressPilot_Factory_Layout_Manager();
     }
 
     /**
@@ -57,12 +59,17 @@ class PressPilot_Factory_Content_Builder {
 
     /**
      * Build content from patterns
+     * Uses layout manager to map generic pattern names to layout-specific variants
      */
     private function build_content( $patterns, $params ) {
         $content_parts = [];
+        $layout = $params['layout'] ?? 'modern';
 
         foreach ( $patterns as $pattern_name ) {
-            $pattern_content = $this->pattern_loader->load_and_render( $pattern_name, $params );
+            // Map generic pattern name to layout-specific variant
+            $actual_pattern = $this->layout_manager->get_pattern_name( $layout, $pattern_name );
+
+            $pattern_content = $this->pattern_loader->load_and_render( $actual_pattern, $params );
             if ( $pattern_content ) {
                 $content_parts[] = $pattern_content;
             }

@@ -58,6 +58,7 @@ final class PressPilot_Factory {
     private $theme_exporter;
     private $static_exporter;
     private $cleanup_handler;
+    private $image_provider;
 
     public static function instance() {
         if ( is_null( self::$instance ) ) {
@@ -118,7 +119,8 @@ final class PressPilot_Factory {
         load_plugin_textdomain( 'presspilot-factory', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
         // Initialize components
-        $this->pattern_loader     = new PressPilot_Factory_Pattern_Loader();
+        $this->image_provider     = new PressPilot_Factory_Image_Provider();
+        $this->pattern_loader     = new PressPilot_Factory_Pattern_Loader( $this->image_provider );
         $this->brand_applier      = new PressPilot_Factory_Brand_Applier();
         $this->cleanup_handler    = new PressPilot_Factory_Cleanup_Handler();
         $this->content_builder    = new PressPilot_Factory_Content_Builder( $this->pattern_loader );

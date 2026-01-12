@@ -1,0 +1,35 @@
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull" style="background:linear-gradient(135deg, {{color_primary}} 0%, {{color_accent}} 100%);padding-top:var(--wp--preset--spacing--80);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--80);padding-left:var(--wp--preset--spacing--50);min-height:85vh;display:flex;align-items:center">
+    <!-- wp:group {"layout":{"type":"constrained","contentSize":"800px"}} -->
+    <div class="wp-block-group">
+        <!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"0.875rem","fontWeight":"600","textTransform":"uppercase","letterSpacing":"0.15em"},"spacing":{"margin":{"bottom":"var:preset|spacing|20"}}}} -->
+        <p class="has-text-align-center" style="color:#ffffffcc;margin-bottom:var(--wp--preset--spacing--20);font-size:0.875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.15em">{{tagline}}</p>
+        <!-- /wp:paragraph -->
+
+        <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2.5rem, 6vw, 4.5rem)","fontWeight":"700","lineHeight":"1.1"}}} -->
+        <h1 class="wp-block-heading has-text-align-center" style="color:#ffffff;font-size:clamp(2.5rem, 6vw, 4.5rem);font-weight:700;line-height:1.1">{{headline}}</h1>
+        <!-- /wp:heading -->
+
+        <!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"1.25rem"},"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
+        <p class="has-text-align-center" style="color:#ffffffdd;margin-top:var(--wp--preset--spacing--30);font-size:1.25rem">{{subheadline}}</p>
+        <!-- /wp:paragraph -->
+
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|50"}}}} -->
+        <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--50)">
+            <!-- wp:button {"style":{"typography":{"fontWeight":"600"},"border":{"radius":"8px"},"spacing":{"padding":{"top":"1rem","bottom":"1rem","left":"2rem","right":"2rem"}}}} -->
+            <div class="wp-block-button" style="font-weight:600"><a class="wp-block-button__link wp-element-button" style="background-color:#ffffff;color:{{color_primary}};border-radius:8px;padding-top:1rem;padding-right:2rem;padding-bottom:1rem;padding-left:2rem">{{cta_text}}</a></div>
+            <!-- /wp:button -->
+
+            <!-- wp:button {"className":"is-style-outline","style":{"typography":{"fontWeight":"600"},"border":{"radius":"8px","width":"2px"},"spacing":{"padding":{"top":"1rem","bottom":"1rem","left":"2rem","right":"2rem"}}}} -->
+            <div class="wp-block-button is-style-outline" style="font-weight:600"><a class="wp-block-button__link wp-element-button" style="color:#ffffff;border-color:#ffffff;border-width:2px;border-style:solid;border-radius:8px;padding-top:1rem;padding-right:2rem;padding-bottom:1rem;padding-left:2rem;background:transparent">{{secondary_cta}}</a></div>
+            <!-- /wp:button -->
+        </div>
+        <!-- /wp:buttons -->
+
+        <!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"0.875rem"},"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
+        <p class="has-text-align-center" style="color:#ffffffaa;margin-top:var(--wp--preset--spacing--30);font-size:0.875rem">No credit card required • Free 14-day trial</p>
+        <!-- /wp:paragraph -->
+    </div>
+    <!-- /wp:group -->
+</div>
+<!-- /wp:group -->

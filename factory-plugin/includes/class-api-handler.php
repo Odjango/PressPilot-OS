@@ -92,7 +92,7 @@ class PressPilot_Factory_Api_Handler {
             'category' => [
                 'required'          => true,
                 'type'              => 'string',
-                'enum'              => [ 'corporate', 'restaurant', 'ecommerce' ],
+                'enum'              => [ 'corporate', 'restaurant', 'ecommerce', 'agency', 'startup', 'local', 'healthcare', 'realestate', 'fitness', 'education' ],
                 'sanitize_callback' => 'sanitize_text_field',
             ],
             'colors' => [
@@ -127,6 +127,13 @@ class PressPilot_Factory_Api_Handler {
                 'default'           => 'original',
                 'sanitize_callback' => 'sanitize_text_field',
             ],
+            'layout' => [
+                'required'          => false,
+                'type'              => 'string',
+                'enum'              => [ '', 'modern', 'classic', 'minimal', 'elegant', 'bold', 'corporate', 'creative', 'startup', 'agency', 'local', 'ecommerce', 'restaurant' ],
+                'default'           => '',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
             'content' => [
                 'required' => false,
                 'type'     => 'object',
@@ -140,16 +147,26 @@ class PressPilot_Factory_Api_Handler {
         $start_time = microtime( true );
 
         try {
+            // Get category first to determine recommended layout
+            $category = $request->get_param( 'category' );
+            $layout = $request->get_param( 'layout' );
+
+            // If no layout specified, use category's recommended layout
+            if ( empty( $layout ) ) {
+                $layout = PressPilot_Factory_Category_Config::get_recommended_layout( $category );
+            }
+
             // Extract parameters
             $params = [
                 'business_name' => $request->get_param( 'businessName' ),
                 'tagline'       => $request->get_param( 'tagline' ),
                 'description'   => $request->get_param( 'description' ),
-                'category'      => $request->get_param( 'category' ),
+                'category'      => $category,
                 'colors'        => $request->get_param( 'colors' ),
                 'fonts'         => $request->get_param( 'fonts' ),
                 'logo'          => $request->get_param( 'logo' ),
                 'variation'     => $request->get_param( 'variation' ),
+                'layout'        => $layout,
                 'content'       => $request->get_param( 'content' ),
             ];
 
@@ -209,65 +226,19 @@ class PressPilot_Factory_Api_Handler {
         $category = $params['category'];
         $content = $params['content'];
 
-        // Common pages for all categories
-        $common_pages = [
-            'home' => [
-                'title'    => 'Home',
-                'template' => 'front-page',
-                'patterns' => [ 'hero', 'features', 'testimonials', 'cta' ],
-            ],
-            'about' => [
-                'title'    => 'About',
-                'template' => 'page',
-                'patterns' => [ 'about-content', 'values-section' ],
-            ],
-            'services' => [
-                'title'    => 'Services',
-                'template' => 'page',
-                'patterns' => [ 'services-grid' ],
-            ],
-            'contact' => [
-                'title'    => 'Contact',
-                'template' => 'page',
-                'patterns' => [ 'contact-form' ],
-            ],
-        ];
+        // Get pages from category config
+        $category_pages = PressPilot_Factory_Category_Config::get_pages( $category );
+        $nav_order = PressPilot_Factory_Category_Config::get_nav_order( $category );
 
-        // Category-specific pages
-        $category_pages = [];
+        // Create pages in nav order for proper menu generation
+        foreach ( $nav_order as $slug ) {
+            if ( ! isset( $category_pages[ $slug ] ) ) {
+                continue;
+            }
 
-        if ( $category === 'restaurant' ) {
-            $category_pages['menu'] = [
-                'title'    => 'Menu',
-                'template' => 'page',
-                'patterns' => [ 'menu-grid' ],
-            ];
-        }
-
-        if ( $category === 'ecommerce' ) {
-            $category_pages['shop'] = [
-                'title'    => 'Shop',
-                'template' => 'page',
-                'patterns' => [ 'shop-grid' ],
-            ];
-            $category_pages['cart'] = [
-                'title'    => 'Cart',
-                'template' => 'page',
-                'patterns' => [ 'woocommerce-cart' ],
-            ];
-            $category_pages['checkout'] = [
-                'title'    => 'Checkout',
-                'template' => 'page',
-                'patterns' => [ 'woocommerce-checkout' ],
-            ];
-        }
-
-        // Merge page definitions
-        $all_pages = array_merge( $common_pages, $category_pages );
-
-        // Create each page
-        foreach ( $all_pages as $slug => $page_config ) {
+            $page_config = $category_pages[ $slug ];
             $page_content = $content[ $slug ] ?? [];
+
             $page_id = $this->content_builder->create_page(
                 $page_config['title'],
                 $slug,

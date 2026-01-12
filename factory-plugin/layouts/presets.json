@@ -1,0 +1,194 @@
+{
+  "modern": {
+    "name": "Modern",
+    "description": "Bold colors, centered hero, clean grid layouts",
+    "patterns": {
+      "hero": "hero-centered",
+      "features": "features-grid",
+      "testimonials": "testimonials",
+      "cta": "cta",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "vibrant"
+  },
+  "classic": {
+    "name": "Classic",
+    "description": "Split hero with image, professional layout",
+    "patterns": {
+      "hero": "hero-split",
+      "features": "features",
+      "testimonials": "testimonials",
+      "cta": "cta-banner",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "professional"
+  },
+  "minimal": {
+    "name": "Minimal",
+    "description": "Dark hero, large typography, clean lines",
+    "patterns": {
+      "hero": "hero-minimal",
+      "features": "features-grid",
+      "testimonials": "testimonials",
+      "cta": "cta",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "dark"
+  },
+  "elegant": {
+    "name": "Elegant",
+    "description": "Balanced design, refined styling",
+    "patterns": {
+      "hero": "hero",
+      "features": "features",
+      "testimonials": "testimonials",
+      "cta": "cta-banner",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "neutral"
+  },
+  "bold": {
+    "name": "Bold",
+    "description": "Large text, vibrant colors, strong CTAs with rounded buttons",
+    "patterns": {
+      "hero": "hero-bold",
+      "features": "features-grid",
+      "testimonials": "testimonials",
+      "cta": "cta-gradient",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "vibrant"
+  },
+  "corporate": {
+    "name": "Corporate",
+    "description": "Professional, trust badges, split layout with image",
+    "patterns": {
+      "hero": "hero-corporate",
+      "features": "features-grid",
+      "testimonials": "testimonials",
+      "cta": "cta-simple",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "professional"
+  },
+  "creative": {
+    "name": "Creative",
+    "description": "Dark background, asymmetric layout, artistic flair",
+    "patterns": {
+      "hero": "hero-creative",
+      "features": "features-grid",
+      "testimonials": "testimonials",
+      "cta": "cta-dark",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "dark"
+  },
+  "startup": {
+    "name": "Startup",
+    "description": "Gradient backgrounds, SaaS style, modern tech feel",
+    "patterns": {
+      "hero": "hero-gradient",
+      "features": "features-grid",
+      "testimonials": "testimonials",
+      "cta": "cta-gradient",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "vibrant"
+  },
+  "agency": {
+    "name": "Agency",
+    "description": "Portfolio-style, large typography, case study focus",
+    "patterns": {
+      "hero": "hero-agency",
+      "features": "features-grid",
+      "testimonials": "testimonials",
+      "cta": "cta-dark",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "neutral"
+  },
+  "local": {
+    "name": "Local Business",
+    "description": "Contact-first, location emphasis, reviews focus",
+    "patterns": {
+      "hero": "hero-local",
+      "features": "features-grid",
+      "testimonials": "testimonials",
+      "cta": "cta-simple",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "professional"
+  },
+  "ecommerce": {
+    "name": "E-commerce",
+    "description": "Product-focused, trust badges, conversion optimized",
+    "patterns": {
+      "hero": "hero-product",
+      "features": "features-grid",
+      "testimonials": "testimonials",
+      "cta": "cta-banner",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "neutral"
+  },
+  "restaurant": {
+    "name": "Restaurant",
+    "description": "Food imagery hero, menu-first, reservation focused",
+    "patterns": {
+      "hero": "hero-food",
+      "features": "features-grid",
+      "testimonials": "testimonials",
+      "cta": "cta-banner",
+      "about": "about-content",
+      "values": "values-section",
+      "services": "services-grid",
+      "contact": "contact-form",
+      "menu": "menu-grid"
+    },
+    "colors_preset": "warm"
+  }
+}
