@@ -113,15 +113,17 @@ class PressPilot_Factory_Pattern_Loader {
             'features_title' => $page_content['features_title'] ?? $page_content['title'] ?? 'Our Features',
             'items'          => $page_content['items']
                                 ?? $params['content']['features']['items']
-                                ?? [],
+                                ?? $this->get_default_features(),
 
             // Values section
             'values_title'    => $params['content']['values']['title'] ?? $page_content['values_title'] ?? 'Our Values',
             'values_subtitle' => $params['content']['values']['subtitle'] ?? $page_content['values_subtitle'] ?? 'What we stand for',
-            'values_items'    => $params['content']['values']['items'] ?? $page_content['values_items'] ?? [],
+            'values_items'    => $params['content']['values']['items'] ?? $page_content['values_items'] ?? $this->get_default_values(),
 
             // Testimonials
-            'testimonials'   => $page_content['testimonials'] ?? [],
+            'testimonials'   => $page_content['testimonials']
+                                ?? $params['content']['testimonials']['items']
+                                ?? $this->get_default_testimonials(),
 
             // Contact
             'contact_title'  => $page_content['contact_title'] ?? 'Contact Us',
@@ -344,6 +346,78 @@ class PressPilot_Factory_Pattern_Loader {
                     [ 'name' => 'Caesar Salad', 'price' => '$9', 'description' => 'Romaine, parmesan, croutons' ],
                     [ 'name' => 'Bruschetta', 'price' => '$8', 'description' => 'Toasted bread with fresh tomatoes' ],
                 ],
+            ],
+        ];
+    }
+
+    /**
+     * Get default features for all sites
+     */
+    private function get_default_features() {
+        return [
+            [
+                'icon' => '⭐',
+                'title' => 'Quality First',
+                'description' => 'We never compromise on quality in everything we do.',
+            ],
+            [
+                'icon' => '🚀',
+                'title' => 'Fast Service',
+                'description' => 'Quick turnaround times without sacrificing quality.',
+            ],
+            [
+                'icon' => '💬',
+                'title' => 'Great Support',
+                'description' => 'Our team is here to help you every step of the way.',
+            ],
+        ];
+    }
+
+    /**
+     * Get default values for about page
+     */
+    private function get_default_values() {
+        return [
+            [
+                'icon' => '⭐',
+                'title' => 'Quality',
+                'description' => 'We never compromise on ingredients',
+            ],
+            [
+                'icon' => '❤️',
+                'title' => 'Passion',
+                'description' => 'We put love into everything we do',
+            ],
+            [
+                'icon' => '🤝',
+                'title' => 'Community',
+                'description' => 'Proud to serve our local neighborhood',
+            ],
+        ];
+    }
+
+    /**
+     * Get default testimonials
+     */
+    private function get_default_testimonials() {
+        return [
+            [
+                'quote' => 'Absolutely amazing experience! The quality and service exceeded all my expectations.',
+                'name' => 'Sarah Johnson',
+                'role' => 'Happy Customer',
+                'avatar' => 'https://placehold.co/48x48',
+            ],
+            [
+                'quote' => 'I have been a loyal customer for years. They never disappoint!',
+                'name' => 'Michael Chen',
+                'role' => 'Regular Customer',
+                'avatar' => 'https://placehold.co/48x48',
+            ],
+            [
+                'quote' => 'The best in town, hands down. Highly recommend to everyone!',
+                'name' => 'Emily Davis',
+                'role' => 'First-time Visitor',
+                'avatar' => 'https://placehold.co/48x48',
             ],
         ];
     }
