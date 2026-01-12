@@ -1,357 +1,314 @@
-# PressPilot Factory Plugin - Project Documentation
+# PressPilot - Complete Project Guide
 
-## Overview
+> **THIS IS THE SINGLE SOURCE OF TRUTH FOR CLAUDE CLI**
 
-The PressPilot Factory Plugin is a WordPress REST API-based theme factory that generates complete FSE (Full Site Editing) themes from AI-generated content. It receives JSON content from an n8n workflow, builds WordPress pages using block patterns, applies branding, and exports both theme ZIPs and static HTML ZIPs.
+---
 
-## Architecture
+## 1. PROJECT VISION
+
+PressPilot is an **AI-powered website orchestration engine** that:
+- **Orchestrates** free, open-source themes, templates, and patterns
+- **Applies** brand identity through logo and brand colors
+- **Generates** contextual AI content seamlessly integrated into templates
+- **Delivers** production-ready, branded websites without custom development
+
+### Core Principles
+- **Free/Open-Source Only:** All dependencies must be free and open-source
+- **AI Generates CONTENT, Not MARKUP:** AI produces JSON content; WordPress builds block markup
+- **Factory Pattern:** Modular factories handle theme selection, branding, content, and assembly
+
+---
+
+## 2. SYSTEM ARCHITECTURE
 
 ```
-┌─────────────────┐     ┌─────────────┐     ┌──────────────────────┐
-│  n8n Workflow   │────▶│  REST API   │────▶│  Factory WordPress   │
-│  (AI Content)   │     │  /generate  │     │  factory.presspilot  │
-└─────────────────┘     └─────────────┘     └──────────────────────┘
-                                                      │
-                              ┌───────────────────────┼───────────────────────┐
-                              ▼                       ▼                       ▼
-                        ┌──────────┐           ┌──────────┐           ┌──────────┐
-                        │  Pages   │           │  Theme   │           │  Static  │
-                        │ Created  │           │   ZIP    │           │   ZIP    │
-                        └──────────┘           └──────────┘           └──────────┘
+┌─────────────────┐     ┌─────────────────────────────────────────────────┐
+│  n8n Workflow   │────▶│  https://factory.presspilotapp.com              │
+│  (Claude AI)    │     │  POST /wp-json/presspilot/v1/generate           │
+└─────────────────┘     └─────────────────────────────────────────────────┘
+                                          │
+                        ┌─────────────────┴─────────────────┐
+                        ▼                                   ▼
+              ┌─────────────────┐                 ┌─────────────────┐
+              │   Theme ZIP     │                 │   Static ZIP    │
+              │   (WordPress)   │                 │   (HTML/CSS)    │
+              └─────────────────┘                 └─────────────────┘
 ```
 
-## Key Principle: AI Generates CONTENT, Not MARKUP
-
-**Critical Design Decision:** The AI agent generates pure content (headlines, descriptions, features) as JSON. WordPress builds the block markup using native functions and pattern templates. This prevents:
-- Malformed block markup
-- FSE compatibility issues  
-- `{{placeholder}}` variables appearing in rendered pages
-
-## Infrastructure
-
+### Infrastructure
 | Component | Location |
 |-----------|----------|
 | Factory WordPress | https://factory.presspilotapp.com |
-| Server | DigitalOcean VPS via Coolify (134.209.167.43) |
+| Server | DigitalOcean VPS (134.209.167.43) |
 | Base Theme | Ollie (FSE block theme) |
-| Static Export | Basic HTML export (fetches rendered pages) |
-| GitHub Repo | github.com/Odjango/PressPilot-OS (Private) |
-| Plugin Path (server) | `/var/lib/docker/volumes/bb6b60fe00c76ab4ab0aaca0e12ded2c0814fad9aeb2295d57050c747d7068c2/_data/wp-content/plugins/factory-plugin/` |
+| GitHub Repo | github.com/Odjango/PressPilot-OS |
 
-## Plugin Structure
+---
 
+## 3. CODE LOCATIONS
+
+### Project Root
 ```
-factory-plugin/
-├── presspilot-factory.php          # Main plugin file, autoloader, activation
-├── readme.txt                       # WordPress plugin readme
-├── CLAUDE.md                        # This file
+/Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/
+```
+
+### Factory Plugin (MAIN WORK AREA)
+```
+/Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/factory-plugin/
+├── presspilot-factory.php          # Main plugin file
 ├── includes/
-│   ├── class-api-handler.php        # REST endpoints, authentication
-│   ├── class-content-builder.php    # wp_insert_post for pages
-│   ├── class-pattern-loader.php     # Loads HTML patterns, replaces {{placeholders}}
-│   ├── class-brand-applier.php      # Colors/fonts/logo via global styles
-│   ├── class-navigation-builder.php # wp_create_nav_menu
-│   ├── class-theme-exporter.php     # Copies Ollie + customizations to ZIP
-│   ├── class-static-exporter.php    # Static HTML export (pages + assets)
-│   └── class-cleanup-handler.php    # Deletes _presspilot_generated posts
+│   ├── class-api-handler.php        # REST API + page creation logic
+│   ├── class-content-builder.php    # Creates pages using patterns
+│   ├── class-pattern-loader.php     # Loads HTML, replaces {{placeholders}}
+│   ├── class-brand-applier.php      # Colors/fonts/logo
+│   ├── class-navigation-builder.php # Menu creation
+│   ├── class-theme-exporter.php     # Theme ZIP export
+│   └── class-static-exporter.php    # Static HTML export
 ├── patterns/                        # HTML block pattern templates
-│   ├── hero.html / hero-centered.html
-│   ├── hero-split.html / hero-minimal.html
-│   ├── features.html / features-grid.html
-│   ├── testimonials.html
-│   ├── cta.html / cta-banner.html
-│   ├── about-content.html
-│   ├── services-grid.html
-│   ├── contact-form.html
-│   ├── menu-grid.html              # Restaurant menu items
-│   ├── shop-grid.html              # WooCommerce products
-│   └── woocommerce-cart.html
-└── variations/                      # Layout/style variations
-    ├── original.json               # Centered hero
-    ├── high-contrast.json          # Split layout
-    └── inverted.json               # Dark mode
+│   ├── hero.html                    # ✅ Has layout
+│   ├── features.html                # ✅ Has {{icon}} placeholder
+│   ├── features-grid.html           # ✅ Has {{icon}} placeholder
+│   ├── about-content.html           # ✅ Has story layout
+│   ├── services-grid.html           # ✅ Has service cards
+│   ├── contact-form.html            # ✅ Has form with inputs
+│   ├── menu-grid.html               # ⚠️ Needs category headers
+│   └── testimonials.html            # ✅ Has quotes
+└── variations/
+    └── original.json                # Default style config
 ```
 
-## REST API
+### Production Server Path
+```
+/var/lib/docker/volumes/bb6b60fe00c76ab4ab0aaca0e12ded2c0814fad9aeb2295d57050c747d7068c2/_data/wp-content/plugins/factory-plugin/
+```
 
-### Authentication
-- Header: `X-PressPilot-Key: <api_key>`
-- API key stored in: `wp_options` → `presspilot_api_key`
+---
 
-### Endpoints
+## 4. HOW GENERATION WORKS
 
-#### POST /wp-json/presspilot/v1/generate
-Main generation endpoint.
+### API Request Flow
+1. **n8n workflow** sends POST to `/wp-json/presspilot/v1/generate`
+2. **class-api-handler.php** validates request and orchestrates:
+   - Calls `cleanup_handler->cleanup()` (removes old content)
+   - Calls `brand_applier->apply()` (sets colors/logo)
+   - Calls `create_pages_for_category()` (builds all pages)
+   - Calls `navigation_builder->create_menu()` (creates nav)
+   - Calls `theme_exporter->export()` (creates theme.zip)
+   - Calls `static_exporter->export()` (creates static.zip)
 
-**Request Body:**
+### Page Creation Logic (class-api-handler.php lines 190-240)
+```php
+$common_pages = [
+    'home' => ['patterns' => ['hero', 'features', 'testimonials', 'cta']],
+    'about' => ['patterns' => ['about-content']],
+    'services' => ['patterns' => ['services-grid']],
+    'contact' => ['patterns' => ['contact-form']],
+];
+
+// Restaurant adds:
+'menu' => ['patterns' => ['menu-grid']]
+
+// E-commerce adds:
+'shop', 'cart', 'checkout'
+```
+
+### Pattern Loading (class-pattern-loader.php)
+- Loads `patterns/{name}.html`
+- Replaces `{{variable}}` with data from request
+- Supports `{{#items}}...{{/items}}` for loops
+- Supports `{{#if condition}}...{{/if}}` for conditionals
+
+---
+
+## 5. WHAT'S WORKING ✅
+
+Based on code audit:
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Hero section | ✅ | Pattern exists, renders correctly |
+| Features with icons | ✅ | Pattern has `{{icon}}` placeholder |
+| Contact form | ✅ | Pattern has full form with inputs |
+| Services grid | ✅ | Pattern exists |
+| Testimonials | ✅ | Pattern exists |
+| Theme ZIP export | ✅ | ~2MB output |
+| Static ZIP export | ✅ | ~60MB output |
+| API authentication | ✅ | X-PressPilot-Key header |
+
+---
+
+## 6. REMAINING ISSUES ⚠️
+
+Based on screenshots and code audit:
+
+### Issue 1: No Values Section on About Page
+- **Problem:** About page only has story, no "Our Values" section with icons
+- **Root Cause:** No `values-section.html` pattern exists
+- **Fix:** 
+  1. Create `patterns/values-section.html` with 3 cards + icons
+  2. Add `'values-section'` to About page patterns in class-api-handler.php line 205
+
+### Issue 2: Menu Lacks Category Headers
+- **Problem:** Menu is flat list, no category groupings with emojis
+- **Root Cause:** `menu-grid.html` only iterates items, no categories
+- **Fix:** Update pattern to support `{{#categories}}` with `{{icon}}`
+
+### Issue 3: Footer Text Readability
+- **Problem:** Black text on blue background (from screenshot)
+- **Root Cause:** Footer template not setting text color to white
+- **Fix:** Check Ollie theme footer or create custom footer pattern
+
+### Issue 4: n8n May Not Send Icon Data
+- **Problem:** Icons might not appear if n8n doesn't include `icon` in feature items
+- **Root Cause:** AI content generation prompt may not request icons
+- **Fix:** Verify n8n workflow sends: `{"title": "...", "description": "...", "icon": "🚀"}`
+
+---
+
+## 7. TASK LIST
+
+### Task 1: Create Values Section Pattern
+```
+File: factory-plugin/patterns/values-section.html
+Content: 3-column layout with icon + title + description per card
+Placeholders: {{values_title}}, {{#items}} {{icon}} {{title}} {{description}} {{/items}}
+```
+
+### Task 2: Add Values to About Page
+```
+File: factory-plugin/includes/class-api-handler.php
+Line: ~205
+Change: 'about' => ['patterns' => ['about-content']]
+To: 'about' => ['patterns' => ['about-content', 'values-section']]
+```
+
+### Task 3: Improve Menu Grid Pattern
+```
+File: factory-plugin/patterns/menu-grid.html
+Add: Category header support with {{#categories}} wrapper
+Add: {{category_icon}} and {{category_name}} placeholders
+```
+
+### Task 4: Verify n8n Sends Icons
+```
+Check: n8n workflow's AI prompt includes request for emoji icons
+Check: Code node transforms AI output to include icon field
+Test: Send manual curl request with icon data, verify they appear
+```
+
+### Task 5: Fix Footer Colors (if needed)
+```
+Check: Ollie theme footer template in parts/
+Ensure: Text color is white on dark background
+Ensure: {{business_name}} placeholder is replaced
+```
+
+---
+
+## 8. DEPLOYMENT
+
+### After Making Changes
+```bash
+# Navigate to plugin folder
+cd /Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/factory-plugin
+
+# Deploy to server
+scp -r ./* root@134.209.167.43:/var/lib/docker/volumes/bb6b60fe00c76ab4ab0aaca0e12ded2c0814fad9aeb2295d57050c747d7068c2/_data/wp-content/plugins/factory-plugin/
+```
+
+### Test API
+```bash
+curl -X POST https://factory.presspilotapp.com/wp-json/presspilot/v1/generate \
+  -H "Content-Type: application/json" \
+  -H "X-PressPilot-Key: YOUR_KEY" \
+  -d '{
+    "businessName": "Mamma Mia Pizza",
+    "category": "restaurant",
+    "colors": {"primary": "#2856A3", "secondary": "#F47920"},
+    "content": {
+      "hero": {"headline": "Best Pizza in Town", "cta_text": "Order Now"},
+      "features": {
+        "items": [
+          {"title": "Fresh", "description": "Local ingredients", "icon": "🥬"},
+          {"title": "Fast", "description": "30 min delivery", "icon": "⚡"},
+          {"title": "Family", "description": "Since 1985", "icon": "❤️"}
+        ]
+      }
+    }
+  }'
+```
+
+---
+
+## 9. RULES FOR CLAUDE CLI
+
+1. **ONLY edit files in:** `/Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/factory-plugin/`
+2. **NEVER search** outside this folder
+3. **NEVER request** permissions for personal folders
+4. **Read this file FIRST** before any task
+5. **One task at a time** - verify each before proceeding
+6. **Test after deploy** - use curl or n8n to verify
+
+---
+
+## 10. API REFERENCE
+
+### Request Schema
 ```json
 {
-  "businessName": "Acme Corp",
-  "category": "corporate",
+  "businessName": "string (required)",
+  "category": "corporate|restaurant|ecommerce (required)",
   "colors": {
-    "primary": "#1e40af",
-    "secondary": "#64748b",
-    "accent": "#f59e0b",
-    "background": "#ffffff",
-    "text": "#1f2937"
+    "primary": "#hex",
+    "secondary": "#hex",
+    "accent": "#hex"
   },
-  "fonts": {
-    "heading": "Inter",
-    "body": "Inter"
-  },
-  "logo": "https://example.com/logo.png",
-  "variation": "original",
+  "fonts": {"heading": "font", "body": "font"},
+  "logo": "URL",
   "content": {
-    "hero": {
-      "headline": "Transform Your Business",
-      "subheadline": "We help companies grow",
-      "cta_text": "Get Started",
-      "cta_url": "/contact"
-    },
-    "about": {
-      "headline": "About Us",
-      "description": "Our story..."
-    },
-    "services": {
-      "headline": "Our Services",
-      "items": [
-        {"title": "Service 1", "description": "..."},
-        {"title": "Service 2", "description": "..."}
-      ]
-    },
-    "testimonials": {
-      "items": [
-        {"quote": "...", "name": "John", "role": "CEO"}
-      ]
-    },
-    "contact": {
-      "headline": "Contact Us",
-      "email": "hello@example.com",
-      "phone": "(555) 123-4567"
-    }
+    "hero": {"headline": "...", "subheadline": "...", "cta_text": "..."},
+    "features": {"items": [{"title": "...", "description": "...", "icon": "emoji"}]},
+    "about": {"headline": "...", "about_text": "..."},
+    "values": {"items": [{"title": "...", "description": "...", "icon": "emoji"}]},
+    "contact": {"headline": "...", "email": "...", "phone": "...", "address": "..."},
+    "menu": {"categories": [{"name": "...", "icon": "emoji", "items": [...]}]}
   }
 }
 ```
 
-**Response:**
+### Response Schema
 ```json
 {
   "success": true,
-  "generation_id": "abc123",
+  "generation_id": "gen_uuid",
   "preview_url": "https://factory.presspilotapp.com",
   "downloads": {
-    "theme_zip": "https://factory.presspilotapp.com/wp-content/themes/acme-corp.zip",
-    "static_zip": "https://factory.presspilotapp.com/wp-content/static/acme-corp-static.zip"
+    "theme_zip": "URL",
+    "static_zip": "URL"
   }
 }
 ```
 
-#### POST /wp-json/presspilot/v1/cleanup
-Removes all generated content (pages with `_presspilot_generated` meta).
+---
 
-#### GET /wp-json/presspilot/v1/status/{id}
-Check generation status.
+## 11. DEBUG COMMANDS
 
-## Business Categories
-
-| Category | Extra Pages |
-|----------|-------------|
-| corporate | Standard pages only |
-| restaurant | + Menu page |
-| ecommerce | + Shop, Cart, Checkout pages |
-| fitness | Standard pages only |
-| portfolio | Standard pages only |
-
-## Pattern System
-
-Patterns use Mustache-style placeholders:
-
-```html
-<!-- wp:heading -->
-<h1>{{headline}}</h1>
-<!-- /wp:heading -->
-
-{{#items}}
-<div class="feature">
-  <h3>{{title}}</h3>
-  <p>{{description}}</p>
-</div>
-{{/items}}
-
-{{#if address}}
-<p>{{address}}</p>
-{{/if}}
-```
-
-**Pattern Loader Features:**
-- Simple placeholders: `{{variable}}`
-- Repeaters: `{{#items}}...{{/items}}`
-- Conditionals: `{{#if condition}}...{{/if}}`
-- Fallback values for missing data
-- HTML escaping for security
-
-## n8n Workflow Integration
-
-### CRITICAL: Correct Endpoint Configuration
-
-**DO NOT USE:** `https://presspilotapp.com/api/generate` (Next.js - BROKEN)
-
-**USE THIS:** `https://factory.presspilotapp.com/wp-json/presspilot/v1/generate` (WordPress Factory - WORKING)
-
-The Next.js serverless environment cannot render WordPress blocks. The Factory Plugin at factory.presspilotapp.com was built specifically for this purpose.
-
-### n8n HTTP Request Node Configuration
-```
-Method: POST
-URL: https://factory.presspilotapp.com/wp-json/presspilot/v1/generate
-Headers:
-  Content-Type: application/json
-  X-PressPilot-Key: <api_key_from_wordpress>
-Body: JSON (from AI content generation step)
-```
-
-### Workflow Steps
-1. Receives webhook with business info
-2. Calls AI (Claude/GPT) to generate content JSON
-3. Transforms AI output to API format (Code node)
-4. POSTs to `https://factory.presspilotapp.com/wp-json/presspilot/v1/generate`
-5. Downloads resulting ZIPs from response URLs
-6. Delivers to user
-
-### Test Script
-Run `./scripts/test-factory-api.sh` to verify the factory endpoint is working.
-
-## Development Workflow
-
-### Local Development
-```bash
-cd /Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/factory-plugin
-# Edit files locally
-git add -A && git commit -m "description" && git push
-```
-
-### Deploy to Server
 ```bash
 # SSH to server
 ssh root@134.209.167.43
 
-# Plugin location
-cd /var/lib/docker/volumes/bb6b60fe00c76ab4ab0aaca0e12ded2c0814fad9aeb2295d57050c747d7068c2/_data/wp-content/plugins/factory-plugin/
+# Check debug log
+tail -100 /var/lib/docker/volumes/bb6b60fe00c76ab4ab0aaca0e12ded2c0814fad9aeb2295d57050c747d7068c2/_data/wp-content/debug.log
 
-# Or SCP files directly
-scp local/file.php root@134.209.167.43:/var/lib/docker/volumes/bb6b60fe00c76ab4ab0aaca0e12ded2c0814fad9aeb2295d57050c747d7068c2/_data/wp-content/plugins/factory-plugin/
-```
+# List pattern files
+ls -la /var/lib/docker/volumes/bb6b60fe00c76ab4ab0aaca0e12ded2c0814fad9aeb2295d57050c747d7068c2/_data/wp-content/plugins/factory-plugin/patterns/
 
-### Enable Debug Mode
-Edit wp-config.php on server:
-```php
+# Enable debug mode (edit wp-config.php)
 define('WP_DEBUG', true);
 define('WP_DEBUG_LOG', true);
-define('WP_DEBUG_DISPLAY', false);
 ```
-Check: `/wp-content/debug.log`
-
-## Current Status (January 2025)
-
-### ✅ Completed
-- [x] Plugin architecture designed
-- [x] All PHP classes implemented
-- [x] Pattern HTML files created
-- [x] REST API endpoints registered
-- [x] Plugin installed on factory server
-- [x] API key created and configured
-- [x] n8n workflow configured
-- [x] API key mismatch fixed (`presspilot_api_key`)
-- [x] Missing pattern files deployed
-- [x] Page creation working (4 pages: Home, About, Services, Contact)
-- [x] Theme ZIP export working (~2MB)
-- [x] Static HTML ZIP export working (~60MB with assets)
-
-### 📊 Current Performance
-- API generation time: ~24 seconds
-- Theme ZIP size: ~2MB
-- Static ZIP size: ~60MB (includes HTML pages + theme assets)
-- Pages created per generation: 4 (corporate), 5 (restaurant), 7 (ecommerce)
-
-### ✅ Recently Fixed Issues
-1. **Static ZIP was empty** - Fixed by switching from Simply Static plugin integration to basic HTML export
-   - Simply Static's internal API was incompatible with programmatic triggering
-   - Basic export fetches rendered HTML via `wp_remote_get()` and packages with assets
-
-2. **Pages confirmed working** - API correctly creates pages with `_presspilot_generated` meta
-
-## Debugging Checklist
-
-When pages aren't created:
-
-1. **Check API Key Match**
-   ```bash
-   # On server
-   grep "presspilot_api_key" class-api-handler.php
-   # Should show: get_option( 'presspilot_api_key' )
-   ```
-
-2. **Verify Patterns Exist**
-   ```bash
-   ls patterns/
-   # Should include: hero.html, features.html, etc.
-   ```
-
-3. **Enable WP Debug**
-   ```php
-   define('WP_DEBUG', true);
-   define('WP_DEBUG_LOG', true);
-   ```
-
-4. **Check Debug Log**
-   ```bash
-   tail -100 wp-content/debug.log
-   ```
-
-5. **Test API Manually**
-   ```bash
-   curl -X POST https://factory.presspilotapp.com/wp-json/presspilot/v1/generate \
-     -H "Content-Type: application/json" \
-     -H "X-PressPilot-Key: YOUR_KEY" \
-     -d '{"businessName":"Test","category":"corporate",...}'
-   ```
-
-## Future Enhancements
-
-### Phase 2
-- [ ] Add more pattern variations
-- [ ] Support custom page templates
-- [ ] Image generation/placement integration
-- [ ] Multi-language support
-
-### Phase 3
-- [ ] Queue system for multiple concurrent generations
-- [ ] Webhook callbacks for generation completion
-- [ ] Analytics/tracking for generated sites
-- [ ] A/B testing different pattern layouts
-
-### Phase 4
-- [ ] Self-hosted deployment option
-- [ ] White-label support
-- [ ] API rate limiting and quotas
-- [ ] Subscription/billing integration
-
-## File Reference Quick Links
-
-| File | Purpose |
-|------|---------|
-| `class-api-handler.php:63` | API key validation |
-| `class-content-builder.php` | Page creation logic |
-| `class-pattern-loader.php` | Template rendering |
-| `patterns/hero.html` | Main hero section |
-| `variations/original.json` | Default layout config |
-
-## Contact & Support
-
-- **Repo:** github.com/Odjango/PressPilot-OS
-- **Factory URL:** https://factory.presspilotapp.com
-- **Server IP:** 134.209.167.43
 
 ---
 
-*Last Updated: January 11, 2026*
+*Last Updated: January 12, 2026*
+*Version: 2.0 - Merged from PressPilot_Detailed_Plan_V3.md and existing CLAUDE.md*

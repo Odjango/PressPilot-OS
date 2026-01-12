@@ -148,8 +148,112 @@ class PressPilot_Factory_Theme_Exporter {
         // Add custom patterns
         $this->add_custom_patterns( $theme_dir );
 
+        // Create custom header and footer template parts
+        $this->create_header_template_part( $theme_dir, $params );
+        $this->create_footer_template_part( $theme_dir, $params );
+
         // Update functions.php
         $this->update_functions_php( $theme_dir, $params );
+    }
+
+    /**
+     * Create custom header template part with logo and business name
+     */
+    private function create_header_template_part( $theme_dir, $params ) {
+        $parts_dir = $theme_dir . '/parts';
+        if ( ! file_exists( $parts_dir ) ) {
+            wp_mkdir_p( $parts_dir );
+        }
+
+        $business_name = esc_html( $params['business_name'] ?? 'My Business' );
+        $logo_url = esc_url( $params['logo'] ?? '' );
+        $category = $params['category'] ?? 'corporate';
+
+        // Build logo block if logo URL provided
+        $logo_block = '';
+        if ( ! empty( $logo_url ) ) {
+            $logo_block = <<<HTML
+<!-- wp:image {"width":"50px","height":"50px","scale":"contain","sizeSlug":"full","linkDestination":"custom","className":"is-style-default"} -->
+<figure class="wp-block-image size-full is-resized is-style-default"><a href="/"><img src="{$logo_url}" alt="{$business_name} Logo" style="object-fit:contain;width:50px;height:50px"/></a></figure>
+<!-- /wp:image -->
+HTML;
+        } else {
+            // Fallback: use site logo block (will show placeholder or uploaded logo)
+            $logo_block = <<<HTML
+<!-- wp:site-logo {"width":50,"shouldSyncIcon":true} /-->
+HTML;
+        }
+
+        // Build navigation links based on category
+        $nav_links = '<!-- wp:navigation-link {"label":"Home","url":"/","kind":"custom","isTopLevelLink":true} /-->' . "\n";
+
+        if ( $category === 'restaurant' ) {
+            $nav_links .= '<!-- wp:navigation-link {"label":"Menu","url":"/menu","kind":"custom","isTopLevelLink":true} /-->' . "\n";
+        } else {
+            $nav_links .= '<!-- wp:navigation-link {"label":"Services","url":"/services","kind":"custom","isTopLevelLink":true} /-->' . "\n";
+        }
+
+        $nav_links .= '<!-- wp:navigation-link {"label":"About","url":"/about","kind":"custom","isTopLevelLink":true} /-->' . "\n";
+        $nav_links .= '<!-- wp:navigation-link {"label":"Contact","url":"/contact","kind":"custom","isTopLevelLink":true} /-->';
+
+        $header_html = <<<HTML
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--50)">
+
+<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
+<div class="wp-block-group">
+
+<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
+<div class="wp-block-group">
+{$logo_block}
+
+<!-- wp:heading {"level":1,"style":{"typography":{"fontWeight":"700","fontSize":"1.5rem"}},"textColor":"contrast"} -->
+<h1 class="wp-block-heading has-contrast-color has-text-color" style="font-size:1.5rem;font-weight:700"><a href="/" style="text-decoration:none;color:inherit;">{$business_name}</a></h1>
+<!-- /wp:heading -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:navigation {"overlayBackgroundColor":"base","overlayTextColor":"contrast","layout":{"type":"flex","justifyContent":"right"},"style":{"typography":{"fontWeight":"500"},"spacing":{"blockGap":"2rem"}},"fontSize":"medium"} -->
+{$nav_links}
+<!-- /wp:navigation -->
+
+</div>
+<!-- /wp:group -->
+
+</div>
+<!-- /wp:group -->
+HTML;
+
+        file_put_contents( $parts_dir . '/header.html', $header_html );
+    }
+
+    /**
+     * Create custom footer template part with PressPilot branding
+     */
+    private function create_footer_template_part( $theme_dir, $params ) {
+        $parts_dir = $theme_dir . '/parts';
+        if ( ! file_exists( $parts_dir ) ) {
+            wp_mkdir_p( $parts_dir );
+        }
+
+        $business_name = esc_html( $params['business_name'] ?? 'My Business' );
+        $year = date( 'Y' );
+        $primary_color = $params['colors']['primary'] ?? '#1e40af';
+
+        // Use inline styles to guarantee text visibility
+        $footer_html = <<<HTML
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"24px","bottom":"24px","left":"24px","right":"24px"}},"color":{"background":"{$primary_color}","text":"#ffffff"}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull" style="background-color:{$primary_color};color:#ffffff;padding:24px">
+
+<!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"0.9rem"},"color":{"text":"#ffffff"}}} -->
+<p class="has-text-align-center" style="color:#ffffff;font-size:0.9rem">© {$year} {$business_name}. All rights reserved. · Powered by <a href="https://presspilot.io" target="_blank" rel="noopener" style="color:#ffffff;text-decoration:underline;">PressPilot</a></p>
+<!-- /wp:paragraph -->
+
+</div>
+<!-- /wp:group -->
+HTML;
+
+        file_put_contents( $parts_dir . '/footer.html', $footer_html );
     }
 
     /**
@@ -446,7 +550,6 @@ HTML;
      */
     private function create_custom_page_template( $templates_dir, $page ) {
         $slug = $page->post_name;
-        $title = $page->post_title;
         $content = $page->post_content;
 
         // If no content, use placeholder
@@ -454,14 +557,13 @@ HTML;
             $content = '<!-- wp:paragraph --><p>Page content goes here.</p><!-- /wp:paragraph -->';
         }
 
+        // Use default layout to allow full-width sections
+        // Don't add extra h1 - content already has its own headers
         $template = <<<HTML
 <!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
-<!-- wp:group {"tagName":"main","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained"}} -->
-<main class="wp-block-group" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
-    <!-- wp:heading {"level":1} -->
-    <h1 class="wp-block-heading">{$title}</h1>
-    <!-- /wp:heading -->
+<!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"0","bottom":"0"}}},"layout":{"type":"default"}} -->
+<main class="wp-block-group" style="margin-top:0;margin-bottom:0">
 {$content}
 </main>
 <!-- /wp:group -->
@@ -479,9 +581,8 @@ HTML;
         $template = <<<HTML
 <!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
-<!-- wp:group {"tagName":"main","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained"}} -->
-<main class="wp-block-group" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
-    <!-- wp:post-title {"level":1} /-->
+<!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"0","bottom":"0"}}},"layout":{"type":"default"}} -->
+<main class="wp-block-group" style="margin-top:0;margin-bottom:0">
     <!-- wp:post-content {"layout":{"type":"default"}} /-->
 </main>
 <!-- /wp:group -->
@@ -528,14 +629,19 @@ HTML;
      */
     private function create_starter_content( $theme_dir, $params ) {
         $pages = $this->get_generated_pages();
+        $business_name = $params['business_name'] ?? 'PressPilot Theme';
+        $tagline = $params['tagline'] ?? '';
+
         $starter_content = [
             'version' => '1.0',
-            'theme' => $params['business_name'] ?? 'PressPilot Theme',
+            'theme' => $business_name,
             'generated_at' => current_time( 'mysql' ),
             'pages' => [],
             'options' => [
                 'show_on_front' => 'page',
                 'page_on_front' => 'home',
+                'blogname' => $business_name,
+                'blogdescription' => $tagline,
             ],
         ];
 
@@ -625,6 +731,14 @@ add_action( 'after_switch_theme', function() {
         update_option( 'page_on_front', $front_page_id );
     }
 
+    // Set site title and tagline from starter content
+    if ( ! empty( $content['options']['blogname'] ) ) {
+        update_option( 'blogname', $content['options']['blogname'] );
+    }
+    if ( ! empty( $content['options']['blogdescription'] ) ) {
+        update_option( 'blogdescription', $content['options']['blogdescription'] );
+    }
+
     // Mark as imported
     update_option( 'presspilot_starter_content_imported', true );
 });
@@ -664,6 +778,13 @@ add_action( 'admin_init', function() {
                 if ( $front_page_id ) {
                     update_option( 'show_on_front', 'page' );
                     update_option( 'page_on_front', $front_page_id );
+                }
+                // Set site title and tagline
+                if ( ! empty( $content['options']['blogname'] ) ) {
+                    update_option( 'blogname', $content['options']['blogname'] );
+                }
+                if ( ! empty( $content['options']['blogdescription'] ) ) {
+                    update_option( 'blogdescription', $content['options']['blogdescription'] );
                 }
                 update_option( 'presspilot_starter_content_imported', true );
             }

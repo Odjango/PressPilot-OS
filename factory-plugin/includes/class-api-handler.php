@@ -219,7 +219,7 @@ class PressPilot_Factory_Api_Handler {
             'about' => [
                 'title'    => 'About',
                 'template' => 'page',
-                'patterns' => [ 'about-content' ],
+                'patterns' => [ 'about-content', 'values-section' ],
             ],
             'services' => [
                 'title'    => 'Services',

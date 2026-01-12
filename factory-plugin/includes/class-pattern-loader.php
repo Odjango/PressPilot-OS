@@ -110,8 +110,15 @@ class PressPilot_Factory_Pattern_Loader {
             'about_image'    => $page_content['about_image'] ?? 'https://placehold.co/600x400',
 
             // Features
-            'features_title' => $page_content['features_title'] ?? 'Our Features',
-            'items'          => $page_content['items'] ?? [],
+            'features_title' => $page_content['features_title'] ?? $page_content['title'] ?? 'Our Features',
+            'items'          => $page_content['items']
+                                ?? $params['content']['features']['items']
+                                ?? [],
+
+            // Values section
+            'values_title'    => $params['content']['values']['title'] ?? $page_content['values_title'] ?? 'Our Values',
+            'values_subtitle' => $params['content']['values']['subtitle'] ?? $page_content['values_subtitle'] ?? 'What we stand for',
+            'values_items'    => $params['content']['values']['items'] ?? $page_content['values_items'] ?? [],
 
             // Testimonials
             'testimonials'   => $page_content['testimonials'] ?? [],
@@ -119,9 +126,14 @@ class PressPilot_Factory_Pattern_Loader {
             // Contact
             'contact_title'  => $page_content['contact_title'] ?? 'Contact Us',
             'contact_text'   => $page_content['contact_text'] ?? 'We\'d love to hear from you.',
-            'email'          => $page_content['email'] ?? 'hello@example.com',
-            'phone'          => $page_content['phone'] ?? '(555) 123-4567',
-            'address'        => $page_content['address'] ?? '',
+            'email'          => $page_content['email'] ?? $params['content']['contact']['email'] ?? 'hello@example.com',
+            'phone'          => $page_content['phone'] ?? $params['content']['contact']['phone'] ?? '(555) 123-4567',
+            'address'        => $page_content['address'] ?? $params['content']['contact']['address'] ?? '',
+
+            // Menu page (restaurant)
+            'menu_title'      => $page_content['menu_title'] ?? $params['content']['menu']['title'] ?? 'Our Menu',
+            'menu_subtitle'   => $page_content['menu_subtitle'] ?? $params['content']['menu']['subtitle'] ?? 'Delicious dishes made fresh daily',
+            'menu_categories' => $page_content['menu_categories'] ?? $params['content']['menu']['categories'] ?? $this->get_default_menu_categories(),
 
             // Hero image
             'hero_image'     => $page_content['hero_image'] ?? 'https://placehold.co/1920x1080',
@@ -139,43 +151,91 @@ class PressPilot_Factory_Pattern_Loader {
     }
 
     /**
-     * Process repeater blocks
+     * Process repeater blocks (supports nested repeaters)
      */
     private function process_repeaters( $template, $data ) {
-        // Match {{#items}}...{{/items}} blocks
+        // Match {{#key}}...{{/key}} blocks (non-greedy for nested support)
         $pattern = '/\{\{#(\w+)\}\}(.*?)\{\{\/\1\}\}/s';
 
-        return preg_replace_callback( $pattern, function( $matches ) use ( $data ) {
-            $key = $matches[1];
-            $inner_template = $matches[2];
-            $output = '';
+        // Process multiple times to handle nested repeaters
+        $max_iterations = 5;
+        $iteration = 0;
 
-            if ( isset( $data[ $key ] ) && is_array( $data[ $key ] ) ) {
-                foreach ( $data[ $key ] as $index => $item ) {
-                    $item_content = $inner_template;
+        while ( preg_match( $pattern, $template ) && $iteration < $max_iterations ) {
+            $template = preg_replace_callback( $pattern, function( $matches ) use ( $data ) {
+                $key = $matches[1];
+                $inner_template = $matches[2];
+                $output = '';
 
-                    // Add index
-                    $item['index'] = $index;
+                // Get the array data for this repeater key
+                $items = $data[ $key ] ?? [];
 
-                    // Replace item placeholders
-                    if ( is_array( $item ) ) {
-                        foreach ( $item as $item_key => $item_value ) {
-                            if ( is_string( $item_value ) || is_numeric( $item_value ) ) {
-                                $item_content = str_replace(
-                                    '{{' . $item_key . '}}',
-                                    esc_html( $item_value ),
-                                    $item_content
-                                );
+                if ( is_array( $items ) && ! empty( $items ) ) {
+                    foreach ( $items as $index => $item ) {
+                        $item_content = $inner_template;
+
+                        // Add index
+                        if ( is_array( $item ) ) {
+                            $item['index'] = $index;
+
+                            // First, process any nested repeaters within this item
+                            // Look for nested {{#subkey}}...{{/subkey}} patterns
+                            foreach ( $item as $item_key => $item_value ) {
+                                if ( is_array( $item_value ) ) {
+                                    // This is a nested array (like 'items' within a category)
+                                    // Process nested repeater
+                                    $nested_pattern = '/\{\{#' . preg_quote( $item_key, '/' ) . '\}\}(.*?)\{\{\/' . preg_quote( $item_key, '/' ) . '\}\}/s';
+                                    $item_content = preg_replace_callback( $nested_pattern, function( $nested_matches ) use ( $item_value ) {
+                                        $nested_template = $nested_matches[1];
+                                        $nested_output = '';
+
+                                        foreach ( $item_value as $nested_index => $nested_item ) {
+                                            $nested_content = $nested_template;
+
+                                            if ( is_array( $nested_item ) ) {
+                                                $nested_item['index'] = $nested_index;
+                                                foreach ( $nested_item as $nested_key => $nested_val ) {
+                                                    if ( is_string( $nested_val ) || is_numeric( $nested_val ) ) {
+                                                        $nested_content = str_replace(
+                                                            '{{' . $nested_key . '}}',
+                                                            esc_html( $nested_val ),
+                                                            $nested_content
+                                                        );
+                                                    }
+                                                }
+                                            }
+
+                                            $nested_output .= $nested_content;
+                                        }
+
+                                        return $nested_output;
+                                    }, $item_content );
+                                }
+                            }
+
+                            // Replace simple item placeholders
+                            foreach ( $item as $item_key => $item_value ) {
+                                if ( is_string( $item_value ) || is_numeric( $item_value ) ) {
+                                    $item_content = str_replace(
+                                        '{{' . $item_key . '}}',
+                                        esc_html( $item_value ),
+                                        $item_content
+                                    );
+                                }
                             }
                         }
+
+                        $output .= $item_content;
                     }
-
-                    $output .= $item_content;
                 }
-            }
 
-            return $output;
-        }, $template );
+                return $output;
+            }, $template );
+
+            $iteration++;
+        }
+
+        return $template;
     }
 
     /**
@@ -241,6 +301,42 @@ class PressPilot_Factory_Pattern_Loader {
             'about'        => [ 'about-content' ],
             'services'     => [ 'services-grid' ],
             'contact'      => [ 'contact-form' ],
+            'menu'         => [ 'menu-grid' ],
+        ];
+    }
+
+    /**
+     * Get default menu categories for restaurant sites
+     */
+    private function get_default_menu_categories() {
+        return [
+            [
+                'icon' => '🍕',
+                'name' => 'Pizzas',
+                'items' => [
+                    [ 'name' => 'Margherita', 'price' => '$14', 'description' => 'Fresh mozzarella, tomato sauce, basil' ],
+                    [ 'name' => 'Pepperoni', 'price' => '$16', 'description' => 'Pepperoni, mozzarella, tomato sauce' ],
+                    [ 'name' => 'Quattro Formaggi', 'price' => '$18', 'description' => 'Four cheese blend with herbs' ],
+                ],
+            ],
+            [
+                'icon' => '🍝',
+                'name' => 'Pasta',
+                'items' => [
+                    [ 'name' => 'Spaghetti Bolognese', 'price' => '$15', 'description' => 'Traditional meat sauce with fresh herbs' ],
+                    [ 'name' => 'Fettuccine Alfredo', 'price' => '$14', 'description' => 'Creamy parmesan sauce' ],
+                    [ 'name' => 'Penne Arrabbiata', 'price' => '$13', 'description' => 'Spicy tomato sauce with garlic' ],
+                ],
+            ],
+            [
+                'icon' => '🥗',
+                'name' => 'Appetizers & Sides',
+                'items' => [
+                    [ 'name' => 'Garlic Bread', 'price' => '$6', 'description' => 'Toasted with garlic butter and herbs' ],
+                    [ 'name' => 'Caesar Salad', 'price' => '$9', 'description' => 'Romaine, parmesan, croutons' ],
+                    [ 'name' => 'Bruschetta', 'price' => '$8', 'description' => 'Toasted bread with fresh tomatoes' ],
+                ],
+            ],
         ];
     }
 }
