@@ -187,11 +187,18 @@ class PressPilot_Factory_Brand_Applier {
     }
 
     /**
-     * Apply logo
+     * Apply logo - supports both URLs and base64 data
      */
-    private function apply_logo( $logo_url, $business_name ) {
-        // Download and add to media library if external URL
-        $attachment_id = $this->maybe_sideload_image( $logo_url, $business_name . ' Logo' );
+    private function apply_logo( $logo_input, $business_name ) {
+        $attachment_id = 0;
+
+        // Check if base64 data
+        if ( strpos( $logo_input, 'data:image/' ) === 0 ) {
+            $attachment_id = $this->save_base64_image( $logo_input, $business_name . '-logo' );
+        } else if ( ! empty( $logo_input ) ) {
+            // URL - sideload as before
+            $attachment_id = $this->maybe_sideload_image( $logo_input, $business_name . ' Logo' );
+        }
 
         if ( $attachment_id ) {
             // Set as custom logo
@@ -199,10 +206,68 @@ class PressPilot_Factory_Brand_Applier {
 
             // Store for later use
             update_option( 'presspilot_logo_id', $attachment_id );
+
+            // Store URL for theme export
+            $logo_url = wp_get_attachment_url( $attachment_id );
+            update_option( 'presspilot_logo_url', $logo_url );
         }
 
         // Also set site icon if square
         $this->maybe_set_site_icon( $attachment_id );
+    }
+
+    /**
+     * Save base64 image to media library
+     */
+    private function save_base64_image( $base64_data, $filename ) {
+        // Extract mime type and data
+        if ( ! preg_match( '/data:image\/(\w+);base64,(.+)/', $base64_data, $matches ) ) {
+            return 0;
+        }
+
+        $ext = sanitize_file_name( $matches[1] );
+        $data = base64_decode( $matches[2] );
+
+        if ( empty( $data ) ) {
+            return 0;
+        }
+
+        // Get upload directory
+        $upload_dir = wp_upload_dir();
+        $file_name = sanitize_file_name( $filename ) . '.' . $ext;
+        $file_path = $upload_dir['path'] . '/' . $file_name;
+
+        // Save file
+        if ( file_put_contents( $file_path, $data ) === false ) {
+            return 0;
+        }
+
+        // Prepare attachment data
+        $file_type = wp_check_filetype( $file_name );
+        $attachment = [
+            'post_mime_type' => $file_type['type'],
+            'post_title'     => $filename,
+            'post_content'   => '',
+            'post_status'    => 'inherit',
+        ];
+
+        // Insert attachment
+        $attachment_id = wp_insert_attachment( $attachment, $file_path );
+
+        if ( is_wp_error( $attachment_id ) ) {
+            @unlink( $file_path );
+            return 0;
+        }
+
+        // Generate metadata
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+        $metadata = wp_generate_attachment_metadata( $attachment_id, $file_path );
+        wp_update_attachment_metadata( $attachment_id, $metadata );
+
+        // Mark as generated
+        update_post_meta( $attachment_id, '_presspilot_generated', true );
+
+        return $attachment_id;
     }
 
     /**

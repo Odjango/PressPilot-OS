@@ -70,6 +70,23 @@ class PressPilot_Factory_Api_Handler {
         return current_user_can( 'manage_options' );
     }
 
+    /**
+     * Sanitize logo input - allows base64 data or URLs
+     */
+    public function sanitize_logo_input( $logo ) {
+        if ( empty( $logo ) ) {
+            return '';
+        }
+
+        // If it's base64 data, allow it through
+        if ( strpos( $logo, 'data:image/' ) === 0 ) {
+            return $logo;
+        }
+
+        // Otherwise sanitize as URL
+        return esc_url_raw( $logo );
+    }
+
     private function get_generate_args() {
         return [
             'businessName' => [
@@ -117,7 +134,7 @@ class PressPilot_Factory_Api_Handler {
             'logo' => [
                 'required'          => false,
                 'type'              => 'string',
-                'sanitize_callback' => 'esc_url_raw',
+                'sanitize_callback' => [ $this, 'sanitize_logo_input' ],
                 'default'           => '',
             ],
             'variation' => [
@@ -180,6 +197,12 @@ class PressPilot_Factory_Api_Handler {
 
             // Step 2: Apply branding (colors, fonts, logo)
             $this->brand_applier->apply( $params );
+
+            // Step 2b: Update logo param with actual URL (for base64 uploads)
+            $logo_url = get_option( 'presspilot_logo_url', '' );
+            if ( $logo_url ) {
+                $params['logo'] = $logo_url;
+            }
 
             // Step 3: Create pages based on category
             $pages = $this->create_pages_for_category( $params );
