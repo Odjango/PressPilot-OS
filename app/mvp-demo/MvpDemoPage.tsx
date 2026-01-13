@@ -184,36 +184,43 @@ export default function MvpDemoPage() {
     try {
       setStages((s) => ({ ...s, inputsNormalized: true }));
 
-      // 2. Map Frontend Data to PHP API Schema
-      // Map Language Code -> Full Name
-      const langMap: Record<string, string> = {
-        'EN': 'English', 'AR': 'Arabic', 'ES': 'Spanish', 'FR': 'French', 'DE': 'German'
-      };
-
-      // Map Category ID -> PressPilot Industry Enum
+      // 2. Map Frontend Categories to Factory API Categories
+      // Factory API supports: corporate, restaurant, ecommerce, agency, startup, local, healthcare, realestate, fitness, education
       const categoryMap: Record<string, string> = {
-        'restaurant_cafe': 'Restaurant / Food Service',
-        'ecommerce_store': 'E-commerce / Online Store',
-        'health_fitness': 'Fitness / Gym / Wellness',
+        'local_service': 'local',
+        'restaurant_cafe': 'restaurant',
+        'health_fitness': 'fitness',
+        'beauty_salon': 'local',
+        'professional_services': 'corporate',
+        'online_coach': 'agency',
+        'saas_product': 'startup',
+        'ecommerce_store': 'ecommerce',
       };
-      // Default to Corporate for others
-      const industry = categoryMap[selectedBusinessCategoryId || ''] || 'Corporate / Professional Services';
+      const factoryCategory = categoryMap[selectedBusinessCategoryId || ''] || 'corporate';
 
-      // 3. Call External API (The "Gas Line")
-      // Warning: Hardcoded Secret for MVP Demo (Proxy this in production!)
-      const res = await fetch('https://inventithere.com/wp-json/presspilot/v1/generate', {
+      // 3. Build colors object (using default PressPilot colors, can be extended later)
+      const colors = {
+        primary: '#1e40af',
+        secondary: '#64748b',
+        accent: '#f59e0b',
+        background: '#ffffff',
+        text: '#1f2937',
+      };
+
+      // 4. Call Factory API
+      const res = await fetch('https://factory.presspilotapp.com/wp-json/presspilot/v1/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-PressPilot-Secret': 'vojRix-juskib-kicse8'
+          'X-PressPilot-Key': 'pp_factory_2026_109540718b67c8f1acb967948eecf2e1'
         },
         body: JSON.stringify({
-          business_name: businessName,
-          business_description: businessDescription,
-          business_type: industry,
-          content_language: langMap[primaryLanguage] || 'English',
-          // Optional
-          business_tagline: ''
+          businessName: businessName,
+          tagline: '',
+          description: businessDescription,
+          category: factoryCategory,
+          colors: colors,
+          // layout is optional - factory will auto-select based on category
         }),
       });
 
@@ -224,11 +231,15 @@ export default function MvpDemoPage() {
 
       const json = await res.json();
 
-      if (!json.download_url) {
-        throw new Error('API returned success but no download URL.');
+      if (!json.success) {
+        throw new Error(json.error || 'API returned an error.');
       }
 
-      // 4. Handle Success
+      if (!json.downloads?.theme_zip) {
+        throw new Error('API returned success but no download URLs.');
+      }
+
+      // 5. Handle Success
       setStages({
         inputsNormalized: true,
         variationsGenerated: true,
@@ -239,22 +250,22 @@ export default function MvpDemoPage() {
 
       setArtifacts((prev) => ({
         ...prev,
-        themeUrl: json.download_url, // The External Zip URL
-        staticUrl: null, // Legacy artifact not supported by new engine yet
-        slug: json.unique_id,
+        themeUrl: json.downloads.theme_zip,
+        staticUrl: json.downloads.static_zip || null,
+        slug: json.generation_id,
         businessTypeId: selectedBusinessTypeId
       }));
 
-      // 5. Auto-Download Trigger
+      // 6. Auto-Download Theme ZIP
       const link = document.createElement('a');
-      link.href = json.download_url;
-      link.download = `presspilot-${json.unique_id}.zip`;
+      link.href = json.downloads.theme_zip;
+      link.download = `presspilot-theme-${json.generation_id}.zip`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
       setPreviewSummary(
-        `Success! Generated theme for ${businessName}. Download started.`
+        `Success! Generated ${json.pages_created} pages for ${businessName} in ${json.duration}. Downloads ready.`
       );
 
     } catch (err: any) {
