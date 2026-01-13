@@ -1,20 +1,20 @@
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull" style="background-color:{{color_background}};padding-top:var(--wp--preset--spacing--80);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--80);padding-left:var(--wp--preset--spacing--50)">
-    <!-- wp:heading {"textAlign":"center","level":2,"style":{"typography":{"fontSize":"2.5rem","fontWeight":"700"},"spacing":{"margin":{"bottom":"var:preset|spacing|60"}}}} -->
-    <h2 class="wp-block-heading has-text-align-center" style="color:{{color_text}};margin-bottom:var(--wp--preset--spacing--60);font-size:2.5rem;font-weight:700">What Our Clients Say</h2>
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}},"color":{"background":"{{color_background}}"}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-background" style="background-color:{{color_background}};padding-top:var(--wp--preset--spacing--80);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--80);padding-left:var(--wp--preset--spacing--50)">
+    <!-- wp:heading {"textAlign":"center","level":2,"style":{"typography":{"fontSize":"2.5rem","fontWeight":"700"},"spacing":{"margin":{"bottom":"var:preset|spacing|60"}},"color":{"text":"{{color_text}}"}}} -->
+    <h2 class="wp-block-heading has-text-align-center has-text-color" style="color:{{color_text}};margin-bottom:var(--wp--preset--spacing--60);font-size:2.5rem;font-weight:700">What Our Clients Say</h2>
     <!-- /wp:heading -->
 
     <!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
     <div class="wp-block-columns">
         {{#testimonials}}
-        <!-- wp:column {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}},"border":{"radius":"12px","width":"1px"}}} -->
+        <!-- wp:column {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}},"border":{"radius":"12px","width":"1px","color":"{{color_secondary}}"}}} -->
         <div class="wp-block-column" style="border-color:{{color_secondary}};border-width:1px;border-style:solid;border-radius:12px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
-            <!-- wp:paragraph {"style":{"typography":{"fontSize":"3rem","lineHeight":"1"}}} -->
-            <p style="color:{{color_primary}};font-size:3rem;line-height:1">"</p>
+            <!-- wp:paragraph {"style":{"typography":{"fontSize":"3rem","lineHeight":"1"},"color":{"text":"{{color_primary}}"}}} -->
+            <p class="has-text-color" style="color:{{color_primary}};font-size:3rem;line-height:1">"</p>
             <!-- /wp:paragraph -->
 
-            <!-- wp:paragraph {"style":{"typography":{"fontSize":"1.125rem","fontStyle":"italic","lineHeight":"1.7"}}} -->
-            <p style="color:{{color_text}};font-size:1.125rem;font-style:italic;line-height:1.7">{{quote}}</p>
+            <!-- wp:paragraph {"style":{"typography":{"fontSize":"1.125rem","fontStyle":"italic","lineHeight":"1.7"},"color":{"text":"{{color_text}}"}}} -->
+            <p class="has-text-color" style="color:{{color_text}};font-size:1.125rem;font-style:italic;line-height:1.7">{{quote}}</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:group {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}},"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
@@ -25,12 +25,12 @@
 
                 <!-- wp:group {"layout":{"type":"constrained"}} -->
                 <div class="wp-block-group">
-                    <!-- wp:paragraph {"style":{"typography":{"fontWeight":"600"}}} -->
-                    <p style="color:{{color_text}};font-weight:600">{{name}}</p>
+                    <!-- wp:paragraph {"style":{"typography":{"fontWeight":"600"},"color":{"text":"{{color_text}}"}}} -->
+                    <p class="has-text-color" style="color:{{color_text}};font-weight:600">{{name}}</p>
                     <!-- /wp:paragraph -->
 
-                    <!-- wp:paragraph {"style":{"typography":{"fontSize":"0.875rem"}}} -->
-                    <p style="color:{{color_secondary}};font-size:0.875rem">{{role}}</p>
+                    <!-- wp:paragraph {"style":{"typography":{"fontSize":"0.875rem"},"color":{"text":"{{color_secondary}}"}}} -->
+                    <p class="has-text-color" style="color:{{color_secondary}};font-size:0.875rem">{{role}}</p>
                     <!-- /wp:paragraph -->
                 </div>
                 <!-- /wp:group -->

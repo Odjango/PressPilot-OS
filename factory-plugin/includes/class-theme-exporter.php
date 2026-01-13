@@ -240,13 +240,13 @@ HTML;
         $year = date( 'Y' );
         $primary_color = $params['colors']['primary'] ?? '#1e40af';
 
-        // Use inline styles to guarantee text visibility
+        // Use properly formatted block markup - JSON must match inline styles exactly
         $footer_html = <<<HTML
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"24px","bottom":"24px","left":"24px","right":"24px"}},"color":{"background":"{$primary_color}","text":"#ffffff"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull" style="background-color:{$primary_color};color:#ffffff;padding:24px">
+<div class="wp-block-group alignfull has-text-color has-background" style="background-color:{$primary_color};color:#ffffff;padding-top:24px;padding-right:24px;padding-bottom:24px;padding-left:24px">
 
 <!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"0.9rem"},"color":{"text":"#ffffff"}}} -->
-<p class="has-text-align-center" style="color:#ffffff;font-size:0.9rem">© {$year} {$business_name}. All rights reserved. · Powered by <a href="https://presspilot.io" target="_blank" rel="noopener" style="color:#ffffff;text-decoration:underline;">PressPilot</a></p>
+<p class="has-text-align-center has-text-color" style="color:#ffffff;font-size:0.9rem">© {$year} {$business_name}. All rights reserved. · Powered by <a href="https://presspilot.io" target="_blank" rel="noopener" style="color:#ffffff;text-decoration:underline;">PressPilot</a></p>
 <!-- /wp:paragraph -->
 
 </div>
