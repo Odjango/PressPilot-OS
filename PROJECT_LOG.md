@@ -403,4 +403,92 @@ curl -X POST https://factory.presspilotapp.com/wp-json/presspilot/v1/generate \
 
 ---
 
-*Last Updated: January 13, 2026*
+## Phase 6: MVP Demo Factory Integration
+
+**Date:** January 12, 2026
+**Status:** Completed
+
+### Goal
+Connect the MVP demo page (presspilotapp.com/mvp-demo) to the factory API for real-world theme generation testing.
+
+### Problem
+MVP demo was pointing to old API endpoint (`inventithere.com`) with incompatible schema.
+
+### Solution
+Updated `app/mvp-demo/MvpDemoPage.tsx` to use factory API:
+
+**1. API Endpoint Change:**
+```
+Before: https://inventithere.com/wp-json/presspilot/v1/generate
+After:  https://factory.presspilotapp.com/wp-json/presspilot/v1/generate
+```
+
+**2. Auth Header Change:**
+```
+Before: X-PressPilot-Secret: vojRix-juskib-kicse8
+After:  X-PressPilot-Key: pp_factory_2026_109540718b67c8f1acb967948eecf2e1
+```
+
+**3. Request Schema Change:**
+```json
+// Before (old API)
+{
+  "business_name": "...",
+  "business_description": "...",
+  "business_type": "...",
+  "content_language": "...",
+  "business_tagline": ""
+}
+
+// After (factory API)
+{
+  "businessName": "...",
+  "description": "...",
+  "category": "corporate|restaurant|ecommerce|...",
+  "colors": { "primary": "#hex", ... }
+}
+```
+
+**4. Category Mapping:**
+| Frontend Category | Factory Category |
+|-------------------|------------------|
+| local_service | local |
+| restaurant_cafe | restaurant |
+| health_fitness | fitness |
+| beauty_salon | local |
+| professional_services | corporate |
+| online_coach | agency |
+| saas_product | startup |
+| ecommerce_store | ecommerce |
+
+**5. Response Handling:**
+```json
+// Before
+{ "download_url": "..." }
+
+// After
+{
+  "success": true,
+  "generation_id": "...",
+  "downloads": {
+    "theme_zip": "...",
+    "static_zip": "..."
+  },
+  "pages_created": 4,
+  "duration": "2.5s"
+}
+```
+
+### Files Modified
+- `app/mvp-demo/MvpDemoPage.tsx` - Complete rewrite of `handleGenerate()` function
+
+### Test Instructions
+1. Go to https://presspilotapp.com/mvp-demo
+2. Select a business category
+3. Enter business name and description
+4. Click "Generate theme & static site"
+5. Downloads should start automatically
+
+---
+
+*Last Updated: January 12, 2026*
