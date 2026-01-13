@@ -26,6 +26,15 @@ class PressPilot_Factory_Brand_Applier {
         $logo = $params['logo'] ?? '';
         $variation = $params['variation'] ?? 'original';
 
+        // Update WordPress site title and tagline for factory preview
+        // This ensures wp:site-title blocks show the correct business name
+        if ( ! empty( $params['business_name'] ) ) {
+            update_option( 'blogname', $params['business_name'] );
+        }
+        if ( isset( $params['tagline'] ) ) {
+            update_option( 'blogdescription', $params['tagline'] );
+        }
+
         // Apply variation first
         $this->apply_variation( $variation, $params );
 

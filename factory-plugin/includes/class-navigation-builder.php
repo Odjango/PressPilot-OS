@@ -60,7 +60,57 @@ class PressPilot_Factory_Navigation_Builder {
         // Mark menu as generated
         update_term_meta( $menu_id, '_presspilot_generated', true );
 
+        // Also create a wp_navigation post for FSE themes
+        $nav_post_id = $this->create_navigation_post( $business_name, $ordered_pages );
+        if ( $nav_post_id ) {
+            update_option( 'presspilot_navigation_post_id', $nav_post_id );
+        }
+
         return $menu_id;
+    }
+
+    /**
+     * Create a wp_navigation post for FSE block themes
+     */
+    private function create_navigation_post( $business_name, $pages ) {
+        // Delete existing navigation posts created by us
+        $existing = get_posts([
+            'post_type'   => 'wp_navigation',
+            'meta_key'    => '_presspilot_generated',
+            'meta_value'  => '1',
+            'numberposts' => -1,
+        ]);
+        foreach ( $existing as $post ) {
+            wp_delete_post( $post->ID, true );
+        }
+
+        // Build navigation block content
+        $nav_items = [];
+        foreach ( $pages as $slug => $page_info ) {
+            $nav_items[] = sprintf(
+                '<!-- wp:navigation-link {"label":"%s","type":"page","id":%d,"url":"%s","kind":"post-type"} /-->',
+                esc_attr( $page_info['title'] ),
+                $page_info['id'],
+                get_permalink( $page_info['id'] )
+            );
+        }
+
+        $content = implode( "\n", $nav_items );
+
+        // Create wp_navigation post
+        $nav_post_id = wp_insert_post([
+            'post_title'   => $business_name . ' Navigation',
+            'post_content' => $content,
+            'post_type'    => 'wp_navigation',
+            'post_status'  => 'publish',
+        ]);
+
+        if ( ! is_wp_error( $nav_post_id ) ) {
+            update_post_meta( $nav_post_id, '_presspilot_generated', '1' );
+            return $nav_post_id;
+        }
+
+        return false;
     }
 
     /**

@@ -1,23 +1,23 @@
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull" style="background-color:{{color_background}};padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--50);border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb">
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}},"color":{"background":"{{color_background}}"},"border":{"top":{"color":"#e5e7eb","width":"1px"},"bottom":{"color":"#e5e7eb","width":"1px"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-background" style="background-color:{{color_background}};border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--50)">
     <!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"center"}} -->
     <div class="wp-block-group">
         <!-- wp:group {"layout":{"type":"constrained"}} -->
         <div class="wp-block-group">
-            <!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"1.75rem","fontWeight":"600"}}} -->
-            <h2 class="wp-block-heading" style="color:{{color_text}};font-size:1.75rem;font-weight:600">Ready to get started?</h2>
+            <!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"1.75rem","fontWeight":"600"},"color":{"text":"{{color_text}}"}}} -->
+            <h2 class="wp-block-heading has-text-color" style="color:{{color_text}};font-size:1.75rem;font-weight:600">Ready to get started?</h2>
             <!-- /wp:heading -->
 
-            <!-- wp:paragraph {"style":{"typography":{"fontSize":"1rem"},"spacing":{"margin":{"top":"0.5rem"}}}} -->
-            <p style="color:{{color_secondary}};margin-top:0.5rem;font-size:1rem">Contact us today and let's discuss your project.</p>
+            <!-- wp:paragraph {"style":{"typography":{"fontSize":"1rem"},"spacing":{"margin":{"top":"0.5rem"}},"color":{"text":"{{color_secondary}}"}}} -->
+            <p class="has-text-color" style="color:{{color_secondary}};margin-top:0.5rem;font-size:1rem">Contact us today and let's discuss your project.</p>
             <!-- /wp:paragraph -->
         </div>
         <!-- /wp:group -->
 
         <!-- wp:buttons -->
         <div class="wp-block-buttons">
-            <!-- wp:button {"style":{"typography":{"fontWeight":"600"},"border":{"radius":"6px"},"spacing":{"padding":{"top":"0.875rem","bottom":"0.875rem","left":"1.75rem","right":"1.75rem"}}}} -->
-            <div class="wp-block-button" style="font-weight:600"><a class="wp-block-button__link wp-element-button" style="background-color:{{color_primary}};color:{{color_primary_text}};border-radius:6px;padding-top:0.875rem;padding-right:1.75rem;padding-bottom:0.875rem;padding-left:1.75rem">{{cta_text}}</a></div>
+            <!-- wp:button {"style":{"typography":{"fontWeight":"600"},"border":{"radius":"6px"},"spacing":{"padding":{"top":"0.875rem","bottom":"0.875rem","left":"1.75rem","right":"1.75rem"}},"color":{"background":"{{color_primary}}","text":"{{color_primary_text}}"}}} -->
+            <div class="wp-block-button" style="font-weight:600"><a class="wp-block-button__link has-text-color has-background wp-element-button" style="background-color:{{color_primary}};color:{{color_primary_text}};border-radius:6px;padding-top:0.875rem;padding-right:1.75rem;padding-bottom:0.875rem;padding-left:1.75rem">{{cta_text}}</a></div>
             <!-- /wp:button -->
         </div>
         <!-- /wp:buttons -->

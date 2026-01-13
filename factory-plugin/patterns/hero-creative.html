@@ -1,27 +1,27 @@
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull" style="background-color:{{color_text}};padding-top:var(--wp--preset--spacing--80);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--80);padding-left:var(--wp--preset--spacing--50);min-height:90vh;display:flex;align-items:center">
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}},"dimensions":{"minHeight":"90vh"},"color":{"background":"{{color_text}}"}},"layout":{"type":"flex","orientation":"vertical","verticalAlignment":"center","justifyContent":"center"}} -->
+<div class="wp-block-group alignfull has-background" style="background-color:{{color_text}};min-height:90vh;padding-top:var(--wp--preset--spacing--80);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--80);padding-left:var(--wp--preset--spacing--50)">
     <!-- wp:group {"layout":{"type":"constrained","contentSize":"1200px"}} -->
     <div class="wp-block-group">
         <!-- wp:columns {"verticalAlignment":"center"} -->
         <div class="wp-block-columns are-vertically-aligned-center">
             <!-- wp:column {"verticalAlignment":"center","width":"60%"} -->
             <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:60%">
-                <!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(3rem, 7vw, 5rem)","fontWeight":"800","lineHeight":"1.05","letterSpacing":"-0.03em"}}} -->
-                <h1 class="wp-block-heading" style="color:#ffffff;font-size:clamp(3rem, 7vw, 5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em">{{headline}}</h1>
+                <!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(3rem, 7vw, 5rem)","fontWeight":"800","lineHeight":"1.05","letterSpacing":"-0.03em"},"color":{"text":"#ffffff"}}} -->
+                <h1 class="wp-block-heading has-text-color" style="color:#ffffff;font-size:clamp(3rem, 7vw, 5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em">{{headline}}</h1>
                 <!-- /wp:heading -->
             </div>
             <!-- /wp:column -->
 
             <!-- wp:column {"verticalAlignment":"center","width":"40%"} -->
             <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:40%">
-                <!-- wp:paragraph {"style":{"typography":{"fontSize":"1.25rem","lineHeight":"1.6"}}} -->
-                <p style="color:#ffffffcc;font-size:1.25rem;line-height:1.6">{{subheadline}}</p>
+                <!-- wp:paragraph {"style":{"typography":{"fontSize":"1.25rem","lineHeight":"1.6"},"color":{"text":"#ffffffcc"}}} -->
+                <p class="has-text-color" style="color:#ffffffcc;font-size:1.25rem;line-height:1.6">{{subheadline}}</p>
                 <!-- /wp:paragraph -->
 
                 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
                 <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
-                    <!-- wp:button {"style":{"typography":{"fontWeight":"600"},"border":{"radius":"0"},"spacing":{"padding":{"top":"1rem","bottom":"1rem","left":"2rem","right":"2rem"}}}} -->
-                    <div class="wp-block-button" style="font-weight:600"><a class="wp-block-button__link wp-element-button" style="background-color:{{color_accent}};color:#ffffff;border-radius:0;padding-top:1rem;padding-right:2rem;padding-bottom:1rem;padding-left:2rem">{{cta_text}} →</a></div>
+                    <!-- wp:button {"style":{"typography":{"fontWeight":"600"},"border":{"radius":"0"},"spacing":{"padding":{"top":"1rem","bottom":"1rem","left":"2rem","right":"2rem"}},"color":{"background":"{{color_accent}}","text":"#ffffff"}}} -->
+                    <div class="wp-block-button" style="font-weight:600"><a class="wp-block-button__link has-text-color has-background wp-element-button" style="background-color:{{color_accent}};color:#ffffff;border-radius:0;padding-top:1rem;padding-right:2rem;padding-bottom:1rem;padding-left:2rem">{{cta_text}} →</a></div>
                     <!-- /wp:button -->
                 </div>
                 <!-- /wp:buttons -->
@@ -30,16 +30,16 @@
         </div>
         <!-- /wp:columns -->
 
-        <!-- wp:group {"style":{"spacing":{"margin":{"top":"var:preset|spacing|70"}}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between"}} -->
-        <div class="wp-block-group" style="margin-top:var(--wp--preset--spacing--70);border-top:1px solid #ffffff33;padding-top:var(--wp--preset--spacing--40)">
-            <!-- wp:paragraph {"style":{"typography":{"fontSize":"0.875rem","textTransform":"uppercase","letterSpacing":"0.1em"}}} -->
-            <p style="color:#ffffff66;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.1em">Award-Winning Design</p>
+        <!-- wp:group {"style":{"spacing":{"margin":{"top":"var:preset|spacing|70"},"padding":{"top":"var:preset|spacing|40"}}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between"}} -->
+        <div class="wp-block-group" style="margin-top:var(--wp--preset--spacing--70);padding-top:var(--wp--preset--spacing--40)">
+            <!-- wp:paragraph {"style":{"typography":{"fontSize":"0.875rem","textTransform":"uppercase","letterSpacing":"0.1em"},"color":{"text":"#ffffff66"}}} -->
+            <p class="has-text-color" style="color:#ffffff66;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.1em">Award-Winning Design</p>
             <!-- /wp:paragraph -->
-            <!-- wp:paragraph {"style":{"typography":{"fontSize":"0.875rem","textTransform":"uppercase","letterSpacing":"0.1em"}}} -->
-            <p style="color:#ffffff66;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.1em">Creative Excellence</p>
+            <!-- wp:paragraph {"style":{"typography":{"fontSize":"0.875rem","textTransform":"uppercase","letterSpacing":"0.1em"},"color":{"text":"#ffffff66"}}} -->
+            <p class="has-text-color" style="color:#ffffff66;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.1em">Creative Excellence</p>
             <!-- /wp:paragraph -->
-            <!-- wp:paragraph {"style":{"typography":{"fontSize":"0.875rem","textTransform":"uppercase","letterSpacing":"0.1em"}}} -->
-            <p style="color:#ffffff66;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.1em">Innovation First</p>
+            <!-- wp:paragraph {"style":{"typography":{"fontSize":"0.875rem","textTransform":"uppercase","letterSpacing":"0.1em"},"color":{"text":"#ffffff66"}}} -->
+            <p class="has-text-color" style="color:#ffffff66;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.1em">Innovation First</p>
             <!-- /wp:paragraph -->
         </div>
         <!-- /wp:group -->

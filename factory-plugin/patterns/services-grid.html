@@ -1,13 +1,13 @@
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull" style="background-color:{{color_background}};padding-top:var(--wp--preset--spacing--80);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--80);padding-left:var(--wp--preset--spacing--50)">
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}},"color":{"background":"{{color_background}}"}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-background" style="background-color:{{color_background}};padding-top:var(--wp--preset--spacing--80);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--80);padding-left:var(--wp--preset--spacing--50)">
     <!-- wp:group {"layout":{"type":"constrained","contentSize":"700px"}} -->
     <div class="wp-block-group">
-        <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"3rem","fontWeight":"700"}}} -->
-        <h1 class="wp-block-heading has-text-align-center" style="color:{{color_text}};font-size:3rem;font-weight:700">Our Services</h1>
+        <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"3rem","fontWeight":"700"},"color":{"text":"{{color_text}}"}}} -->
+        <h1 class="wp-block-heading has-text-align-center has-text-color" style="color:{{color_text}};font-size:3rem;font-weight:700">Our Services</h1>
         <!-- /wp:heading -->
 
-        <!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"1.25rem"},"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
-        <p class="has-text-align-center" style="color:{{color_secondary}};margin-top:var(--wp--preset--spacing--20);font-size:1.25rem">{{tagline}}</p>
+        <!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"1.25rem"},"spacing":{"margin":{"top":"var:preset|spacing|20"}},"color":{"text":"{{color_secondary}}"}}} -->
+        <p class="has-text-align-center has-text-color" style="color:{{color_secondary}};margin-top:var(--wp--preset--spacing--20);font-size:1.25rem">{{tagline}}</p>
         <!-- /wp:paragraph -->
     </div>
     <!-- /wp:group -->
@@ -19,8 +19,8 @@
     <!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
     <div class="wp-block-columns">
         {{#items}}
-        <!-- wp:column {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}},"border":{"radius":"16px"}}} -->
-        <div class="wp-block-column" style="background-color:#f8fafc;border-radius:16px;padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--40)">
+        <!-- wp:column {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}},"border":{"radius":"16px"},"color":{"background":"#f8fafc"}}} -->
+        <div class="wp-block-column has-background" style="background-color:#f8fafc;border-radius:16px;padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--40)">
             <!-- wp:group {"style":{"spacing":{"margin":{"bottom":"var:preset|spacing|30"}}},"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"center"}} -->
             <div class="wp-block-group" style="margin-bottom:var(--wp--preset--spacing--30)">
                 <!-- wp:paragraph {"style":{"typography":{"fontSize":"3rem"}}} -->
@@ -29,18 +29,18 @@
             </div>
             <!-- /wp:group -->
 
-            <!-- wp:heading {"textAlign":"center","level":3,"style":{"typography":{"fontSize":"1.5rem","fontWeight":"600"}}} -->
-            <h3 class="wp-block-heading has-text-align-center" style="color:{{color_text}};font-size:1.5rem;font-weight:600">{{title}}</h3>
+            <!-- wp:heading {"textAlign":"center","level":3,"style":{"typography":{"fontSize":"1.5rem","fontWeight":"600"},"color":{"text":"{{color_text}}"}}} -->
+            <h3 class="wp-block-heading has-text-align-center has-text-color" style="color:{{color_text}};font-size:1.5rem;font-weight:600">{{title}}</h3>
             <!-- /wp:heading -->
 
-            <!-- wp:paragraph {"align":"center","style":{"typography":{"lineHeight":"1.7"},"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
-            <p class="has-text-align-center" style="color:{{color_secondary}};margin-top:var(--wp--preset--spacing--20);line-height:1.7">{{description}}</p>
+            <!-- wp:paragraph {"align":"center","style":{"typography":{"lineHeight":"1.7"},"spacing":{"margin":{"top":"var:preset|spacing|20"}},"color":{"text":"{{color_secondary}}"}}} -->
+            <p class="has-text-align-center has-text-color" style="color:{{color_secondary}};margin-top:var(--wp--preset--spacing--20);line-height:1.7">{{description}}</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
             <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--30)">
-                <!-- wp:button {"className":"is-style-outline","style":{"typography":{"fontSize":"0.875rem"},"border":{"radius":"6px"}}} -->
-                <div class="wp-block-button is-style-outline" style="font-size:0.875rem"><a class="wp-block-button__link wp-element-button" style="color:{{color_primary}};border-color:{{color_primary}};border-width:2px;border-style:solid;border-radius:6px;background:transparent">Learn More</a></div>
+                <!-- wp:button {"className":"is-style-outline","style":{"typography":{"fontSize":"0.875rem"},"border":{"radius":"6px","width":"2px","style":"solid","color":"{{color_primary}}"},"color":{"text":"{{color_primary}}"}}} -->
+                <div class="wp-block-button is-style-outline" style="font-size:0.875rem"><a class="wp-block-button__link has-text-color has-border-color wp-element-button" style="color:{{color_primary}};border-color:{{color_primary}};border-width:2px;border-style:solid;border-radius:6px">Learn More</a></div>
                 <!-- /wp:button -->
             </div>
             <!-- /wp:buttons -->

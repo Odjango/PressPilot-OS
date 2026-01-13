@@ -139,6 +139,11 @@ class PressPilot_Factory_Api_Handler {
                 'type'     => 'object',
                 'default'  => [],
             ],
+            'includeStaticExport' => [
+                'required' => false,
+                'type'     => 'boolean',
+                'default'  => false,
+            ],
         ];
     }
 
@@ -182,6 +187,12 @@ class PressPilot_Factory_Api_Handler {
             // Step 4: Create navigation menu
             $menu_id = $this->navigation_builder->create_menu( $params['business_name'], $pages, $params['category'] );
 
+            // Step 4b: Update Ollie header template with navigation post ID
+            $nav_post_id = get_option( 'presspilot_navigation_post_id' );
+            if ( $nav_post_id ) {
+                $this->update_header_navigation_ref( $nav_post_id );
+            }
+
             // Step 5: Store generation metadata BEFORE exporting (needed for static export colors)
             update_option( 'presspilot_last_generation', [
                 'id'        => $generation_id,
@@ -194,20 +205,27 @@ class PressPilot_Factory_Api_Handler {
             // Step 6: Export theme ZIP
             $theme_zip = $this->theme_exporter->export( $params, $generation_id );
 
-            // Step 7: Export static site via Simply Static
-            $static_zip = $this->static_exporter->export( $generation_id );
+            // Step 7: Export static site (optional - disabled by default)
+            $static_zip = null;
+            $include_static = $request->get_param( 'includeStaticExport' );
+            if ( $include_static ) {
+                $static_zip = $this->static_exporter->export( $generation_id );
+            }
 
             // Calculate duration
             $duration = round( microtime( true ) - $start_time, 2 );
+
+            // Build response
+            $downloads = [ 'theme_zip' => $theme_zip ];
+            if ( $static_zip ) {
+                $downloads['static_zip'] = $static_zip;
+            }
 
             return new WP_REST_Response([
                 'success'       => true,
                 'generation_id' => $generation_id,
                 'preview_url'   => home_url( '/' ),
-                'downloads'     => [
-                    'theme_zip'  => $theme_zip,
-                    'static_zip' => $static_zip,
-                ],
+                'downloads'     => $downloads,
                 'pages_created' => count( $pages ),
                 'duration'      => $duration . 's',
             ], 200 );
@@ -298,5 +316,33 @@ class PressPilot_Factory_Api_Handler {
             'timestamp'     => $last_gen['timestamp'],
             'pages'         => $last_gen['pages'],
         ], 200 );
+    }
+
+    /**
+     * Update Ollie header template with navigation post reference
+     */
+    private function update_header_navigation_ref( $nav_post_id ) {
+        $header_path = get_template_directory() . '/parts/header.html';
+
+        if ( ! file_exists( $header_path ) || ! is_writable( $header_path ) ) {
+            return false;
+        }
+
+        $header_content = file_get_contents( $header_path );
+
+        // Match wp:navigation block with any JSON attributes (handles nested braces)
+        // This pattern matches <!-- wp:navigation followed by JSON and /-->
+        $replacement = '<!-- wp:navigation {"ref":' . $nav_post_id . ',"layout":{"type":"flex","justifyContent":"right"},"style":{"spacing":{"blockGap":"1.5rem"}}} /-->';
+
+        // Use simple string replacement - find any wp:navigation block
+        $pattern = '/<!-- wp:navigation .*?\/-->/s';
+        $new_content = preg_replace( $pattern, $replacement, $header_content );
+
+        if ( $new_content !== $header_content ) {
+            file_put_contents( $header_path, $new_content );
+            return true;
+        }
+
+        return false;
     }
 }
