@@ -491,4 +491,100 @@ After:  X-PressPilot-Key: pp_factory_2026_109540718b67c8f1acb967948eecf2e1
 
 ---
 
-*Last Updated: January 12, 2026*
+## Phase 7: WordPress Block Validation Fix
+
+**Date:** January 13, 2026
+**Status:** Completed
+
+### Problem
+Generated themes showed "Block contains unexpected or invalid content" errors with "Attempt Recovery" buttons in WordPress editor for:
+- Hero sections
+- Features sections
+- Testimonials sections
+- CTA sections
+- Footer template
+
+### Root Cause
+**Mismatch between block JSON attributes and inline HTML styles.**
+
+WordPress block validation requires EXACT correspondence between:
+1. JSON attributes in block comments (`<!-- wp:group {"style":{"color":{"text":"#fff"}}} -->`)
+2. Inline styles in HTML (`style="color:#fff"`)
+3. CSS classes (`has-text-color`)
+
+Our patterns had:
+- Inline color styles without JSON declarations
+- Extra CSS properties (`display:flex`, `align-items`, `opacity`) not in JSON
+- Missing `has-text-color` and `has-background` CSS classes
+- Raw `<div>` elements inside blocks (hero background overlays)
+
+### Solution
+
+**1. Color declarations:** Added `"color":{"text":"...","background":"..."}` to block JSON for every inline color style.
+
+**2. CSS classes:** Added required WordPress classes:
+```html
+<!-- Before -->
+<p style="color:#ffffff">Text</p>
+
+<!-- After -->
+<p class="has-text-color" style="color:#ffffff">Text</p>
+```
+
+**3. Hero backgrounds:** Replaced custom div overlays with proper `wp:cover` block:
+```html
+<!-- Before (invalid) -->
+<!-- wp:group -->
+<div class="wp-block-group">
+    <div style="position:absolute;background:..."></div>  <!-- Raw div = invalid -->
+    ...
+</div>
+
+<!-- After (valid) -->
+<!-- wp:cover {"url":"...","dimRatio":70} -->
+<div class="wp-block-cover">
+    <span class="wp-block-cover__background"></span>
+    <img class="wp-block-cover__image-background" src="..."/>
+    <div class="wp-block-cover__inner-container">
+        ...
+    </div>
+</div>
+```
+
+**4. Min-height:** Used WordPress's `dimensions` attribute:
+```json
+{"style":{"dimensions":{"minHeight":"80vh"}}}
+```
+
+**5. Footer padding:** Fixed shorthand to individual properties:
+```html
+<!-- Before -->
+style="padding:24px"
+
+<!-- After -->
+style="padding-top:24px;padding-right:24px;padding-bottom:24px;padding-left:24px"
+```
+
+### Files Modified
+- `factory-plugin/patterns/hero-food.html` - Complete rewrite using wp:cover
+- `factory-plugin/patterns/hero.html` - Added color JSON + minHeight
+- `factory-plugin/patterns/hero-centered.html` - Added color JSON
+- `factory-plugin/patterns/hero-corporate.html` - Added color JSON + classes
+- `factory-plugin/patterns/features.html` - Added color JSON + classes
+- `factory-plugin/patterns/testimonials.html` - Added color JSON + classes
+- `factory-plugin/patterns/cta.html` - Added color JSON + classes
+- `factory-plugin/includes/class-theme-exporter.php` - Fixed footer markup
+
+### Verification
+- Generated new theme with restaurant category
+- Downloaded and extracted theme ZIP
+- Verified footer has correct `has-text-color has-background` classes
+- Verified hero uses proper `wp:cover` structure
+- All patterns now have JSON-inline style parity
+
+### Key Lesson
+**WordPress block validation rule:** Every inline `style` property MUST have a corresponding entry in the block comment JSON, plus the appropriate CSS class.
+
+---
+
+*Last Updated: January 13, 2026*
