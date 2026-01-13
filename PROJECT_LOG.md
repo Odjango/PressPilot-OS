@@ -300,11 +300,70 @@ curl -X POST .../generate -d '{"businessName":"Test","category":"corporate"}'
 
 ---
 
+## Server Cleanup
+
+**Date:** January 12, 2026
+**Status:** Completed
+
+### Problem
+Coolify dashboard showed 504 Gateway Timeout during deployment. Investigation revealed:
+- Memory pressure (2.8GB/3.8GB used, swap at 1.5GB)
+- Accumulated static exports (~40 files, 884MB)
+- Accumulated theme exports (~41 files, 79MB)
+- Docker unused resources
+
+### Actions Taken
+
+**1. Old Export Cleanup:**
+| Resource | Before | After |
+|----------|--------|-------|
+| Static exports | 40 files (884MB) | 3 files (544KB) |
+| Theme exports | 41 files (79MB) | 3 files (6MB) |
+
+**2. Docker Cleanup:**
+```bash
+docker system prune -af --volumes
+docker builder prune -af
+```
+Freed: 107MB of unused Docker resources
+
+**3. Total Space Recovered:**
+| Metric | Before | After |
+|--------|--------|-------|
+| Disk Used | 22GB (46%) | 21GB (43%) |
+| Space Freed | - | ~1GB |
+
+### Deployment Result
+- Build completed successfully despite 504 UI timeout
+- New container running: `hkws0oc4okw0ww408ksw4wwg:4325238...`
+- All services healthy
+
+### Post-Cleanup Verification
+```bash
+# API Test - Corporate
+curl -X POST .../generate -d '{"category":"corporate"}'
+# Result: success, 4 pages, 2.53s
+
+# API Test - Fitness (new category)
+curl -X POST .../generate -d '{"category":"fitness"}'
+# Result: success, 4 pages, 1.97s
+```
+
+### Recommendation
+Add periodic cleanup job for old exports (keep last 3-5 files):
+```bash
+# Add to cron or Coolify scheduled task
+cd /path/to/presspilot-factory/static && ls -t | tail -n +4 | xargs rm -rf
+cd /path/to/presspilot-factory/themes && ls -t | tail -n +4 | xargs rm -f
+```
+
+---
+
 ## Commit History
 
 | Commit | Date | Description |
 |--------|------|-------------|
-| `5fc9c62` | 2026-01-12 | feat: Add 12 layouts, 10 categories, contextual images, and WCAG color contrast |
+| `4325238` | 2026-01-12 | feat: Add 12 layouts, 10 categories, contextual images, and WCAG color contrast |
 | `d9369f0` | 2026-01-12 | fix: Rewrite static exporter to build HTML directly |
 | `4b7583f` | 2026-01-12 | fix: Add default content for Features, Testimonials, Values sections |
 | `fd61c32` | 2026-01-12 | fix: Use explicit inline colors in patterns |
@@ -344,4 +403,4 @@ curl -X POST https://factory.presspilotapp.com/wp-json/presspilot/v1/generate \
 
 ---
 
-*Last Updated: January 12, 2026*
+*Last Updated: January 13, 2026*
