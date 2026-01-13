@@ -25,12 +25,13 @@ export async function POST(request: Request) {
             tagline: body.tagline || '',
             description: body.description || '',
             category: category,
+            logo: body.logo_base64 || '',
             colors: {
-                primary: '#1e40af',
-                secondary: '#64748b',
-                accent: '#f59e0b',
-                background: '#ffffff',
-                text: '#1f2937'
+                primary: '#8B0000',
+                secondary: '#6B8E23',
+                accent: '#FFD700',
+                background: '#FFFAF0',
+                text: '#2C1810'
             }
         };
 
