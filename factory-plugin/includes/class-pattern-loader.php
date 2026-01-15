@@ -133,7 +133,7 @@ class PressPilot_Factory_Pattern_Loader {
             'features_title' => $page_content['features_title'] ?? $page_content['title'] ?? 'Our Features',
             'items'          => $page_content['items']
                                 ?? $params['content']['features']['items']
-                                ?? $this->get_default_features(),
+                                ?? $this->get_default_features( $category ),
 
             // Values section
             'values_title'    => $params['content']['values']['title'] ?? $page_content['values_title'] ?? 'Our Values',
@@ -275,9 +275,11 @@ class PressPilot_Factory_Pattern_Loader {
                                                 $nested_item['index'] = $nested_index;
                                                 foreach ( $nested_item as $nested_key => $nested_val ) {
                                                     if ( is_string( $nested_val ) || is_numeric( $nested_val ) ) {
+                                                        // Skip escaping for icon key to preserve emoji
+                                                        $replacement = ( $nested_key === 'icon' ) ? $nested_val : esc_html( $nested_val );
                                                         $nested_content = str_replace(
                                                             '{{' . $nested_key . '}}',
-                                                            esc_html( $nested_val ),
+                                                            $replacement,
                                                             $nested_content
                                                         );
                                                     }
@@ -295,9 +297,11 @@ class PressPilot_Factory_Pattern_Loader {
                             // Replace simple item placeholders
                             foreach ( $item as $item_key => $item_value ) {
                                 if ( is_string( $item_value ) || is_numeric( $item_value ) ) {
+                                    // Skip escaping for icon key to preserve emoji
+                                    $replacement = ( $item_key === 'icon' ) ? $item_value : esc_html( $item_value );
                                     $item_content = str_replace(
                                         '{{' . $item_key . '}}',
-                                        esc_html( $item_value ),
+                                        $replacement,
                                         $item_content
                                     );
                                 }
@@ -341,11 +345,12 @@ class PressPilot_Factory_Pattern_Loader {
      * Replace simple placeholders
      */
     private function replace_placeholders( $template, $data ) {
-        // Keys that should not be escaped (like color values)
+        // Keys that should not be escaped (like color values and icons)
         $raw_keys = [
             'color_primary', 'color_secondary', 'color_accent', 'color_background', 'color_text',
             'color_primary_text', 'color_secondary_text', 'color_accent_text',
             'color_primary_light', 'color_primary_dark',
+            'icon', // Allow emoji icons through without escaping
         ];
 
         foreach ( $data as $key => $value ) {
@@ -434,7 +439,12 @@ class PressPilot_Factory_Pattern_Loader {
     /**
      * Get default features for all sites
      */
-    private function get_default_features() {
+    private function get_default_features( $category = '' ) {
+        // Use category-specific features if available
+        if ( $category === 'restaurant' ) {
+            return $this->get_restaurant_features();
+        }
+
         return [
             [
                 'icon' => '⭐',
@@ -450,6 +460,29 @@ class PressPilot_Factory_Pattern_Loader {
                 'icon' => '💬',
                 'title' => 'Great Support',
                 'description' => 'Our team is here to help you every step of the way.',
+            ],
+        ];
+    }
+
+    /**
+     * Get restaurant-specific features
+     */
+    private function get_restaurant_features() {
+        return [
+            [
+                'icon' => '🥬',
+                'title' => 'Fresh Ingredients',
+                'description' => 'Locally sourced produce and quality ingredients.',
+            ],
+            [
+                'icon' => '👨‍🍳',
+                'title' => 'Family Recipes',
+                'description' => 'Passed down through generations with love.',
+            ],
+            [
+                'icon' => '🏠',
+                'title' => 'Cozy Atmosphere',
+                'description' => 'A warm and welcoming space to enjoy your meal.',
             ],
         ];
     }
