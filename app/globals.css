@@ -19,6 +19,10 @@
       opacity: 1;
     }
   }
+
+  --color-cream: var(--color-cream);
+  --color-black: var(--color-black);
+  --color-dark: var(--color-dark);
 }
 
 @layer base {
