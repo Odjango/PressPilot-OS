@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Standalone output for robust Docker deployment
-  // output: "standalone",
+  output: "standalone",
 
   // Use Turbopack (default in Next.js 16) with empty config to silence warning
   turbopack: {},
