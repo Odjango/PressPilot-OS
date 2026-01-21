@@ -2,8 +2,8 @@
 
 ## 1. PROJECT MISSION
 PressPilot is a SaaS platform that generates complete, valid WordPress websites in 90 seconds. 
-- **Core Mechanism:** User Input (Biz Info + Logo) -> AI Content Generation -> Node.js Generator -> WordPress Theme ZIP.
-- **Critical Rule:** We generate "Unbreakable" FSE Themes using the **Application Layer (Node.js)**, not the Database Layer (PHP). The theme is portable and zero-dependency.
+- **Core Mechanism:** User Input (Biz Info + Logo) -> **Library Assembly Engine** -> WordPress Theme ZIP.
+- **Critical Rule:** We generate "Unbreakable" FSE Themes by **Assembling proven parts**, not synthesizing new code. We use "Layout Recipes" to combine vetted patterns from base themes (Ollie, Frost, TT4).
 
 ## 2. ARCHITECTURE & FILE MAP (SOURCE OF TRUTH)
 The logic is strictly modular. The Agent must strictly use these files:
@@ -11,9 +11,10 @@ The logic is strictly modular. The Agent must strictly use these files:
 ### A. The "Brain" (Generator Engine)
 - **Directory:** `src/generator/`
 - **Orchestrator:** `src/generator/index.ts`
-- **Pattern Injection:** `src/generator/engine/PatternInjector.ts`
+- **Pattern Registry:** `src/generator/config/PatternRegistry.ts` (Defines Layout Recipes)
+- **Assembly Engine:** `src/generator/engine/PatternInjector.ts` (Executes Recipes)
 - **Content Logic:** `src/generator/engine/ContentEngine.ts`
-- **Role:** Generates the ZIP file containing `theme.json`, `templates/`, and `patterns/`.
+- **Role:** Assembles a ready-to-use theme by injecting user content into a selected sequence of proven patterns.
 
 ### B. The "Hands" (SaaS App)
 - **Directory:** `app/`

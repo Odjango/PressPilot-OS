@@ -12,33 +12,22 @@ import { ContentEngine } from './engine/ContentEngine';
  * PressPilot Generator Orchestrator
  * Refactored: 2026-01-04 (Hassan's Rule 1: Modularization)
  */
-async function generateTheme() {
-    // 1. SETUP & PARSE ARGS
-    const args = process.argv.slice(2);
-    const dataArg = args.find(arg => arg.startsWith('--data='));
-    const baseArg = args.find(arg => arg.startsWith('--base='));
-    const modeArg = args.find(arg => arg.startsWith('--mode='));
+export interface GeneratorOptions {
+    base?: BaseTheme;
+    mode?: GeneratorMode;
+    data?: GeneratorData;
+    outDir?: string; // Optional override for output directory
+}
 
-    let baseName: BaseTheme = 'ollie';
-    if (baseArg) baseName = baseArg.split('=')[1].toLowerCase() as BaseTheme;
-
-    let mode: GeneratorMode = 'standard';
-    if (modeArg) mode = modeArg.split('=')[1].toLowerCase() as GeneratorMode;
+export async function generateTheme(options: GeneratorOptions = {}) {
+    // 1. SETUP
+    const baseName: BaseTheme = options.base || 'ollie';
+    const mode: GeneratorMode = options.mode || 'standard';
+    const userData: GeneratorData = options.data || {};
 
     const personality = PATTERN_REGISTRY[baseName];
     if (!personality) {
-        console.error(`Error: Unknown base theme '${baseName}'.`);
-        process.exit(1);
-    }
-
-    let userData: GeneratorData = {};
-    if (dataArg) {
-        try {
-            userData = JSON.parse(dataArg.substring(7));
-        } catch (e) {
-            console.error("Error parsing JSON data:", e);
-            process.exit(1);
-        }
+        throw new Error(`Error: Unknown base theme '${baseName}'.`);
     }
 
     const themeName = userData.name || `PressPilot ${baseName} ${mode}`;
@@ -46,8 +35,9 @@ async function generateTheme() {
     const timestamp = Date.now();
 
     const rootDir = process.cwd();
-    const buildDir = path.join(rootDir, 'output', `${safeName}-${timestamp}`);
-    const zipPath = path.join(rootDir, 'output', `${safeName}-${timestamp}.zip`);
+    // Use provided output dir or default
+    const buildDir = options.outDir ? options.outDir : path.join(rootDir, 'output', `${safeName}-${timestamp}`);
+    const zipPath = path.join(path.dirname(buildDir), `${safeName}-${timestamp}.zip`);
     const themeDir = path.join(buildDir, safeName);
 
     console.log(`[Orchestrator] Starting generation for: ${themeName}`);
@@ -70,18 +60,36 @@ async function generateTheme() {
             await contentEngine.generatePages(themeDir, userData);
             await contentEngine.injectContentLoader(themeDir, userData);
         } else {
-            // STANDARD / NATIVE MODE (The "Smart Selection" Logic)
-            // 1. Use Native Patterns (Ollie, Frost, etc.)
-            if (personality.patterns.hero && userData.hero_headline) {
-                const heroPath = path.join(themeDir, personality.patterns.hero);
-                if (await fs.pathExists(heroPath)) {
-                    let heroContent = await fs.readFile(heroPath, 'utf8');
-                    heroContent = heroContent.replace(personality.patterns.hero_search_headline, userData.hero_headline);
-                    if (userData.hero_subheadline && personality.patterns.hero_search_sub) {
-                        heroContent = heroContent.replace(personality.patterns.hero_search_sub, userData.hero_subheadline);
+            // STANDARD / LIBRARY MODE (Recipe Assembly)
+
+            // 1. Select Recipe
+            let recipe = null;
+            if (personality.recipes) {
+                const industry = userData.industry || 'saas'; // Default to SaaS
+                const availableRecipes = personality.recipes[industry] || personality.recipes['saas'];
+
+                if (availableRecipes && availableRecipes.length > 0) {
+                    // Pick random or first
+                    recipe = availableRecipes[0];
+                }
+            }
+
+            if (recipe) {
+                await patternInjector.injectRecipe(themeDir, recipe, userData, personality);
+            } else {
+                console.log('[Orchestrator] No recipe found, falling back to basic injection.');
+                // Fallback: Just Hero Injection (Legacy)
+                if (personality.patterns.hero && userData.hero_headline) {
+                    const heroPath = path.join(themeDir, personality.patterns.hero);
+                    if (await fs.pathExists(heroPath)) {
+                        let heroContent = await fs.readFile(heroPath, 'utf8');
+                        heroContent = heroContent.replace(personality.patterns.hero_search_headline, userData.hero_headline);
+                        if (userData.hero_subheadline && personality.patterns.hero_search_sub) {
+                            heroContent = heroContent.replace(personality.patterns.hero_search_sub, userData.hero_subheadline);
+                        }
+                        await fs.writeFile(heroPath, heroContent);
+                        console.log(`[Pattern] Injected content into Native Hero: ${personality.patterns.hero}`);
                     }
-                    await fs.writeFile(heroPath, heroContent);
-                    console.log(`[Pattern] Injected content into Native Hero: ${personality.patterns.hero}`);
                 }
             }
 
@@ -91,21 +99,7 @@ async function generateTheme() {
             // 3. Inject Nuclear Loader (Required for "Test Pizza" Fix)
             await contentEngine.injectContentLoader(themeDir, userData);
 
-            // 4. Inject Menus (Universal Feature)
-            // Even in standard mode, if we have menus, we must render them.
-            // We use the PatternInjector's logic for this.
-            // Note: Currently it's inside 'injectHeavyMode', let's fix that or reuse it.
-            // Refactoring note: Ideally `injectMenus` should be public. 
-            // For now, we will call injectHeavyMode logic selectively or simply rely on it if we switch to heavy mode for restaurants.
-            // BUT, the safer path is to add a public method `injectMenus` to PatternInjector and call it here.
-            // Since I cannot easily see PatternInjector again right now without cost, I will assume I can modify it or access the logic.
-            // Wait, I just modified PatternInjector to put menu logic inside `injectHeavyMode`.
-            // Design Decision: If it's a restaurant, we should probably force HEAVY MODE to ensure all patterns are loaded?
-            // OR: Simply expose the menu injection logic.
-            // Let's call `patternInjector.injectMenus` (I need to refactor PatternInjector first to expose this).
-
-            // Actually, let's just make sure PatternInjector has a separate method.
-            // I will MODIFY PatternInjector again to extract `injectMenus` as a public method.
+            // 4. Inject Menus
             if (userData.menus && userData.menus.length > 0) {
                 await patternInjector.injectMenus(themeDir, userData, safeName);
             }
@@ -121,9 +115,6 @@ async function generateTheme() {
         if (!report.isValid) {
             console.error('[Validator] CRITICAL FSE ERRORS FOUND:');
             report.errors.forEach((err: string) => console.error(`  - ${err}`));
-            // We allow proceeding but with a loud warning for now, or we can exit.
-            // "Eliminate Attempt Recovery" implies we should probably stop or fix.
-            // For Phase 3, we log criticals.
             console.error('[Validator] Theme Generation Completed with ERRORS.');
         } else {
             console.log('[Validator] Theme Passed FSE Validation Check.');
@@ -138,24 +129,59 @@ async function generateTheme() {
         const output = fs.createWriteStream(zipPath);
         const archive = archiver('zip', { zlib: { level: 9 } });
 
-        output.on('close', function () {
-            console.log(JSON.stringify({
-                status: "success",
-                themeName: themeName,
-                downloadPath: zipPath,
-                filename: `${safeName}-${timestamp}.zip`
-            }));
+        await new Promise((resolve, reject) => {
+            output.on('close', resolve);
+            archive.on('error', reject);
+            archive.pipe(output);
+            archive.directory(themeDir, safeName);
+            archive.finalize();
         });
-        archive.on('error', (err: any) => { throw err; });
-        archive.pipe(output);
-        archive.directory(themeDir, safeName);
-        await archive.finalize();
+
+        const result = {
+            status: "success",
+            themeName: themeName,
+            downloadPath: zipPath,
+            filename: `${safeName}-${timestamp}.zip`,
+            themeDir: themeDir // useful for checking
+        };
+
+        return result;
 
     } catch (err) {
         console.error('[Orchestrator] Error:', err);
-        process.exit(1);
+        throw err;
     }
 }
 
-generateTheme();
+// CLI ENTRY POINT
+if (require.main === module) {
+    (async () => {
+        const args = process.argv.slice(2);
+        const dataArg = args.find(arg => arg.startsWith('--data='));
+        const baseArg = args.find(arg => arg.startsWith('--base='));
+        const modeArg = args.find(arg => arg.startsWith('--mode='));
 
+        let base: BaseTheme = 'ollie';
+        if (baseArg) base = baseArg.split('=')[1].toLowerCase() as BaseTheme;
+
+        let mode: GeneratorMode = 'standard';
+        if (modeArg) mode = modeArg.split('=')[1].toLowerCase() as GeneratorMode;
+
+        let data: GeneratorData = {};
+        if (dataArg) {
+            try {
+                data = JSON.parse(dataArg.substring(7));
+            } catch (e) {
+                console.error("Error parsing JSON data:", e);
+                process.exit(1);
+            }
+        }
+
+        try {
+            const result = await generateTheme({ base, mode, data });
+            console.log(JSON.stringify(result));
+        } catch (e) {
+            process.exit(1);
+        }
+    })();
+}

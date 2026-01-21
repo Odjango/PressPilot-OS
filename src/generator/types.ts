@@ -15,6 +15,7 @@ export interface ThemePersonality {
     colors: ThemeColors;
     patterns: ThemePatterns;
     home_template: string;
+    recipes?: Record<string, LayoutRecipe[]>; // Key: Industry (e.g. 'saas'), Value: List of recipes
 }
 
 export type UniversalPageTemplate = 'universal-about' | 'universal-services' | 'universal-contact';
@@ -55,7 +56,16 @@ export interface GeneratorData {
     images?: string[]; // Array of local image paths from CLI
     pages?: PageData[];
     menus?: RestaurantMenu[];
+    industry?: string; // e.g., 'saas', 'restaurant', 'agency'
 }
 
 export type BaseTheme = 'ollie' | 'frost' | 'twentytwentyfour' | 'spectra';
 export type GeneratorMode = 'standard' | 'heavy';
+
+export type PatternReference = string; // Path to pattern file relative to theme root
+
+export interface LayoutRecipe {
+    name: string;
+    description: string;
+    patterns: PatternReference[]; // Sequence of patterns to assemble
+}

@@ -1,157 +1,66 @@
 import path from 'node:path';
-import { promises as fs } from 'node:fs';
-import AdmZip from 'adm-zip';
 import { PressPilotNormalizedContext, PressPilotVariationManifest } from '@/types/presspilot';
-import { applyStyleVariationToThemeJson } from '@/lib/presspilot/themeStyle';
-import { resolveBusinessCopy, resolveBusinessTypeStyle } from '@/lib/presspilot/kit';
-import { applyBusinessCopyToTheme, injectHeaderContent, injectFooterContent } from '@/lib/presspilot/contentInject';
-import { KitSummary, writeKitSummaryFile } from '@/lib/presspilot/kitSummary';
-import { buildWpImportXmlFromKit } from '@/lib/presspilot/wpImport';
+import { resolveBusinessCopy } from '@/lib/presspilot/kit';
+import { generateTheme, GeneratorOptions } from '@/src/generator/index';
+import { BaseTheme, GeneratorData } from '@/src/generator/types';
 
 export interface ThemeBuildResult {
   themeDir: string;
   themeZipPath: string;
 }
 
-const BUILD_ROOT = path.join('/tmp', 'presspilot-build');
-const THEMES_ROOT = path.join(BUILD_ROOT, 'themes');
-const FOUNDATION_THEME_SLUG = 'presspilot-fse-v2';
-// Source theme lives in themes/ at repo root, not in build/
-const FOUNDATION_THEME_DIR = path.join(process.cwd(), 'themes', FOUNDATION_THEME_SLUG);
-
 export async function buildWordPressTheme(
   context: PressPilotNormalizedContext,
   variation: PressPilotVariationManifest,
-  options?: { businessTypeId?: string | null; styleVariation?: string | null; kitSummary?: KitSummary | null; baseTheme?: string | null }
+  options?: { businessTypeId?: string | null; styleVariation?: string | null; kitSummary?: any | null; baseTheme?: string | null }
 ): Promise<ThemeBuildResult> {
-  await fs.mkdir(BUILD_ROOT, { recursive: true });
-  await fs.mkdir(THEMES_ROOT, { recursive: true });
+  // 1. Resolve Industry and Base Theme
+  const businessTypeId = options?.businessTypeId;
+  let industry = 'saas'; // Default
+  let baseTheme: BaseTheme = (options?.baseTheme as BaseTheme) || 'ollie';
 
-  await ensureFoundationThemeExists();
-
-  // DYNAMIC BASE THEME RESOLUTION
-  const selectedBase = options?.baseTheme || FOUNDATION_THEME_SLUG;
-  let sourceDir = FOUNDATION_THEME_DIR;
-
-  if (selectedBase !== FOUNDATION_THEME_SLUG) {
-    // Look in 'bases/' for 'ollie', 'frost', etc.
-    // Note: 'bases' is at project root.
-    const basesRoot = path.join(process.cwd(), 'bases');
-    sourceDir = path.join(basesRoot, selectedBase);
+  if (businessTypeId) {
+    if (businessTypeId === 'restaurant_cafe') {
+      industry = 'restaurant';
+    } else if (businessTypeId === 'saas_product') {
+      industry = 'saas';
+    } else if (businessTypeId === 'professional_services') {
+      industry = 'agency';
+      baseTheme = 'frost'; // Override to Frost for agencies as per rules
+    } else if (businessTypeId === 'online_coach') {
+      industry = 'general';
+      baseTheme = 'twentytwentyfour';
+    } else {
+      industry = 'general';
+    }
   }
 
-  const themeDir = path.join(THEMES_ROOT, context.brand.slug);
-  // Ensure source exists before likely confusing error
-  await fs.access(sourceDir).catch(() => {
-    throw new Error(`Base theme not found at ${sourceDir}`);
+  // 2. Prepare Generator Data
+  const copy = await resolveBusinessCopy(context, variation, businessTypeId ?? null);
+
+  const generatorData: GeneratorData = {
+    name: context.brand.name,
+    primary: context.visual.custom_colors?.primary,
+    secondary: context.visual.custom_colors?.secondary,
+    hero_headline: variation.preview.label, // Or copy.hero.title
+    hero_subheadline: copy.hero.subtitle,
+    industry: industry,
+    // Pass other data if needed
+  };
+
+  // 3. Call The Generator Engine
+  console.log(`[themeKit] invoking Generator for ${context.brand.name} (Base: ${baseTheme}, Industry: ${industry})`);
+
+  const result = await generateTheme({
+    base: baseTheme,
+    mode: 'standard', // Always standard for now
+    data: generatorData,
+    // We can let the generator handle output paths, or override if needed. 
+    // The generator returns the path.
   });
 
-  await fs.rm(themeDir, { recursive: true, force: true });
-  await fs.cp(sourceDir, themeDir, { recursive: true });
-
-  const { kit, styleVariation: resolvedStyleVariation } = await resolveBusinessTypeStyle(options?.businessTypeId ?? null);
-  const appliedStyleVariation = options?.styleVariation ?? resolvedStyleVariation;
-
-  await applyStyleVariationToThemeJson({
-    themeDir,
-    businessTypeId: options?.businessTypeId ?? null,
-    styleVariation: appliedStyleVariation,
-    kitVersion: kit.version,
-    customColors: context.visual.custom_colors
-  });
-
-  const copy = await resolveBusinessCopy(context, variation, options?.businessTypeId ?? null);
-  await applyBusinessCopyToTheme(themeDir, copy, context.brand.name);
-  // Ensure tagline is set in kitSummary
-  const summaryWithTagline = options?.kitSummary
-    ? { ...options.kitSummary, tagline: copy.hero.subtitle }
-    : null;
-  await writeKitSummaryFile(themeDir, summaryWithTagline);
-  if (summaryWithTagline) {
-    const importerXml = await buildWpImportXmlFromKit({ kit: summaryWithTagline, copy });
-    const importerPath = path.join(themeDir, 'presspilot-demo-content.xml');
-    await fs.writeFile(importerPath, importerXml, 'utf8');
-    console.log('[WPImport] wrote theme demo XML:', importerPath);
-  }
-
-  // Inject FSE Parts (ONLY IF UNIVERSAL)
-  // If we utilize a dedicated base (Ollie/Frost), we respect their native design.
-  if (selectedBase === FOUNDATION_THEME_SLUG) {
-    await injectHeaderContent(themeDir, context.navShell);
-    await injectFooterContent(themeDir, context.brand.name, context.navShell);
-  } else {
-    console.log(`[themeKit] Skipping Universal Header/Footer injection for Native Theme: ${selectedBase}`);
-  }
-
-  await writeThemeStyleHeader(themeDir, context, variation, kit.version);
-  await injectThemeConfig(themeDir, options?.businessTypeId);
-
-  const themeZipPath = path.join(THEMES_ROOT, `${context.brand.slug}.zip`);
-  const zip = new AdmZip();
-  zip.addLocalFolder(themeDir);
-  zip.writeZip(themeZipPath);
-  console.log('[themeKit] wrote theme zip:', themeZipPath);
-
-  return { themeDir, themeZipPath };
-}
-
-async function injectThemeConfig(themeDir: string, businessTypeId?: string | null) {
-  const functionsPath = path.join(themeDir, 'functions.php');
-  let content = await fs.readFile(functionsPath, 'utf8');
-
-  let themeType = 'universal';
-  let enableWoo = false;
-
-  if (businessTypeId === 'restaurant_cafe') {
-    themeType = 'restaurant';
-  } else if (businessTypeId === 'ecommerce_store') {
-    themeType = 'ecommerce';
-    enableWoo = true;
-  }
-
-  content = content.replace(
-    "define('PP_THEME_TYPE', 'universal');",
-    `define('PP_THEME_TYPE', '${themeType}');`
-  );
-  content = content.replace(
-    "define('PP_ENABLE_WOOCOMMERCE', false);",
-    `define('PP_ENABLE_WOOCOMMERCE', ${enableWoo});`
-  );
-  content = content.replace(
-    "define('PP_SITE_TITLE', 'PressPilot Site');",
-    `define('PP_SITE_TITLE', '${themeDir.split('/').pop()}');` // Fallback, but better to pass brand name
-  );
-  // Wait, I need the brand name here. I'll use a placeholder replacement or pass it in.
-  // The context.brand.name is available in buildWordPressTheme but not passed to injectThemeConfig.
-  // I will update the function signature.
-
-  await fs.writeFile(functionsPath, content, 'utf8');
-}
-
-async function ensureFoundationThemeExists() {
-  try {
-    await fs.access(FOUNDATION_THEME_DIR);
-  } catch (error) {
-    throw new Error(
-      `PressPilot foundation theme not found at ${FOUNDATION_THEME_DIR}. Ensure themes/${FOUNDATION_THEME_SLUG} exists before generating kits.`
-    );
-  }
-}
-
-async function writeThemeStyleHeader(
-  themeDir: string,
-  context: PressPilotNormalizedContext,
-  variation: PressPilotVariationManifest,
-  kitVersion: string
-) {
-  const stylePath = path.join(themeDir, 'style.css');
-  const contents = `/*
-Theme Name: ${context.brand.name} – Golden Foundation
-Theme URI: https://presspilot.os/${context.brand.slug}
-Author: PressPilot OS
-Description: Generated for ${context.brand.name} using the PressPilot Golden Foundation kit (${variation.preview.label}).
-Version: ${kitVersion}
-Text Domain: ${context.brand.slug}
-*/`;
-  await fs.writeFile(stylePath, contents, 'utf8');
+  return {
+    themeDir: result.themeDir,
+    themeZipPath: result.downloadPath
+  };
 }

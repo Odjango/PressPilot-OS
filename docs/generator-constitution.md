@@ -3,145 +3,85 @@
 **Purpose**: Eliminate instability, Attempt Recovery, and nondeterministic output by removing generator freedom.
 
 ## 0. Prime Directive (Non-Negotiable)
-The Generator is not allowed to **invent structure**.
+The Generator is not allowed to **synthesize new structure**.
+It MUST **Assemble** from proven parts.
 The Generator is not allowed to **guess**.
-The Generator is not allowed to **improvise**.
 
 If the Generator cannot satisfy a rule below:
 ❌ It must NOT output partial content
 ❌ It must NOT insert placeholders
 ❌ It must NOT “help”
 ✅ It must either:
-1.  Emit the **minimal safe structure**, or
+1.  Emit the **minimal safe layout** from a proven Recipe, or
 2.  **Fail the build** with a reason (dev mode only)
 
 ## 1. Theme Scope & File Contract (MVBT)
-The Generator MUST output exactly this minimum structure:
+The Generator MUST output exactly this minimum structure based on a Base Theme (Ollie, Frost, TT4):
 ```text
 /
-├─ style.css
-├─ theme.json
-├─ functions.php
+├─ style.css          (Configured from Base)
+├─ theme.json         (Configured from Base + User Colors)
+├─ functions.php      (Standard PressPilot Core)
 ├─ index.php          (dummy / silence only)
-├─ screenshot.png
-├─ assets/
+├─ screenshot.png     (From Base)
+├─ assets/            (Copied from Base)
 ├─ templates/
-│  └─ index.html      (MANDATORY ENGINE)
+│  └─ front-page.html (Assembled via Recipe)
 ├─ parts/
-│  ├─ header.html
-│  └─ footer.html
-└─ patterns/          (ONLY if patterns are used)
+│  ├─ header.html     (From Base Pattern)
+│  └─ footer.html     (From Base Pattern)
+└─ patterns/          (Injected from Recipe)
 ```
 
 **Forbidden**:
--   PHP templates (`header.php`, `page.php`, etc.)
+-   Synthesized Block Markup (rewriting HTML by hand)
 -   Dynamic DB seeding
--   Conditional file generation
+-   Conditional file generation outside of Recipe logic
 
 ## 2. theme.json — The Global Brain
 **Mandatory**:
--   schema: v2 or v3
+-   Adhere to Base Theme's structure (do not reinvent)
 -   `settings.appearanceTools = true`
--   `settings.layout.contentSize`
--   `settings.layout.wideSize`
--   Explicit color palette slugs
--   Explicit typography scale
+-   Explicit color palette slugs (mapped to User Input)
 
 **Forbidden**:
--   Hardcoded colors in templates
--   Referencing presets that do not exist
--   Inline CSS styles in block markup
+-   Changing the structure of the Base Theme's `theme.json`
+-   Inline CSS styles in block markup (unless present in Base Pattern)
 
-**Rule**: If a preset is referenced anywhere and not defined → **FAIL**
+## 3. Assembly Contract (No Freedom)
+The Generator must operate as an **Assembly Engine**:
+1.  **Select Recipe**: Identify the correct `LayoutRecipe` from `PatternRegistry` based on Industry.
+2.  **Copy Patterns**: Copy referenced patterns from Base Theme to Output.
+3.  **Inject Content**: Perform safe text replacement *inside* the pattern files.
+4.  **Assemble Template**: Reference these patterns in `front-page.html`.
 
-## 3. Component Contracts (No Freedom)
-### 3.1 Header (`parts/header.html`)
+### 3.1 Header & Footer
+- Must use the Base Theme's designated Header/Footer patterns.
+- Must not be synthesized from scratch.
+
+### 3.2 Main Template (`templates/front-page.html`)
 **Allowed Blocks**:
--   `core/group`
--   `core/site-logo`
--   `core/site-title`
--   `core/navigation`
--   `core/navigation-link`
+-   `wp:pattern` (ONLY)
 
 **Required Structure**:
-1.  group (tagName: header)
-2.  inner group (layout: flex / row)
-3.  site-logo
-4.  site-title
-5.  navigation (INLINE LINKS ONLY)
-
-**Navigation Rules (Absolute)**:
--   Must use inline `navigation-link` blocks
--   Must never include `"ref"`
--   Must never be empty
--   Must never rely on DB menus
-
-**Forbidden**:
--   `wp:pattern` (unless Pattern Rules satisfied)
--   Placeholders of any kind
--   PHP
--   Fixed heights
--   External menu references
-
-**Violation** → **FAIL**
-
-### 3.2 Main Template (`templates/index.html`)
-**Allowed Blocks**:
--   `core/group`
--   `core/post-content`
--   Any content blocks allowed by layout discipline
-
-**Required Structure**:
-1.  group (tagName: main, layout: constrained)
-2.  content blocks OR post-content
-
-**Rules**:
--   Only ONE H1 maximum
--   No unresolved patterns
--   No placeholders
--   Must close all blocks correctly
-
-### 3.3 Footer (`parts/footer.html`)
-**Allowed Blocks**:
--   `core/group`
--   `core/columns`
--   `core/paragraph`
--   `core/navigation` (secondary, inline only)
--   `core/social-links`
--   `wp:pattern` (ONLY if Pattern Contract satisfied)
-
-**Forbidden**:
--   PHP
--   Dynamic date logic
--   DB dependencies
--   Hardcoded navigation refs
+1.  Sequence of `wp:pattern` blocks defined by the Recipe.
 
 ## 4. Navigation Contract (Global)
 Navigation is **structural**, not data-driven.
+- **Restaurant Exception**: If Industry = Restaurant, a dedicated Menu page is allowed.
 
-**Rules**:
--   Always inline
--   Always deterministic
--   Always visible on activation
--   No DB entities
--   No programmatic menu creation
--   Any `"ref"` anywhere → **FAIL**
-
-## 5. Pattern Contract (Option B)
-Patterns are allowed only if ALL conditions are met.
+## 5. Pattern Contract (Recipe Driven)
+Patterns are allowed only if they exist in the `PatternRegistry` Recipe.
 
 If `wp:pattern` is used:
-1.  `/patterns/*.php` MUST exist
-2.  Pattern file MUST include:
-    -   valid pattern header
-    -   pure block markup
+1.  Must be part of the active Layout Recipe
+2.  File MUST exist in `patterns/` (copied from Base)
 3.  Slug MUST resolve exactly
 4.  No placeholders
-5.  No dynamic PHP
 
 **Validator Rule**:
--   Missing pattern → **FAIL**
--   Placeholder pattern → **FAIL**
+-   Pattern not in Recipe → **FAIL**
+-   Missing pattern file → **FAIL**
 
 ## 6. Placeholder Ban (Global)
 The Generator MUST NEVER emit:

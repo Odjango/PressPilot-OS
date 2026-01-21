@@ -8,6 +8,54 @@ import { generateMenuPattern } from '../patterns/restaurant-menu';
 export class PatternInjector {
     constructor(private rootDir: string) { }
 
+    async injectRecipe(themeDir: string, recipe: import('../types').LayoutRecipe, userData: GeneratorData, personality: ThemePersonality): Promise<void> {
+        console.log(`[Pattern] Injecting Recipe: ${recipe.name}...`);
+
+        let templateContent = '';
+
+        for (const patternPath of recipe.patterns) {
+            const fullPath = path.join(themeDir, patternPath);
+
+            if (await fs.pathExists(fullPath)) {
+                let content = await fs.readFile(fullPath, 'utf8');
+
+                // 1. Extract Slug (Robust Regex)
+                const slugMatch = content.match(/Slug:\s+([^\r\n]+)/);
+                const slug = slugMatch ? slugMatch[1].trim() : null;
+
+                if (!slug) {
+                    console.warn(`[Pattern] Warning: No slug found for ${patternPath}`);
+                    continue;
+                }
+
+                // 2. Inject Content (Text Replacement)
+                // Hero Replacement
+                if (patternPath === personality.patterns.hero) {
+                    if (userData.hero_headline) {
+                        content = content.replace(personality.patterns.hero_search_headline, userData.hero_headline);
+                    }
+                    if (userData.hero_subheadline && personality.patterns.hero_search_sub) {
+                        content = content.replace(personality.patterns.hero_search_sub, userData.hero_subheadline);
+                    }
+                }
+
+                // Apply Changes to File
+                await fs.writeFile(fullPath, content);
+
+                // 3. Add to Template Sequence
+                templateContent += `<!-- wp:pattern {"slug":"${slug}"} /-->\n`;
+            } else {
+                console.warn(`[Pattern] Warning: Pattern file not found ${patternPath}`);
+            }
+        }
+
+        // 4. Transform to Front Page
+        // We write to front-page.html to ensure it takes precedence as the Homepage
+        const frontPagePath = path.join(themeDir, 'templates', 'front-page.html');
+        await fs.writeFile(frontPagePath, templateContent);
+        console.log(`[Pattern] Generated front-page.html from recipe.`);
+    }
+
     async injectHeavyMode(themeDir: string, personality: ThemePersonality, userData: GeneratorData, safeName: string): Promise<void> {
         console.log('[Pattern] Injecting Heavy Mode Patterns...');
 
