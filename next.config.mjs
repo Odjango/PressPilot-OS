@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Standalone output for robust Docker deployment
-  output: "standalone",
-  
+  // output: "standalone",
+
   // Use Turbopack (default in Next.js 16) with empty config to silence warning
   turbopack: {},
-  
+
   // Externalize WordPress packages to avoid module resolution issues
   serverExternalPackages: [
     '@wordpress/block-library',
@@ -22,12 +22,12 @@ const nextConfig = {
     '@wordpress/icons',
     'jsdom',
   ],
-  
+
   // Skip TypeScript errors during build
   typescript: {
     ignoreBuildErrors: true,
   },
-  
+
   // Webpack config to handle WordPress package ESM/CJS issues
   webpack: (config, { isServer }) => {
     if (isServer) {
