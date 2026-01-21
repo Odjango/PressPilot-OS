@@ -1,15 +1,19 @@
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}},"color":{"background":"#f8fafc"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-background" style="background-color:#f8fafc;padding-top:var(--wp--preset--spacing--80);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--80);padding-left:var(--wp--preset--spacing--50)">
+<div class="wp-block-group alignfull has-background"
+    style="background-color:#f8fafc;padding-top:var(--wp--preset--spacing--80);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--80);padding-left:var(--wp--preset--spacing--50)">
     <!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|60"}}}} -->
     <div class="wp-block-columns">
         <!-- wp:column {"width":"50%"} -->
         <div class="wp-block-column" style="flex-basis:50%">
             <!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"2.5rem","fontWeight":"700"},"color":{"text":"#1f2937"}}} -->
-            <h1 class="wp-block-heading has-text-color" style="color:#1f2937;font-size:2.5rem;font-weight:700">{{contact_title}}</h1>
+            <h1 class="wp-block-heading has-text-color" style="color:#1f2937;font-size:2.5rem;font-weight:700">
+                {{contact_title}}</h1>
             <!-- /wp:heading -->
 
             <!-- wp:paragraph {"style":{"typography":{"fontSize":"1.125rem","lineHeight":"1.7"},"spacing":{"margin":{"top":"var:preset|spacing|20"}},"color":{"text":"#64748b"}}} -->
-            <p class="has-text-color" style="color:#64748b;margin-top:var(--wp--preset--spacing--20);font-size:1.125rem;line-height:1.7">{{contact_text}}</p>
+            <p class="has-text-color"
+                style="color:#64748b;margin-top:var(--wp--preset--spacing--20);font-size:1.125rem;line-height:1.7">
+                {{contact_text}}</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:group {"style":{"spacing":{"margin":{"top":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
@@ -79,23 +83,36 @@
         <!-- /wp:column -->
 
         <!-- wp:column {"width":"50%","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}},"border":{"radius":"16px"},"color":{"background":"#ffffff"}}} -->
-        <div class="wp-block-column has-background" style="background-color:#ffffff;border-radius:16px;padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--50);flex-basis:50%;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1)">
+        <div class="wp-block-column has-background"
+            style="background-color:#ffffff;border-radius:16px;padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--50);flex-basis:50%;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1)">
             <!-- wp:heading {"textAlign":"center","level":3,"style":{"typography":{"fontSize":"1.75rem","fontWeight":"600"},"spacing":{"margin":{"bottom":"var:preset|spacing|20"}},"color":{"text":"#1f2937"}}} -->
-            <h3 class="wp-block-heading has-text-align-center has-text-color" style="color:#1f2937;margin-bottom:var(--wp--preset--spacing--20);font-size:1.75rem;font-weight:600">Get in Touch</h3>
+            <h3 class="wp-block-heading has-text-align-center has-text-color"
+                style="color:#1f2937;margin-bottom:var(--wp--preset--spacing--20);font-size:1.75rem;font-weight:600">Get
+                in Touch</h3>
             <!-- /wp:heading -->
 
             <!-- wp:paragraph {"align":"center","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|40"}},"color":{"text":"#64748b"}}} -->
-            <p class="has-text-align-center has-text-color" style="color:#64748b;margin-bottom:var(--wp--preset--spacing--40)">We would love to hear from you. Reach out to us today!</p>
+            <p class="has-text-align-center has-text-color"
+                style="color:#64748b;margin-bottom:var(--wp--preset--spacing--40)">We would love to hear from you. Reach
+                out to us today!</p>
             <!-- /wp:paragraph -->
 
             <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center","orientation":"vertical"},"style":{"spacing":{"blockGap":"1rem"}}} -->
             <div class="wp-block-buttons">
-                <!-- wp:button {"width":100,"style":{"typography":{"fontWeight":"600"},"border":{"radius":"6px"},"spacing":{"padding":{"top":"1rem","bottom":"1rem","left":"2rem","right":"2rem"}}}} -->
-                <div class="wp-block-button has-custom-width wp-block-button__width-100" style="font-weight:600"><a class="wp-block-button__link has-text-color has-background wp-element-button" href="mailto:{{email}}" style="background-color:{{color_primary}};color:#ffffff;border-radius:6px;padding-top:1rem;padding-right:2rem;padding-bottom:1rem;padding-left:2rem;width:100%;text-align:center">📧 Email Us</a></div>
+                <!-- wp:button {"width":100,"style":{"typography":{"fontWeight":"600"},"border":{"radius":"6px"},"spacing":{"padding":{"top":"1rem","bottom":"1rem","left":"2rem","right":"2rem"}},"color":{"text":"#ffffff","background":"{{color_primary}}"}}} -->
+                <div class="wp-block-button has-custom-width wp-block-button__width-100" style="font-weight:600"><a
+                        class="wp-block-button__link has-text-color has-background wp-element-button"
+                        href="mailto:{{email}}"
+                        style="background-color:{{color_primary}};color:#ffffff;border-radius:6px;padding-top:1rem;padding-right:2rem;padding-bottom:1rem;padding-left:2rem;width:100%;text-align:center">📧
+                        Email Us</a></div>
                 <!-- /wp:button -->
 
-                <!-- wp:button {"width":100,"style":{"typography":{"fontWeight":"600"},"border":{"radius":"6px"},"spacing":{"padding":{"top":"1rem","bottom":"1rem","left":"2rem","right":"2rem"}}}} -->
-                <div class="wp-block-button has-custom-width wp-block-button__width-100" style="font-weight:600"><a class="wp-block-button__link has-text-color has-background wp-element-button" href="tel:{{phone}}" style="background-color:#f1f5f9;color:{{color_primary}};border-radius:6px;padding-top:1rem;padding-right:2rem;padding-bottom:1rem;padding-left:2rem;width:100%;text-align:center">📞 Call Us</a></div>
+                <!-- wp:button {"width":100,"style":{"typography":{"fontWeight":"600"},"border":{"radius":"6px"},"spacing":{"padding":{"top":"1rem","bottom":"1rem","left":"2rem","right":"2rem"}},"color":{"text":"{{color_primary}}","background":"#f1f5f9"}}} -->
+                <div class="wp-block-button has-custom-width wp-block-button__width-100" style="font-weight:600"><a
+                        class="wp-block-button__link has-text-color has-background wp-element-button"
+                        href="tel:{{phone}}"
+                        style="background-color:#f1f5f9;color:{{color_primary}};border-radius:6px;padding-top:1rem;padding-right:2rem;padding-bottom:1rem;padding-left:2rem;width:100%;text-align:center">📞
+                        Call Us</a></div>
                 <!-- /wp:button -->
             </div>
             <!-- /wp:buttons -->
