@@ -33,6 +33,18 @@ export interface PageData {
     content?: PageContent;
 }
 
+export interface RestaurantMenuItem {
+    name: string;
+    price: string;
+    description?: string;
+    image?: string;
+}
+
+export interface RestaurantMenu {
+    title: string; // e.g., "Dinner", "Drinks"
+    items: RestaurantMenuItem[];
+}
+
 export interface GeneratorData {
     name?: string;
     primary?: string;
@@ -42,6 +54,7 @@ export interface GeneratorData {
     logo?: string; // Path to local logo file
     images?: string[]; // Array of local image paths from CLI
     pages?: PageData[];
+    menus?: RestaurantMenu[];
 }
 
 export type BaseTheme = 'ollie' | 'frost' | 'twentytwentyfour' | 'spectra';

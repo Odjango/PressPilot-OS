@@ -5,11 +5,12 @@
  * @package PressPilot_Factory
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
-class PressPilot_Factory_Api_Handler {
+class PressPilot_Factory_Api_Handler
+{
 
     private $cleanup_handler;
     private $brand_applier;
@@ -23,281 +24,252 @@ class PressPilot_Factory_Api_Handler {
     public function __construct(
         PressPilot_Factory_Cleanup_Handler $cleanup_handler,
         PressPilot_Factory_Brand_Applier $brand_applier,
-        PressPilot_Factory_Content_Builder $content_builder,
-        PressPilot_Factory_Navigation_Builder $navigation_builder,
+        $content_builder, // Deprecated
+        $navigation_builder, // Deprecated
         PressPilot_Factory_Theme_Exporter $theme_exporter,
         PressPilot_Factory_Static_Exporter $static_exporter
     ) {
-        $this->cleanup_handler    = $cleanup_handler;
-        $this->brand_applier      = $brand_applier;
-        $this->content_builder    = $content_builder;
-        $this->navigation_builder = $navigation_builder;
-        $this->theme_exporter     = $theme_exporter;
-        $this->static_exporter    = $static_exporter;
+        $this->cleanup_handler = $cleanup_handler;
+        $this->brand_applier = $brand_applier;
+        $this->theme_exporter = $theme_exporter;
+        $this->static_exporter = $static_exporter;
     }
 
-    public function register_routes() {
-        register_rest_route( $this->namespace, '/generate', [
-            'methods'             => 'POST',
-            'callback'            => [ $this, 'handle_generate' ],
-            'permission_callback' => [ $this, 'check_permission' ],
-            'args'                => $this->get_generate_args(),
+    public function register_routes()
+    {
+        register_rest_route($this->namespace, '/generate', [
+            'methods' => 'POST',
+            'callback' => [$this, 'handle_generate'],
+            'permission_callback' => [$this, 'check_permission'],
+            'args' => $this->get_generate_args(),
         ]);
 
-        register_rest_route( $this->namespace, '/cleanup', [
-            'methods'             => 'POST',
-            'callback'            => [ $this, 'handle_cleanup' ],
-            'permission_callback' => [ $this, 'check_permission' ],
+        register_rest_route($this->namespace, '/cleanup', [
+            'methods' => 'POST',
+            'callback' => [$this, 'handle_cleanup'],
+            'permission_callback' => [$this, 'check_permission'],
         ]);
 
-        register_rest_route( $this->namespace, '/status/(?P<id>[a-zA-Z0-9_-]+)', [
-            'methods'             => 'GET',
-            'callback'            => [ $this, 'handle_status' ],
-            'permission_callback' => [ $this, 'check_permission' ],
+        register_rest_route($this->namespace, '/status/(?P<id>[a-zA-Z0-9_-]+)', [
+            'methods' => 'GET',
+            'callback' => [$this, 'handle_status'],
+            'permission_callback' => [$this, 'check_permission'],
         ]);
     }
 
-    public function check_permission( WP_REST_Request $request ) {
+    public function check_permission(WP_REST_Request $request)
+    {
         // Check for API key in header
-        $api_key = $request->get_header( 'X-PressPilot-Key' );
-        $stored_key = get_option( 'presspilot_api_key' );
+        $api_key = $request->get_header('X-PressPilot-Key');
+        $stored_key = get_option('presspilot_api_key');
 
-        if ( $stored_key && $api_key === $stored_key ) {
+        if ($stored_key && $api_key === $stored_key) {
             return true;
         }
 
         // Fallback to capability check
-        return current_user_can( 'manage_options' );
+        return current_user_can('manage_options');
     }
 
     /**
      * Sanitize logo input - allows base64 data or URLs
      */
-    public function sanitize_logo_input( $logo ) {
-        if ( empty( $logo ) ) {
+    public function sanitize_logo_input($logo)
+    {
+        if (empty($logo)) {
             return '';
         }
 
         // If it's base64 data, allow it through
-        if ( strpos( $logo, 'data:image/' ) === 0 ) {
+        if (strpos($logo, 'data:image/') === 0) {
             return $logo;
         }
 
         // Otherwise sanitize as URL
-        return esc_url_raw( $logo );
+        return esc_url_raw($logo);
     }
 
-    private function get_generate_args() {
+    private function get_generate_args()
+    {
         return [
             'businessName' => [
-                'required'          => true,
-                'type'              => 'string',
+                'required' => true,
+                'type' => 'string',
                 'sanitize_callback' => 'sanitize_text_field',
             ],
             'tagline' => [
-                'required'          => false,
-                'type'              => 'string',
+                'required' => false,
+                'type' => 'string',
                 'sanitize_callback' => 'sanitize_text_field',
-                'default'           => '',
+                'default' => '',
             ],
             'description' => [
-                'required'          => false,
-                'type'              => 'string',
+                'required' => false,
+                'type' => 'string',
                 'sanitize_callback' => 'sanitize_textarea_field',
-                'default'           => '',
+                'default' => '',
             ],
             'category' => [
-                'required'          => true,
-                'type'              => 'string',
-                'enum'              => [ 'corporate', 'restaurant', 'ecommerce', 'agency', 'startup', 'local', 'healthcare', 'realestate', 'fitness', 'education' ],
+                'required' => true,
+                'type' => 'string',
+                'enum' => ['corporate', 'restaurant', 'ecommerce', 'agency', 'startup', 'local', 'healthcare', 'realestate', 'fitness', 'education'],
                 'sanitize_callback' => 'sanitize_text_field',
             ],
             'colors' => [
                 'required' => false,
-                'type'     => 'object',
-                'default'  => [
-                    'primary'   => '#1e40af',
+                'type' => 'object',
+                'default' => [
+                    'primary' => '#1e40af',
                     'secondary' => '#64748b',
-                    'accent'    => '#f59e0b',
-                    'background'=> '#ffffff',
-                    'text'      => '#1f2937',
+                    'accent' => '#f59e0b',
+                    'background' => '#ffffff',
+                    'text' => '#1f2937',
                 ],
             ],
             'fonts' => [
                 'required' => false,
-                'type'     => 'object',
-                'default'  => [
+                'type' => 'object',
+                'default' => [
                     'heading' => 'Inter',
-                    'body'    => 'Inter',
+                    'body' => 'Inter',
                 ],
             ],
             'logo' => [
-                'required'          => false,
-                'type'              => 'string',
-                'sanitize_callback' => [ $this, 'sanitize_logo_input' ],
-                'default'           => '',
+                'required' => false,
+                'type' => 'string',
+                'sanitize_callback' => [$this, 'sanitize_logo_input'],
+                'default' => '',
             ],
             'variation' => [
-                'required'          => false,
-                'type'              => 'string',
-                'enum'              => [ 'original', 'high-contrast', 'inverted' ],
-                'default'           => 'original',
+                'required' => false,
+                'type' => 'string',
+                'enum' => ['original', 'high-contrast', 'inverted'],
+                'default' => 'original',
                 'sanitize_callback' => 'sanitize_text_field',
             ],
             'layout' => [
-                'required'          => false,
-                'type'              => 'string',
-                'enum'              => [ '', 'modern', 'classic', 'minimal', 'elegant', 'bold', 'corporate', 'creative', 'startup', 'agency', 'local', 'ecommerce', 'restaurant' ],
-                'default'           => '',
+                'required' => false,
+                'type' => 'string',
+                'enum' => ['', 'modern', 'classic', 'minimal', 'elegant', 'bold', 'corporate', 'creative', 'startup', 'agency', 'local', 'ecommerce', 'restaurant'],
+                'default' => '',
                 'sanitize_callback' => 'sanitize_text_field',
             ],
             'content' => [
                 'required' => false,
-                'type'     => 'object',
-                'default'  => [],
+                'type' => 'object',
+                'default' => [],
             ],
             'includeStaticExport' => [
                 'required' => false,
-                'type'     => 'boolean',
-                'default'  => false,
+                'type' => 'boolean',
+                'default' => false,
             ],
         ];
     }
 
-    public function handle_generate( WP_REST_Request $request ) {
+    public function handle_generate(WP_REST_Request $request)
+    {
         $generation_id = 'gen_' . wp_generate_uuid4();
-        $start_time = microtime( true );
+        $start_time = microtime(true);
 
         try {
             // Get category first to determine recommended layout
-            $category = $request->get_param( 'category' );
-            $layout = $request->get_param( 'layout' );
+            $category = $request->get_param('category');
+            $layout = $request->get_param('layout');
 
             // If no layout specified, use category's recommended layout
-            if ( empty( $layout ) ) {
-                $layout = PressPilot_Factory_Category_Config::get_recommended_layout( $category );
+            if (empty($layout)) {
+                $layout = PressPilot_Factory_Category_Config::get_recommended_layout($category);
             }
 
             // Extract parameters
             $params = [
-                'business_name' => $request->get_param( 'businessName' ),
-                'tagline'       => $request->get_param( 'tagline' ),
-                'description'   => $request->get_param( 'description' ),
-                'category'      => $category,
-                'colors'        => $request->get_param( 'colors' ),
-                'fonts'         => $request->get_param( 'fonts' ),
-                'logo'          => $request->get_param( 'logo' ),
-                'variation'     => $request->get_param( 'variation' ),
-                'layout'        => $layout,
-                'content'       => $request->get_param( 'content' ),
+                'business_name' => $request->get_param('businessName'),
+                'tagline' => $request->get_param('tagline'),
+                'description' => $request->get_param('description'),
+                'category' => $category,
+                'colors' => $request->get_param('colors'),
+                'fonts' => $request->get_param('fonts'),
+                'logo' => $request->get_param('logo'),
+                'variation' => $request->get_param('variation'),
+                'layout' => $layout,
+                'content' => $request->get_param('content'),
             ];
 
             // Step 1: Cleanup previous generation
             $this->cleanup_handler->cleanup();
 
             // Step 2: Apply branding (colors, fonts, logo)
-            $this->brand_applier->apply( $params );
+            $this->brand_applier->apply($params);
 
-            // Step 2b: Update logo param with actual URL (for base64 uploads)
-            $logo_url = get_option( 'presspilot_logo_url', '' );
-            if ( $logo_url ) {
+            // Step 2b: Update logo param with actual URL
+            $logo_url = get_option('presspilot_logo_url', '');
+            if ($logo_url) {
                 $params['logo'] = $logo_url;
             }
 
-            // Step 3: Create pages based on category
-            $pages = $this->create_pages_for_category( $params );
-
-            // Step 4: Create navigation menu
-            $menu_id = $this->navigation_builder->create_menu( $params['business_name'], $pages, $params['category'] );
-
-            // Step 4b: Update Ollie header template with navigation post ID
-            $nav_post_id = get_option( 'presspilot_navigation_post_id' );
-            if ( $nav_post_id ) {
-                $this->update_header_navigation_ref( $nav_post_id );
-            }
-
-            // Step 5: Store generation metadata BEFORE exporting (needed for static export colors)
-            update_option( 'presspilot_last_generation', [
-                'id'        => $generation_id,
-                'timestamp' => current_time( 'mysql' ),
-                'params'    => $params,
-                'pages'     => $pages,
-                'menu_id'   => $menu_id,
-            ]);
-
-            // Step 6: Export theme ZIP
-            $theme_zip = $this->theme_exporter->export( $params, $generation_id );
-
-            // Step 7: Export static site (optional - disabled by default)
-            $static_zip = null;
-            $include_static = $request->get_param( 'includeStaticExport' );
-            if ( $include_static ) {
-                $static_zip = $this->static_exporter->export( $generation_id );
-            }
+            // LEGACY STEPS REMOVED: Database Injection and Theme Export via PHP are deprecated.
+            // The Node.js engine now handles generation completely.
 
             // Calculate duration
-            $duration = round( microtime( true ) - $start_time, 2 );
-
-            // Build response
-            $downloads = [ 'theme_zip' => $theme_zip ];
-            if ( $static_zip ) {
-                $downloads['static_zip'] = $static_zip;
-            }
+            $duration = round(microtime(true) - $start_time, 2);
 
             return new WP_REST_Response([
-                'success'       => true,
+                'success' => true,
                 'generation_id' => $generation_id,
-                'preview_url'   => home_url( '/' ),
-                'downloads'     => $downloads,
-                'pages_created' => count( $pages ),
-                'duration'      => $duration . 's',
-            ], 200 );
+                'preview_url' => home_url('/'),
+                'downloads' => [],
+                'pages_created' => 0,
+                'message' => 'PHP Generation Deprecated. Use Node.js Engine.',
+                'duration' => $duration . 's',
+            ], 200);
 
-        } catch ( Exception $e ) {
+        } catch (Exception $e) {
             return new WP_REST_Response([
-                'success'       => false,
+                'success' => false,
                 'generation_id' => $generation_id,
-                'error'         => $e->getMessage(),
-            ], 500 );
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
-    private function create_pages_for_category( $params ) {
+    private function create_pages_for_category($params)
+    {
         $pages = [];
         $category = $params['category'];
         $content = $params['content'];
 
         // Get pages from category config
-        $category_pages = PressPilot_Factory_Category_Config::get_pages( $category );
-        $nav_order = PressPilot_Factory_Category_Config::get_nav_order( $category );
+        $category_pages = PressPilot_Factory_Category_Config::get_pages($category);
+        $nav_order = PressPilot_Factory_Category_Config::get_nav_order($category);
 
         // Create pages in nav order for proper menu generation
-        foreach ( $nav_order as $slug ) {
-            if ( ! isset( $category_pages[ $slug ] ) ) {
+        foreach ($nav_order as $slug) {
+            if (!isset($category_pages[$slug])) {
                 continue;
             }
 
-            $page_config = $category_pages[ $slug ];
-            $page_content = $content[ $slug ] ?? [];
+            $page_config = $category_pages[$slug];
+            $page_content = $content[$slug] ?? [];
 
             $page_id = $this->content_builder->create_page(
                 $page_config['title'],
                 $slug,
                 $page_config['patterns'],
-                array_merge( $params, [ 'page_content' => $page_content ] )
+                array_merge($params, ['page_content' => $page_content])
             );
 
-            if ( $page_id ) {
-                $pages[ $slug ] = [
-                    'id'    => $page_id,
+            if ($page_id) {
+                $pages[$slug] = [
+                    'id' => $page_id,
                     'title' => $page_config['title'],
-                    'url'   => get_permalink( $page_id ),
+                    'url' => get_permalink($page_id),
                 ];
 
                 // Set front page
-                if ( $slug === 'home' ) {
-                    update_option( 'show_on_front', 'page' );
-                    update_option( 'page_on_front', $page_id );
+                if ($slug === 'home') {
+                    update_option('show_on_front', 'page');
+                    update_option('page_on_front', $page_id);
                 }
             }
         }
@@ -305,53 +277,56 @@ class PressPilot_Factory_Api_Handler {
         return $pages;
     }
 
-    public function handle_cleanup( WP_REST_Request $request ) {
+    public function handle_cleanup(WP_REST_Request $request)
+    {
         try {
             $count = $this->cleanup_handler->cleanup();
 
             return new WP_REST_Response([
                 'success' => true,
-                'message' => sprintf( 'Cleaned up %d items', $count ),
-            ], 200 );
+                'message' => sprintf('Cleaned up %d items', $count),
+            ], 200);
 
-        } catch ( Exception $e ) {
+        } catch (Exception $e) {
             return new WP_REST_Response([
                 'success' => false,
-                'error'   => $e->getMessage(),
-            ], 500 );
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
-    public function handle_status( WP_REST_Request $request ) {
-        $id = $request->get_param( 'id' );
-        $last_gen = get_option( 'presspilot_last_generation' );
+    public function handle_status(WP_REST_Request $request)
+    {
+        $id = $request->get_param('id');
+        $last_gen = get_option('presspilot_last_generation');
 
-        if ( ! $last_gen || $last_gen['id'] !== $id ) {
+        if (!$last_gen || $last_gen['id'] !== $id) {
             return new WP_REST_Response([
                 'success' => false,
-                'error'   => 'Generation not found',
-            ], 404 );
+                'error' => 'Generation not found',
+            ], 404);
         }
 
         return new WP_REST_Response([
-            'success'       => true,
+            'success' => true,
             'generation_id' => $last_gen['id'],
-            'timestamp'     => $last_gen['timestamp'],
-            'pages'         => $last_gen['pages'],
-        ], 200 );
+            'timestamp' => $last_gen['timestamp'],
+            'pages' => $last_gen['pages'],
+        ], 200);
     }
 
     /**
      * Update Ollie header template with navigation post reference
      */
-    private function update_header_navigation_ref( $nav_post_id ) {
+    private function update_header_navigation_ref($nav_post_id)
+    {
         $header_path = get_template_directory() . '/parts/header.html';
 
-        if ( ! file_exists( $header_path ) || ! is_writable( $header_path ) ) {
+        if (!file_exists($header_path) || !is_writable($header_path)) {
             return false;
         }
 
-        $header_content = file_get_contents( $header_path );
+        $header_content = file_get_contents($header_path);
 
         // Match wp:navigation block with any JSON attributes (handles nested braces)
         // This pattern matches <!-- wp:navigation followed by JSON and /-->
@@ -359,10 +334,10 @@ class PressPilot_Factory_Api_Handler {
 
         // Use simple string replacement - find any wp:navigation block
         $pattern = '/<!-- wp:navigation .*?\/-->/s';
-        $new_content = preg_replace( $pattern, $replacement, $header_content );
+        $new_content = preg_replace($pattern, $replacement, $header_content);
 
-        if ( $new_content !== $header_content ) {
-            file_put_contents( $header_path, $new_content );
+        if ($new_content !== $header_content) {
+            file_put_contents($header_path, $new_content);
             return true;
         }
 

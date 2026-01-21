@@ -229,62 +229,19 @@ export async function POST(request: Request) {
     }, { status: 500 });
   } finally {
     // ---------------------------------------------------------
-    // "THE NUCLEAR HYDRATION" (Triggered regardless of valid response)
-    // 1. Flush Cache & Kill Ghosts (Template/Page/Part)
-    // 2. Hydrate the "Home" Page with fresh content via DB Injection
-    //    (Because the file-based theme is not deployed to the factory)
+    // "THE NUCLEAR HYDRATION" (DEPRECATED - REMOVED IN REFACTOR)
+    // Legacy generic preview mechanism removed in favor of Node.js engine stability.
     // ---------------------------------------------------------
+    /*
     try {
       if (validatedBusinessTypeId && context) {
         const wpBakeUrl = 'https://factory.presspilotapp.com/wp-json/presspilot/v1/bake';
-        console.log(`[api/generate] Triggering Nuclear Hydration at ${wpBakeUrl}...`);
-
-        // Assemble rudimentary preview content from the plan (if available)
-        // This ensures the user sees "Mamma Mia" and not "Ception"
-        let fullSiteContent = '';
-        if (kitPlan && kitPlan.pages.length > 0) {
-          const homePage = kitPlan.pages.find(p => p.slug === 'home') || kitPlan.pages[0];
-          fullSiteContent = homePage.sections.map(section => {
-            // Simple mapping of sections to block HTML
-            // This is a "Lite" preview compared to the full file theme
-            if (section.kind === 'hero') {
-              return `<!-- wp:cover {"overlayColor":"contrast","layout":{"type":"constrained"}} -->
-<div class="wp-block-cover"><span aria-hidden="true" class="wp-block-cover__background has-contrast-background-color"></span><div class="wp-block-cover__inner-container"><!-- wp:heading {"textAlign":"center","level":1} -->
-<h1 class="wp-block-heading has-text-align-center">${section.heading || context.brand.name}</h1>
-<!-- /wp:heading -->
-<!-- wp:paragraph {"align":"center","fontSize":"large"} -->
-<p class="has-text-align-center has-large-font-size">${section.subheading || context.brand.tagline}</p>
-<!-- /wp:paragraph --></div></div>
-<!-- /wp:cover -->`;
-            }
-            return `<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:heading -->
-<h2 class="wp-block-heading">${section.heading || ''}</h2>
-<!-- /wp:heading -->
-<!-- wp:paragraph -->
-<p>${section.body || section.subheading || ''}</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:group -->`;
-          }).join('\n');
-        }
-
-        await fetch(wpBakeUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            site_title: context.brand.name,
-            colors: {
-              primary: context.visual.custom_colors?.primary,
-              secondary: context.visual.custom_colors?.secondary
-            },
-            full_site_content: fullSiteContent
-          })
-        });
-        console.log('[api/generate] Nuclear Hydration Signal Sent.');
+        // ... (Legacy code removed)
       }
     } catch (cleanupError) {
       console.error('[api/generate] Failed to trigger Nuclear Hydration:', cleanupError);
     }
+    */
   }
 }
 

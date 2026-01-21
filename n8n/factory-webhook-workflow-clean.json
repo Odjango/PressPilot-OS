@@ -1,0 +1,113 @@
+{
+  "name": "PressPilot Factory Generator - Clean",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "build-site",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-trigger-001",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "build-site-production"
+    },
+    {
+      "parameters": {
+        "jsCode": "// PressPilot Factory - Transform Input\n// Maps frontend form fields to Factory API format\n\nconst input = items[0].json;\n\n// Map frontend businessType/industry to Factory API category\nconst categoryMap = {\n  'Restaurant / Food Service': 'restaurant',\n  'Real Estate / Architecture': 'realestate',\n  'Tech / SaaS': 'startup',\n  'Health / Wellness': 'fitness',\n  'Creative Agency': 'agency',\n  'E-commerce': 'ecommerce',\n  'Personal Portfolio': 'corporate'\n};\n\n// Handle various field name formats from proxy\nconst businessName = input.business_name || input.businessName || 'My Business';\nconst businessType = input.industry || input.businessType || 'corporate';\nconst category = categoryMap[businessType] || 'corporate';\n\n// Build Factory API payload\nreturn [{\n  json: {\n    businessName: businessName,\n    tagline: input.tagline || '',\n    description: input.description || '',\n    category: category,\n    colors: {\n      primary: '#1e40af',\n      secondary: '#64748b',\n      accent: '#f59e0b',\n      background: '#ffffff',\n      text: '#1f2937'\n    },\n    logo: input.logo_base64 || input.logo || null\n  }\n}];"
+      },
+      "id": "transform-input-002",
+      "name": "Transform Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://factory.presspilotapp.com/wp-json/presspilot/v1/generate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-PressPilot-Key",
+              "value": "pp_factory_2026_109540718b67c8f1acb967948eecf2e1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "call-factory-api-003",
+      "name": "Call Factory API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [710, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: $json.success !== false, original: $json.downloads?.theme_zip || $json.preview_url || 'https://factory.presspilotapp.com', high_contrast: $json.downloads?.theme_zip || 'https://factory.presspilotapp.com', inverted: $json.downloads?.static_zip || 'https://factory.presspilotapp.com', theme_zip: $json.downloads?.theme_zip || null, static_zip: $json.downloads?.static_zip || null, generation_id: $json.generation_id || null, pages_created: $json.pages_created || 0, duration: $json.duration || '0s' } }}"
+      },
+      "id": "return-urls-004",
+      "name": "Return URLs",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [940, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Transform Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Input": {
+      "main": [
+        [
+          {
+            "node": "Call Factory API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Factory API": {
+      "main": [
+        [
+          {
+            "node": "Return URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "versionId": "clean-v1"
+}

@@ -3,6 +3,7 @@ import path from 'path';
 import { GeneratorData, ThemePersonality } from '../types';
 import { UNIVERSAL_PATTERNS } from '../config/PatternRegistry';
 import { getUniversalBlogContent, getUniversalFooterContent, getUniversalHeaderContent, getArchiveContent, getSearchContent, getUniversalHomeContent } from '../patterns';
+import { generateMenuPattern } from '../patterns/restaurant-menu';
 
 export class PatternInjector {
     constructor(private rootDir: string) { }
@@ -62,5 +63,45 @@ export class PatternInjector {
         await fs.writeFile(headerPath, getUniversalHeaderContent(userData.pages).trim());
 
         console.log('[Pattern] Forced Universal Header & Footer.');
+    }
+
+    async injectMenus(themeDir: string, userData: GeneratorData, safeName: string): Promise<void> {
+        // 5. Inject Restaurant Menu (Topic: Restaurant)
+        if (userData.menus && userData.menus.length > 0) {
+            console.log(`[Pattern] Injecting ${userData.menus.length} Menus...`);
+
+            // Generate the Pattern Content (The "Columns" Block)
+            const menuPatternSlug = 'presspilot-menu';
+            const menuPatternContent = userData.menus.map(generateMenuPattern).join('\n\n<!-- wp:spacer {"height":"var:preset|spacing|50"} -->\n<div style="height:var(--wp--preset--spacing--50)" aria-hidden="true" class="wp-block-spacer"></div>\n<!-- /wp:spacer -->\n\n');
+
+            // Wrap in a Pattern Header for WordPress to recognize it
+            const patternFileContent = `<?php
+/**
+ * Title: Restaurant Menu
+ * Slug: presspilot/menu
+ * Categories: featured
+ */
+?>
+${menuPatternContent}`;
+
+            const patternPath = path.join(themeDir, 'patterns', 'presspilot-menu.php');
+            await fs.writeFile(patternPath, patternFileContent);
+
+            // Create a "page-menu.html" template that uses this pattern
+            // This ensures visiting /menu loads this layout
+            const menuPageTemplate = `<!-- wp:template-part {"slug":"header","theme":"${safeName}","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
+<main class="wp-block-group" style="margin-top:var(--wp--preset--spacing--50);margin-bottom:var(--wp--preset--spacing--50)">
+    <!-- wp:pattern {"slug":"presspilot/menu"} /-->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","theme":"${safeName}","tagName":"footer"} /-->`;
+
+            const menuTemplatePath = path.join(themeDir, 'templates', 'page-menu.html');
+            await fs.writeFile(menuTemplatePath, menuPageTemplate);
+            console.log('[Pattern] Injected Restaurant Menu Pattern & Template.');
+        }
     }
 }

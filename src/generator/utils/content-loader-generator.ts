@@ -12,25 +12,25 @@ export const generateContentLoader = (pages: PageData[], businessName: string, t
             ]`).join(',') : '';
 
     const timestamp = Date.now();
-    const funcName = \`presspilot_setup_\${timestamp}\`;
+    const funcName = `presspilot_setup_${timestamp}`;
 
-    return \`<?php
+    return `<?php
 /**
  * Auto-Content Loader
  * 
  * Automatically creates pages, assigns menus, and sets site identity upon theme activation.
  */
 
-function \${funcName}() {
+function ${funcName}() {
     // 0. FLUSH CACHE (Critical for persistence)
     wp_cache_flush();
 
     // 1. Set Site Identity
-    update_option('blogname', '\${businessName.replace(/'/g, "\\'")}' . ' [UPDATED]' );
-    update_option('blogdescription', '\${tagline.replace(/'/g, "\\'")}' );
+    update_option('blogname', '${businessName.replace(/'/g, "\\'")}' . ' [UPDATED]' );
+    update_option('blogdescription', '${tagline.replace(/'/g, "\\'")}' );
 
     // 2. Create Pages
-    $pages = [\${pagesArrayPhp}
+    $pages = [${pagesArrayPhp}
     ];
 
     $created_page_ids = [];
@@ -124,6 +124,6 @@ function \${funcName}() {
     $locations['primary'] = $menu_id;
     set_theme_mod('nav_menu_locations', $locations);
 }
-add_action('init', '\${funcName}');
-\`;
+add_action('init', '${funcName}');
+`;
 };
