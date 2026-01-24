@@ -79,6 +79,7 @@ export default function StudioPage() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("RAW N8N DATA:", data);
         const fallbackUrl = 'https://factory.presspilotapp.com';
 
         // Robust Fallback: Ensure buttons are NEVER disabled due to missing URLs
@@ -94,8 +95,9 @@ export default function StudioPage() {
       }
     } catch (error: any) {
       console.error("Submission Error:", error);
+      alert("CRITICAL ERROR: " + (error.message || "Unknown error"));
+      console.error(error);
       setError(error.message || "An unknown error occurred");
-      toast.error(`Connection Failed: ${error.message || "Unknown error"}`);
     } finally {
       setLoading(false);
     }

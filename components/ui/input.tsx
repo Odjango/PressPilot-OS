@@ -9,6 +9,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         return (
             <input
                 type={type}
+                style={{ backgroundColor: 'white', color: 'black', borderColor: 'gray' }}
                 className={cn(
                     "w-full p-4 bg-white text-black border-2 border-gray-300 rounded-lg focus:border-blue-600 outline-none",
                     className
