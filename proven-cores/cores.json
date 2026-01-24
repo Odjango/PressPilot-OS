@@ -1,0 +1,50 @@
+[
+  {
+    "id": "frost",
+    "name": "Frost",
+    "directory": "frost",
+    "category": "Minimalist",
+    "description": "A clean, wireframe-style theme perfect for developers and designers who want a blank canvas.",
+    "tags": ["minimal", "clean", "developer", "wireframe"]
+  },
+  {
+    "id": "ollie",
+    "name": "Ollie",
+    "directory": "ollie",
+    "category": "Modern",
+    "description": "A powerful, user-friendly theme with a highly visual onboarding experience.",
+    "tags": ["modern", "user-friendly", "visual", "versatile"]
+  },
+  {
+    "id": "twentytwentyfour",
+    "name": "Twenty Twenty-Four",
+    "directory": "twentytwentyfour",
+    "category": "Default",
+    "description": "The reliable, versatile default WordPress theme tailored for any type of site.",
+    "tags": ["default", "reliable", "business", "blog"]
+  },
+  {
+    "id": "spectra-one",
+    "name": "Spectra One",
+    "directory": "spectra-one",
+    "category": "Corporate",
+    "description": "A polished, professional theme optimized for performance and agency-style websites.",
+    "tags": ["agency", "professional", "fast", "sleek"]
+  },
+  {
+    "id": "tove",
+    "name": "Tove",
+    "directory": "tove",
+    "category": "Creative",
+    "description": "A colorful, multi-purpose theme ideal for cafes, restaurants, and creative portfolios.",
+    "tags": ["creative", "colorful", "portfolio", "playful"]
+  },
+  {
+    "id": "blockbase",
+    "name": "Blockbase",
+    "directory": "blockbase",
+    "category": "Utility",
+    "description": "A simple, unopinionated parent theme. The ultimate blank slate for custom builds.",
+    "tags": ["utility", "basic", "structure", "universal"]
+  }
+]

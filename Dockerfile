@@ -1,73 +1,20 @@
-# Dockerfile for PressPilot-OS (YT Summarizer) on Coolify
-# Uses npm (since package-lock.json is present) and multi-stage build.
+FROM node:20-alpine
 
-# 1. Base image
-FROM node:20-bookworm-slim AS base
 WORKDIR /app
 
-# 2. Dependencies
-FROM base AS deps
-# Install dependencies for canvas and node-gyp
-RUN apt-get update && apt-get install -y \
-    python3 \
-    make \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
+# Install dependencies
 COPY package.json package-lock.json ./
-# Install dependencies based on lockfile
-RUN npm install --legacy-peer-deps
+RUN npm ci
 
-# 3. Builder
-FROM base AS builder
-COPY --from=deps /app/node_modules ./node_modules
+# Copy source code
 COPY . .
 
-# Disable Next.js telemetry during build
-ENV NEXT_TELEMETRY_DISABLED=1
+# CRITICAL: Create output folder and ensure write permissions for the generator
+RUN mkdir -p output && chmod 777 output
 
-# Build the application
-# OPTIMIZE MEMORY: Set to 2GB to prevent OOM on standard VPS (Enterprise Safe Limit)
-ENV NODE_OPTIONS="--max-old-space-size=2048"
+# Build the Next.js application
 RUN npm run build
 
-# 4. Runner
-FROM base AS runner
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
-# Create a non-root user for security
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# Copy necessary files
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/static ./.next/static
-
-# We are using "output: standalone" for stability
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Copy themes folder as it is required by PressPilot
-COPY --from=builder --chown=nextjs:nodejs /app/themes ./themes
-
-# Copy Generator Source and Assets (Required for n8n/CLI generation)
-COPY --from=builder --chown=nextjs:nodejs /app/src ./src
-COPY --from=builder --chown=nextjs:nodejs /app/assets ./assets
-COPY --from=builder --chown=nextjs:nodejs /app/bases ./bases
-
-# Copy Scripts (Critical: was missing before)
-COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
-
-USER nextjs
-
+# Expose port and start
 EXPOSE 3000
-
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
-# Use Safe Boot script to prevent restart loops
-CMD ["/bin/bash", "/app/scripts/boot_safe.sh"]
+CMD ["npm", "start"]

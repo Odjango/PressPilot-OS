@@ -1,0 +1,5 @@
+# Agent OS Standards Index
+
+- name: proven-cores
+  description: Strict rules about using only the 6 selected theme cores.
+  path: proven-cores.md

@@ -12,7 +12,8 @@
     "build-wp-theme": "tsx src/generator/index.ts",
     "theme:build": "npx tsx scripts/validateGenerator.ts golden-spec && npx tsx scripts/buildWpTheme.ts",
     "validate-theme": "node validator/presspilot-validator.js",
-    "test:themes": "node scripts/generate-and-validate-test-themes.js"
+    "test:themes": "node scripts/generate-and-validate-test-themes.js",
+    "generate": "tsx src/generator/index.ts"
   },
   "bin": {
     "presspilot-validate": "validator/presspilot-validator.js"
@@ -57,6 +58,7 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.17",
     "tsx": "^4.19.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }
 }

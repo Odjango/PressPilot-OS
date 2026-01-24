@@ -6,7 +6,7 @@ export const generateContentLoader = (pages: PageData[], businessName: string, t
     // 1. Prepare Pages Array
     const pagesArrayPhp = pages && pages.length > 0 ? pages.map(p => `
             [
-                'title' => '${p.title.replace(/'/g, "\\'")}',
+                'title' => '${(p.title || p.slug || "Untitled").replace(/'/g, "\\'")}',
                 'slug'  => '${p.slug}',
                 'content' => '', // Content is in the template: page-${p.slug}.html
             ]`).join(',') : '';

@@ -103,6 +103,16 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             if (userData.menus && userData.menus.length > 0) {
                 await patternInjector.injectMenus(themeDir, userData, safeName);
             }
+
+            // 5. Industry Specific Injection (Portfolio / Fitness)
+            const industry = (userData.industry || '').toLowerCase();
+            if (industry === 'portfolio' || industry === 'creative') {
+                await patternInjector.injectGallery(themeDir, safeName);
+            } else if (industry === 'fitness' || industry === 'gym') {
+                await patternInjector.injectSchedule(themeDir, safeName);
+            } else if (industry === 'ecommerce' || industry === 'shop') {
+                await patternInjector.injectWooCommerce(themeDir, safeName);
+            }
         }
 
         // 3.5. VALIDATION HARDENING (Phase 3)

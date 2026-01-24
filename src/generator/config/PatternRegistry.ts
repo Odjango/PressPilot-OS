@@ -100,6 +100,36 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
             ]
         }
     },
+    'spectra-one': {
+        colors: {
+            brand: 'primary',
+            brand_alt: 'secondary',
+            accent: 'tertiary'
+        },
+        patterns: {
+            hero: 'patterns/hero-banner.php', // Assuming typical pattern
+            hero_search_headline: 'Your Vision, Built',
+            hero_search_sub: 'Create stunning websites.'
+        },
+        home_template: 'templates/index.html',
+        recipes: {
+            'restaurant': [
+                {
+                    name: "Modern Bistro",
+                    description: "Chic dining layout",
+                    patterns: [
+                        'patterns/header.php',
+                        'patterns/hero-banner.php',
+                        // Spectra doesn't have explicit menu-card in our previous listing? 
+                        // Fallback to generic feature sections if needed or specific ones found in dir
+                        'patterns/feature-3.php',
+                        'patterns/testimonials-2.php',
+                        'patterns/footer.php'
+                    ]
+                }
+            ]
+        }
+    },
     'twentytwentyfour': {
         colors: {
             brand: 'accent',
