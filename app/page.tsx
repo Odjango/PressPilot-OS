@@ -94,10 +94,9 @@ export default function StudioPage() {
         throw new Error('Signal failed');
       }
     } catch (error: any) {
-      console.error("Submission Error:", error);
-      alert("CRITICAL ERROR: " + (error.message || "Unknown error"));
-      console.error(error);
-      setError(error.message || "An unknown error occurred");
+      console.error("GENERATION FAILED:", error);
+      setError(error?.message || "Unknown API Error");
+      setSitePreviews(null); // Force it to be empty so we don't show old data
     } finally {
       setLoading(false);
     }
@@ -111,6 +110,14 @@ export default function StudioPage() {
         {/* Render Previews if available */}
         <>
           <HeroSection />
+
+          {error && (
+            <div className="max-w-4xl mx-auto my-8 p-6 bg-red-50 border-2 border-red-500 text-red-700 rounded-lg">
+              <h3 className="font-bold text-lg">GENERATION FAILED</h3>
+              <p className="font-mono text-sm mt-2">{error}</p>
+            </div>
+          )}
+
           <div id="bento-grid">
             <BentoFeatures previewUrl={selectedPreview} />
           </div>
