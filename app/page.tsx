@@ -53,7 +53,16 @@ export default function StudioPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/proxy-n8n', {
+      console.log("Attempting to connect to:", process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL);
+      const webhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
+
+      if (!webhookUrl) {
+        alert("System Error: Webhook URL is missing in Environment Variables");
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -159,17 +168,17 @@ export default function StudioPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="font-mono text-xs uppercase tracking-wider text-neutral-500">Business Name</label>
-                    <Input required value={formData.businessName} onChange={e => setFormData({ ...formData, businessName: e.target.value })} className="rounded-none border-black/20 focus:border-black text-black bg-white placeholder:text-neutral-400" />
+                    <Input required value={formData.businessName} onChange={e => setFormData({ ...formData, businessName: e.target.value })} className="placeholder:text-neutral-400" />
                   </div>
                   <div className="space-y-2">
                     <label className="font-mono text-xs uppercase tracking-wider text-neutral-500">Tagline</label>
-                    <Input value={formData.businessTagline} onChange={e => setFormData({ ...formData, businessTagline: e.target.value })} className="rounded-none border-black/20 focus:border-black text-black bg-white placeholder:text-neutral-400" />
+                    <Input value={formData.businessTagline} onChange={e => setFormData({ ...formData, businessTagline: e.target.value })} className="placeholder:text-neutral-400" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <label className="font-mono text-xs uppercase tracking-wider text-neutral-500">Description</label>
-                  <Textarea required value={formData.businessDescription} onChange={e => setFormData({ ...formData, businessDescription: e.target.value })} className="rounded-none border-black/20 focus:border-black min-h-[100px] text-black bg-white placeholder:text-neutral-400" />
+                  <Textarea required value={formData.businessDescription} onChange={e => setFormData({ ...formData, businessDescription: e.target.value })} className="min-h-[100px] placeholder:text-neutral-400" />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
