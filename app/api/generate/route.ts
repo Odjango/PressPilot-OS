@@ -209,6 +209,14 @@ export async function POST(request: Request) {
       appliedStyleVariation
     );
 
+    const themeUrl = `/api/download?kind=theme&slug=${slug}`;
+
+    // VERIFY FILES EXIST (Force Backend Verification)
+    if (!themeUrl || themeUrl.length < 5 || !themeResult.themeZipPath) {
+      console.error("CRITICAL: Generator finished but no URL produced.");
+      throw new Error("Generator failed to produce a valid URL.");
+    }
+
     return NextResponse.json({
       slug,
       themeZipPath: themeResult.themeZipPath,

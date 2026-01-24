@@ -115,6 +115,10 @@ export default function StudioPage() {
 
   return (
     <main className="min-h-screen w-full bg-cream selection:bg-black selection:text-cream">
+      {/* FORCE FRONTEND DEBUG */}
+      <div className="w-full bg-black text-white p-2 text-xs font-mono overflow-auto z-[60] relative">
+        DEBUG DATA: {JSON.stringify(sitePreviews || "No Data", null, 2)}
+      </div>
       <Toaster position="top-right" theme="light" />
 
       <BlueprintGrid>
