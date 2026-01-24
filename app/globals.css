@@ -27,16 +27,13 @@
 
 @layer base {
   :root {
-    --color-cream: #F9F9F5;
+    --color-cream: #ffffff;
+    /* Forced White */
     --color-black: #000000;
     --color-dark: #333333;
   }
 
-  .dark {
-    --color-cream: #0a0a0a;
-    --color-black: #fafafa;
-    --color-dark: #f0f0f0;
-  }
+  /* Dark Mode Removed */
 }
 
 /*

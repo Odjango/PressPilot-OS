@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import HeaderAuthStatus from "@/components/HeaderAuthStatus";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ModeToggle } from "@/components/ui/mode-toggle";
+// import { ModeToggle } from "@/components/ui/mode-toggle";
 
 import "./globals.css";
 
@@ -30,29 +30,30 @@ const jetbrains = JetBrains_Mono({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="light" style={{ colorScheme: 'light' }}>
       <body
-        className={`font-sans bg-cream text-black antialiased selection:bg-black selection:text-cream`}
+        className={`font-sans bg-white text-black antialiased selection:bg-black selection:text-cream`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          forcedTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col bg-cream dark:bg-black text-black dark:text-cream transition-colors duration-300">
-            <header className="border-b border-black/10 dark:border-white/10 bg-cream/80 dark:bg-black/80 backdrop-blur sticky top-0 z-50 transition-colors duration-300">
+          <div className="flex min-h-screen flex-col bg-white text-black transition-colors duration-300">
+            <header className="border-b border-black/10 bg-white/80 backdrop-blur sticky top-0 z-50 transition-colors duration-300">
               <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
                 <Link
                   href="/"
-                  className="text-lg font-bold tracking-tighter text-black dark:text-cream uppercase font-sans"
+                  className="text-lg font-bold tracking-tighter text-black uppercase font-sans"
                 >
                   PressPilot<span className="text-neutral-400">OS</span>
                 </Link>
                 <nav className="hidden md:flex items-center gap-6 text-sm font-mono text-neutral-500">
-                  <Link href="/pricing" className="hover:text-black dark:hover:text-cream transition-colors">Pricing</Link>
-                  <Link href="#" className="hover:text-black dark:hover:text-cream transition-colors">Docs</Link>
-                  <ModeToggle />
+                  <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
+                  <Link href="#" className="hover:text-black transition-colors">Docs</Link>
+                  {/* ModeToggle Removed for Forced Light Mode */}
                   <HeaderAuthStatus />
                 </nav>
               </div>
