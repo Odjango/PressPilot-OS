@@ -588,3 +588,50 @@ style="padding-top:24px;padding-right:24px;padding-bottom:24px;padding-left:24px
 ---
 
 *Last Updated: January 13, 2026*
+
+---
+
+## Phase 8: Internal Generator Migration & 3-Color Engine
+
+**Date:** January 24, 2026
+**Status:** Completed
+
+### Goal
+Eliminate dependency on external N8N workflows, improve deployment stability, and enhance branding capabilities with a multi-color system.
+
+### Major Changes
+
+1.  **Migrated to Internal Generator:**
+    -   Switched API endpoint from N8N webhook to `/api/generate` (Internal Node.js route).
+    -   Removed "Zombie" mock data fallbacks (Luigi, Pizza).
+    -   Implemented parallel generation for 3 distinct layout variations simultaneously.
+
+2.  **3-Color "Trinity" System:**
+    -   **Problem:** Previous system used a single primary color or hardcoded defaults.
+    -   **Solution:** Implemented `jimp` based extraction to pull **Primary**, **Secondary**, and **Accent** colors from the uploaded logo.
+    -   **UI:** Added a Frontend Color Editor allowing users to tweak these extracted colors before generation.
+
+3.  **Triple-Layout Generation:**
+    -   **Original:** Split Hero (Classic).
+    -   **High Contrast:** Full Bleed Hero (Modern).
+    -   **Inverted:** Centered Hero (Minimal).
+
+4.  **Deployment & Optimization:**
+    -   **Removed:** `openai`, `colorthief`, `youtube-transcript`, `ytdl-core` (Unused dependencies causing OOM).
+    -   **Removed:** YT Summarizer App (Legacy feature).
+    -   **Config:** Optimized `next.config.mjs` to disable ESLint during production builds, reducing RAM usage.
+
+### Files Modified
+-   `src/generator/index.ts`: Standardized entry point.
+-   `src/generator/utils/color-extraction.ts`: New Jimp-based logic.
+-   `app/api/generate/route.ts`: Core orchestrator for parallel builds.
+-   `app/page.tsx`: New Color Editor UI.
+
+### Result
+-   Build time reduced significantly.
+-   Deployment on 512MB/1GB VPS is stable.
+-   User now receives 3 downloadable theme variations per request.
+
+---
+
+*Last Updated: January 24, 2026*

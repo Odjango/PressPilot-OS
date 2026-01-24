@@ -8,7 +8,8 @@
 ## 2. WordPress Generation Engine (CRITICAL)
 * **Architecture:** "Canonical Serializer" pattern. We do NOT use PHP to generate themes; we generate strict HTML/JSON via Node.js.
 * **Key Libraries:**
-    * `adm-zip`: For zipping the final theme package.
+    * `adm-zip` & `archiver`: For zipping the final theme package.
+    * `jimp`: For native Node.js image processing and color extraction.
     * `@wordpress/block-serialization-default-parser`: Peer dependency for validation.
 * **Output Target:** WordPress Full Site Editing (FSE) Block Themes.
     * Must produce a valid `theme.json` (Version 2 Schema).
@@ -16,7 +17,7 @@
 
 ## 3. DevOps & Infrastructure
 * **Hosting:** Digital Ocean Droplet (Managed by Coolify).
-* **CI/CD:** n8n pipelines + GitHub Actions.
+* **CI/CD:** GitHub Actions (Deployment).
 * **Testing:** Playwright (E2E) and Node.js-based static analysis.
 
 ## 4. Replit Environment Constraints

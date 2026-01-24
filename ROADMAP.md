@@ -23,33 +23,23 @@ PressPilot is a SaaS platform that allows non-coders to generate custom WordPres
 * **Languages:** Support for English, Spanish, French, Italian, and Arabic (RTL).
 
 ## Phase 4: Production Scalability (The 1000-User Goal)
-- [ ] **Implement Async Job Queue (BullMQ/Redis):**
-    - Move generation logic out of the main API response.
-    - Create a "Job ID" system so the frontend can poll for status.
-    - Prevent Node.js event loop blocking during high traffic.
-    - Required before public launch.
+- [x] **Internal Generator Migration:** Removed N8N dependency; engine now runs 100% on Node.js.
+- [x] **Memory Optimization:** Optimized build process to run on low-RAM (<1GB) VPS instances.
+- [ ] **Async Job Queue (BullMQ/Redis):** _(Planned Next for High Traffic)_
 
 ## Phase 5: Business Logic (Payments & Auth)
 - [x] **Supabase Integration:** (COMPLETED) - App is connected. Auth is ready.
 - [ ] **Credit System:** Create `user_credits` table (UUID, integer).
 - [ ] **Lemon Squeezy Integration:**
-  - Create "One-Time Credit" and "Subscription" products in LS Dashboard.
-  - **Webhook Handler:** Build an n8n workflow to listen for `order_created`.
-  - **Logic:** Match email -> increment Supabase credits.
-  - **Frontend:** Add "Buy Credits" overlay using the Lemon Squeezy Checkout SDK.
-- [ ] **n8n Gatekeeper:**
-  - Update "Generate" workflow to check `credits > 0`.
-  - If 0, return 402 error.
+    - [ ] Webhook Handler (Internal API Route).
+    - [ ] Frontend "Buy Credits" overlay.
 
-## Phase 6: Infrastructure (Going Live)
-- [ ] **Dockerize the Engine:** Create a production `Dockerfile` for the Next.js/Node app.
-- [ ] **Server Setup (Coolify/DigitalOcean):**
-  - Provision a $6/mo Droplet (Ubuntu).
-  - Install Coolify (Self-hosted PaaS).
-  - Connect GitHub repo for auto-deployments.
-- [ ] **Domain & DNS:** Point `presspilot.io` to the VPS.
-- [ ] **SSL & Security:** Auto-provision Let's Encrypt certs.
+## Phase 8: Core Engine Upgrade (Jan 2026) - COMPLETED
+- [x] **Triple-Layout Generation:** Automatically build "Classic", "Modern", and "Minimal" variations.
+- [x] **3-Color "Trinity" System:** Extract Primary, Secondary, and Accent from Logo.
+- [x] **Frontend Color Editor:** Live preview and adjustment of brand colors.
+- [x] **Dependency Cleanup:** Removed OpenAI and Legacy N8N artifacts.
 
-## Phase 7: The "Go Live" Checklist
+## Phase 9: The "Go Live" Checklist
 - [ ] Full End-to-End Test (Payment -> Credit Add -> Generation -> Email).
 - [ ] UI Polish (Loading states, Error messages).
