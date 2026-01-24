@@ -100,8 +100,8 @@ export async function POST(request: Request) {
       })) as RawVariationResponse;
       variationSet = buildVariationSetFromAI(context, aiResponse);
     } catch (variationError) {
-      console.error('[api/generate] variation engine unavailable, falling back', variationError);
-      variationSet = buildFallbackVariationSet(context);
+      console.error('[api/generate] variation engine unavailable', variationError);
+      throw variationError;
     }
     const variation =
       variationSet.variations.find((candidate) => candidate.id === variationId) ?? variationSet.variations[0];

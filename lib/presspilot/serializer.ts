@@ -71,7 +71,7 @@ export async function serialize(nodes: BlockNode[]): Promise<string> {
     } catch (error) {
         console.error('[Serializer] Critical Error:', error);
         // Fallback: return a generic container with the raw content if possible, or just a safe error comment
-        return `<!-- wp:group {"className":"serialization-failure-fallback"} -->\n<div class="serialization-failure">\n<!-- Serializer crashed. Content rendered as raw text fallback. -->\n</div>\n<!-- /wp:group -->`;
+        return `<div class="p-4 border border-red-500 text-red-500">Error rendering content. Check console.</div>`;
     }
 }
 
