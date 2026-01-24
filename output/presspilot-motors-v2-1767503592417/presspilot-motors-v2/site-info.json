@@ -1,0 +1,5 @@
+{
+    "name": "PressPilot Motors v2",
+    "base": "ollie",
+    "mode": "heavy"
+}
