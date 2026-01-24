@@ -84,9 +84,13 @@ export default function StudioPage() {
         const data = await response.json();
         console.log("RAW N8N DATA:", data);
 
-        // 1. DETECT ZOMBIE SUCCESS (Generation claimed success but returned no files)
-        if (data.success && !data.original && !data.theme_zip) {
-          console.error("ZOMBIE SUCCESS TRAPPED:", data);
+        // 1. DETECT "ZOMBIE" OR ASYNC RESPONSE
+        // If it claims success but has no files, OR if it's just a status message ("processing")
+        const isEmptySuccess = data.success && !data.original && !data.theme_zip;
+        const isAsyncMessage = data.status === 'processing' || !data.original; // Catch-all for missing data
+
+        if (isEmptySuccess || isAsyncMessage) {
+          console.error("ZOMBIE/ASYNC TRAPPED:", data);
           setZombieData(data); // Trigger Debug UI
           setSitePreviews(null); // Ensure no broken preview rendering
           setShowForm(false);
