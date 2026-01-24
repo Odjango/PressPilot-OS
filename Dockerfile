@@ -2,19 +2,17 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dependencies
 COPY package.json package-lock.json ./
-RUN npm ci
 
-# Copy source code
+# CRITICAL FIX: Use --legacy-peer-deps to bypass React 19 vs 18 conflicts
+RUN npm ci --legacy-peer-deps
+
 COPY . .
 
-# CRITICAL: Create output folder and ensure write permissions for the generator
+# Ensure the generator has permission to write zip files
 RUN mkdir -p output && chmod 777 output
 
-# Build the Next.js application
 RUN npm run build
 
-# Expose port and start
 EXPOSE 3000
 CMD ["npm", "start"]
