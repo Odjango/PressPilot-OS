@@ -13,7 +13,9 @@ import { buildFallbackVariationSet } from '../lib/presspilot/fallbackVariations'
 import { buildWordPressTheme } from '../lib/presspilot/themeKit';
 import { buildStaticSite } from '../lib/presspilot/staticSite';
 import type { KitSummary } from '../lib/presspilot/kitSummary';
-import { callPressPilotJson } from '../lib/openai';
+// OpenAI Logic Removed for Production Build Optimization
+// import { callPressPilotJson } from '../lib/openai';
+// ...
 
 const DEMO_ROOT = path.join(process.cwd(), 'build', 'demo');
 
@@ -55,31 +57,18 @@ async function run() {
 
     const appliedStyleVariation = spec.styleVariation ?? resolvedStyleVariation;
 
+    /* OpenAI Logic Disabled
     let variationSet;
     try {
       const aiResponse = (await callPressPilotJson({
-        system:
-          'You are the PressPilot Studio design engine. ' +
-          'Given normalized business inputs, respond ONLY with JSON { variations: Variation[] } ' +
-          'matching the PressPilotVariationManifest schema. ' +
-          'Use ids variation_a, variation_b, variation_c. Populate tokens, nav, preview, and pattern_set_id.',
-        user: {
-          requestedIds: VARIATION_IDS,
-          brand: context.brand,
-          narrative: context.narrative,
-          visual: context.visual,
-          modes: context.modes,
-          request: {
-            businessTypeId: spec.businessTypeId ?? null,
-            styleVariation: appliedStyleVariation ?? null,
-          },
-        },
+         // ...
       })) as RawVariationResponse;
       variationSet = buildVariationSetFromAI(context, aiResponse);
     } catch (error) {
-      console.warn('[demo-kits] Variation engine unavailable, using fallback for', resolvedSlug, error);
-      variationSet = buildFallbackVariationSet(context);
-    }
+    */
+    console.warn('[demo-kits] Variation engine unavailable (Optimization), using fallback for', resolvedSlug);
+    const variationSet = buildFallbackVariationSet(context);
+    // }
 
     const variation = variationSet.variations[0];
     const kitSummary: KitSummary = {

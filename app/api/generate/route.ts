@@ -5,7 +5,7 @@ import {
   VariationId,
 } from '@/types/presspilot';
 
-import { callPressPilotJson } from '@/lib/openai';
+// import { callPressPilotJson } from '@/lib/openai';
 import { applyBusinessInputs } from '@/lib/presspilot/context';
 import {
   buildVariationSetFromAI,
@@ -79,30 +79,8 @@ export async function POST(request: Request) {
     context = applyBusinessInputs(payload);
 
     let variationSet;
-    try {
-      const aiResponse = (await callPressPilotJson({
-        system:
-          'You are the PressPilot Studio design engine. ' +
-          'Given normalized business inputs, respond ONLY with JSON { variations: Variation[] } ' +
-          'matching the PressPilotVariationManifest schema. ' +
-          'Use ids variation_a, variation_b, variation_c. Populate tokens, nav, preview, and pattern_set_id.',
-        user: {
-          requestedIds: VARIATION_IDS,
-          brand: context.brand,
-          narrative: context.narrative,
-          visual: context.visual,
-          modes: context.modes,
-          request: {
-            businessTypeId: businessTypeId ?? null,
-            styleVariation: appliedStyleVariation ?? null,
-          },
-        },
-      })) as RawVariationResponse;
-      variationSet = buildVariationSetFromAI(context, aiResponse);
-    } catch (variationError) {
-      console.error('[api/generate] variation engine unavailable', variationError);
-      throw variationError;
-    }
+    // OpenAI AI Variation Logic Removed for Optimization
+    variationSet = buildFallbackVariationSet(context);
     const variation =
       variationSet.variations.find((candidate) => candidate.id === variationId) ?? variationSet.variations[0];
 
@@ -277,59 +255,32 @@ async function generateKitPlan(
   context: ReturnType<typeof applyBusinessInputs>,
   variation: PressPilotVariationManifest,
 ): Promise<KitPlan> {
-  try {
-    const rawPlan = await callPressPilotJson({
-      system:
-        'You are the PressPilot Kit Architect. Respond ONLY with JSON { pages: Page[] }. ' +
-        'Page = { slug: string; title: string; sections: Section[] }. ' +
-        'Section = { id: string; kind: string; heading?: string; subheading?: string; body?: string; notes?: string }. ' +
-        'Use concise text and keep strings under 140 characters when possible.',
-      user: {
-        brand: context.brand,
-        narrative: context.narrative,
-        variation,
-      },
-    });
-
-    if (Array.isArray(rawPlan?.pages)) {
-      const pages: KitPlanPage[] = rawPlan.pages
-        .filter((page: any) => typeof page?.slug === 'string' && Array.isArray(page?.sections))
-        .map((page: any) => ({
-          slug: page.slug,
-          title: page.title ?? page.slug,
-          sections: (Array.isArray(page.sections) ? page.sections : []).map((section: any, index: number) => ({
-            id: section?.id ?? `section-${index + 1}`,
-            kind: section?.kind ?? 'content',
-            heading: section?.heading,
-            subheading: section?.subheading,
-            body: section?.body,
-            notes: section?.notes,
-          })),
-        }));
-
-      if (pages.length > 0) {
-        return { pages };
-      }
-    }
-  } catch (error) {
-    console.error('[api/generate] kit plan AI failed', error);
-  }
-
+  // OpenAI Logic Removed - Return Default Plan
   return {
     pages: [
       {
         slug: 'home',
-        title: context.brand.name,
+        title: 'Home',
         sections: [
           {
             id: 'hero',
             kind: 'hero',
             heading: variation.preview.label,
             subheading: context.narrative.description_long.slice(0, 140),
-          },
-        ],
+          }
+        ]
       },
-    ],
+      {
+        slug: 'about',
+        title: 'About',
+        sections: []
+      },
+      {
+        slug: 'contact',
+        title: 'Contact',
+        sections: []
+      }
+    ]
   };
 }
 

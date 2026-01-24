@@ -28,10 +28,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
   // Webpack config to handle WordPress package ESM/CJS issues
   webpack: (config, { isServer }) => {
     if (isServer) {
