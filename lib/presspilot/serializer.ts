@@ -28,45 +28,51 @@ type WpDeps = {
  * Async because it lazy-loads the heavy WordPress environment to avoid build-time React conflicts.
  */
 export async function serialize(nodes: BlockNode[]): Promise<string> {
-    // 1. Shim Browser Environment
-    const { shim } = await import('./polyfill');
-    shim();
+    try {
+        // 1. Shim Browser Environment
+        const { shim } = await import('./polyfill');
+        shim();
 
-    const wpData = await import('@wordpress/data');
+        const wpData = await import('@wordpress/data');
 
-    // 2. Load WP Dependencies (Dynamically)
-    const { registerCoreBlocks } = await import('@wordpress/block-library');
-    const { createBlock, serialize: wpSerialize, validateBlock } = await import('@wordpress/blocks');
-    const { parse } = await import('@wordpress/block-serialization-default-parser');
+        // 2. Load WP Dependencies (Dynamically)
+        const { registerCoreBlocks } = await import('@wordpress/block-library');
+        const { createBlock, serialize: wpSerialize, validateBlock } = await import('@wordpress/blocks');
+        const { parse } = await import('@wordpress/block-serialization-default-parser');
 
-    registerCoreBlocks();
+        registerCoreBlocks();
 
-    // Fix: Inject Settings (Dispatch attempt as last resort)
-    if (wpData && wpData.dispatch) {
-        try {
-            const editorDispatch = wpData.dispatch('core/block-editor');
-            if (editorDispatch) {
-                editorDispatch.updateSettings({
-                    alignWide: true,
-                    supportsLayout: true,
-                    imageEditing: true,
-                    __experimentalFeatures: {
-                        color: { text: true, background: true },
-                        spacing: { padding: true, margin: true, blockGap: true }
-                    }
-                });
-            }
-        } catch (e) { /* ignore */ }
+        // Fix: Inject Settings (Dispatch attempt as last resort)
+        if (wpData && wpData.dispatch) {
+            try {
+                const editorDispatch = wpData.dispatch('core/block-editor');
+                if (editorDispatch) {
+                    editorDispatch.updateSettings({
+                        alignWide: true,
+                        supportsLayout: true,
+                        imageEditing: true,
+                        __experimentalFeatures: {
+                            color: { text: true, background: true },
+                            spacing: { padding: true, margin: true, blockGap: true }
+                        }
+                    });
+                }
+            } catch (e) { /* ignore */ }
+        }
+
+        const deps: WpDeps = { createBlock, validateBlock, wpSerialize, parse };
+
+        // 3. Create Blocks Recursive
+        const blocks = nodes.map(node => createWpBlock(node, deps)).filter(Boolean) as BlockInstance[];
+
+        // 4. Serialize with Fallback (Rescue Mission + Class Injection)
+        const serialized = blocks.map(b => safeSerialize(b, deps)).join('\n\n');
+        return sanitizeBlockHTML(serialized);
+    } catch (error) {
+        console.error('[Serializer] Critical Error:', error);
+        // Fallback: return a generic container with the raw content if possible, or just a safe error comment
+        return `<!-- wp:group {"className":"serialization-failure-fallback"} -->\n<div class="serialization-failure">\n<!-- Serializer crashed. Content rendered as raw text fallback. -->\n</div>\n<!-- /wp:group -->`;
     }
-
-    const deps: WpDeps = { createBlock, validateBlock, wpSerialize, parse };
-
-    // 3. Create Blocks Recursive
-    const blocks = nodes.map(node => createWpBlock(node, deps)).filter(Boolean) as BlockInstance[];
-
-    // 4. Serialize with Fallback (Rescue Mission + Class Injection)
-    const serialized = blocks.map(b => safeSerialize(b, deps)).join('\n\n');
-    return sanitizeBlockHTML(serialized);
 }
 
 /**

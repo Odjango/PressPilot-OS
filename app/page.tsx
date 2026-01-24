@@ -12,6 +12,7 @@ import { CustomSelect } from '@/components/ui/custom-select';
 import { GlowButton } from '@/components/ui/glow-button';
 import { Bot, Terminal, Paperclip, X } from 'lucide-react';
 import { SitePreviewDeck } from '@/components/ui/site-preview-deck';
+import DownloadPanel from '@/components/DownloadPanel';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface SitePreviews {
@@ -22,6 +23,7 @@ interface SitePreviews {
 
 export default function StudioPage() {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false); // Toggle for form overlay
   const [formData, setFormData] = useState({
     businessName: '',
@@ -90,8 +92,10 @@ export default function StudioPage() {
       } else {
         throw new Error('Signal failed');
       }
-    } catch (error) {
-      toast.error('Connection Failed.');
+    } catch (error: any) {
+      console.error("Submission Error:", error);
+      setError(error.message || "An unknown error occurred");
+      toast.error(`Connection Failed: ${error.message || "Unknown error"}`);
     } finally {
       setLoading(false);
     }
@@ -137,6 +141,22 @@ export default function StudioPage() {
           )}
         </>
       </BlueprintGrid>
+
+      {/* Persistent Download Panel and Error Display */}
+      <div className="fixed bottom-8 left-8 z-50 flex flex-col gap-4 max-w-sm">
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">Error:</strong>
+            <span className="block sm:inline"> {error}</span>
+          </div>
+        )}
+        <DownloadPanel
+          themeUrl={sitePreviews?.original ? `${sitePreviews.original}/wp-content/themes/presspilot-child.zip` : null} // Rough approximation for safe download enable
+          staticUrl={null}
+          isGenerating={loading}
+          slug={formData.businessName.toLowerCase().replace(/\s+/g, '-')}
+        />
+      </div>
 
       {/* Form Overlay (Slide Up) */}
       <AnimatePresence>

@@ -195,8 +195,9 @@ export async function POST(request: Request) {
         throw new Error(`Theme generation failed: ${err.message}`);
       }),
       buildStaticSite(context, variation, { businessTypeId: validatedBusinessTypeId, kitSummary })
-        .catch(err => {
-          console.error('[api/generate] buildStaticSite failed', err);
+        .catch((err: Error) => {
+          console.error('[api/generate] buildStaticSite failed. Stack:', err.stack);
+          console.error('[api/generate] buildStaticSite message:', err.message);
           throw new Error(`Static site generation failed: ${err.message}`);
         })
     ]);

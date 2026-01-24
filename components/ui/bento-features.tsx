@@ -101,7 +101,7 @@ export const BentoFeatures = ({ previewUrl }: { previewUrl?: string | null }) =>
                                 {previewUrl ? (
                                     <iframe
                                         src={previewUrl}
-                                        className="w-full h-full border-0"
+                                        className="w-full min-h-[800px] border rounded-lg shadow-xl"
                                         title="Live Preview"
                                         key={previewUrl} // Force refresh
                                     />
