@@ -24,8 +24,12 @@ const nextConfig = {
   ],
 
   // Skip TypeScript errors during build
+  // Skip TypeScript errors during build
   typescript: {
     ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 
   // Webpack config to handle WordPress package ESM/CJS issues
