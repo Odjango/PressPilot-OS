@@ -12,7 +12,15 @@ export interface ThemeBuildResult {
 export async function buildWordPressTheme(
   context: PressPilotNormalizedContext,
   variation: PressPilotVariationManifest,
-  options?: { businessTypeId?: string | null; styleVariation?: string | null; kitSummary?: any | null; baseTheme?: string | null }
+  options?: {
+    businessTypeId?: string | null;
+    styleVariation?: string | null;
+    kitSummary?: any | null;
+    baseTheme?: string | null;
+    // Overrides for Variations
+    heroPattern?: string;
+    dataOverride?: Partial<GeneratorData>;
+  }
 ): Promise<ThemeBuildResult> {
   // 1. Resolve Industry and Base Theme
   const businessTypeId = options?.businessTypeId;
@@ -39,9 +47,11 @@ export async function buildWordPressTheme(
   const copy = await resolveBusinessCopy(context, variation, businessTypeId ?? null);
 
   const generatorData: GeneratorData = {
-    name: context.brand.name,
-    primary: context.visual.custom_colors?.primary,
-    secondary: context.visual.custom_colors?.secondary,
+    // Priority: Override > Context > Default
+    name: options?.dataOverride?.name || context.brand.name,
+    primary: options?.dataOverride?.primary || context.visual.custom_colors?.primary,
+    secondary: options?.dataOverride?.secondary || context.visual.custom_colors?.secondary,
+
     hero_headline: variation.preview.label, // Or copy.hero.title
     hero_subheadline: copy.hero.subtitle,
     industry: industry,
@@ -49,12 +59,13 @@ export async function buildWordPressTheme(
   };
 
   // 3. Call The Generator Engine
-  console.log(`[themeKit] invoking Generator for ${context.brand.name} (Base: ${baseTheme}, Industry: ${industry})`);
+  console.log(`[themeKit] invoking Generator for ${generatorData.name} (Base: ${baseTheme}, Industry: ${industry})`);
 
   const result = await generateTheme({
     base: baseTheme,
     mode: 'standard', // Always standard for now
     data: generatorData,
+    heroPattern: options?.heroPattern // PASS OVERRIDE
     // We can let the generator handle output paths, or override if needed. 
     // The generator returns the path.
   });

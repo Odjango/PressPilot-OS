@@ -16,7 +16,8 @@ export interface GeneratorOptions {
     base?: BaseTheme;
     mode?: GeneratorMode;
     data?: GeneratorData;
-    outDir?: string; // Optional override for output directory
+    outDir?: string;
+    heroPattern?: string; // New: Override to force specific pattern
 }
 
 export async function generateTheme(options: GeneratorOptions = {}) {
@@ -74,7 +75,29 @@ export async function generateTheme(options: GeneratorOptions = {}) {
                 }
             }
 
-            if (recipe) {
+            // PATTERN INJECTION (With Override Support)
+            if (options.heroPattern) {
+                // FORCE OVERRIDE
+                console.log(`[Orchestrator] Forcing Hero Pattern: ${options.heroPattern}`);
+                const heroPath = path.join(themeDir, personality.patterns.hero); // Target location
+
+                // Check if it's a valid file path in our repo
+                if (await fs.pathExists(options.heroPattern)) {
+                    await fs.copy(options.heroPattern, heroPath);
+                    console.log(`[Orchestrator] Overwrote Hero with: ${options.heroPattern}`);
+                } else {
+                    console.warn(`[Orchestrator] Requested hero pattern not found: ${options.heroPattern}`);
+                }
+
+                // Inject Content into the new Hero
+                let heroContent = await fs.readFile(heroPath, 'utf8');
+                heroContent = heroContent.replace(personality.patterns.hero_search_headline, userData.hero_headline || "Welcome");
+                if (userData.hero_subheadline && personality.patterns.hero_search_sub) {
+                    heroContent = heroContent.replace(personality.patterns.hero_search_sub, userData.hero_subheadline || "");
+                }
+                await fs.writeFile(heroPath, heroContent);
+
+            } else if (recipe) {
                 await patternInjector.injectRecipe(themeDir, recipe, userData, personality);
             } else {
                 console.log('[Orchestrator] No recipe found, falling back to basic injection.');

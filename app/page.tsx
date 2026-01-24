@@ -32,6 +32,7 @@ export default function StudioPage() {
     contentLanguage: 'English',
     businessType: 'Restaurant / Food Service',
     logo_base64: '',
+    palette: { primary: '', secondary: '', accent: '' } // New Palette State
   });
   const [sitePreviews, setSitePreviews] = useState<SitePreviews | null>(null);
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
@@ -58,55 +59,51 @@ export default function StudioPage() {
     setZombieData(null);
 
     try {
-      console.log("Attempting to connect to:", process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL);
-      const webhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
+      // ARCHITECTURAL UPGRADE: Use Internal Generator (Sync)
+      // Deprecated: process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL
+      const apiUrl = '/api/generate';
 
-      if (!webhookUrl) {
-        alert("System Error: Webhook URL is missing in Environment Variables");
-        setLoading(false);
-        return;
-      }
-
-      const response = await fetch(webhookUrl, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          businessName: formData.businessName,
-          tagline: formData.businessTagline,
-          description: formData.businessDescription,
-          contentLanguage: formData.contentLanguage,
-          businessType: formData.businessType,
-          logo: formData.logo_base64,
+          input: {
+            businessName: formData.businessName,
+            heroTitle: formData.businessTagline, // Map Tagline -> HeroTitle
+            businessDescription: formData.businessDescription,
+            primaryLanguage: formData.contentLanguage, // Map Language
+            businessCategory: formData.businessType, // Map Sector
+            logoBase64: formData.logo_base64,
+            palette: formData.palette, // PASS FRONTEND PALETTE
+          }
         }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log("RAW N8N DATA:", data);
+        console.log("INTERNAL API DATA:", data);
 
-        // 1. DETECT "ZOMBIE" OR ASYNC RESPONSE
-        // If it claims success but has no files, OR if it's just a status message ("processing")
-        const isEmptySuccess = data.success && !data.original && !data.theme_zip;
-        const isAsyncMessage = data.status === 'processing' || !data.original; // Catch-all for missing data
-
-        if (isEmptySuccess || isAsyncMessage) {
-          console.error("ZOMBIE/ASYNC TRAPPED:", data);
+        // 1. DETECT FAILURE (API returned 200 but missing URL)
+        // Internal API returns 'themeUrl' and 'themeZipPath'
+        if (!data.themeUrl) {
+          console.error("GENERATION TRAPPED:", data);
           setZombieData(data); // Trigger Debug UI
-          setSitePreviews(null); // Ensure no broken preview rendering
+          setSitePreviews(null);
           setShowForm(false);
-          return; // Stop processing
+          return;
         }
 
-        // Zombie Data Killed: No fallback to factory.presspilotapp.com
+        // 2. SUCCESS: Map internal 'themeUrl' to 'original' slot
         setSitePreviews({
-          original: data.original || "",
-          high_contrast: data.high_contrast || "",
-          inverted: data.inverted || ""
+          original: data.themeUrl || "",
+          high_contrast: "", // Internal API currently generates single variation
+          inverted: ""
         });
 
         setShowForm(false); // Close form on success to show previews
       } else {
-        throw new Error('Signal failed');
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.details || err.error || 'Internal Generator Failed');
       }
     } catch (error: any) {
       console.error("GENERATION FAILED:", error);
@@ -267,7 +264,49 @@ export default function StudioPage() {
 
                 {/* Simplified Logo Input for Blueprint Aesthetic */}
                 <div className="border border-dashed border-black/20 p-6 text-center hover:bg-cream transition-colors cursor-pointer relative group">
-                  <input type="file" accept="image/*" onChange={handleLogoChange} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
+                  <input type="file" accept="image/*" onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    // Logo Logic
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      const base64 = reader.result as string;
+                      setFormData(prev => ({ ...prev, logo_base64: base64 }));
+
+                      // CLIENT-SIDE COLOR EXTRACTION (Naive)
+                      // We create a hidden image to sample colors
+                      const img = new Image();
+                      img.src = base64;
+                      img.onload = () => {
+                        // Simple logic: just grab center pixel as primary, offset as secondary?
+                        // Or just default to Black/Grey to let user choose.
+                        // Since we don't have ColorThief browser lib easy, we'll let user edit.
+                        // Actually, let's try a simple canvas sample.
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        if (ctx) {
+                          canvas.width = 1; canvas.height = 1;
+                          ctx.drawImage(img, 0, 0, 1, 1);
+                          const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+                          const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+
+                          // Update Palette State (We need to add this state!)
+                          // See note below: I will update formData state structure first.
+                          setFormData(prev => ({
+                            ...prev,
+                            palette: {
+                              primary: hex,
+                              secondary: '#333333',
+                              accent: '#3b82f6'
+                            }
+                          }));
+                          toast.success("Logo Colors Extracted (Adjust below)");
+                        }
+                      };
+                    };
+                    reader.readAsDataURL(file);
+                  }} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
+
                   <div className="flex flex-col items-center justify-center gap-2">
                     {formData.logo_base64 && (
                       <div className="w-12 h-12 object-contain bg-white border border-black/10 p-1 mb-2 rounded-sm shadow-sm overflow-hidden flex items-center justify-center">
@@ -279,6 +318,49 @@ export default function StudioPage() {
                     <p className="font-mono text-xs text-neutral-500 group-hover:text-black transition-colors">
                       {formData.logo_base64 ? "Logo Attached (Click to Change)" : "Upload Logo (Vector/PNG)"}
                     </p>
+                  </div>
+                </div>
+
+                {/* COLOR PALETTE EDITOR (NEW) */}
+                <div className="space-y-4 border-t border-black/10 pt-4">
+                  <label className="font-mono text-xs uppercase tracking-wider text-neutral-500 block">Brand Palette</label>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-neutral-400 uppercase">Primary</span>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={formData.palette?.primary || '#000000'}
+                          onChange={(e) => setFormData({ ...formData, palette: { ...formData.palette, primary: e.target.value } })}
+                          className="w-10 h-10 border border-black/20 rounded cursor-pointer p-1 bg-white"
+                        />
+                        <span className="text-xs font-mono">{formData.palette?.primary || '#000'}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-neutral-400 uppercase">Secondary</span>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={formData.palette?.secondary || '#333333'}
+                          onChange={(e) => setFormData({ ...formData, palette: { ...formData.palette, secondary: e.target.value } })}
+                          className="w-10 h-10 border border-black/20 rounded cursor-pointer p-1 bg-white"
+                        />
+                        <span className="text-xs font-mono">{formData.palette?.secondary || '#333'}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-neutral-400 uppercase">Accent</span>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={formData.palette?.accent || '#3b82f6'}
+                          onChange={(e) => setFormData({ ...formData, palette: { ...formData.palette, accent: e.target.value } })}
+                          className="w-10 h-10 border border-black/20 rounded cursor-pointer p-1 bg-white"
+                        />
+                        <span className="text-xs font-mono">{formData.palette?.accent || '#3b8'}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

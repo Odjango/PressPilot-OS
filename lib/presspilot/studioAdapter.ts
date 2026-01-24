@@ -14,6 +14,33 @@ export interface StudioFormInput {
   heroTitle?: string;
   paletteId?: string;
   fontPairId?: string;
+  logoBase64?: string;
+  palette?: {
+    primary?: string;
+    secondary?: string;
+    accent?: string;
+  };
+}
+
+// ... (omitted lines)
+
+export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPilotSaaSInput {
+  const businessName = input?.businessName?.trim() || 'PressPilot Demo Co.';
+  const description = input?.businessDescription?.trim() || 'A modern business generated via PressPilot.';
+  // ...
+
+  const base: PressPilotSaaSInput = {
+    // ...
+    visualAssets: {
+      has_logo: !!input?.logoBase64,
+      // Note: Actual logo data handling would need to be passed to context or stored, 
+      // but for now we signal intent.
+      image_source_preference: 'mixed',
+      image_keywords: ['brand', 'web design']
+    },
+    // ...
+  };
+  return base;
 }
 
 export interface StudioRequestPayload {
@@ -62,61 +89,7 @@ function resolveBusinessCategory(value?: string): BusinessCategory {
   return BUSINESS_CATEGORY_MAP[key] ?? 'service';
 }
 
-export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPilotSaaSInput {
-  const businessName = input?.businessName?.trim() || 'PressPilot Demo Co.';
-  const description = input?.businessDescription?.trim() || 'A modern business generated via PressPilot.';
-  const primaryLanguage = resolveLanguage(input?.primaryLanguage);
-  const businessCategory = resolveBusinessCategory(input?.businessCategory);
-  const rtlRequired = primaryLanguage === 'ar';
 
-  const base: PressPilotSaaSInput = {
-    brand: {
-      business_name: businessName,
-      business_tagline: input?.heroTitle?.trim() || 'Powered by PressPilot OS',
-      business_category: businessCategory,
-      region_or_country: 'Global',
-      slug: input?.slug
-    },
-    language: {
-      primary_language: primaryLanguage,
-      secondary_languages: [],
-      rtl_required: rtlRequired
-    },
-    narrative: {
-      description_long: description,
-      audience_notes: 'Studio playground submission',
-      niche_tags: ['studio', 'presspilot'],
-      goals: 'Generate a polished kit for demo purposes'
-    },
-    visualAssets: {
-      has_logo: false,
-      image_source_preference: 'mixed',
-      image_keywords: ['brand', 'web design']
-    },
-    visualControls: {
-      palette_id: input?.paletteId || 'pp-default',
-      font_pair_id: input?.fontPairId || 'pp-fontpair-01',
-      layout_density: 'balanced',
-      corner_style: 'rounded',
-      primary_ctas: [
-        { label: 'Book a call', url: '#contact' },
-        { label: 'View work', url: '#portfolio' }
-      ]
-    },
-    modes: {
-      business_category: businessCategory,
-      restaurant: businessCategory === 'restaurant_cafe' ? { enabled: true } : null,
-      ecommerce: businessCategory === 'ecommerce' ? { enabled: true, store_type: 'both', currency: 'USD' } : null
-    },
-    system: {
-      plan_tier: 'free',
-      ai_model_tier: 'default',
-      image_tier: 'stock'
-    }
-  };
-
-  return base;
-}
 
 export function resolveStudioPayload(payload: StudioRequestPayload): PressPilotSaaSInput {
   if (payload.payload) {
