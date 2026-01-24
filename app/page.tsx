@@ -35,6 +35,7 @@ export default function StudioPage() {
   });
   const [sitePreviews, setSitePreviews] = useState<SitePreviews | null>(null);
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
+  const [zombieData, setZombieData] = useState<any>(null); // Debug state for empty success
 
   // ... (Logo Handling Logic - Same as before)
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,6 +54,8 @@ export default function StudioPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
+    setZombieData(null);
 
     try {
       console.log("Attempting to connect to:", process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL);
@@ -80,6 +83,16 @@ export default function StudioPage() {
       if (response.ok) {
         const data = await response.json();
         console.log("RAW N8N DATA:", data);
+
+        // 1. DETECT ZOMBIE SUCCESS (Generation claimed success but returned no files)
+        if (data.success && !data.original && !data.theme_zip) {
+          console.error("ZOMBIE SUCCESS TRAPPED:", data);
+          setZombieData(data); // Trigger Debug UI
+          setSitePreviews(null); // Ensure no broken preview rendering
+          setShowForm(false);
+          return; // Stop processing
+        }
+
         // Zombie Data Killed: No fallback to factory.presspilotapp.com
         setSitePreviews({
           original: data.original || "",
@@ -113,6 +126,17 @@ export default function StudioPage() {
             <div className="max-w-4xl mx-auto my-8 p-6 bg-red-50 border-2 border-red-500 text-red-700 rounded-lg">
               <h3 className="font-bold text-lg">GENERATION FAILED</h3>
               <p className="font-mono text-sm mt-2">{error}</p>
+            </div>
+          )}
+
+          {/* ZOMBIE SUCCESS DEBUGGER */}
+          {zombieData && (
+            <div className="max-w-4xl mx-auto my-8 p-8 border-2 border-yellow-500 bg-yellow-50 rounded-xl text-left">
+              <h2 className="text-xl font-bold text-yellow-800 mb-4">⚠️ Generation "Succeeded" but returned Empty Data</h2>
+              <p className="mb-2 text-sm text-yellow-700">The n8n workflow returned success, but the file URLs are missing.</p>
+              <pre className="bg-black text-white p-4 rounded text-xs overflow-auto max-h-96">
+                {JSON.stringify(zombieData, null, 2)}
+              </pre>
             </div>
           )}
 
