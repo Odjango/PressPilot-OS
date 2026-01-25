@@ -86,6 +86,54 @@ export async function POST(request: Request) {
     const variationSet = buildFallbackVariationSet(context);
     const slug = context.brand.slug;
 
+    // RESTORED: Required Logic for kitSummary
+    const variation = variationSet.variations[0]; // Use primary for summary
+    kitPlan = await generateKitPlan(context, variation);
+    const copy = await resolveBusinessCopy(context, variation, validatedBusinessTypeId);
+
+    // Build wpImport from business category or fallback
+    let wpImport = null;
+    const businessCategoryId = body.businessCategoryId ?? null;
+    const category = businessCategoryId ? getBusinessCategoryById(businessCategoryId as BusinessCategoryId) : null;
+
+    if (category && category.defaultPages && category.defaultPages.length > 0) {
+      const menuSlugs = category.defaultMenu.map(label => label.toLowerCase().replace(/\s+/g, '-'));
+      wpImport = {
+        front_page_slug: 'home',
+        pages: category.defaultPages.map(p => ({ slug: p.slug, title: p.title })),
+        menu: { location: 'primary', name: 'Main Menu', items: menuSlugs },
+      };
+    } else {
+      wpImport = {
+        front_page_slug: 'home',
+        pages: [
+          { slug: 'home', title: 'Home' },
+          { slug: 'about', title: 'About' },
+          { slug: 'services', title: 'Services' },
+          { slug: 'blog', title: 'Blog' },
+          { slug: 'contact', title: 'Contact' },
+        ],
+        menu: {
+          location: 'primary',
+          name: 'Main Menu',
+          items: ['home', 'about', 'services', 'blog', 'contact'],
+        },
+      };
+    }
+
+    const kitSummary: KitSummary = {
+      slug,
+      brandName: context.brand.name,
+      businessTypeId: validatedBusinessTypeId,
+      styleVariation: appliedStyleVariation,
+      createdAt: new Date().toISOString(),
+      plan: kitPlan,
+      tagline: copy.hero.subtitle,
+      businessCategoryId: body.businessCategoryId ?? null,
+      business: { name: context.brand.name, category_id: body.businessCategoryId ?? null },
+      wpImport,
+    };
+
     // Parallel Build
     const results = await Promise.all(targetVariations.map(async (vid) => {
       const variation = variationSet.variations.find(v => v.id === vid) ?? variationSet.variations[0];
