@@ -8,10 +8,18 @@ type DownloadKind = 'theme' | 'static';
 
 export const runtime = 'nodejs';
 
-const BUILD_ROOT = path.join('/tmp', 'presspilot-build');
+const BUILD_ROOT = path.join(process.cwd(), 'output');
+// The Generator creates a dedicated folder for each slug: output/slug/slug.zip
+// So we need to look inside that folder.
+// Actually, looking at generator/index.ts: 
+// buildDir = output/slug
+// zipPath = output/slug.zip (sibling to buildDir? No, dirname(buildDir) is output)
+// Wait, generator says: path.join(path.dirname(buildDir), `${safeName}.zip`)
+// If buildDir is output/slug, dirname is output. So zip is at output/slug.zip.
+
 const KIND_TO_FOLDER: Record<DownloadKind, string> = {
-  theme: path.join(BUILD_ROOT, 'themes'),
-  static: path.join(BUILD_ROOT, 'static')
+  theme: BUILD_ROOT,
+  static: BUILD_ROOT // Assuming static site generator also puts zips in output root
 };
 
 export async function GET(request: Request) {
