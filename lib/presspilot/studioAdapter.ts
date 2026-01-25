@@ -65,13 +65,8 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
       image_keywords: [category, 'business']
     }
   };
-  visualAssets: {
-    has_logo: !!input?.logoBase64,
-      image_source_preference: 'mixed',
-        image_keywords: [category, 'business']
-  }
-};
-return base;
+
+  return base;
 }
 
 export interface StudioRequestPayload {
