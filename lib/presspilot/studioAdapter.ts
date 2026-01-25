@@ -25,22 +25,53 @@ export interface StudioFormInput {
 // ... (omitted lines)
 
 export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPilotSaaSInput {
-  const businessName = input?.businessName?.trim() || 'PressPilot Demo Co.';
-  const description = input?.businessDescription?.trim() || 'A modern business generated via PressPilot.';
+  const businessName = input?.businessName?.trim();
+  const description = input?.businessDescription?.trim();
+
+  if (!businessName) throw new Error('Missing Business Name');
+  if (!description) throw new Error('Missing Business Description');
   // ...
 
+  const category = resolveBusinessCategory(input?.businessCategory);
+
   const base: PressPilotSaaSInput = {
-    // ...
+    brand: {
+      business_name: businessName,
+      business_category: category,
+      business_tagline: input?.heroTitle || 'Welcome',
+      slug: (input?.slug || businessName.toLowerCase().replace(/[^a-z0-9]+/g, '-')).slice(0, 60)
+    },
+    narrative: {
+      description_long: description
+    },
+    language: {
+      primary_language: resolveLanguage(input?.primaryLanguage),
+      rtl_required: resolveLanguage(input?.primaryLanguage) === 'ar'
+    },
+    modes: {
+      business_category: category,
+      restaurant: { enabled: category === 'restaurant_cafe' },
+      ecommerce: { enabled: category === 'ecommerce' }
+    },
+    visualControls: {
+      palette_id: input?.paletteId || 'pp-slate',
+      font_pair_id: input?.fontPairId || 'pp-inter',
+      layout_density: 'balanced',
+      corner_style: 'rounded'
+    },
     visualAssets: {
       has_logo: !!input?.logoBase64,
-      // Note: Actual logo data handling would need to be passed to context or stored, 
-      // but for now we signal intent.
       image_source_preference: 'mixed',
-      image_keywords: ['brand', 'web design']
-    },
-    // ...
+      image_keywords: [category, 'business']
+    }
   };
-  return base;
+  visualAssets: {
+    has_logo: !!input?.logoBase64,
+      image_source_preference: 'mixed',
+        image_keywords: [category, 'business']
+  }
+};
+return base;
 }
 
 export interface StudioRequestPayload {

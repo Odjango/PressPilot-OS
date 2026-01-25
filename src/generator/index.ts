@@ -100,20 +100,7 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             } else if (recipe) {
                 await patternInjector.injectRecipe(themeDir, recipe, userData, personality);
             } else {
-                console.log('[Orchestrator] No recipe found, falling back to basic injection.');
-                // Fallback: Just Hero Injection (Legacy)
-                if (personality.patterns.hero && userData.hero_headline) {
-                    const heroPath = path.join(themeDir, personality.patterns.hero);
-                    if (await fs.pathExists(heroPath)) {
-                        let heroContent = await fs.readFile(heroPath, 'utf8');
-                        heroContent = heroContent.replace(personality.patterns.hero_search_headline, userData.hero_headline);
-                        if (userData.hero_subheadline && personality.patterns.hero_search_sub) {
-                            heroContent = heroContent.replace(personality.patterns.hero_search_sub, userData.hero_subheadline);
-                        }
-                        await fs.writeFile(heroPath, heroContent);
-                        console.log(`[Pattern] Injected content into Native Hero: ${personality.patterns.hero}`);
-                    }
-                }
+                console.warn('[Orchestrator] No recipe found. Skipping default injection to avoid mock data fallback.');
             }
 
             // 2. Generate Pages (Restored Feature)

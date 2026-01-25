@@ -79,7 +79,7 @@ export default function SaaSInputForm({ value, onChange, onPreview, disabled, is
         <label className="block text-sm">
           <span className="block font-medium text-neutral-700">Business Name</span>
           <input
-            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none"
             placeholder="Joes Pizza House"
             value={value.brand.business_name}
             onChange={(event) => handleBrandChange({ business_name: event.target.value })}
@@ -91,7 +91,7 @@ export default function SaaSInputForm({ value, onChange, onPreview, disabled, is
         <label className="block text-sm">
           <span className="block font-medium text-neutral-700">Business Description</span>
           <textarea
-            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none"
             placeholder="Long-form copy about the business"
             value={value.narrative.description_long}
             onChange={(event) => handleNarrativeChange({ description_long: event.target.value })}
@@ -104,7 +104,7 @@ export default function SaaSInputForm({ value, onChange, onPreview, disabled, is
         <label className="block text-sm">
           <span className="block font-medium text-neutral-700">Primary Language</span>
           <select
-            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none"
             value={value.language.primary_language}
             onChange={(event) =>
               handleLanguageChange({ primary_language: event.target.value as SupportedLanguageCode })
@@ -122,7 +122,7 @@ export default function SaaSInputForm({ value, onChange, onPreview, disabled, is
         <label className="block text-sm">
           <span className="block font-medium text-neutral-700">Business Category</span>
           <select
-            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
+            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none"
             value={value.brand.business_category}
             onChange={(event) =>
               handleBrandChange({ business_category: event.target.value as BusinessCategory })
@@ -140,13 +140,12 @@ export default function SaaSInputForm({ value, onChange, onPreview, disabled, is
 
       <button
         type="submit"
-        className={`w-full rounded-full px-4 py-2 text-sm font-semibold text-white transition ${
-          disabled
-            ? 'bg-neutral-400'
-            : isLoading
+        className={`w-full rounded-full px-4 py-2 text-sm font-semibold text-white transition ${disabled
+          ? 'bg-neutral-400'
+          : isLoading
             ? 'bg-neutral-700'
             : 'bg-neutral-900 hover:bg-neutral-800'
-        }`}
+          }`}
         disabled={disabled}
       >
         {isLoading ? 'Generating Preview…' : 'Preview Designs'}
