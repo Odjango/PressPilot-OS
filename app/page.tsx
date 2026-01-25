@@ -95,9 +95,9 @@ export default function StudioPage() {
 
         // 2. SUCCESS: Map internal 'themeUrl' to 'original' slot
         setSitePreviews({
-          original: data.themeUrl || "",
-          high_contrast: "", // Internal API currently generates single variation
-          inverted: ""
+          original: data.themeUrl_a || "",
+          high_contrast: data.themeUrl_b || "",
+          inverted: data.themeUrl_c || ""
         });
 
         setShowForm(false); // Close form on success to show previews

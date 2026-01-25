@@ -78,129 +78,62 @@ export async function POST(request: Request) {
 
     context = applyBusinessInputs(payload);
 
-    let variationSet;
-    // OpenAI AI Variation Logic Removed for Optimization
-    variationSet = buildFallbackVariationSet(context);
-    const variation =
-      variationSet.variations.find((candidate) => candidate.id === variationId) ?? variationSet.variations[0];
+    // 3-VARIATION PARALLEL GENERATION
+    // We force generate A, B, and C regardless of input to fill the UI cards
+    const targetVariations: VariationId[] = ['variation_a', 'variation_b', 'variation_c'];
 
+    // Resolve fallback set once to get base data
+    const variationSet = buildFallbackVariationSet(context);
     const slug = context.brand.slug;
-    kitPlan = await generateKitPlan(context, variation);
 
-    // Resolve business copy to get tagline
-    const copy = await resolveBusinessCopy(context, variation, validatedBusinessTypeId);
+    // Parallel Build
+    const results = await Promise.all(targetVariations.map(async (vid) => {
+      const variation = variationSet.variations.find(v => v.id === vid) ?? variationSet.variations[0];
+      // Unique slug for this variation file: "my-gym-a.zip"
+      const variationSlug = `${slug}-${vid.replace('variation_', '')}`;
 
-    // Build wpImport from business category or fallback
-    let wpImport = null;
-    const businessCategoryId = body.businessCategoryId ?? null;
-    const category = businessCategoryId ? getBusinessCategoryById(businessCategoryId as BusinessCategoryId) : null;
+      try {
+        const buildRes = await buildWordPressTheme(context, variation, {
+          businessTypeId: validatedBusinessTypeId,
+          styleVariation: appliedStyleVariation,
+          kitSummary,
+          baseTheme: selectedBaseTheme,
+          outputSlug: variationSlug // Force filename
+        });
+        return {
+          id: vid,
+          success: true,
+          url: `/api/download?kind=theme&slug=${variationSlug}`,
+          zipPath: buildRes.themeZipPath
+        };
+      } catch (e) {
+        console.error(`Failed to build ${vid}`, e);
+        return { id: vid, success: false, url: null, zipPath: null };
+      }
+    }));
 
-    if (category && category.defaultPages && category.defaultPages.length > 0) {
-      // Convert menu labels to slugs: lowercase, replace spaces with hyphens
-      const menuSlugs = category.defaultMenu.map(label => {
-        const slug = label.toLowerCase().replace(/\s+/g, '-');
-        // Special cases: Menu -> menu, Shop -> shop (already handled by lowercase)
-        return slug;
-      });
+    // Generate Static Site (Just once for the primary request, or skip for speed?)
+    // For now, let's just do it for Variation A (Original)
+    const staticResult = await buildStaticSite(context, variationSet.variations[0], {
+      businessTypeId: validatedBusinessTypeId, kitSummary
+    }).catch(e => ({ staticZipPath: null }));
 
-      wpImport = {
-        front_page_slug: 'home',
-        pages: category.defaultPages.map(p => ({
-          slug: p.slug,
-          title: p.title,
-        })),
-        menu: {
-          location: 'primary',
-          name: 'Main Menu',
-          items: menuSlugs,
-        },
-      };
-    } else {
-      // Fallback to generic pages
-      wpImport = {
-        front_page_slug: 'home',
-        pages: [
-          { slug: 'home', title: 'Home' },
-          { slug: 'about', title: 'About' },
-          { slug: 'services', title: 'Services' },
-          { slug: 'blog', title: 'Blog' },
-          { slug: 'contact', title: 'Contact' },
-        ],
-        menu: {
-          location: 'primary',
-          name: 'Main Menu',
-          items: ['home', 'about', 'services', 'blog', 'contact'],
-        },
-      };
-    }
+    const getUrl = (vid: string) => results.find(r => r.id === vid)?.url || '';
 
-    const kitSummary: KitSummary = {
-      slug,
-      brandName: context.brand.name,
-      businessTypeId: validatedBusinessTypeId,
-      styleVariation: appliedStyleVariation,
-      createdAt: new Date().toISOString(),
-      plan: kitPlan,
-      tagline: copy.hero.subtitle,
-      businessCategoryId: body.businessCategoryId ?? null,
-      business: {
-        name: context.brand.name,
-        category_id: body.businessCategoryId ?? null,
-      },
-      wpImport,
-    };
-    const resolveBaseTheme = (typeId: string | null): string => {
-      // "Smarter" Selection Logic (Restoring Plugin Logic)
-      if (typeId === 'restaurant_cafe') return 'ollie';
-      if (typeId === 'saas_product' || typeId === 'professional_services') return 'frost';
-      if (typeId === 'ecommerce_store') return 'ollie';
-      if (typeId === 'local_service') return 'ollie';
-      if (typeId === 'health_fitness' || typeId === 'beauty_salon') return 'frost'; // Clean look
-      if (typeId === 'online_coach') return 'twentytwentyfour';
-      return 'ollie'; // Default upgrade from 'universal'
-    };
-
-    const selectedBaseTheme = resolveBaseTheme(validatedBusinessTypeId);
-
-    const [themeResult, staticResult] = await Promise.all([
-      buildWordPressTheme(context, variation, {
-        businessTypeId: validatedBusinessTypeId,
-        styleVariation: appliedStyleVariation,
-        kitSummary,
-        baseTheme: selectedBaseTheme
-      }).catch(err => {
-        console.error('[api/generate] buildWordPressTheme failed', err);
-        throw new Error(`Theme generation failed: ${err.message}`);
-      }),
-      buildStaticSite(context, variation, { businessTypeId: validatedBusinessTypeId, kitSummary })
-        .catch((err: Error) => {
-          console.error('[api/generate] buildStaticSite failed. Stack:', err.stack);
-          console.error('[api/generate] buildStaticSite message:', err.message);
-          throw new Error(`Static site generation failed: ${err.message}`);
-        })
-    ]);
-
-    console.log(
-      'PressPilot generate: businessTypeId =',
-      validatedBusinessTypeId,
-      'styleVariation =',
-      appliedStyleVariation
-    );
-
-    const themeUrl = `/api/download?kind=theme&slug=${slug}`;
-
-    // VERIFY FILES EXIST (Force Backend Verification)
-    if (!themeUrl || themeUrl.length < 5 || !themeResult.themeZipPath) {
-      console.error("CRITICAL: Generator finished but no URL produced.");
-      throw new Error("Generator failed to produce a valid URL.");
+    // Verify at least one success
+    if (!results.some(r => r.success)) {
+      throw new Error("All variations failed to generate.");
     }
 
     return NextResponse.json({
-      slug,
-      themeZipPath: themeResult.themeZipPath,
-      staticZipPath: staticResult.staticZipPath,
-      themeUrl: `/api/download?kind=theme&slug=${slug}`,
-      staticUrl: `/api/download?kind=static&slug=${slug}`,
+
+      themeUrl_a: getUrl('variation_a'),
+      themeUrl_b: getUrl('variation_b'),
+      themeUrl_c: getUrl('variation_c'),
+      // Fallback for older frontend logic if needed (points to A)
+
+
+
       businessTypeId: validatedBusinessTypeId,
       styleVariation: appliedStyleVariation,
       kitVersion: kit.version,

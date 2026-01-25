@@ -20,6 +20,7 @@ export async function buildWordPressTheme(
     // Overrides for Variations
     heroPattern?: string;
     dataOverride?: Partial<GeneratorData>;
+    outputSlug?: string; // FORCE filename
   }
 ): Promise<ThemeBuildResult> {
   // 1. Resolve Industry and Base Theme
@@ -65,7 +66,8 @@ export async function buildWordPressTheme(
     base: baseTheme,
     mode: 'standard', // Always standard for now
     data: generatorData,
-    heroPattern: options?.heroPattern // PASS OVERRIDE
+    heroPattern: options?.heroPattern, // PASS OVERRIDE
+    slug: options?.outputSlug // PASS SLUG
     // We can let the generator handle output paths, or override if needed. 
     // The generator returns the path.
   });

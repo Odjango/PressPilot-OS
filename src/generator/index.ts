@@ -18,6 +18,7 @@ export interface GeneratorOptions {
     data?: GeneratorData;
     outDir?: string;
     heroPattern?: string; // New: Override to force specific pattern
+    slug?: string; // Force specific output filename (no timestamp)
 }
 
 export async function generateTheme(options: GeneratorOptions = {}) {
@@ -32,13 +33,16 @@ export async function generateTheme(options: GeneratorOptions = {}) {
     }
 
     const themeName = userData.name || `PressPilot ${baseName} ${mode}`;
-    const safeName = themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
-    const timestamp = Date.now();
+    // Use provided slug or generate from name
+    const safeName = options.slug || themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+
+    // TIMESTAMP REMOVED for predictable downloads
+    // const timestamp = Date.now();
 
     const rootDir = process.cwd();
     // Use provided output dir or default
-    const buildDir = options.outDir ? options.outDir : path.join(rootDir, 'output', `${safeName}-${timestamp}`);
-    const zipPath = path.join(path.dirname(buildDir), `${safeName}-${timestamp}.zip`);
+    const buildDir = options.outDir ? options.outDir : path.join(rootDir, 'output', safeName);
+    const zipPath = path.join(path.dirname(buildDir), `${safeName}.zip`);
     const themeDir = path.join(buildDir, safeName);
 
     console.log(`[Orchestrator] Starting generation for: ${themeName}`);
@@ -161,7 +165,7 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             status: "success",
             themeName: themeName,
             downloadPath: zipPath,
-            filename: `${safeName}-${timestamp}.zip`,
+            filename: `${safeName}.zip`,
             themeDir: themeDir // useful for checking
         };
 
