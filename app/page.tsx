@@ -85,7 +85,7 @@ export default function StudioPage() {
 
         // 1. DETECT FAILURE (API returned 200 but missing URL)
         // Internal API returns 'themeUrl' and 'themeZipPath'
-        if (!data.themeUrl) {
+        if (!data.themeUrl_a) {
           console.error("GENERATION TRAPPED:", data);
           setZombieData(data); // Trigger Debug UI
           setSitePreviews(null);
