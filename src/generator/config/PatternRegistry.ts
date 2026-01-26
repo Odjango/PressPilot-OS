@@ -10,6 +10,7 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
         patterns: {
             hero: 'patterns/hero-light.php',
             hero_search_headline: 'Build your site with clicks, not code.',
+            hero_search_pretitle: 'WordPress Reimagined',
             hero_search_sub: 'Easily create beautiful, fully-customizable websites with the new WordPress Site Editor and the Ollie block theme. No coding skills required.'
         },
         home_template: 'templates/index.html',
@@ -55,6 +56,19 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
                         'patterns/footer-light.php'
                     ]
                 }
+            ],
+            'ecommerce': [
+                {
+                    name: "Ollie Shop",
+                    description: "E-commerce layout",
+                    patterns: [
+                        'patterns/header-light.php',
+                        'patterns/hero-light.php',
+                        'patterns/feature-boxes-with-icon-dark.php',
+                        'patterns/card-contact.php', // Location/Support
+                        'patterns/footer-light.php'
+                    ]
+                }
             ]
         }
     },
@@ -97,6 +111,18 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
                         'patterns/footer-stacked.php'
                     ]
                 }
+            ],
+            'ecommerce': [
+                {
+                    name: "Frost Store",
+                    description: "Minimal Shop",
+                    patterns: [
+                        'patterns/header-default.php',
+                        'patterns/hero-one-column.php',
+                        'patterns/boxes-three.php',
+                        'patterns/footer-default.php'
+                    ]
+                }
             ]
         }
     },
@@ -120,10 +146,44 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
                     patterns: [
                         'patterns/header.php',
                         'patterns/hero-banner.php',
-                        // Spectra doesn't have explicit menu-card in our previous listing? 
-                        // Fallback to generic feature sections if needed or specific ones found in dir
                         'patterns/feature-3.php',
                         'patterns/testimonials-2.php',
+                        'patterns/footer.php'
+                    ]
+                }
+            ],
+            'saas': [
+                {
+                    name: "Spectra SaaS",
+                    description: "SaaS layout",
+                    patterns: [
+                        'patterns/header.php',
+                        'patterns/hero-banner.php',
+                        'patterns/feature-3.php',
+                        'patterns/footer.php'
+                    ]
+                }
+            ],
+            'portfolio': [
+                {
+                    name: "Spectra Portfolio",
+                    description: "Portfolio layout",
+                    patterns: [
+                        'patterns/header.php',
+                        'patterns/hero-banner.php',
+                        'patterns/feature-3.php',
+                        'patterns/footer.php'
+                    ]
+                }
+            ],
+            'ecommerce': [
+                {
+                    name: "Spectra Shop",
+                    description: "Shop layout",
+                    patterns: [
+                        'patterns/header.php',
+                        'patterns/hero-banner.php',
+                        'patterns/feature-3.php',
                         'patterns/footer.php'
                     ]
                 }
@@ -148,7 +208,6 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
                     name: "Modern SaaS",
                     description: "Contemporary SaaS layout from TT4",
                     patterns: [
-                        // 'patterns/header.php', // Removed: TT4 uses template parts, not patterns for header
                         'patterns/banner-hero.php',
                         'patterns/text-feature-grid-3-col.php',
                         'patterns/cta-pricing.php',
@@ -168,7 +227,99 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
                         'patterns/footer.php'
                     ]
                 }
+            ],
+            'ecommerce': [
+                {
+                    name: "Business Store",
+                    description: "Business layout",
+                    patterns: [
+                        'patterns/banner-project-description.php',
+                        'patterns/text-alternating-images.php',
+                        'patterns/cta-subscribe-centered.php',
+                        'patterns/footer.php'
+                    ]
+                }
             ]
+        }
+    },
+    'tove': {
+        colors: {
+            brand: 'primary',
+            brand_alt: 'secondary',
+            accent: 'tertiary'
+        },
+        patterns: {
+            hero: 'patterns/hero-text-image.php',
+            hero_search_headline: 'Welcome',
+            hero_search_sub: 'A colorful theme.'
+        },
+        home_template: 'templates/index.html',
+        recipes: {
+            'general': [{
+                name: "Colorful Portfolio",
+                description: "Playful layout",
+                patterns: ['patterns/hero-text-image.php', 'patterns/footer-default.php']
+            }],
+            'saas': [{
+                name: "Colorful Portfolio",
+                description: "Playful layout",
+                patterns: ['patterns/hero-text-image.php', 'patterns/footer-default.php']
+            }],
+            'restaurant': [{
+                name: "Colorful Portfolio",
+                description: "Playful layout",
+                patterns: ['patterns/hero-text-image.php', 'patterns/footer-default.php']
+            }],
+            'portfolio': [{
+                name: "Colorful Portfolio",
+                description: "Playful layout",
+                patterns: ['patterns/hero-text-image.php', 'patterns/footer-default.php']
+            }],
+            'ecommerce': [{
+                name: "Colorful Shop",
+                description: "Playful layout",
+                patterns: ['patterns/hero-text-image.php', 'patterns/footer-default.php']
+            }]
+        }
+    },
+    'blockbase': {
+        colors: {
+            brand: 'primary',
+            brand_alt: 'foreground',
+            accent: 'secondary'
+        },
+        patterns: {
+            hero: 'patterns/header-default.php',
+            hero_search_headline: 'Welcome',
+            hero_search_sub: 'Simplicity is key.'
+        },
+        home_template: 'templates/index.html',
+        recipes: {
+            'general': [{
+                name: "Minimal Base",
+                description: "Simple foundation",
+                patterns: ['patterns/header-default.php', 'patterns/footer-default.php']
+            }],
+            'saas': [{
+                name: "Minimal Base",
+                description: "Simple foundation",
+                patterns: ['patterns/header-default.php', 'patterns/footer-default.php']
+            }],
+            'restaurant': [{
+                name: "Minimal Base",
+                description: "Simple foundation",
+                patterns: ['patterns/header-default.php', 'patterns/footer-default.php']
+            }],
+            'portfolio': [{
+                name: "Minimal Base",
+                description: "Simple foundation",
+                patterns: ['patterns/header-default.php', 'patterns/footer-default.php']
+            }],
+            'ecommerce': [{
+                name: "Minimal Shop",
+                description: "Simple foundation",
+                patterns: ['patterns/header-default.php', 'patterns/footer-default.php']
+            }]
         }
     }
 };

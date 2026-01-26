@@ -62,10 +62,18 @@ export async function applyStyleVariationToThemeJson(opts: {
   }
 
   try {
+    // Try target theme dir first
     variationRaw = await fs.readFile(variationPath, 'utf8');
   } catch (error) {
-    console.warn('[PressPilot] style variation not found at', variationPath, 'for', styleVariation, error);
-    return;
+    // Fallback: Try project root styles/
+    const rootStylePath = path.join(process.cwd(), paletteRelativePath);
+    try {
+      variationRaw = await fs.readFile(rootStylePath, 'utf8');
+      console.log(`[PressPilot] Found style variation in source at ${rootStylePath}`);
+    } catch (rootError) {
+      console.warn('[PressPilot] style variation not found at', variationPath, 'OR', rootStylePath, error);
+      return;
+    }
   }
 
   let themeJson: Record<string, JsonValue>;

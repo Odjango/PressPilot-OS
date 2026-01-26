@@ -64,17 +64,17 @@ export class StyleEngine {
             const safetyCss = `
 /* PressPilot Safety Patch */
 .wp-block-quote, .wp-block-pullquote {
-    color: #111827 !important; /* Dark Grey */
-    background-color: #F3F4F6 !important; /* Light Grey */
+    color: var(--wp--preset--color--main) !important;
+    background-color: var(--wp--preset--color--tertiary) !important;
     padding: 2rem !important;
-    border-radius: 8px !important;
-    border-left: 4px solid var(--wp--preset--color--primary) !important;
+    border-radius: 2px !important;
+    border-left: 2px solid var(--wp--preset--color--primary) !important;
 }
 .wp-block-quote p {
-    color: #111827 !important;
+    color: var(--wp--preset--color--main) !important;
 }
 .wp-block-quote cite {
-    color: #4B5563 !important;
+    color: var(--wp--preset--color--secondary) !important;
     font-style: normal !important;
 }
 `;

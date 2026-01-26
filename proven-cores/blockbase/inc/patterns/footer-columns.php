@@ -1,57 +1,55 @@
 <?php
 /**
- * Footer with 3 columns
- *
- * @package Blockbase
+ * Title: Footer (DARK)
+ * Slug: blockbase/footer-columns-1769393696341
+ * Categories: footer
+ * Block Types: core/template-part/footer
  */
+?>
 
-return array(
-	'title'      => __( 'Footer with 3 columns', 'blockbase' ),
-	'categories' => array( 'blockbase' ),
-	'blockTypes' => array( 'core/template-part/footer' ),
-	'content'    => '<!-- wp:group {"layout":{"inherit":true}} -->
-	<div class="wp-block-group">
-		
-		<!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"60px","bottom":"60px"}}},"className":"pre-footer"} -->
-		<div class="wp-block-group alignwide pre-footer" style="padding-top:60px;padding-bottom:60px"><!-- wp:columns -->
-		<div class="wp-block-columns"><!-- wp:column -->
-		<div class="wp-block-column"><!-- wp:site-title {"style":{"typography":{"textTransform":"uppercase"}},"fontSize":"medium"} /-->
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+    
+    <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|50","left":"var:preset|spacing|50"}}}} -->
+    <div class="wp-block-columns alignwide">
+        <!-- wp:column {"width":"40%"} -->
+        <div class="wp-block-column" style="flex-basis:40%">
+            <!-- wp:site-title {"level":3,"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}}} /-->
+            
+            <!-- wp:paragraph {"style":{"typography":{"lineHeight":"1.6"}}} -->
+            <p style="line-height:1.6">Built with robust, clean code. Optimized for performance and scale.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
 
-		<!-- wp:site-tagline {"fontSize":"small"} /-->
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Quick Links</h6>
+            <!-- /wp:heading -->
+            
+            <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","orientation":"vertical"}} /-->
+        </div>
+        <!-- /wp:column -->
 
-		<!-- wp:social-links {"iconColor":"primary","iconColorValue":"var(--wp--custom--color--foreground)","className":"is-style-logos-only"} -->
-		<ul class="wp-block-social-links has-icon-color is-style-logos-only"><!-- wp:social-link {"url":"http://twitter.com","service":"twitter"} /-->
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Connect</h6>
+            <!-- /wp:heading -->
+             <!-- wp:social-links {"iconColor":"base","iconColorValue":"#ffffff","style":{"spacing":{"blockGap":"1rem"}}} -->
+            <ul class="wp-block-social-links has-icon-color has-base-color">
+                <!-- wp:social-link {"url":"#","service":"twitter"} /-->
+                <!-- wp:social-link {"url":"#","service":"linkedin"} /-->
+            </ul>
+            <!-- /wp:social-links -->
+            <!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}, "fontSize":"small"} -->
+             <p class="has-small-font-size" style="margin-top:var(--wp--preset--spacing--20)">© 2026 PressPilot Site.<br>Powered by PressPilot OS.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
+    </div>
+    <!-- /wp:columns -->
 
-		<!-- wp:social-link {"url":"http://facebook.com","service":"facebook"} /-->
-
-		<!-- wp:social-link {"url":"http://instagram.com","service":"instagram"} /--></ul>
-		<!-- /wp:social-links --></div>
-		<!-- /wp:column -->
-
-		<!-- wp:column -->
-		<div class="wp-block-column"><!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"14px"}}} -->
-		<h3 style="font-size:14px;"><strong>' . esc_html__( 'More info', 'blockbase' ) . '</strong></h3>
-		<!-- /wp:heading -->
-
-		<!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","setCascadingProperties":true,"justifyContent":"left","orientation":"vertical"},"style":{"typography":{"textDecoration":"underline"}},"fontSize":"small"} /--></div>
-		<!-- /wp:column -->
-
-		<!-- wp:column -->
-		<div class="wp-block-column"><!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"14px","textTransform":"uppercase"}}} -->
-		<h3 style="text-transform:uppercase;font-size:14px"><strong>' . esc_html__( 'Search', 'blockbase' ) . '</strong></h3><!-- /wp:heading --><!-- wp:search {"label":"' . esc_html__( 'Search', 'blockbase' ) . '","showLabel":false,"buttonText":"' . esc_html__( 'Search', 'blockbase' ) . '","buttonPosition":"button-inside"} /--></div>
-		<!-- /wp:column --></div>
-		<!-- /wp:columns --></div>
-		<!-- /wp:group -->
-	
-		<!-- wp:group {"className":"site-footer","style":{"spacing":{"padding":{"bottom":"30px"}}}} -->
-		<div class="wp-block-group site-footer" style="padding-bottom: 30px">
-	
-		<!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"var(--wp--custom--font-sizes--tiny)"}}} -->
-		<p class="has-text-align-center" style="font-size:var(--wp--custom--font-sizes--tiny)">Proudly Powered by <a href="https://wordpress.org" rel="nofollow">WordPress</a></p>
-		<!-- /wp:paragraph -->
-	
-		</div>
-		<!-- /wp:group -->
-	</div>
-	<!-- /wp:group -->',
-);
+</div>
+<!-- /wp:group -->

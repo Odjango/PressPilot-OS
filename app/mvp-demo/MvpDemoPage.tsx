@@ -57,6 +57,12 @@ export default function MvpDemoPage() {
     'Describe the business in full sentences so the preview has real copy.'
   );
   const [primaryLanguage, setPrimaryLanguage] = useState('EN');
+  const [logoPath, setLogoPath] = useState(''); // NEW: Logo Path State
+  // NEW: Manual Color Overrides
+  const [customPrimary, setCustomPrimary] = useState('');
+  const [customSecondary, setCustomSecondary] = useState('');
+  const [customAccent, setCustomAccent] = useState('');
+
   const [businessCategory, setBusinessCategory] = useState<
     'service' | 'product' | 'nonprofit' | 'restaurant'
   >('service');
@@ -175,6 +181,23 @@ export default function MvpDemoPage() {
     }
   }
 
+  // 6. Auto-Download Effect (Watch for artifacts.themeUrl)
+  useEffect(() => {
+    if (artifacts.themeUrl && isGenerating) {
+      console.log('Auto-downloading theme:', artifacts.themeUrl);
+      const link = document.createElement('a');
+      link.href = artifacts.themeUrl;
+      link.download = artifacts.slug ? `presspilot-theme-${artifacts.slug}.zip` : 'presspilot-theme.zip';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Stop generating spinner
+      setIsGenerating(false);
+      setPreviewSummary(`Success! Generated local theme for ${businessName}.`);
+    }
+  }, [artifacts.themeUrl, isGenerating, artifacts.slug, businessName]);
+
   async function handleGenerate() {
     // 1. Validation & Reset
     if (!businessName) return;
@@ -185,7 +208,6 @@ export default function MvpDemoPage() {
       setStages((s) => ({ ...s, inputsNormalized: true }));
 
       // 2. Map Frontend Categories to Factory API Categories
-      // Factory API supports: corporate, restaurant, ecommerce, agency, startup, local, healthcare, realestate, fitness, education
       const categoryMap: Record<string, string> = {
         'local_service': 'local',
         'restaurant_cafe': 'restaurant',
@@ -196,31 +218,31 @@ export default function MvpDemoPage() {
         'saas_product': 'startup',
         'ecommerce_store': 'ecommerce',
       };
-      const factoryCategory = categoryMap[selectedBusinessCategoryId || ''] || 'corporate';
 
-      // 3. Build colors object (using default PressPilot colors, can be extended later)
-      const colors = {
-        primary: '#1e40af',
-        secondary: '#64748b',
-        accent: '#f59e0b',
-        background: '#ffffff',
-        text: '#1f2937',
-      };
-
-      // 4. Call Factory API
-      const res = await fetch('https://factory.presspilotapp.com/wp-json/presspilot/v1/generate', {
+      // 3. Call Local Generator API
+      const res = await fetch('/api/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-PressPilot-Key': 'pp_factory_2026_109540718b67c8f1acb967948eecf2e1'
         },
         body: JSON.stringify({
-          businessName: businessName,
-          tagline: '',
-          description: businessDescription,
-          category: factoryCategory,
-          colors: colors,
-          // layout is optional - factory will auto-select based on category
+          input: {
+            businessName,
+            businessDescription,
+            businessName,
+            businessDescription,
+            primaryLanguage,
+            businessCategory,
+            logoPath, // Sending to backend
+            palette: {
+              primary: customPrimary || undefined,
+              secondary: customSecondary || undefined,
+              accent: customAccent || undefined
+            }
+          },
+          businessTypeId: selectedBusinessTypeId,
+          styleVariation: selectedStyle?.styleVariation,
+          businessCategoryId: selectedBusinessCategoryId
         }),
       });
 
@@ -230,13 +252,10 @@ export default function MvpDemoPage() {
       }
 
       const json = await res.json();
+      console.log('Generator API Response:', json);
 
-      if (!json.success) {
-        throw new Error(json.error || 'API returned an error.');
-      }
-
-      if (!json.downloads?.theme_zip) {
-        throw new Error('API returned success but no download URLs.');
+      if (json.error) {
+        throw new Error(json.details || json.error || 'API returned an error.');
       }
 
       // 5. Handle Success
@@ -248,32 +267,25 @@ export default function MvpDemoPage() {
         downloadsReady: true,
       });
 
+      // The local API returns: themeUrl_a, themeUrl_b, themeUrl_c
       setArtifacts((prev) => ({
         ...prev,
-        themeUrl: json.downloads.theme_zip,
-        staticUrl: json.downloads.static_zip || null,
-        slug: json.generation_id,
+        themeUrl: json.themeUrl_a || null, // Primary download
+        staticUrl: null,
+        slug: (json.siteArchetype || businessName.toLowerCase().replace(/[^a-z0-9]/g, '-')),
         businessTypeId: selectedBusinessTypeId
       }));
 
-      // 6. Auto-Download Theme ZIP
-      const link = document.createElement('a');
-      link.href = json.downloads.theme_zip;
-      link.download = `presspilot-theme-${json.generation_id}.zip`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      setPreviewSummary(
-        `Success! Generated ${json.pages_created} pages for ${businessName} in ${json.duration}. Downloads ready.`
-      );
+      // Note: Auto-download is handled by useEffect now
+      // which will verify artifacts are set before triggering.
 
     } catch (err: any) {
-      console.error(err);
+      console.error('Generation Error:', err);
       setError(err.message || 'Generation failed.');
-    } finally {
-      setIsGenerating(false);
+      setIsGenerating(false); // Stop spinner on error
     }
+    // Finally block removed: we let the useEffect stop the spinner on success, 
+    // or the catch block stop it on error. This prevents race conditions.
   }
 
   const selectedStyle = businessTypes.find((t) => t.id === selectedBusinessTypeId);
@@ -422,8 +434,8 @@ export default function MvpDemoPage() {
                           resetEngineState();
                         }}
                         className={`flex items-start justify-between rounded-xl border px-3 py-2 text-left text-sm transition ${selected
-                            ? 'border-sky-500 bg-sky-50 text-neutral-900'
-                            : 'border-slate-200 bg-white text-neutral-800 hover:border-sky-400 hover:bg-sky-50'
+                          ? 'border-sky-500 bg-sky-50 text-neutral-900'
+                          : 'border-slate-200 bg-white text-neutral-800 hover:border-sky-400 hover:bg-sky-50'
                           }`}
                       >
                         <div>
@@ -509,6 +521,77 @@ export default function MvpDemoPage() {
                     placeholder="Describe the business in full sentences so the preview has real copy."
                   />
                 </div>
+
+                <div className="md:col-span-2 space-y-1">
+                  <label className="text-xs font-medium text-neutral-700">Logo Upload</label>
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="block w-full text-sm text-slate-500
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-xs file:font-semibold
+                        file:bg-sky-50 file:text-sky-700
+                        hover:file:bg-sky-100"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+
+                        const formData = new FormData();
+                        formData.append('file', file);
+
+                        try {
+                          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                          const json = await res.json();
+                          if (json.success) {
+                            setLogoPath(json.absolutePath);
+                            // Use the web-accessible URL for preview, but absolutePath for generator
+                            const previewUrl = json.url;
+                            // We can store previewUrl in a separate state if needed, or just rely on browser logic
+                            // For simplicity, let's just confirm it worked.
+                            console.log('Logo uploaded:', json.absolutePath);
+                          }
+                        } catch (err) {
+                          console.error('Upload failed', err);
+                          setError('Logo upload failed');
+                        }
+                      }}
+                    />
+                  </div>
+                  {logoPath && (
+                    <p className="text-[10px] text-emerald-600 mt-1">✓ Logo ready: {logoPath.split(/[/\\]/).pop()}</p>
+                  )}
+                  <p className="text-[10px] text-slate-400">Upload a logo (PNG/JPG). The AI will generate a color palette from it.</p>
+                </div>
+
+                <div className="md:col-span-2 space-y-1">
+                  <label className="text-xs font-medium text-neutral-700">Brand Color Overrides</label>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-[10px] uppercase text-slate-500">Primary</label>
+                      <div className="flex bg-white border border-slate-200 rounded-lg p-1 items-center gap-2">
+                        <input type="color" className="h-8 w-8 rounded cursor-pointer border-0 p-0" value={customPrimary || '#000000'} onChange={(e) => setCustomPrimary(e.target.value)} />
+                        <input className="text-xs w-full outline-none" placeholder="#HEX" value={customPrimary} onChange={(e) => setCustomPrimary(e.target.value)} />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase text-slate-500">Secondary</label>
+                      <div className="flex bg-white border border-slate-200 rounded-lg p-1 items-center gap-2">
+                        <input type="color" className="h-8 w-8 rounded cursor-pointer border-0 p-0" value={customSecondary || '#ffffff'} onChange={(e) => setCustomSecondary(e.target.value)} />
+                        <input className="text-xs w-full outline-none" placeholder="#HEX" value={customSecondary} onChange={(e) => setCustomSecondary(e.target.value)} />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase text-slate-500">Accent</label>
+                      <div className="flex bg-white border border-slate-200 rounded-lg p-1 items-center gap-2">
+                        <input type="color" className="h-8 w-8 rounded cursor-pointer border-0 p-0" value={customAccent || '#ff0000'} onChange={(e) => setCustomAccent(e.target.value)} />
+                        <input className="text-xs w-full outline-none" placeholder="#HEX" value={customAccent} onChange={(e) => setCustomAccent(e.target.value)} />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-slate-400">Leave blank to use "Smart Extraction" from logo, or select manually to override.</p>
+                </div>
               </div>
             </div>
 
@@ -586,8 +669,8 @@ export default function MvpDemoPage() {
                 disabled={!artifacts.themeUrl}
                 onClick={() => artifacts.themeUrl && window.open(artifacts.themeUrl, '_blank')}
                 className={`flex items-center justify-between rounded-lg border px-3 py-2 text-xs font-medium shadow-sm transition ${artifacts.themeUrl
-                    ? 'border-sky-300 bg-sky-50 text-sky-700 hover:bg-sky-100'
-                    : 'border-slate-200 bg-slate-50 text-slate-400'
+                  ? 'border-sky-300 bg-sky-50 text-sky-700 hover:bg-sky-100'
+                  : 'border-slate-200 bg-slate-50 text-slate-400'
                   }`}
               >
                 <span>WordPress theme (.zip)</span>
@@ -598,8 +681,8 @@ export default function MvpDemoPage() {
                 disabled={!artifacts.staticUrl}
                 onClick={() => artifacts.staticUrl && window.open(artifacts.staticUrl, '_blank')}
                 className={`flex items-center justify-between rounded-lg border px-3 py-2 text-xs font-medium shadow-sm transition ${artifacts.staticUrl
-                    ? 'border-sky-300 bg-sky-50 text-sky-700 hover:bg-sky-100'
-                    : 'border-slate-200 bg-slate-50 text-slate-400'
+                  ? 'border-sky-300 bg-sky-50 text-sky-700 hover:bg-sky-100'
+                  : 'border-slate-200 bg-slate-50 text-slate-400'
                   }`}
               >
                 <span>Static site (HTML/CSS/JS)</span>

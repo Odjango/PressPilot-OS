@@ -1,28 +1,55 @@
 <?php
 /**
- * Title: Footer with heading, text, button.
- * Slug: frost/footer-stacked-dark
+ * Title: Footer (DARK)
+ * Slug: frost/footer-stacked-dark-1769393696358
  * Categories: footer
  * Block Types: core/template-part/footer
  */
 ?>
-<!-- wp:group {"align":"full","style":{"elements":{"link":{"color":{"text":"var:preset|color|base"}}},"spacing":{"padding":{"top":"var:preset|spacing|x-large","bottom":"var:preset|spacing|small","right":"30px","left":"30px"},"margin":{"top":"0px"}}},"backgroundColor":"contrast","textColor":"base","className":"has-background-color","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-background-color has-base-color has-contrast-background-color has-text-color has-background has-link-color" style="margin-top:0px;padding-top:var(--wp--preset--spacing--x-large);padding-right:30px;padding-bottom:var(--wp--preset--spacing--small);padding-left:30px">
-	<!-- wp:heading {"textAlign":"center","anchor":"let-s-connect","style":{"spacing":{"margin":{"bottom":"20px"}}},"className":"wp-block-heading","fontSize":"max-48"} -->
-	<h2 class="wp-block-heading has-text-align-center has-max-48-font-size" id="let-s-connect" style="margin-bottom:20px"><?php echo esc_html__( 'Let’s Connect', 'frost' ); ?></h2>
-	<!-- /wp:heading -->
-	<!-- wp:paragraph {"align":"center"} -->
-	<p class="has-text-align-center"><?php echo esc_html__( 'With its clean, minimal design and powerful feature set, This theme enables you to build stylish and sophisticated WordPress websites.', 'frost' ); ?></p>
-	<!-- /wp:paragraph -->
-	<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center","orientation":"horizontal"},"style":{"spacing":{"margin":{"bottom":"var:preset|spacing|x-large"}}}} -->
-	<div class="wp-block-buttons" style="margin-bottom:var(--wp--preset--spacing--x-large)">
-		<!-- wp:button -->
-		<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#"><?php echo esc_html__( 'Get in Touch', 'frost' ); ?> →</a></div>
-		<!-- /wp:button -->
-	</div>
-	<!-- /wp:buttons -->
-	<!-- wp:paragraph {"align":"center","fontSize":"small"} -->
-	<p class="has-text-align-center has-small-font-size">&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php echo esc_html__( 'Your Company LLC', 'frost' ); ?> · <a href="#"><?php echo esc_html__( 'Contact Us', 'frost' ); ?></a></p>
-	<!-- /wp:paragraph -->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+    
+    <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|50","left":"var:preset|spacing|50"}}}} -->
+    <div class="wp-block-columns alignwide">
+        <!-- wp:column {"width":"40%"} -->
+        <div class="wp-block-column" style="flex-basis:40%">
+            <!-- wp:site-title {"level":3,"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}}} /-->
+            
+            <!-- wp:paragraph {"style":{"typography":{"lineHeight":"1.6"}}} -->
+            <p style="line-height:1.6">Built with robust, clean code. Optimized for performance and scale.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
+
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Quick Links</h6>
+            <!-- /wp:heading -->
+            
+            <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","orientation":"vertical"}} /-->
+        </div>
+        <!-- /wp:column -->
+
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Connect</h6>
+            <!-- /wp:heading -->
+             <!-- wp:social-links {"iconColor":"base","iconColorValue":"#ffffff","style":{"spacing":{"blockGap":"1rem"}}} -->
+            <ul class="wp-block-social-links has-icon-color has-base-color">
+                <!-- wp:social-link {"url":"#","service":"twitter"} /-->
+                <!-- wp:social-link {"url":"#","service":"linkedin"} /-->
+            </ul>
+            <!-- /wp:social-links -->
+            <!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}, "fontSize":"small"} -->
+             <p class="has-small-font-size" style="margin-top:var(--wp--preset--spacing--20)">© 2026 PressPilot Site.<br>Powered by PressPilot OS.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
+    </div>
+    <!-- /wp:columns -->
+
 </div>
 <!-- /wp:group -->

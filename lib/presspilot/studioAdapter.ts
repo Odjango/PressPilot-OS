@@ -15,6 +15,7 @@ export interface StudioFormInput {
   paletteId?: string;
   fontPairId?: string;
   logoBase64?: string;
+  logoPath?: string; // Local absolute path for OS usage
   palette?: {
     primary?: string;
     secondary?: string;
@@ -57,10 +58,16 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
       palette_id: input?.paletteId || 'pp-slate',
       font_pair_id: input?.fontPairId || 'pp-inter',
       layout_density: 'balanced',
-      corner_style: 'rounded'
+      corner_style: 'rounded',
+      custom_colors: input?.palette ? {
+        primary: input.palette.primary,
+        secondary: input.palette.secondary,
+        accent: input.palette.accent
+      } : undefined
     },
     visualAssets: {
-      has_logo: !!input?.logoBase64,
+      has_logo: !!input?.logoBase64 || !!input?.logoPath,
+      logo_file_url: input?.logoPath, // Map path for extraction
       image_source_preference: 'mixed',
       image_keywords: [category, 'business']
     }

@@ -7,131 +7,8 @@
 			"defaultDuotone": false,
 			"defaultGradients": false,
 			"defaultPalette": false,
-			"duotone": [
-				{
-					"name": "Blue",
-					"slug": "blue",
-					"colors": [
-						"#462CFF",
-						"#ECE8FF"
-					]
-				},
-				{
-					"name": "Pink",
-					"slug": "Pink",
-					"colors": [
-						"#F22AAA",
-						"#FFDBF0"
-					]
-				},
-				{
-					"name": "Green",
-					"slug": "green",
-					"colors": [
-						"#196A64",
-						"#E0FFFD"
-					]
-				},
-				{
-					"name": "Yellow",
-					"slug": "yellow",
-					"colors": [
-						"#4B420D",
-						"#FFE465"
-					]
-				},
-				{
-					"name": "Red",
-					"slug": "red",
-					"colors": [
-						"#33120B",
-						"#FF756B"
-					]
-				},
-				{
-					"name": "Teal",
-					"slug": "teal",
-					"colors": [
-						"#233938",
-						"#67EBFF"
-					]
-				},
-				{
-					"name": "Orange",
-					"slug": "orange",
-					"colors": [
-						"#31210D",
-						"#FFA15B"
-					]
-				},
-				{
-					"name": "Punchy",
-					"slug": "punchy",
-					"colors": [
-						"#00007e",
-						"#6aff7e"
-					]
-				},
-				{
-					"name": "Blueberry",
-					"slug": "blueberry",
-					"colors": [
-						"#7f02d3",
-						"#00dbfe"
-					]
-				},
-				{
-					"name": "Lime",
-					"slug": "lime",
-					"colors": [
-						"#02794c",
-						"#fbf01a"
-					]
-				},
-				{
-					"name": "Sunset",
-					"slug": "sunset",
-					"colors": [
-						"#FF3253",
-						"#FFDC53"
-					]
-				},
-				{
-					"name": "Grayscale",
-					"slug": "grayscale",
-					"colors": [
-						"#000",
-						"#fff"
-					]
-				}
-			],
-			"gradients": [
-				{
-					"name": "Purple",
-					"slug": "purple",
-					"gradient": "linear-gradient(135deg, #4D34FA, #ad34fa)"
-				},
-				{
-					"name": "Blue",
-					"slug": "blue",
-					"gradient": "linear-gradient(135deg, #0057FF, #31B5FF)"
-				},
-				{
-					"name": "Pink",
-					"slug": "pink",
-					"gradient": "linear-gradient(135deg, #FF007A, #FF81BD)"
-				},
-				{
-					"name": "Black",
-					"slug": "black",
-					"gradient": "linear-gradient(135deg, #14111E, #4B4462)"
-				},
-				{
-					"name": "Heat",
-					"slug": "heat",
-					"gradient": "linear-gradient(135deg, #F32758, #FFC581)"
-				}
-			],
+			"duotone": [],
+			"gradients": [],
 			"palette": [
 				{
 					"name": "Brand",
@@ -218,49 +95,49 @@
 		},
 		"shadow": {
 			"defaultPresets": false,
-            "presets": [
-                {
-                    "name": "Extra Large Dark",
-                    "slug": "extra-large-dark",
-                    "shadow": "0px 536px 150px 0px rgba(20, 17, 31, 0.00), 0px 343px 137px 0px rgba(20, 17, 31, 0.01), 0px 193px 116px 0px rgba(20, 17, 31, 0.05), 0px 86px 86px 0px rgba(20, 17, 31, 0.09), 0px 21px 47px 0px rgba(20, 17, 31, 0.10)"
-                },
+			"presets": [
 				{
-                    "name": "Large Dark",
-                    "slug": "large-dark",
-                    "shadow": "0px 219px 61px 0px rgba(20, 17, 31, 0.00), 0px 140px 56px 0px rgba(20, 17, 31, 0.01), 0px 79px 47px 0px rgba(20, 17, 31, 0.05), 0px 35px 35px 0px rgba(20, 17, 31, 0.09), 0px 9px 19px 0px rgba(20, 17, 31, 0.10)"
-                },
+					"name": "Extra Large Dark",
+					"slug": "extra-large-dark",
+					"shadow": "0px 536px 150px 0px rgba(20, 17, 31, 0.00), 0px 343px 137px 0px rgba(20, 17, 31, 0.01), 0px 193px 116px 0px rgba(20, 17, 31, 0.05), 0px 86px 86px 0px rgba(20, 17, 31, 0.09), 0px 21px 47px 0px rgba(20, 17, 31, 0.10)"
+				},
 				{
-                    "name": "Medium Dark",
-                    "slug": "medium-dark",
-                    "shadow": "0px 66px 18px 0px rgba(20, 17, 31, 0.00), 0px 42px 17px 0px rgba(20, 17, 31, 0.01), 0px 24px 14px 0px rgba(20, 17, 31, 0.05), 0px 10px 10px 0px rgba(20, 17, 31, 0.09), 0px 3px 6px 0px rgba(20, 17, 31, 0.10)"
-                },
+					"name": "Large Dark",
+					"slug": "large-dark",
+					"shadow": "0px 219px 61px 0px rgba(20, 17, 31, 0.00), 0px 140px 56px 0px rgba(20, 17, 31, 0.01), 0px 79px 47px 0px rgba(20, 17, 31, 0.05), 0px 35px 35px 0px rgba(20, 17, 31, 0.09), 0px 9px 19px 0px rgba(20, 17, 31, 0.10)"
+				},
 				{
-                    "name": "Small Dark",
-                    "slug": "small-dark",
-                    "shadow": "0px 16px 4px 0px rgba(20, 17, 31, 0.00), 0px 10px 4px 0px rgba(20, 17, 31, 0.01), 0px 6px 3px 0px rgba(20, 17, 31, 0.05), 0px 3px 3px 0px rgba(20, 17, 31, 0.09), 0px 1px 1px 0px rgba(20, 17, 31, 0.10)"
-                },
+					"name": "Medium Dark",
+					"slug": "medium-dark",
+					"shadow": "0px 66px 18px 0px rgba(20, 17, 31, 0.00), 0px 42px 17px 0px rgba(20, 17, 31, 0.01), 0px 24px 14px 0px rgba(20, 17, 31, 0.05), 0px 10px 10px 0px rgba(20, 17, 31, 0.09), 0px 3px 6px 0px rgba(20, 17, 31, 0.10)"
+				},
 				{
-                    "name": "Extra Large Light",
-                    "slug": "extra-large-light",
-                    "shadow": "0px 536px 150px 0px rgba(20, 17, 31, 0.00), 0px 343px 137px 0px rgba(20, 17, 31, 0.01), 0px 193px 116px 0px rgba(20, 17, 31, 0.03), 0px 86px 86px 0px rgba(20, 17, 31, 0.04), 0px 21px 47px 0px rgba(20, 17, 31, 0.05)"
-                },
+					"name": "Small Dark",
+					"slug": "small-dark",
+					"shadow": "0px 16px 4px 0px rgba(20, 17, 31, 0.00), 0px 10px 4px 0px rgba(20, 17, 31, 0.01), 0px 6px 3px 0px rgba(20, 17, 31, 0.05), 0px 3px 3px 0px rgba(20, 17, 31, 0.09), 0px 1px 1px 0px rgba(20, 17, 31, 0.10)"
+				},
 				{
-                    "name": "Large Light",
-                    "slug": "large-light",
-                    "shadow": "0px 219px 61px 0px rgba(20, 17, 31, 0.00), 0px 140px 56px 0px rgba(20, 17, 31, 0.01), 0px 79px 47px 0px rgba(20, 17, 31, 0.03), 0px 35px 35px 0px rgba(20, 17, 31, 0.04), 0px 9px 19px 0px rgba(20, 17, 31, 0.05)"
-                },
+					"name": "Extra Large Light",
+					"slug": "extra-large-light",
+					"shadow": "0px 536px 150px 0px rgba(20, 17, 31, 0.00), 0px 343px 137px 0px rgba(20, 17, 31, 0.01), 0px 193px 116px 0px rgba(20, 17, 31, 0.03), 0px 86px 86px 0px rgba(20, 17, 31, 0.04), 0px 21px 47px 0px rgba(20, 17, 31, 0.05)"
+				},
 				{
-                    "name": "Medium Light",
-                    "slug": "medium-light",
-                    "shadow": "0px 69px 19px 0px rgba(20, 17, 31, 0.00), 0px 44px 18px 0px rgba(20, 17, 31, 0.01), 0px 25px 15px 0px rgba(20, 17, 31, 0.03), 0px 11px 11px 0px rgba(20, 17, 31, 0.04), 0px 3px 6px 0px rgba(20, 17, 31, 0.05)"
-                },
+					"name": "Large Light",
+					"slug": "large-light",
+					"shadow": "0px 219px 61px 0px rgba(20, 17, 31, 0.00), 0px 140px 56px 0px rgba(20, 17, 31, 0.01), 0px 79px 47px 0px rgba(20, 17, 31, 0.03), 0px 35px 35px 0px rgba(20, 17, 31, 0.04), 0px 9px 19px 0px rgba(20, 17, 31, 0.05)"
+				},
 				{
-                    "name": "Small Light",
-                    "slug": "small-light",
-                    "shadow": "0px 16px 5px 0px rgba(20, 17, 31, 0.00), 0px 10px 4px 0px rgba(20, 17, 31, 0.00), 0px 6px 4px 0px rgba(20, 17, 31, 0.02), 0px 3px 3px 0px rgba(20, 17, 31, 0.03), 0px 1px 1px 0px rgba(20, 17, 31, 0.03)"
-                }
-            ]
-        },
+					"name": "Medium Light",
+					"slug": "medium-light",
+					"shadow": "0px 69px 19px 0px rgba(20, 17, 31, 0.00), 0px 44px 18px 0px rgba(20, 17, 31, 0.01), 0px 25px 15px 0px rgba(20, 17, 31, 0.03), 0px 11px 11px 0px rgba(20, 17, 31, 0.04), 0px 3px 6px 0px rgba(20, 17, 31, 0.05)"
+				},
+				{
+					"name": "Small Light",
+					"slug": "small-light",
+					"shadow": "0px 16px 5px 0px rgba(20, 17, 31, 0.00), 0px 10px 4px 0px rgba(20, 17, 31, 0.00), 0px 6px 4px 0px rgba(20, 17, 31, 0.02), 0px 3px 3px 0px rgba(20, 17, 31, 0.03), 0px 1px 1px 0px rgba(20, 17, 31, 0.03)"
+				}
+			]
+		},
 		"spacing": {
 			"defaultSpacingSizes": false,
 			"spacingSizes": [
@@ -329,7 +206,9 @@
 							"fontStretch": "75% 125%",
 							"fontStyle": "normal",
 							"fontWeight": "300 900",
-							"src": [ "file:./assets/fonts/mona-sans/Mona-Sans.woff2"]
+							"src": [
+								"file:./assets/fonts/mona-sans/Mona-Sans.woff2"
+							]
 						}
 					]
 				},

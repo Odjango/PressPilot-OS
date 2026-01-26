@@ -6,19 +6,25 @@ export class ChassisLoader {
     constructor(private rootDir: string) { }
 
     async load(baseName: BaseTheme, targetDir: string): Promise<void> {
-        const BASE_THEME_PATH = path.join(this.rootDir, 'bases', baseName);
+        // PRIORITY 1: Check 'proven-cores' (The User's defined Vault)
+        let sourcePath = path.join(this.rootDir, 'proven-cores', baseName);
 
-        if (!fs.existsSync(BASE_THEME_PATH)) {
-            if (baseName === 'spectra') {
-                console.error(`Spectra base not found at ${BASE_THEME_PATH}. Please ensure it is installed.`);
-                process.exit(1);
+        if (!fs.existsSync(sourcePath)) {
+            // PRIORITY 2: Fallback to 'bases' (Legacy/Default)
+            sourcePath = path.join(this.rootDir, 'bases', baseName);
+
+            if (!fs.existsSync(sourcePath)) {
+                if (baseName === 'spectra') {
+                    console.error(`Spectra base not found at ${sourcePath}.`);
+                    process.exit(1);
+                }
+                throw new Error(`Base theme not found for '${baseName}' (checked proven-cores/ and bases/)`);
             }
-            throw new Error(`Base theme not found at ${BASE_THEME_PATH}`);
         }
 
-        console.log(`[Chassis] Loading base '${baseName}' from ${BASE_THEME_PATH}...`);
+        console.log(`[Chassis] Loading base '${baseName}' from ${sourcePath}...`);
         await fs.ensureDir(targetDir);
-        await fs.copy(BASE_THEME_PATH, targetDir);
+        await fs.copy(sourcePath, targetDir);
         console.log(`[Chassis] Base loaded.`);
     }
 }

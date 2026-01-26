@@ -1,50 +1,55 @@
 <?php
 /**
- * Title: Footer Centered
- * Slug: ollie/footer-dark-centered
- * Description: 
+ * Title: Footer (DARK)
+ * Slug: ollie/footer-dark-centered-1769393696397
  * Categories: footer
- * Keywords: 
- * Viewport Width: 1500
  * Block Types: core/template-part/footer
- * Post Types: wp_template
- * Inserter: true
  */
 ?>
-<!-- wp:group {"metadata":{"name":"Footer"},"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|x-large","bottom":"var:preset|spacing|x-large","right":"var:preset|spacing|medium","left":"var:preset|spacing|medium"},"margin":{"top":"0px"},"blockGap":"var:preset|spacing|large"},"elements":{"link":{"color":{"text":"var:preset|color|base"}}}},"backgroundColor":"main","textColor":"base","layout":{"inherit":true,"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-base-color has-main-background-color has-text-color has-background has-link-color" style="margin-top:0px;padding-top:var(--wp--preset--spacing--x-large);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--x-large);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:group {"metadata":{"name":"Footer Inside"},"style":{"spacing":[]},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:site-title {"level":0,"textAlign":"center","isLink":false} /-->
 
-<!-- wp:group {"metadata":{"name":"Navs"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"fontSize":"small","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"center"}} -->
-<div class="wp-block-group has-small-font-size"><!-- wp:paragraph -->
-<p><?php esc_html_e( 'Download', 'ollie' ); ?></p>
-<!-- /wp:paragraph -->
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+    
+    <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|50","left":"var:preset|spacing|50"}}}} -->
+    <div class="wp-block-columns alignwide">
+        <!-- wp:column {"width":"40%"} -->
+        <div class="wp-block-column" style="flex-basis:40%">
+            <!-- wp:site-title {"level":3,"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}}} /-->
+            
+            <!-- wp:paragraph {"style":{"typography":{"lineHeight":"1.6"}}} -->
+            <p style="line-height:1.6">Built with robust, clean code. Optimized for performance and scale.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
 
-<!-- wp:paragraph -->
-<p><?php esc_html_e( 'Visit Ollie', 'ollie' ); ?></p>
-<!-- /wp:paragraph -->
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Quick Links</h6>
+            <!-- /wp:heading -->
+            
+            <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","orientation":"vertical"}} /-->
+        </div>
+        <!-- /wp:column -->
 
-<!-- wp:paragraph -->
-<p><?php esc_html_e( 'Twitter', 'ollie' ); ?></p>
-<!-- /wp:paragraph -->
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Connect</h6>
+            <!-- /wp:heading -->
+             <!-- wp:social-links {"iconColor":"base","iconColorValue":"#ffffff","style":{"spacing":{"blockGap":"1rem"}}} -->
+            <ul class="wp-block-social-links has-icon-color has-base-color">
+                <!-- wp:social-link {"url":"#","service":"twitter"} /-->
+                <!-- wp:social-link {"url":"#","service":"linkedin"} /-->
+            </ul>
+            <!-- /wp:social-links -->
+            <!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}, "fontSize":"small"} -->
+             <p class="has-small-font-size" style="margin-top:var(--wp--preset--spacing--20)">© 2026 PressPilot Site.<br>Powered by PressPilot OS.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
+    </div>
+    <!-- /wp:columns -->
 
-<!-- wp:paragraph -->
-<p><?php esc_html_e( 'Visit Mike', 'ollie' ); ?></p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:group -->
-
-<!-- wp:paragraph {"align":"center","fontSize":"small"} -->
-<p class="has-text-align-center has-small-font-size"><?php esc_html_e( '© 2025 · Powered by WordPress and ', 'ollie' ); ?><a href="https://olliewp.com"><?php esc_html_e( 'Ollie', 'ollie' ); ?></a></p>
-<!-- /wp:paragraph -->
-
-<!-- wp:social-links {"iconColor":"main","iconColorValue":"#150E29","iconBackgroundColor":"base","iconBackgroundColorValue":"#fff","className":"is-style-default","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|small","left":"var:preset|spacing|small"}}},"layout":{"type":"flex","justifyContent":"center"}} -->
-<ul class="wp-block-social-links has-icon-color has-icon-background-color is-style-default"><!-- wp:social-link {"url":"#","service":"twitter"} /-->
-
-<!-- wp:social-link {"url":"#","service":"instagram"} /-->
-
-<!-- wp:social-link {"url":"#","service":"linkedin"} /-->
-
-<!-- wp:social-link {"url":"#","service":"facebook"} /--></ul>
-<!-- /wp:social-links --></div>
-<!-- /wp:group --></div>
+</div>
 <!-- /wp:group -->

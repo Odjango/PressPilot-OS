@@ -5,6 +5,10 @@ import { PageData, UniversalPageTemplate } from './types';
 import { getUniversalAboutContent } from './patterns/universal-about';
 import { getUniversalServicesContent } from './patterns/universal-services';
 import { getUniversalContactContent } from './patterns/universal-contact';
+import { getUniversalHomeContent } from './patterns/universal-home';
+import { getUniversalMenuContent } from './patterns/universal-menu';
+import { getUniversalReservationContent } from './patterns/universal-reservation';
+import { getUniversalFooterContent } from './patterns/universal-footer';
 
 export const buildPageTemplate = async (themeDir: string, page: PageData) => {
     const filename = `page-${page.slug}.html`;
@@ -14,6 +18,9 @@ export const buildPageTemplate = async (themeDir: string, page: PageData) => {
 
     // Switch for templates (To be populated with actual pattern calls)
     switch (page.template) {
+        case 'universal-home':
+            content = getUniversalHomeContent(page.content);
+            break;
         case 'universal-about':
             content = getUniversalAboutContent(page.content);
             break;
@@ -23,27 +30,36 @@ export const buildPageTemplate = async (themeDir: string, page: PageData) => {
         case 'universal-contact':
             content = getUniversalContactContent(page.content);
             break;
-        default:
-            content = `<!-- wp:paragraph --><p>Default Page</p><!-- /wp:paragraph -->`;
+        case 'universal-menu':
+            content = getUniversalMenuContent(page.content);
+            break;
+        case 'universal-reservation':
+            content = getUniversalReservationContent(page.content);
+            break;
+            console.log(`[Override] Overwrote front-page.html with custom home template.`);
     }
+};
 
-    // Wrap in standard Header/Footer layout if needed, or if patterns handle it.
-    // Our patterns usually include header/footer refs? 
-    // Wait, patterns in 'patterns/index.ts' like `getUniversalBlogContent` include `wp:template-part header`.
-    // So our page content should also include them.
+import { getUniversalHeaderContent } from './patterns/universal-header';
 
-    // For now, let's wrap the content with the basic FSE structure
-    const fullTemplate = `
-<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
-<!-- wp:group {"tagName":"main","layout":{"inherit":true}} -->
-<main class="wp-block-group">
-    ${content}
-</main>
-<!-- /wp:group -->
-<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
-`;
+export const buildHeaderTemplate = async (themeDir: string, businessName: string, pages: { title: string, slug: string }[]) => {
+    const filename = 'header.html';
+    const filePath = path.join(themeDir, 'parts', filename);
+    const content = getUniversalHeaderContent(businessName, pages);
 
     await fs.ensureDir(path.dirname(filePath));
-    await fs.writeFile(filePath, fullTemplate.trim());
-    console.log(`Generated template: ${filename}`);
+    await fs.writeFile(filePath, content.trim());
+    console.log(`[Override] Generated custom header with navigation: ${filename}`);
+};
+
+export const buildFooterTemplate = async (themeDir: string, businessName: string) => {
+    const filename = 'footer.html';
+    // Overwrite the 'parts' footer if it exists (Ollie structure)
+    // Also check 'patterns' folder if some themes store it there, but standard is parts.
+    const filePath = path.join(themeDir, 'parts', filename);
+    const content = getUniversalFooterContent(businessName);
+
+    await fs.ensureDir(path.dirname(filePath));
+    await fs.writeFile(filePath, content.trim());
+    console.log(`[Override] Generated branded footer: ${filename}`);
 };

@@ -86,19 +86,63 @@ export const getUniversalLandingContent = () => `
 `;
 
 export const getUniversalFooterContent = (footerName: string) => `
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
-    <!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between"}} -->
-    <div class="wp-block-group alignwide">
-        <!-- wp:paragraph {"fontSize":"small"} -->
-        <p class="has-small-font-size">© ${new Date().getFullYear()} ${footerName} · Powered by PressPilot</p>
-        <!-- /wp:paragraph -->
-        
-        <!-- wp:paragraph {"fontSize":"small"} -->
-        <p class="has-small-font-size"><a href="#">Facebook</a> · <a href="#">LinkedIn</a></p>
-        <!-- /wp:paragraph -->
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"}}},"backgroundColor":"primary","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-primary-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+    <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|50","left":"var:preset|spacing|50"}}}} -->
+    <div class="wp-block-columns alignwide">
+        <!-- wp:column {"width":"40%"} -->
+        <div class="wp-block-column" style="flex-basis:40%">
+            <!-- wp:site-logo {"width":60,"shouldSyncIcon":false} /-->
+            <!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"24px","fontWeight":"700"}}} -->
+            <h3 class="wp-block-heading" style="font-size:24px;font-weight:700">${footerName}</h3>
+            <!-- /wp:heading -->
+            <!-- wp:paragraph {"style":{"typography":{"lineHeight":"1.6"}}} -->
+            <p style="line-height:1.6">Experience the best flavors in town. Locally sourced, prepared with passion.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
+
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Company</h6>
+            <!-- /wp:heading -->
+            
+            <!-- wp:group {"layout":{"type":"flex","orientation":"vertical"}} -->
+            <div class="wp-block-group">
+                <!-- wp:paragraph -->
+                <p><a href="/about">About Us</a></p>
+                <!-- /wp:paragraph -->
+                <!-- wp:paragraph -->
+                <p><a href="/contact">Contact</a></p>
+                <!-- /wp:paragraph -->
+                <!-- wp:paragraph -->
+                <p><a href="#">Careers</a></p>
+                <!-- /wp:paragraph -->
+            </div>
+            <!-- /wp:group -->
+        </div>
+        <!-- /wp:column -->
+
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Connect</h6>
+            <!-- /wp:heading -->
+             <!-- wp:social-links {"iconColor":"base","iconColorValue":"#ffffff","style":{"spacing":{"blockGap":"1rem"}}} -->
+            <ul class="wp-block-social-links has-icon-color has-base-color">
+                <!-- wp:social-link {"url":"#","service":"facebook"} /-->
+                <!-- wp:social-link {"url":"#","service":"instagram"} /-->
+                <!-- wp:social-link {"url":"#","service":"twitter"} /-->
+            </ul>
+            <!-- /wp:social-links -->
+            <!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+             <p style="margin-top:var(--wp--preset--spacing--20)">© ${new Date().getFullYear()} ${footerName}.<br>Powered by PressPilot OS.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
     </div>
-    <!-- /wp:group -->
+    <!-- /wp:columns -->
 </div>
 <!-- /wp:group -->
 `;

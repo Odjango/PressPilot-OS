@@ -1,96 +1,55 @@
 <?php
 /**
- * Title: Footer with site title, menu, opening hours and contact information in four columns.
- * Slug: tove/footer-horizontal-columns-1
- * Categories: tove-footer
+ * Title: Footer (DARK)
+ * Slug: tove/footer-horizontal-columns-1-1769393696476
+ * Categories: footer
+ * Block Types: core/template-part/footer
  */
 ?>
-<!-- wp:group {"align":"wide","layout":{"inherit":true,"type":"constrained"}} -->
-<div class="wp-block-group alignwide"><!-- wp:group {"align":"wide"} -->
-	<div class="wp-block-group alignwide"><!-- wp:separator {"opacity":"css","className":"is-style-wide"} -->
-		<hr class="wp-block-separator has-css-opacity is-style-wide" />
-		<!-- /wp:separator -->
 
-		<!-- wp:spacer {"height":"1px","className":"hide-mobile"} -->
-		<div style="height:1px" aria-hidden="true" class="wp-block-spacer hide-mobile"></div>
-		<!-- /wp:spacer -->
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+    
+    <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|50","left":"var:preset|spacing|50"}}}} -->
+    <div class="wp-block-columns alignwide">
+        <!-- wp:column {"width":"40%"} -->
+        <div class="wp-block-column" style="flex-basis:40%">
+            <!-- wp:site-title {"level":3,"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}}} /-->
+            
+            <!-- wp:paragraph {"style":{"typography":{"lineHeight":"1.6"}}} -->
+            <p style="line-height:1.6">Built with robust, clean code. Optimized for performance and scale.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
 
-		<!-- wp:columns -->
-		<div class="wp-block-columns"><!-- wp:column -->
-			<div class="wp-block-column"><!-- wp:site-title {"level":0,"textAlign":"left","fontSize":"large"} /-->
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Quick Links</h6>
+            <!-- /wp:heading -->
+            
+            <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","orientation":"vertical"}} /-->
+        </div>
+        <!-- /wp:column -->
 
-				<!-- wp:spacer {"height":"1px"} -->
-				<div style="height:1px" aria-hidden="true" class="wp-block-spacer"></div>
-				<!-- /wp:spacer -->
-			</div>
-			<!-- /wp:column -->
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Connect</h6>
+            <!-- /wp:heading -->
+             <!-- wp:social-links {"iconColor":"base","iconColorValue":"#ffffff","style":{"spacing":{"blockGap":"1rem"}}} -->
+            <ul class="wp-block-social-links has-icon-color has-base-color">
+                <!-- wp:social-link {"url":"#","service":"twitter"} /-->
+                <!-- wp:social-link {"url":"#","service":"linkedin"} /-->
+            </ul>
+            <!-- /wp:social-links -->
+            <!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}, "fontSize":"small"} -->
+             <p class="has-small-font-size" style="margin-top:var(--wp--preset--spacing--20)">© 2026 PressPilot Site.<br>Powered by PressPilot OS.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
+    </div>
+    <!-- /wp:columns -->
 
-			<!-- wp:column -->
-			<div class="wp-block-column">
-				<!-- wp:heading {"level":6,"style":{"spacing":{"margin":{"bottom":"var:preset|spacing|30"}}}} -->
-				<h6 style="margin-bottom:var(--wp--preset--spacing--30)">Navigation</h6>
-				<!-- /wp:heading -->
-
-				<!-- wp:navigation {"ref":25660,"overlayMenu":"never","__unstableLocation":"primary","className":"no-margin-top","layout":{"type":"flex","setCascadingProperties":"true","orientation":"vertical","justifyContent":"left","flexWrap":"wrap"},"style":{"spacing":{"blockGap":"0.5em"}}} /-->
-			</div>
-			<!-- /wp:column -->
-
-			<!-- wp:column -->
-			<div class="wp-block-column">
-				<!-- wp:heading {"level":6,"style":{"spacing":{"margin":{"bottom":"var:preset|spacing|30"}}}} -->
-				<h6 style="margin-bottom:var(--wp--preset--spacing--30)">Our Hours</h6>
-				<!-- /wp:heading -->
-
-				<!-- wp:columns {"isStackedOnMobile":false,"className":"no-margin-top"} -->
-				<div class="wp-block-columns is-not-stacked-on-mobile no-margin-top"><!-- wp:column -->
-					<div class="wp-block-column"><!-- wp:paragraph -->
-						<p>Mon–Fri<br>Saturday<br>Sunday</p>
-						<!-- /wp:paragraph -->
-					</div>
-					<!-- /wp:column -->
-
-					<!-- wp:column -->
-					<div class="wp-block-column"><!-- wp:paragraph -->
-						<p>07 – 18<br>08 – 19<br>08 – 19</p>
-						<!-- /wp:paragraph -->
-					</div>
-					<!-- /wp:column -->
-				</div>
-				<!-- /wp:columns -->
-			</div>
-			<!-- /wp:column -->
-
-			<!-- wp:column -->
-			<div class="wp-block-column">
-				<!-- wp:heading {"level":6,"style":{"spacing":{"margin":{"bottom":"var:preset|spacing|30"}}}} -->
-				<h6 style="margin-bottom:var(--wp--preset--spacing--30)">Contact</h6>
-				<!-- /wp:heading -->
-
-				<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"0","right":"0","bottom":"0","left":"0"}}}} -->
-				<p style="margin-top:0;margin-right:0;margin-bottom:0;margin-left:0">hi@niofika.se<br>08-123 45 67</p>
-				<!-- /wp:paragraph -->
-			</div>
-			<!-- /wp:column -->
-		</div>
-		<!-- /wp:columns -->
-
-		<!-- wp:spacer {"height":"32px"} -->
-		<div style="height:32px" aria-hidden="true" class="wp-block-spacer"></div>
-		<!-- /wp:spacer -->
-
-		<!-- wp:group {"style":{"spacing":{"blockGap":"4px"}},"className":"theme-credits-row","layout":{"type":"flex","justifyContent":"center"}} -->
-		<div class="wp-block-group theme-credits-row"><!-- wp:paragraph {"fontSize":"tiny"} -->
-			<p class="has-tiny-font-size"><strong>© 2023</strong> </p>
-			<!-- /wp:paragraph -->
-
-			<!-- wp:site-title {"level":0,"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"tiny"} /-->
-
-			<!-- wp:paragraph {"fontSize":"tiny"} -->
-			<p class="has-tiny-font-size">— Theme by <a href="https://andersnoren.se">Anders Norén</a></p>
-			<!-- /wp:paragraph -->
-		</div>
-		<!-- /wp:group -->
-	</div>
-	<!-- /wp:group -->
 </div>
 <!-- /wp:group -->

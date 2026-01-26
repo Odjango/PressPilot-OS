@@ -8,6 +8,7 @@ export interface ThemeColors {
 export interface ThemePatterns {
     hero: string;
     hero_search_headline: string;
+    hero_search_pretitle?: string;
     hero_search_sub: string;
 }
 
@@ -17,8 +18,27 @@ export interface ThemePersonality {
     home_template: string;
     recipes?: Record<string, LayoutRecipe[]>; // Key: Industry (e.g. 'saas'), Value: List of recipes
 }
+export type UniversalPageTemplate =
+    | 'universal-home'
+    | 'universal-about'
+    | 'universal-services'
+    | 'universal-contact'
+    | 'universal-menu'         // Restaurant
+    | 'universal-reservation'  // Restaurant
+    | 'universal-portfolio'    // Agency
+    | 'universal-shop';        // E-commerce
 
-export type UniversalPageTemplate = 'universal-about' | 'universal-services' | 'universal-contact';
+export interface PatternSlot {
+    patternId: string; // e.g., 'universal-hero'
+    data?: any; // Overrides for this specific slot
+}
+
+export interface SiteRecipe {
+    industry: string;
+    description: string;
+    pages: PageData[]; // The default pages structure for this vertical
+}
+
 
 export interface PageContent {
     hero_title?: string;
@@ -50,6 +70,7 @@ export interface GeneratorData {
     name?: string;
     primary?: string;
     secondary?: string;
+    accent?: string;
     hero_headline?: string;
     hero_subheadline?: string;
     logo?: string; // Path to local logo file
@@ -59,7 +80,7 @@ export interface GeneratorData {
     industry?: string; // e.g., 'saas', 'restaurant', 'agency'
 }
 
-export type BaseTheme = 'ollie' | 'frost' | 'twentytwentyfour' | 'spectra';
+export type BaseTheme = 'ollie' | 'frost' | 'twentytwentyfour' | 'spectra' | 'tove' | 'blockbase';
 export type GeneratorMode = 'standard' | 'heavy';
 
 export type PatternReference = string; // Path to pattern file relative to theme root

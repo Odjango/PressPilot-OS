@@ -14,6 +14,12 @@ export class PatternInjector {
         let templateContent = '';
 
         for (const patternPath of recipe.patterns) {
+            // Deduplication: Skip headers/footers as they are injected via the global wrapper below
+            if (patternPath.includes('header') || patternPath.includes('footer')) {
+                console.log(`[Pattern] Deduplication: Skipping ${patternPath} (handled by global wrapper).`);
+                continue;
+            }
+
             const fullPath = path.join(themeDir, patternPath);
 
             if (await fs.pathExists(fullPath)) {
@@ -34,6 +40,11 @@ export class PatternInjector {
                     if (userData.hero_headline) {
                         content = content.replace(personality.patterns.hero_search_headline, userData.hero_headline);
                     }
+                    if (personality.patterns.hero_search_pretitle) {
+                        // Replace pre-title with Industry or Empty
+                        const preTitle = userData.industry ? userData.industry.toUpperCase() : 'WELCOME';
+                        content = content.replace(personality.patterns.hero_search_pretitle, preTitle);
+                    }
                     if (userData.hero_subheadline && personality.patterns.hero_search_sub) {
                         content = content.replace(personality.patterns.hero_search_sub, userData.hero_subheadline);
                     }
@@ -49,11 +60,25 @@ export class PatternInjector {
             }
         }
 
+        // 3.5 Force Universal Footer (The "FooterFactory" Step)
+        const footerPath = path.join(themeDir, 'parts', 'footer.html');
+        await fs.ensureDir(path.dirname(footerPath));
+        const footerName = userData.name || 'PressPilot Site';
+        await fs.writeFile(footerPath, getUniversalFooterContent(footerName).trim());
+        console.log(`[Pattern] FooterFactory: Generated branded footer for ${footerName}`);
+
+        // Prepend Header and Append Footer to the Front Page Template
+        // This ensures the Homepage uses the SAME header/footer as inner pages
+        // FIX: Removed 'theme' and 'tagName' attributes to prevent JSON validation errors and slug mismatches.
+        // We use the 'slug' reference which resolves to the file we just wrote above.
+        const fullContent = `<!-- wp:template-part {"slug":"header"} /-->
+${templateContent}
+<!-- wp:template-part {"slug":"footer"} /-->`;
+
         // 4. Transform to Front Page
-        // We write to front-page.html to ensure it takes precedence as the Homepage
         const frontPagePath = path.join(themeDir, 'templates', 'front-page.html');
-        await fs.writeFile(frontPagePath, templateContent);
-        console.log(`[Pattern] Generated front-page.html from recipe.`);
+        await fs.writeFile(frontPagePath, fullContent);
+        console.log(`[Pattern] Generated front-page.html with Header/Footer wrapper.`);
     }
 
     async injectHeavyMode(themeDir: string, personality: ThemePersonality, userData: GeneratorData, safeName: string): Promise<void> {
@@ -101,7 +126,7 @@ export class PatternInjector {
         }
 
         // 4. Force Header/Footer
-        const footerPath = path.join(themeDir, UNIVERSAL_PATTERNS.footer);
+        const footerPath = path.join(themeDir, 'parts', 'footer.html'); // Ensure parts/footer.html
         const footerName = userData.name || 'PressPilot Site';
         await fs.ensureDir(path.dirname(footerPath));
         await fs.writeFile(footerPath, getUniversalFooterContent(footerName).trim());
@@ -136,8 +161,16 @@ ${menuPatternContent}`;
             await fs.writeFile(patternPath, patternFileContent);
 
             // Create a "page-menu.html" template that uses this pattern
-            // This ensures visiting /menu loads this layout
+            // Premium Layout: Dark Header + Content
             const menuPageTemplate = `<!-- wp:template-part {"slug":"header","theme":"${safeName}","tagName":"header"} /-->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"main","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-main-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}}} -->
+    <h1 class="wp-block-heading has-text-align-center" style="font-style:normal;font-weight:700">Our Menu</h1>
+    <!-- /wp:heading -->
+</div>
+<!-- /wp:group -->
 
 <!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
 <main class="wp-block-group" style="margin-top:var(--wp--preset--spacing--50);margin-bottom:var(--wp--preset--spacing--50)">
@@ -150,214 +183,132 @@ ${menuPatternContent}`;
             const menuTemplatePath = path.join(themeDir, 'templates', 'page-menu.html');
             await fs.writeFile(menuTemplatePath, menuPageTemplate);
             console.log('[Pattern] Injected Restaurant Menu Pattern & Template.');
+            await this.injectNavLink(themeDir, 'Menu', '/menu');
+        }
+
+        // 6. FACTORY 3.2: Activate Other Vertical Architects
+        if (userData.industry === 'fitness' || userData.industry === 'gym') {
+            await this.injectSchedule(themeDir, safeName);
+        }
+
+        if (userData.industry === 'portfolio' || userData.industry === 'agency' || userData.industry === 'creative') {
+            await this.injectGallery(themeDir, safeName);
+        }
+
+        if (userData.industry === 'ecommerce' || userData.industry === 'shop') {
+            await this.injectWooCommerce(themeDir, safeName);
         }
     }
 
     async injectGallery(themeDir: string, safeName: string): Promise<void> {
         console.log('[Pattern] Injecting Portfolio Gallery...');
 
-        // 1. Create Gallery Template
-        const galleryContent = `<!-- wp:template-part {"slug":"header","theme":"${safeName}","tagName":"header"} /-->
+        // FACTORY v2: Load Pattern
+        const patternPath = path.join(process.cwd(), 'src/generator/patterns/library/gallery-pattern.html');
+        let galleryPatternHtml = '';
+        try {
+            galleryPatternHtml = await fs.readFile(patternPath, 'utf8');
+        } catch (err) {
+            console.warn('[Pattern] Missing gallery-pattern.html');
+            return;
+        }
 
-<!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
-<main class="wp-block-group" style="margin-top:var(--wp--preset--spacing--50);margin-bottom:var(--wp--preset--spacing--50)">
-    <!-- wp:heading {"textAlign":"center","level":1} -->
-    <h1 class="wp-block-heading has-text-align-center">Gallery</h1>
-    <!-- /wp:heading -->
-
+        // Generate Grid Items (Safe Images)
+        // In V2, we would use real images from userData.images if available
+        const galleryItemsHtml = `
     <!-- wp:columns {"align":"wide"} -->
     <div class="wp-block-columns alignwide">
         <!-- wp:column -->
         <div class="wp-block-column">
-            <!-- wp:image {"sizeSlug":"large","linkDestination":"none"} -->
             <figure class="wp-block-image size-large"><img src="https://placehold.co/600x800" alt="Gallery Image 1"/></figure>
-            <!-- /wp:image -->
-             <!-- wp:image {"sizeSlug":"large","linkDestination":"none"} -->
             <figure class="wp-block-image size-large"><img src="https://placehold.co/600x500" alt="Gallery Image 2"/></figure>
-            <!-- /wp:image -->
         </div>
         <!-- /wp:column -->
-        
         <!-- wp:column -->
         <div class="wp-block-column">
-             <!-- wp:image {"sizeSlug":"large","linkDestination":"none"} -->
             <figure class="wp-block-image size-large"><img src="https://placehold.co/600x500" alt="Gallery Image 3"/></figure>
-            <!-- /wp:image -->
-            <!-- wp:image {"sizeSlug":"large","linkDestination":"none"} -->
             <figure class="wp-block-image size-large"><img src="https://placehold.co/600x800" alt="Gallery Image 4"/></figure>
-            <!-- /wp:image -->
-        </div>
-        <!-- /wp:column -->
-
-         <!-- wp:column -->
-        <div class="wp-block-column">
-             <!-- wp:image {"sizeSlug":"large","linkDestination":"none"} -->
-            <figure class="wp-block-image size-large"><img src="https://placehold.co/600x700" alt="Gallery Image 5"/></figure>
-            <!-- /wp:image -->
-             <!-- wp:image {"sizeSlug":"large","linkDestination":"none"} -->
-            <figure class="wp-block-image size-large"><img src="https://placehold.co/600x600" alt="Gallery Image 6"/></figure>
-            <!-- /wp:image -->
         </div>
         <!-- /wp:column -->
     </div>
-    <!-- /wp:columns -->
-</main>
-<!-- /wp:group -->
+    <!-- /wp:columns -->`;
 
-<!-- wp:template-part {"slug":"footer","theme":"${safeName}","tagName":"footer"} /-->`;
+        const galleryContent = galleryPatternHtml.replace('{{GALLERY_GRID}}', galleryItemsHtml);
 
         await fs.ensureDir(path.join(themeDir, 'templates'));
         await fs.writeFile(path.join(themeDir, 'templates', 'page-gallery.html'), galleryContent);
-
-        // 2. Inject Nav Link
         await this.injectNavLink(themeDir, 'Gallery', '/gallery');
     }
 
     async injectSchedule(themeDir: string, safeName: string): Promise<void> {
         console.log('[Pattern] Injecting Fitness Schedule...');
 
-        // 1. Create Schedule Template
-        const scheduleContent = `<!-- wp:template-part {"slug":"header","theme":"${safeName}","tagName":"header"} /-->
+        const patternPath = path.join(process.cwd(), 'src/generator/patterns/library/schedule-pattern.html');
+        let schedulePatternHtml = '';
+        try {
+            schedulePatternHtml = await fs.readFile(patternPath, 'utf8');
+        } catch (err) { console.warn('Missing schedule pattern'); return; }
 
-<!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
-<main class="wp-block-group" style="margin-top:var(--wp--preset--spacing--50);margin-bottom:var(--wp--preset--spacing--50)">
-    <!-- wp:heading {"textAlign":"center","level":1} -->
-    <h1 class="wp-block-heading has-text-align-center">Class Schedule</h1>
-    <!-- /wp:heading -->
-
+        // Generate Schedule Table Rows
+        const scheduleTableHtml = `
     <!-- wp:table {"hasFixedLayout":true,"className":"is-style-stripes"} -->
     <figure class="wp-block-table is-style-stripes">
         <table class="has-fixed-layout">
             <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>Class</th>
-                    <th>Trainer</th>
-                </tr>
+                <tr><th>Time</th><th>Class</th><th>Trainer</th></tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>09:00 AM</td>
-                    <td>Morning Flow Yoga</td>
-                    <td>Sarah</td>
-                </tr>
-                <tr>
-                    <td>10:30 AM</td>
-                    <td>HIIT Blast</td>
-                    <td>Mike</td>
-                </tr>
-                <tr>
-                    <td>05:00 PM</td>
-                    <td>Power Lifting</td>
-                    <td>Jessica</td>
-                </tr>
-                 <tr>
-                    <td>06:30 PM</td>
-                    <td>Evening Meditation</td>
-                    <td>David</td>
-                </tr>
+                <tr><td>09:00 AM</td><td>Morning Flow</td><td>Sarah</td></tr>
+                <tr><td>10:30 AM</td><td>HIIT Blast</td><td>Mike</td></tr>
+                <tr><td>06:00 PM</td><td>Power Yoga</td><td>David</td></tr>
             </tbody>
         </table>
     </figure>
-    <!-- /wp:table -->
-</main>
-<!-- /wp:group -->
+    <!-- /wp:table -->`;
 
-<!-- wp:template-part {"slug":"footer","theme":"${safeName}","tagName":"footer"} /-->`;
+        const scheduleContent = schedulePatternHtml.replace('{{SCHEDULE_TABLE}}', scheduleTableHtml);
 
         await fs.ensureDir(path.join(themeDir, 'templates'));
         await fs.writeFile(path.join(themeDir, 'templates', 'page-schedule.html'), scheduleContent);
-
-        // 2. Inject Nav Link
         await this.injectNavLink(themeDir, 'Schedule', '/schedule');
     }
 
-
     async injectWooCommerce(themeDir: string, safeName: string): Promise<void> {
-        console.log('[Pattern] Injecting WooCommerce Templates...');
+        console.log(`[PatternMatcher] Injecting WooCommerce Support for '${safeName}'...`);
 
-        // 1. Create Product Archive Template (Shop Page)
-        const archiveContent = `<!-- wp:template-part {"slug":"header","theme":"${safeName}","tagName":"header"} /-->
+        // 1. Inject Theme Support in functions.php
+        const functionsPath = path.join(themeDir, 'functions.php');
+        if (await fs.pathExists(functionsPath)) {
+            let content = await fs.readFile(functionsPath, 'utf8');
+            const wooSupport = `
+/* PressPilot WooCommerce Support */
+add_action('after_setup_theme', function() {
+    add_theme_support('woocommerce');
+    add_theme_support('wc-product-gallery-zoom');
+    add_theme_support('wc-product-gallery-lightbox');
+    add_theme_support('wc-product-gallery-slider');
+});
+`;
+            // Append to file
+            if (!content.includes('add_theme_support(\'woocommerce\')')) {
+                await fs.appendFile(functionsPath, wooSupport);
+                console.log(`[PatternMatcher] Added WooCommerce support to functions.php`);
+            }
+        }
 
-<!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
-<main class="wp-block-group" style="margin-top:var(--wp--preset--spacing--50);margin-bottom:var(--wp--preset--spacing--50)">
-    <!-- wp:heading {"textAlign":"center","level":1} -->
-    <h1 class="wp-block-heading has-text-align-center">Shop</h1>
-    <!-- /wp:heading -->
+        // 2. Inject Universal Shop Pattern
+        // Resolves to src/generator/assets/patterns/universal-shop-grid.php
+        const sourcePattern = path.join(this.rootDir, 'src', 'generator', 'assets', 'patterns', 'universal-shop-grid.php');
+        const destPattern = path.join(themeDir, 'patterns', 'shop-grid.php');
 
-    <!-- wp:query {"query":{"perPage":9,"pages":0,"offset":0,"postType":"product","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false},"align":"wide","layout":{"type":"constrained"}} -->
-    <div class="wp-block-query alignwide">
-        <!-- wp:post-template {"align":"wide","layout":{"type":"grid","columnCount":3}} -->
-        <!-- wp:group {"style":{"border":{"width":"1px","radius":"8px"},"spacing":{"padding":{"top":"var:preset|spacing|30","right":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30"}}},"borderColor":"border-light","layout":{"type":"flex","orientation":"vertical","justifyContent":"center"}} -->
-        <div class="wp-block-group has-border-light-border-color" style="border-width:1px;border-radius:8px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)">
-            <!-- wp:post-featured-image {"isLink":true,"height":"200px","align":"center"} /-->
-            
-            <!-- wp:post-title {"isLink":true,"textAlign":"center","fontSize":"medium"} /-->
-            
-            <!-- wp:woocommerce/product-price {"textAlign":"center"} /-->
-            
-            <!-- wp:woocommerce/product-button {"textAlign":"center"} /-->
-        </div>
-        <!-- /wp:group -->
-        <!-- /wp:post-template -->
+        if (await fs.pathExists(sourcePattern)) {
+            await fs.copy(sourcePattern, destPattern);
+            console.log(`[PatternMatcher] Injected 'shop-grid.php' pattern.`);
+        } else {
+            console.warn(`[PatternMatcher] Warning: Universal Shop pattern not found at ${sourcePattern}`);
+        }
 
-        <!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"center"}} -->
-        <!-- wp:query-pagination-previous /-->
-        <!-- wp:query-pagination-numbers /-->
-        <!-- wp:query-pagination-next /-->
-        <!-- /wp:query-pagination -->
-    </div>
-    <!-- /wp:query -->
-</main>
-<!-- /wp:group -->
-
-<!-- wp:template-part {"slug":"footer","theme":"${safeName}","tagName":"footer"} /-->`;
-
-        await fs.ensureDir(path.join(themeDir, 'templates'));
-        await fs.writeFile(path.join(themeDir, 'templates', 'archive-product.html'), archiveContent);
-
-        // 2. Create Single Product Template
-        const singleProductContent = `<!-- wp:template-part {"slug":"header","theme":"${safeName}","tagName":"header"} /-->
-
-<!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
-<main class="wp-block-group" style="margin-top:var(--wp--preset--spacing--50);margin-bottom:var(--wp--preset--spacing--50)">
-    <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|50","left":"var:preset|spacing|50"}}}} -->
-    <div class="wp-block-columns alignwide">
-        <!-- wp:column {"width":"50%"} -->
-        <div class="wp-block-column" style="flex-basis:50%">
-            <!-- wp:post-featured-image /-->
-        </div>
-        <!-- /wp:column -->
-
-        <!-- wp:column {"width":"50%","verticalAlignment":"center"} -->
-        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%">
-            <!-- wp:post-title {"level":1} /-->
-            <!-- wp:woocommerce/product-price {"fontSize":"large"} /-->
-            <!-- wp:post-excerpt /-->
-            <!-- wp:woocommerce/product-button /-->
-            <!-- wp:woocommerce/product-meta /-->
-        </div>
-        <!-- /wp:column -->
-    </div>
-    <!-- /wp:columns -->
-    
-    <!-- wp:spacer {"height":"var:preset|spacing|50"} -->
-    <div style="height:var(--wp--preset--spacing--50)" aria-hidden="true" class="wp-block-spacer"></div>
-    <!-- /wp:spacer -->
-
-    <!-- wp:heading -->
-    <h2>Description</h2>
-    <!-- /wp:heading -->
-    <!-- wp:post-content /-->
-
-</main>
-<!-- /wp:group -->
-
-<!-- wp:template-part {"slug":"footer","theme":"${safeName}","tagName":"footer"} /-->`;
-
-        await fs.writeFile(path.join(themeDir, 'templates', 'single-product.html'), singleProductContent);
-
-        // 3. Inject Nav Link
+        // 3. Inject Navigation Link
         await this.injectNavLink(themeDir, 'Shop', '/shop');
     }
 

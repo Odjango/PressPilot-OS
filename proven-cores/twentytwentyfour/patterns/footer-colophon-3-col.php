@@ -1,106 +1,55 @@
 <?php
 /**
- * Title: Footer with colophon, 3 columns
- * Slug: twentytwentyfour/footer-colophon-3-col
+ * Title: Footer (DARK)
+ * Slug: twentytwentyfour/footer-colophon-3-col-1769393696495
  * Categories: footer
  * Block Types: core/template-part/footer
- * Description: A footer section with a colophon and 3 columns.
  */
 ?>
 
-<!-- wp:group {"align":"wide","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignwide">
-	<!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}}} -->
-	<div class="wp-block-group alignwide" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
-		<!-- wp:image {"width":"40px","height":"auto","sizeSlug":"full","linkDestination":"none"} -->
-		<figure class="wp-block-image size-full is-resized">
-			<img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/icon-message.webp" alt="" style="width:40px;height:auto" />
-		</figure>
-		<!-- /wp:image -->
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+    
+    <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|50","left":"var:preset|spacing|50"}}}} -->
+    <div class="wp-block-columns alignwide">
+        <!-- wp:column {"width":"40%"} -->
+        <div class="wp-block-column" style="flex-basis:40%">
+            <!-- wp:site-title {"level":3,"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}}} /-->
+            
+            <!-- wp:paragraph {"style":{"typography":{"lineHeight":"1.6"}}} -->
+            <p style="line-height:1.6">Built with robust, clean code. Optimized for performance and scale.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
 
-		<!-- wp:separator {"className":"is-style-wide"} -->
-		<hr class="wp-block-separator has-alpha-channel-opacity is-style-wide" />
-		<!-- /wp:separator -->
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Quick Links</h6>
+            <!-- /wp:heading -->
+            
+            <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","orientation":"vertical"}} /-->
+        </div>
+        <!-- /wp:column -->
 
-		<!-- wp:columns {"style":{"spacing":{"padding":{"top":"var:preset|spacing|10"}}}} -->
-		<div class="wp-block-columns" style="padding-top:var(--wp--preset--spacing--10)">
-			<!-- wp:column {"width":"57%"} -->
-			<div class="wp-block-column" style="flex-basis:57%">
-				<!-- wp:heading {"fontSize":"x-large"} -->
-				<h2 class="wp-block-heading has-x-large-font-size"><?php esc_html_e( 'Keep up, get in touch.', 'twentytwentyfour' ); ?></h2>
-				<!-- /wp:heading -->
-			</div>
-			<!-- /wp:column -->
-			<!-- wp:column {"width":"30%"} -->
-			<div class="wp-block-column" style="flex-basis:30%">
-				<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|10"}},"layout":{"type":"flex","orientation":"vertical"}} -->
-				<div class="wp-block-group">
-					<!-- wp:heading {"level":3,"fontSize":"medium","fontFamily":"body"} -->
-					<h3 class="wp-block-heading has-body-font-family has-medium-font-size"><?php esc_html_e( 'Contact', 'twentytwentyfour' ); ?></h3>
-					<!-- /wp:heading -->
-					<!-- wp:paragraph -->
-					<p><a href="#"><?php echo esc_html_x( 'info@example.com', 'Example email in site footer', 'twentytwentyfour' ); ?></a></p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-			</div>
-			<!-- /wp:column -->
-			<!-- wp:column {"width":"30%"} -->
-			<div class="wp-block-column" style="flex-basis:30%">
-				<!-- wp:columns {"isStackedOnMobile":false} -->
-				<div class="wp-block-columns is-not-stacked-on-mobile">
-					<!-- wp:column -->
-					<div class="wp-block-column">
-						<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|10"}},"layout":{"type":"flex","orientation":"vertical"}} -->
-						<div class="wp-block-group">
-							<!-- wp:heading {"level":3,"fontSize":"medium","fontFamily":"body"} -->
-							<h3 class="wp-block-heading has-body-font-family has-medium-font-size"><?php esc_html_e( 'Follow', 'twentytwentyfour' ); ?></h3>
-							<!-- /wp:heading -->
-							<!-- wp:paragraph -->
-							<p><a href="#"><?php esc_html_e( 'Instagram', 'twentytwentyfour' ); ?></a> / <a href="#"><?php esc_html_e( 'Facebook', 'twentytwentyfour' ); ?></a></p>
-							<!-- /wp:paragraph -->
-						</div>
-						<!-- /wp:group -->
-					</div>
-					<!-- /wp:column -->
-				</div>
-				<!-- /wp:columns -->
-			</div>
-			<!-- /wp:column -->
-		</div>
-		<!-- /wp:columns -->
+        <!-- wp:column {"width":"30%"} -->
+        <div class="wp-block-column" style="flex-basis:30%">
+            <!-- wp:heading {"level":6,"style":{"typography":{"textTransform":"uppercase","letterSpacing":"1px"}}} -->
+            <h6 class="wp-block-heading" style="text-transform:uppercase;letter-spacing:1px">Connect</h6>
+            <!-- /wp:heading -->
+             <!-- wp:social-links {"iconColor":"base","iconColorValue":"#ffffff","style":{"spacing":{"blockGap":"1rem"}}} -->
+            <ul class="wp-block-social-links has-icon-color has-base-color">
+                <!-- wp:social-link {"url":"#","service":"twitter"} /-->
+                <!-- wp:social-link {"url":"#","service":"linkedin"} /-->
+            </ul>
+            <!-- /wp:social-links -->
+            <!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}, "fontSize":"small"} -->
+             <p class="has-small-font-size" style="margin-top:var(--wp--preset--spacing--20)">© 2026 PressPilot Site.<br>Powered by PressPilot OS.</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
+    </div>
+    <!-- /wp:columns -->
 
-		<!-- wp:spacer {"height":"var:preset|spacing|50"} -->
-		<div style="height:var(--wp--preset--spacing--50)" aria-hidden="true" class="wp-block-spacer"></div>
-		<!-- /wp:spacer -->
-
-		<!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"top"}} -->
-		<div class="wp-block-group">
-			<!-- wp:group {"style":{"spacing":{"blockGap":"6px"}},"layout":{"type":"flex","flexWrap":"wrap"}} -->
-			<div class="wp-block-group">
-				<!-- wp:paragraph {"fontSize":"small"} -->
-				<p class="has-small-font-size"><?php esc_html_e( '&copy;', 'twentytwentyfour' ); ?></p>
-				<!-- /wp:paragraph -->
-				<!-- wp:site-title {"level":0,"style":{"typography":{"fontStyle":"normal","fontWeight":"400"}},"fontSize":"small"} /-->
-			</div>
-			<!-- /wp:group -->
-			<!-- wp:paragraph {"fontSize":"small"} -->
-			<p class="has-small-font-size">
-				<?php
-				/* Translators: WordPress link. */
-				$wordpress_link = '<a href="' . esc_url( __( 'https://wordpress.org', 'twentytwentyfour' ) ) . '" rel="nofollow">WordPress</a>';
-				echo sprintf(
-					/* Translators: Designed with WordPress */
-					esc_html__( 'Designed with %1$s', 'twentytwentyfour' ),
-					$wordpress_link
-				);
-				?>
-			</p>
-			<!-- /wp:paragraph -->
-		</div>
-		<!-- /wp:group -->
-
-	</div>
-	<!-- /wp:group -->
 </div>
 <!-- /wp:group -->

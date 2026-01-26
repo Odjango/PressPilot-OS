@@ -1,3 +1,4 @@
+
 import fs from 'fs-extra';
 import path from 'path';
 import archiver from 'archiver';
@@ -7,10 +8,11 @@ import { ChassisLoader } from './engine/ChassisLoader';
 import { StyleEngine } from './engine/StyleEngine';
 import { PatternInjector } from './engine/PatternInjector';
 import { ContentEngine } from './engine/ContentEngine';
+import { AssetCleaner } from './cleanup/AssetCleaner';
 
 /**
  * PressPilot Generator Orchestrator
- * Refactored: 2026-01-04 (Hassan's Rule 1: Modularization)
+ * Refactored: 2026-01-25 (Functional Repair & Asset Cleanup)
  */
 export interface GeneratorOptions {
     base?: BaseTheme;
@@ -36,9 +38,6 @@ export async function generateTheme(options: GeneratorOptions = {}) {
     // Use provided slug or generate from name
     const safeName = options.slug || themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
-    // TIMESTAMP REMOVED for predictable downloads
-    // const timestamp = Date.now();
-
     const rootDir = process.cwd();
     // Use provided output dir or default
     const buildDir = options.outDir ? options.outDir : path.join(rootDir, 'output', safeName);
@@ -53,9 +52,16 @@ export async function generateTheme(options: GeneratorOptions = {}) {
         const styleEngine = new StyleEngine();
         const patternInjector = new PatternInjector(rootDir);
         const contentEngine = new ContentEngine();
+        const assetCleaner = new AssetCleaner();
 
         // 3. EXECUTE PIPELINE
+        console.log(`[Orchestrator] Cleaning build directory: ${themeDir}`);
+        await fs.emptyDir(themeDir); // CRITICAL FIX: Ensure no stale files from previous builds
+
         await chassis.load(baseName, themeDir);
+
+        // CLEANUP STEP: Remove default assets (Saves ~2MB)
+        await assetCleaner.clean(themeDir);
 
         await styleEngine.applyColors(themeDir, userData, personality);
         await styleEngine.updateMetadata(themeDir, themeName, baseName, mode);
@@ -96,6 +102,11 @@ export async function generateTheme(options: GeneratorOptions = {}) {
                 // Inject Content into the new Hero
                 let heroContent = await fs.readFile(heroPath, 'utf8');
                 heroContent = heroContent.replace(personality.patterns.hero_search_headline, userData.hero_headline || "Welcome");
+                if (personality.patterns.hero_search_pretitle) {
+                    // Replace pre-title with Industry or Empty
+                    const preTitle = userData.industry ? userData.industry.toUpperCase() : 'WELCOME';
+                    heroContent = heroContent.replace(personality.patterns.hero_search_pretitle, preTitle);
+                }
                 if (userData.hero_subheadline && personality.patterns.hero_search_sub) {
                     heroContent = heroContent.replace(personality.patterns.hero_search_sub, userData.hero_subheadline || "");
                 }
@@ -110,7 +121,7 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             // 2. Generate Pages (Restored Feature)
             await contentEngine.generatePages(themeDir, userData);
 
-            // 3. Inject Nuclear Loader (Required for "Test Pizza" Fix)
+            // 3. Inject Safe Content Loader
             await contentEngine.injectContentLoader(themeDir, userData);
 
             // 4. Inject Menus
@@ -127,6 +138,9 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             } else if (industry === 'ecommerce' || industry === 'shop') {
                 await patternInjector.injectWooCommerce(themeDir, safeName);
             }
+
+            // PROOF OF CONTROL REMOVED: Restoring real patterns.
+            await fs.writeFile(path.join(themeDir, 'DEBUG_VERSION.txt'), `Build: ${new Date().toISOString()}`);
         }
 
         // 3.5. VALIDATION HARDENING (Phase 3)

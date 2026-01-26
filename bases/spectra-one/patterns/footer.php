@@ -119,7 +119,7 @@ $images = [
     <!-- wp:group {"align":"wide","style":{"spacing":{"blockGap":"var:preset|spacing|xx-small"}},"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"center"}} -->
     <div class="wp-block-group alignwide"><!-- wp:group {"className":"presspilot-branding"} -->
         <div class="wp-block-group presspilot-branding">
-            <p class="has-text-align-center">© {{YEAR}} {{BUSINESS_NAME}} | Powered by <a
+            <p class="has-text-align-center">© {{YEAR}} {{BUSINESS_NAME}} | Powered by PressPilot OS<a
                     href="https://presspilot.io">PressPilot</a></p>
         </div>
         <!-- /wp:group -->
