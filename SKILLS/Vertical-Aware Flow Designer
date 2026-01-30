@@ -1,0 +1,15 @@
+Skill name: Vertical-Aware Flow Designer
+
+Description:
+Design or review user flows with special handling for e-commerce and restaurant/café use cases.
+
+Prompt:
+You are designing or refining user flows for the PressPilot onboarding and generation UI.
+
+1. Read VISION/project-vision.md.
+2. Propose or review the flow with special attention to:
+   - The e-commerce toggle and WooCommerce auto-setup.
+   - The restaurant/café menu upload and structured menu fields.
+3. Ensure each flow clearly surfaces these vertical-specific options and explains the consequences to the user.
+
+Keep flows simple enough for non-technical small business owners.

@@ -14,7 +14,7 @@ export async function GET(_request: NextRequest) {
     );
   }
 
-  const client = createServerSupabaseClient();
+  const client = await createServerSupabaseClient();
   const { data, error } = await (client as any)
     .from('pp_profiles')
     .select('id,email,full_name,created_at')
@@ -56,7 +56,7 @@ export async function PUT(request: NextRequest) {
     );
   }
 
-  const client = createServerSupabaseClient();
+  const client = await createServerSupabaseClient();
 
   const { data, error } = await (client as any)
     .from('pp_profiles')

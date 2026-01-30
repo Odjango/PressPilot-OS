@@ -16,17 +16,17 @@
 <div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--medium);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--medium);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:group {"metadata":{"name":"Text and Button"},"style":{"spacing":{"blockGap":"var:preset|spacing|medium"}},"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center","justifyContent":"space-between"}} -->
 <div class="wp-block-group"><!-- wp:group {"metadata":{"name":"Text"},"style":{"spacing":{"blockGap":"5px"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:paragraph {"fontSize":"base"} -->
-<p class="has-base-font-size"><strong><?php esc_html_e( 'Smart Sync', 'ollie' ); ?></strong></p>
+<p class="has-base-font-size"><strong>Smart Sync</strong></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"style":{"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}}},"textColor":"secondary"} -->
-<p class="has-secondary-color has-text-color has-link-color"><?php esc_html_e( 'Updates in real-time across all devices', 'ollie' ); ?></p>
+<p class="has-secondary-color has-text-color has-link-color">Updates in real-time across all devices</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
 <!-- wp:buttons {"className":"ollie-no-shrink"} -->
 <div class="wp-block-buttons ollie-no-shrink"><!-- wp:button {"className":"is-style-secondary-button"} -->
-<div class="wp-block-button is-style-secondary-button"><a class="wp-block-button__link wp-element-button"><?php esc_html_e( 'Read More', 'ollie' ); ?></a></div>
+<div class="wp-block-button is-style-secondary-button"><a class="wp-block-button__link wp-element-button">Read More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group -->
@@ -38,17 +38,17 @@
 <!-- wp:group {"metadata":{"name":"Text and Button"},"style":{"spacing":{"blockGap":"var:preset|spacing|medium"}},"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center","justifyContent":"space-between"}} -->
 <div class="wp-block-group"><!-- wp:group {"metadata":{"name":"Text"},"style":{"spacing":{"blockGap":"5px"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:paragraph {"fontSize":"base"} -->
-<p class="has-base-font-size"><strong><strong><?php esc_html_e( 'Version Control', 'ollie' ); ?></strong></strong></p>
+<p class="has-base-font-size"><strong><strong>Version Control</strong></strong></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"style":{"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}}},"textColor":"secondary"} -->
-<p class="has-secondary-color has-text-color has-link-color"><?php esc_html_e( 'Never lose a design iteration again', 'ollie' ); ?></p>
+<p class="has-secondary-color has-text-color has-link-color">Never lose a design iteration again</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
 <!-- wp:buttons {"className":"ollie-no-shrink"} -->
 <div class="wp-block-buttons ollie-no-shrink"><!-- wp:button {"className":"is-style-secondary-button"} -->
-<div class="wp-block-button is-style-secondary-button"><a class="wp-block-button__link wp-element-button"><?php esc_html_e( 'Read More', 'ollie' ); ?></a></div>
+<div class="wp-block-button is-style-secondary-button"><a class="wp-block-button__link wp-element-button">Read More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group -->
@@ -60,17 +60,17 @@
 <!-- wp:group {"metadata":{"name":"Text and Button"},"style":{"spacing":{"blockGap":"var:preset|spacing|medium"}},"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center","justifyContent":"space-between"}} -->
 <div class="wp-block-group"><!-- wp:group {"metadata":{"name":"Text"},"style":{"spacing":{"blockGap":"5px"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:paragraph {"fontSize":"base"} -->
-<p class="has-base-font-size"><strong><strong><?php esc_html_e( 'Team Comments', 'ollie' ); ?></strong></strong></p>
+<p class="has-base-font-size"><strong><strong>Team Comments</strong></strong></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"style":{"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}}},"textColor":"secondary"} -->
-<p class="has-secondary-color has-text-color has-link-color"><?php esc_html_e( 'Collaborate without the chaos', 'ollie' ); ?></p>
+<p class="has-secondary-color has-text-color has-link-color">Collaborate without the chaos</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
 <!-- wp:buttons {"className":"ollie-no-shrink"} -->
 <div class="wp-block-buttons ollie-no-shrink"><!-- wp:button {"className":"is-style-secondary-button"} -->
-<div class="wp-block-button is-style-secondary-button"><a class="wp-block-button__link wp-element-button"><?php esc_html_e( 'Read More', 'ollie' ); ?></a></div>
+<div class="wp-block-button is-style-secondary-button"><a class="wp-block-button__link wp-element-button">Read More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>

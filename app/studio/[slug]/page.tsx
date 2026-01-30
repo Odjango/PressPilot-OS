@@ -14,15 +14,15 @@ type StudioProject = {
 };
 
 type PageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 export const dynamic = 'force-dynamic';
 
-export default function StudioPage({ params }: PageProps) {
-  const slug = params.slug;
+export default async function StudioPage({ params }: PageProps) {
+  const { slug } = await params;
 
   return (
     <section className="mx-auto max-w-5xl px-6 py-12">

@@ -24,11 +24,11 @@ $images = [
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|xxx-small"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:heading {"textAlign":"center","level":5,"textColor":"white","className":"wp-block-heading"} -->
-<h5 class="wp-block-heading has-text-align-center has-white-color has-text-color"><?php esc_html_e( 'Esther Howard', 'spectra-one' ); ?></h5>
+<h5 class="wp-block-heading has-text-align-center has-white-color has-text-color">Esther Howard</h5>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"align":"center","textColor":"white","fontSize":"x-small"} -->
-<p class="has-text-align-center has-white-color has-text-color has-x-small-font-size"><?php esc_html_e( 'Senior Product Designer at Spectra', 'spectra-one' ); ?></p>
+<p class="has-text-align-center has-white-color has-text-color has-x-small-font-size">Senior Product Designer at Spectra</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -44,19 +44,19 @@ $images = [
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|large","bottom":"var:preset|spacing|large","right":"var:preset|spacing|large","left":"var:preset|spacing|large"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--large);padding-right:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--large);padding-left:var(--wp--preset--spacing--large)"><!-- wp:buttons {"layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-buttons"><!-- wp:button {"width":100,"style":{"border":{"radius":"99px"}}} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button" style="border-radius:99px"><?php esc_html_e( 'Behance', 'spectra-one' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button" style="border-radius:99px">Behance</a></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"width":100,"style":{"border":{"radius":"99px"}}} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button" style="border-radius:99px"><?php esc_html_e( 'Dribbble', 'spectra-one' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button" style="border-radius:99px">Dribbble</a></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"width":100,"style":{"border":{"radius":"99px"}}} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button" style="border-radius:99px"><?php esc_html_e( 'Linkedin', 'spectra-one' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button" style="border-radius:99px">Linkedin</a></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"width":100,"style":{"border":{"radius":"99px"}}} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button" style="border-radius:99px"><?php esc_html_e( 'Github', 'spectra-one' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button" style="border-radius:99px">Github</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>

@@ -18,10 +18,10 @@ $images = [
 <!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"var:preset|spacing|xx-large","bottom":"var:preset|spacing|xx-large"},"blockGap":"var:preset|spacing|x-large"}},"backgroundColor":"tertiary","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignwide has-tertiary-background-color has-background" style="padding-top:var(--wp--preset--spacing--xx-large);padding-bottom:var(--wp--preset--spacing--xx-large)"><!-- wp:group {"align":"wide","layout":{"type":"constrained","contentSize":""}} -->
 <div class="wp-block-group alignwide"><!-- wp:heading {"textAlign":"center","textColor":"heading","className":"wp-block-heading"} -->
-<h2 class="wp-block-heading has-text-align-center has-heading-color has-text-color"><?php esc_html_e( 'Discover a new way to build website', 'spectra-one' ); ?></h2>
+<h2 class="wp-block-heading has-text-align-center has-heading-color has-text-color">Discover a new way to build website</h2>
 <!-- /wp:heading -->
 <!-- wp:paragraph {"align":"center"} -->
-<p class="has-text-align-center"><?php esc_html_e( 'Get online quickly with easy-to-use Full Site Editor builder', 'spectra-one' ); ?></p>
+<p class="has-text-align-center">Get online quickly with easy-to-use Full Site Editor builder</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 <!-- wp:columns {"align":"wide","style":{"spacing":{}}} -->
@@ -33,16 +33,16 @@ $images = [
 <!-- wp:column {"verticalAlignment":"center"} -->
 <div class="wp-block-column is-vertically-aligned-center"><!-- wp:group {"style":{"spacing":{"padding":{"left":"var:preset|spacing|medium","right":"var:preset|spacing|x-small"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--x-small);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:paragraph {"style":{"typography":{"letterSpacing":"2px"}},"fontSize":"x-small"} -->
-<p class="has-x-small-font-size" style="letter-spacing:2px"><?php esc_html_e( '01', 'spectra-one' ); ?></p>
+<p class="has-x-small-font-size" style="letter-spacing:2px">01</p>
 <!-- /wp:paragraph -->
 <!-- wp:heading {"level":4,"textColor":"heading","className":"wp-block-heading"} -->
-<h4 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'Visual editing experience', 'spectra-one' ); ?></h4>
+<h4 class="wp-block-heading has-heading-color has-text-color">Visual editing experience</h4>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Customize the entire website layout, including the header, footer, and all other template parts. With FSE, we can create and edit templates for their entire website, including single posts, archive pages, and custom post types.', 'spectra-one' ); ?></p>
+<p>Customize the entire website layout, including the header, footer, and all other template parts. With FSE, we can create and edit templates for their entire website, including single posts, archive pages, and custom post types.</p>
 <!-- /wp:paragraph -->
 <!-- wp:paragraph {"style":{"elements":{"link":{"color":{"text":"var:preset|color|primary"}}},"typography":{"fontStyle":"normal","fontWeight":"500"},"spacing":{"margin":{"top":"var:preset|spacing|small"}}},"fontSize":"small"} -->
-<p class="has-link-color has-small-font-size" style="margin-top:var(--wp--preset--spacing--small);font-style:normal;font-weight:500"><a href="#"><?php esc_html_e( 'Learn More', 'spectra-one' ); ?></a></p>
+<p class="has-link-color has-small-font-size" style="margin-top:var(--wp--preset--spacing--small);font-style:normal;font-weight:500"><a href="#">Learn More</a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:column --></div>
@@ -51,16 +51,16 @@ $images = [
 <div class="wp-block-columns alignwide"><!-- wp:column {"verticalAlignment":"center"} -->
 <div class="wp-block-column is-vertically-aligned-center"><!-- wp:group {"style":{"spacing":{"padding":{"right":"var:preset|spacing|x-small","left":"var:preset|spacing|medium"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--x-small);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:paragraph {"style":{"typography":{"letterSpacing":"2px"}},"fontSize":"x-small"} -->
-<p class="has-x-small-font-size" style="letter-spacing:2px"><?php esc_html_e( '02', 'spectra-one' ); ?></p>
+<p class="has-x-small-font-size" style="letter-spacing:2px">02</p>
 <!-- /wp:paragraph -->
 <!-- wp:heading {"level":4,"textColor":"heading","className":"wp-block-heading"} -->
-<h4 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'Innovative block patterns', 'spectra-one' ); ?></h4>
+<h4 class="wp-block-heading has-heading-color has-text-color">Innovative block patterns</h4>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Block patterns are pre-designed block layouts that we can easily insert into their content. These patterns can help to save time and create visually appealing designs. Allows us to create custom themes using the block-based template.', 'spectra-one' ); ?></p>
+<p>Block patterns are pre-designed block layouts that we can easily insert into their content. These patterns can help to save time and create visually appealing designs. Allows us to create custom themes using the block-based template.</p>
 <!-- /wp:paragraph -->
 <!-- wp:paragraph {"style":{"elements":{"link":{"color":{"text":"var:preset|color|primary"}}},"typography":{"fontStyle":"normal","fontWeight":"500"},"spacing":{"margin":{"top":"var:preset|spacing|small"}}},"fontSize":"small"} -->
-<p class="has-link-color has-small-font-size" style="margin-top:var(--wp--preset--spacing--small);font-style:normal;font-weight:500"><a href="#"><?php esc_html_e( 'Learn More', 'spectra-one' ); ?></a></p>
+<p class="has-link-color has-small-font-size" style="margin-top:var(--wp--preset--spacing--small);font-style:normal;font-weight:500"><a href="#">Learn More</a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:column -->
@@ -79,16 +79,16 @@ $images = [
 <!-- wp:column {"verticalAlignment":"center"} -->
 <div class="wp-block-column is-vertically-aligned-center"><!-- wp:group {"style":{"spacing":{"padding":{"left":"var:preset|spacing|medium","right":"var:preset|spacing|x-small"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--x-small);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:paragraph {"style":{"typography":{"letterSpacing":"2px"}},"fontSize":"x-small"} -->
-<p class="has-x-small-font-size" style="letter-spacing:2px"><?php esc_html_e( '03', 'spectra-one' ); ?></p>
+<p class="has-x-small-font-size" style="letter-spacing:2px">03</p>
 <!-- /wp:paragraph -->
 <!-- wp:heading {"level":4,"textColor":"heading","className":"wp-block-heading"} -->
-<h4 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'Beautiful global styles', 'spectra-one' ); ?></h4>
+<h4 class="wp-block-heading has-heading-color has-text-color">Beautiful global styles</h4>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Global styles enable us to create and apply consistent design elements across the entire website, including typography, colors, and spacing. Providing us with more control over our website\'s look and feel.', 'spectra-one' ); ?></p>
+<p>Global styles enable us to create and apply consistent design elements across the entire website, including typography, colors, and spacing. Providing us with more control over our website's look and feel.</p>
 <!-- /wp:paragraph -->
 <!-- wp:paragraph {"style":{"elements":{"link":{"color":{"text":"var:preset|color|primary"}}},"typography":{"fontStyle":"normal","fontWeight":"500"},"spacing":{"margin":{"top":"var:preset|spacing|small"}}},"fontSize":"small"} -->
-<p class="has-link-color has-small-font-size" style="margin-top:var(--wp--preset--spacing--small);font-style:normal;font-weight:500"><a href="#"><?php esc_html_e( 'Learn More', 'spectra-one' ); ?></a></p>
+<p class="has-link-color has-small-font-size" style="margin-top:var(--wp--preset--spacing--small);font-style:normal;font-weight:500"><a href="#">Learn More</a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:column --></div>

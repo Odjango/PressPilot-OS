@@ -63,3 +63,24 @@ The Generator executes logic based on the user's business type:
 
 ### Universal (Default)
 - **Action**: Falls back to "Classic Business" recipe.
+
+## 7. Enterprise-Grade Styling Rules
+To ensure a premium, trustworthy aesthetic, all generated themes must adhere to:
+
+### A. Color Harmonization
+- **Saturation Cap**: Primary brand colors must be capped at 80% saturation.
+- **Auto-A11y**: Brand color on white text must meet WCAG AA (4.5:1). If not, it receives an automatic darkening adjustment.
+- **Headings Only**: The massive saturation of "primary" color should be restricted to **Headings (H1-H3)**.
+- **Body Text**: Must strictly use a professional neutral (e.g., `#1E1E26`), NOT the brand color.
+
+### B. Stable Navigation (FSE Compliance)
+- **Rule**: `wp:navigation` blocks MUST be self-closing.
+- **Prohibited**: Do NOT embed `wp:navigation-link` inner blocks in generated patterns. This causes "Attempt Recovery" errors in the Site Editor because there is no matching database record.
+- **Structure**:
+  ```html
+  <!-- wp:navigation {"layout":{...}} /-->
+  ```
+
+### C. Consistent Branding
+- **Footer**: Every theme footer must end with a unified line:
+  > © 202X [Business Name]. All rights reserved. Powered by **PressPilot OS**

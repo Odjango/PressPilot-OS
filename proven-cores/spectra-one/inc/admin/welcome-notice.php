@@ -65,18 +65,18 @@ function render_welcome_notice(): void {
 	?>
 
 	<div class="notice notice-info swt-welcome-notice">
-		<button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php esc_html_e( 'Close this notice..', 'spectra-one' ); ?></span></button>
+		<button type="button" class="notice-dismiss"><span class="screen-reader-text">Close this notice..</span></button>
 		<div class="swt-row">
 			<div class="swt-col">
 				<div class="notice-content">
 					<p class="sub-notice-title">
-						<?php esc_html_e( 'Thanks for installing the Spectra One theme &#x1F389;', 'spectra-one' ); ?>
+						Thanks for installing the Spectra One theme &#x1F389;
 					</p>
 					<h2 class="notice-title">
-						<?php esc_html_e( 'Please install the Spectra Builder', 'spectra-one' ); ?>
+						Please install the Spectra Builder
 					</h2>
 					<p class="description">
-						<?php esc_html_e( 'Once you have installed the Spectra Builder plugin, you will be ready to build amazing, fast-loading websites.', 'spectra-one' ); ?>
+						Once you have installed the Spectra Builder plugin, you will be ready to build amazing, fast-loading websites.
 					</p>
 					<div class="notice-actions">
 						<button id="swt-install-spectra" class="button button-primary button-hero">
@@ -87,7 +87,7 @@ function render_welcome_notice(): void {
 							</span>
 						</button>
 						<a href="<?php echo esc_url( $lean_more_url ); ?>" target="_blank" class="button button-primary button-hero">
-							<?php esc_html_e( 'Learn More', 'spectra-one' ); ?>
+							Learn More
 						</a>
 					</div>
 				</div>

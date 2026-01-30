@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PressPilot Architecture Overview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .gradient-bg { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%); }
+    .flow-arrow { position: relative; }
+    .flow-arrow::after { content: '→'; position: absolute; right: -20px; top: 50%; transform: translateY(-50%); font-size: 24px; color: #3b82f6; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .animate-pulse-slow { animation: pulse 3s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="gradient-bg text-white rounded-2xl p-8 mb-8 shadow-2xl">
+      <h1 class="text-4xl font-bold mb-2">PressPilot Theme Factory</h1>
+      <p class="text-xl opacity-90">AI-Powered WordPress FSE Theme Generation at Scale</p>
+    </div>
+
+    <!-- User Flow -->
+    <div class="bg-white rounded-xl p-6 mb-8 shadow-lg">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">📋 User Journey (7 Steps)</h2>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 w-36 text-center">
+          <div class="text-3xl mb-2">🌐</div>
+          <div class="font-semibold text-blue-800">1. Language</div>
+          <div class="text-xs text-gray-600 mt-1">EN/ES/FR/IT/AR</div>
+        </div>
+        <div class="text-2xl text-blue-400 flex items-center">→</div>
+        <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 w-36 text-center">
+          <div class="text-3xl mb-2">📝</div>
+          <div class="font-semibold text-blue-800">2. Business Info</div>
+          <div class="text-xs text-gray-600 mt-1">Name, tagline, desc</div>
+        </div>
+        <div class="text-2xl text-blue-400 flex items-center">→</div>
+        <div class="bg-purple-50 border-2 border-purple-200 rounded-lg p-4 w-36 text-center">
+          <div class="text-3xl mb-2">🎨</div>
+          <div class="font-semibold text-purple-800">3. Brand Colors</div>
+          <div class="text-xs text-gray-600 mt-1">Logo → 5 palettes</div>
+        </div>
+        <div class="text-2xl text-purple-400 flex items-center">→</div>
+        <div class="bg-purple-50 border-2 border-purple-200 rounded-lg p-4 w-36 text-center">
+          <div class="text-3xl mb-2">🔤</div>
+          <div class="font-semibold text-purple-800">4. Fonts</div>
+          <div class="text-xs text-gray-600 mt-1">7 Google pairs</div>
+        </div>
+        <div class="text-2xl text-purple-400 flex items-center">→</div>
+        <div class="bg-green-50 border-2 border-green-200 rounded-lg p-4 w-36 text-center">
+          <div class="text-3xl mb-2">👁️</div>
+          <div class="font-semibold text-green-800">5. Hero Preview</div>
+          <div class="text-xs text-gray-600 mt-1">3 style options</div>
+        </div>
+        <div class="text-2xl text-green-400 flex items-center">→</div>
+        <div class="bg-amber-50 border-2 border-amber-200 rounded-lg p-4 w-36 text-center animate-pulse-slow">
+          <div class="text-3xl mb-2">⚙️</div>
+          <div class="font-semibold text-amber-800">6. Generating</div>
+          <div class="text-xs text-gray-600 mt-1">Progress animation</div>
+        </div>
+        <div class="text-2xl text-amber-400 flex items-center">→</div>
+        <div class="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4 w-36 text-center">
+          <div class="text-3xl mb-2">📥</div>
+          <div class="font-semibold text-emerald-800">7. Download</div>
+          <div class="text-xs text-gray-600 mt-1">Theme ZIP ready</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Architecture -->
+    <div class="bg-white rounded-xl p-6 mb-8 shadow-lg">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">🏗️ System Architecture</h2>
+      <div class="grid grid-cols-4 gap-4">
+        <!-- Frontend -->
+        <div class="col-span-4 bg-blue-100 rounded-lg p-4 text-center border-2 border-blue-300">
+          <div class="font-bold text-blue-800">User Interface (Next.js 14)</div>
+          <div class="text-sm text-blue-600 mt-1">Multi-step form wizard • Real-time previews • Progress tracking</div>
+        </div>
+
+        <!-- API Gateway -->
+        <div class="col-span-4 bg-indigo-100 rounded-lg p-4 text-center border-2 border-indigo-300 mt-2">
+          <div class="font-bold text-indigo-800">API Gateway (Next.js API Routes)</div>
+          <div class="flex justify-center gap-4 mt-2 text-sm">
+            <span class="bg-white px-2 py-1 rounded">/api/upload</span>
+            <span class="bg-white px-2 py-1 rounded">/api/colors</span>
+            <span class="bg-white px-2 py-1 rounded">/api/preview</span>
+            <span class="bg-white px-2 py-1 rounded">/api/generate</span>
+          </div>
+        </div>
+
+        <!-- Orchestration -->
+        <div class="col-span-4 bg-purple-100 rounded-lg p-4 text-center border-2 border-purple-300 mt-2">
+          <div class="font-bold text-purple-800">Orchestration Layer (n8n)</div>
+          <div class="flex justify-center gap-2 mt-2 text-xs">
+            <span class="bg-purple-200 px-2 py-1 rounded">Validate</span>
+            <span>→</span>
+            <span class="bg-purple-200 px-2 py-1 rounded">AI Generate</span>
+            <span>→</span>
+            <span class="bg-purple-200 px-2 py-1 rounded">Theme Build</span>
+            <span>→</span>
+            <span class="bg-purple-200 px-2 py-1 rounded">Special Handler</span>
+            <span>→</span>
+            <span class="bg-purple-200 px-2 py-1 rounded">Package</span>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div class="bg-green-100 rounded-lg p-4 border-2 border-green-300 mt-2">
+          <div class="font-bold text-green-800 text-center mb-2">🤖 AI Services</div>
+          <div class="text-sm space-y-1">
+            <div class="bg-white rounded px-2 py-1">OpenAI GPT-4</div>
+            <div class="bg-white rounded px-2 py-1">DALL-E 3</div>
+            <div class="bg-white rounded px-2 py-1">Unsplash API</div>
+          </div>
+        </div>
+
+        <div class="bg-orange-100 rounded-lg p-4 border-2 border-orange-300 mt-2">
+          <div class="font-bold text-orange-800 text-center mb-2">🏭 WP Factory</div>
+          <div class="text-sm space-y-1">
+            <div class="bg-white rounded px-2 py-1">theme.json Gen</div>
+            <div class="bg-white rounded px-2 py-1">Template Builder</div>
+            <div class="bg-white rounded px-2 py-1">Pattern Library</div>
+          </div>
+        </div>
+
+        <div class="bg-cyan-100 rounded-lg p-4 border-2 border-cyan-300 mt-2">
+          <div class="font-bold text-cyan-800 text-center mb-2">💾 Storage</div>
+          <div class="text-sm space-y-1">
+            <div class="bg-white rounded px-2 py-1">PostgreSQL</div>
+            <div class="bg-white rounded px-2 py-1">Redis Queue</div>
+            <div class="bg-white rounded px-2 py-1">S3 Storage</div>
+          </div>
+        </div>
+
+        <div class="bg-pink-100 rounded-lg p-4 border-2 border-pink-300 mt-2">
+          <div class="font-bold text-pink-800 text-center mb-2">🔧 Workers</div>
+          <div class="text-sm space-y-1">
+            <div class="bg-white rounded px-2 py-1">BullMQ Jobs</div>
+            <div class="bg-white rounded px-2 py-1">5 Concurrent</div>
+            <div class="bg-white rounded px-2 py-1">Auto-retry</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Features Grid -->
+    <div class="grid grid-cols-3 gap-6 mb-8">
+      <!-- Color System -->
+      <div class="bg-white rounded-xl p-6 shadow-lg">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">🎨 Brand Colors</h3>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-blue-600 rounded"></div>
+            <span class="text-sm">Primary (from logo)</span>
+          </div>
+          <div class="text-sm text-gray-600 mb-2">5 Palette Variations:</div>
+          <div class="flex gap-1">
+            <div class="w-6 h-6 rounded" style="background:#1e40af"></div>
+            <div class="w-6 h-6 rounded" style="background:#3b82f6"></div>
+            <div class="w-6 h-6 rounded" style="background:#60a5fa"></div>
+            <div class="w-6 h-6 rounded" style="background:#93c5fd"></div>
+            <div class="w-6 h-6 rounded" style="background:#dbeafe"></div>
+          </div>
+          <div class="text-xs text-gray-500">+ Color wheel for fine-tuning</div>
+        </div>
+      </div>
+
+      <!-- Font Selection -->
+      <div class="bg-white rounded-xl p-6 shadow-lg">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">🔤 Typography</h3>
+        <div class="space-y-2 text-sm">
+          <div class="p-2 bg-gray-50 rounded">
+            <div class="font-semibold" style="font-family:Inter">Modern: Inter</div>
+          </div>
+          <div class="p-2 bg-gray-50 rounded">
+            <div class="font-semibold" style="font-family:Georgia">Classic: Playfair</div>
+          </div>
+          <div class="p-2 bg-gray-50 rounded">
+            <div class="font-semibold" style="font-family:Arial">Bold: Montserrat</div>
+          </div>
+          <div class="text-xs text-gray-500 mt-2">7 pairs • Self-hosted (GDPR)</div>
+        </div>
+      </div>
+
+      <!-- Hero Styles -->
+      <div class="bg-white rounded-xl p-6 shadow-lg">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">🖼️ Hero Styles</h3>
+        <div class="space-y-2">
+          <div class="h-16 bg-gray-100 rounded flex items-center justify-center text-sm border-2 border-gray-200">
+            Minimal: Centered text
+          </div>
+          <div class="h-16 bg-gradient-to-r from-gray-700 to-gray-900 rounded flex items-center justify-center text-sm text-white">
+            Full Width: Image + overlay
+          </div>
+          <div class="h-16 bg-gray-100 rounded flex items-center justify-center text-sm border-2 border-gray-200">
+            <div class="w-1/2 text-center">Text</div>
+            <div class="w-1/2 bg-gray-300 h-full rounded-r"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Special Handlers -->
+    <div class="grid grid-cols-2 gap-6 mb-8">
+      <!-- E-commerce -->
+      <div class="bg-white rounded-xl p-6 shadow-lg border-l-4 border-emerald-500">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">🛒 E-commerce Handler</h3>
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center gap-2">
+            <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-xs">WooCommerce</span>
+            <span>Full integration</span>
+          </div>
+          <ul class="list-disc list-inside text-gray-600 space-y-1">
+            <li>Product categories from user input</li>
+            <li>Sample products auto-created</li>
+            <li>Shop, Cart, Checkout pages</li>
+            <li>Currency configuration</li>
+            <li>Ready to run on activation</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Restaurant -->
+      <div class="bg-white rounded-xl p-6 shadow-lg border-l-4 border-amber-500">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">🍽️ Restaurant Handler</h3>
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center gap-2">
+            <span class="bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs">Menu System</span>
+            <span>Dedicated page</span>
+          </div>
+          <ul class="list-disc list-inside text-gray-600 space-y-1">
+            <li>Upload .docx, .txt, .rtf menu files</li>
+            <li>Paste text → AI parses</li>
+            <li>Categories & items extracted</li>
+            <li>Price formatting</li>
+            <li>Auto nav item "Menu"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Languages -->
+    <div class="bg-white rounded-xl p-6 mb-8 shadow-lg">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">🌍 Multilingual Support</h3>
+      <div class="flex justify-center gap-4">
+        <div class="text-center p-4 bg-gray-50 rounded-lg">
+          <div class="text-2xl mb-1">🇺🇸</div>
+          <div class="font-semibold">English</div>
+          <div class="text-xs text-gray-500">LTR</div>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-lg">
+          <div class="text-2xl mb-1">🇪🇸</div>
+          <div class="font-semibold">Español</div>
+          <div class="text-xs text-gray-500">LTR</div>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-lg">
+          <div class="text-2xl mb-1">🇫🇷</div>
+          <div class="font-semibold">Français</div>
+          <div class="text-xs text-gray-500">LTR</div>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-lg">
+          <div class="text-2xl mb-1">🇮🇹</div>
+          <div class="font-semibold">Italiano</div>
+          <div class="text-xs text-gray-500">LTR</div>
+        </div>
+        <div class="text-center p-4 bg-blue-50 rounded-lg border-2 border-blue-300">
+          <div class="text-2xl mb-1">🇸🇦</div>
+          <div class="font-semibold">العربية</div>
+          <div class="text-xs text-blue-600 font-semibold">RTL ←</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme Output -->
+    <div class="bg-white rounded-xl p-6 shadow-lg">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">📦 Generated Theme Structure</h3>
+      <div class="grid grid-cols-4 gap-4 text-sm">
+        <div class="bg-gray-50 rounded-lg p-4">
+          <div class="font-bold text-gray-700 mb-2">📁 Root Files</div>
+          <div class="space-y-1 text-gray-600">
+            <div>style.css</div>
+            <div>theme.json</div>
+            <div>functions.php</div>
+            <div>screenshot.png</div>
+          </div>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <div class="font-bold text-gray-700 mb-2">📁 templates/</div>
+          <div class="space-y-1 text-gray-600">
+            <div>index.html</div>
+            <div>home.html</div>
+            <div>page.html</div>
+            <div>single.html</div>
+          </div>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <div class="font-bold text-gray-700 mb-2">📁 patterns/</div>
+          <div class="space-y-1 text-gray-600">
+            <div>hero-*.php</div>
+            <div>about-section.php</div>
+            <div>services-grid.php</div>
+            <div>testimonials.php</div>
+          </div>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <div class="font-bold text-gray-700 mb-2">📁 assets/</div>
+          <div class="space-y-1 text-gray-600">
+            <div>fonts/ (self-hosted)</div>
+            <div>images/</div>
+            <div>css/custom.css</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-8 text-center text-gray-500 text-sm">
+      <p>PressPilot Theme Factory - Complete Technical Architecture</p>
+      <p class="mt-1">WordPress FSE • OpenAI • Next.js • n8n • BullMQ</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -79,36 +79,30 @@ export default function ProjectsClient({
     setIsLoadingList(true);
     setListError(null);
 
-    // Get user email from Supabase session if not provided via prop
-    let ownerEmail = userEmail;
-    if (!ownerEmail) {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      ownerEmail = authUser?.email ?? null;
-    }
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const accessToken = session?.access_token || 'bypass-token';
 
-    if (!ownerEmail) {
-      // If no email, show empty list (RLS will block anyway)
-      setProjects([]);
-      setIsLoadingList(false);
-      return;
-    }
+      const response = await fetch('/api/projects', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
 
-    const { data, error } = await supabase
-      .from('pp_projects')
-      .select('id,owner_email,name,slug,status,created_at')
-      .eq('owner_email', ownerEmail.toLowerCase())
-      .order('created_at', { ascending: false });
+      if (!response.ok) {
+        throw new Error('Failed to load projects');
+      }
 
-    if (error) {
+      const { projects: data } = await response.json();
+      setProjects(data ?? []);
+    } catch (error) {
       console.error('[ProjectsClient] loadProjects error:', error);
       setProjects([]);
       setListError('Unable to load projects. Please try again.');
-    } else {
-      setProjects(data ?? []);
+    } finally {
+      setIsLoadingList(false);
     }
-
-    setIsLoadingList(false);
-  }, [userEmail]);
+  }, []);
 
   const totalProjectsLabel = useMemo(
     () => `${projects.length} project${projects.length === 1 ? '' : 's'}`,
@@ -151,24 +145,19 @@ export default function ProjectsClient({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${accessToken}`
         },
-        body: JSON.stringify({
-          name: form.name,
-          slug: (form.slug ?? '').trim() || slugify(form.name),
-          status: form.status ?? 'draft',
-        }),
+        body: JSON.stringify(form)
       });
 
-      const payload = await response.json();
-
       if (!response.ok) {
-        throw new Error(payload.error || 'Failed to create project');
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to create project');
       }
 
-      const data = payload.project;
+      const { project: newProj } = await response.json();
 
-      setProjects((prev) => (data ? [data, ...prev] : prev));
+      setProjects((current) => [newProj, ...current]);
       setForm({
         name: '',
         slug: '',
@@ -176,11 +165,8 @@ export default function ProjectsClient({
       });
       setStatus({ type: 'idle' });
     } catch (error) {
-      console.error('[ProjectsClient] createProject error:', error);
-      setStatus({
-        type: 'error',
-        message: formatProjectError(error)
-      });
+      console.error('[ProjectsClient] create error:', error);
+      setStatus({ type: 'error', message: formatProjectError(error) });
     }
   };
 

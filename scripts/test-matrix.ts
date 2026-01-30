@@ -22,7 +22,11 @@ const SCENARIOS: Scenario[] = [
             name: 'Iron Gym',
             industry: 'fitness',
             hero_headline: 'Get Strong',
-            pages: ['Home', 'About', 'Contact']
+            pages: [
+                { title: 'Home', slug: 'home', template: 'universal-home' },
+                { title: 'About', slug: 'about', template: 'universal-about' },
+                { title: 'Contact', slug: 'contact', template: 'universal-contact' }
+            ]
         }
     },
     {
@@ -34,7 +38,10 @@ const SCENARIOS: Scenario[] = [
             name: 'Frosty Shop',
             industry: 'ecommerce',
             hero_headline: 'Buy Stuff',
-            pages: ['Home', 'Shop']
+            pages: [
+                { title: 'Home', slug: 'home', template: 'universal-home' },
+                { title: 'Shop', slug: 'shop', template: 'universal-shop' }
+            ]
         }
     },
     {
@@ -58,7 +65,10 @@ const SCENARIOS: Scenario[] = [
             name: 'My Portfolio',
             industry: 'portfolio',
             hero_headline: 'Look at this',
-            pages: ['Home', 'Work']
+            pages: [
+                { title: 'Home', slug: 'home', template: 'universal-home' },
+                { title: 'Work', slug: 'work', template: 'universal-portfolio' }
+            ]
         }
     }
 ];

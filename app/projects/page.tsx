@@ -21,7 +21,13 @@ export default async function ProjectsPage() {
   if (userEmail) {
     // If logged in, load projects
     console.log('[ProjectsPage] fetching projects for', userEmail);
-    const supabase = createServerSupabaseClient();
+
+    // Check if we are in bypass mode
+    const isBypass = (await getUserAuthContext()).user?.id === 'presspilot-dev-user';
+    const { createServiceSupabaseClient } = await import('@/lib/supabase-server');
+
+    const supabase = isBypass ? createServiceSupabaseClient() : await createServerSupabaseClient();
+
     const { data, error } = await supabase
       .from('pp_projects')
       .select('id,owner_email,name,slug,status,created_at')

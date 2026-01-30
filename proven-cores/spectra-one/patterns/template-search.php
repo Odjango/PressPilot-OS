@@ -16,11 +16,11 @@
 <div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--x-large);padding-bottom:var(--wp--preset--spacing--x-large)"><!-- wp:query {"queryId":0,"query":{"perPage":6,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true},"displayLayout":{"type":"flex","columns":3},"align":"wide","layout":{"type":"constrained"}} -->
 <div class="wp-block-query alignwide"><!-- wp:query-no-results {"align":"wide"} -->
 <!-- wp:paragraph {"align":"center","placeholder":"Add text or blocks that will display when a query returns no results.","fontSize":"large"} -->
-<p class="has-text-align-center has-large-font-size"><?php esc_html_e( 'Sorry, but nothing matched your search terms. Try another search?', 'spectra-one' ); ?></p>
+<p class="has-text-align-center has-large-font-size">Sorry, but nothing matched your search terms. Try another search?</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:group {"layout":{"type":"constrained","contentSize":"480px"}} -->
-<div class="wp-block-group"><!-- wp:search {"label":"<?php esc_html_e( 'Search', 'spectra-one' ); ?>","showLabel":false,"placeholder":"<?php esc_attr_e( 'Search...', 'spectra-one' ); ?>","width":null,"widthUnit":"%","buttonText":"Search","buttonPosition":"button-inside","buttonUseIcon":true,"align":"center","className":"is-style-swt-search-minimal"} /--></div>
+<div class="wp-block-group"><!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Search...","width":null,"widthUnit":"%","buttonText":"Search","buttonPosition":"button-inside","buttonUseIcon":true,"align":"center","className":"is-style-swt-search-minimal"} /--></div>
 <!-- /wp:group -->
 <!-- /wp:query-no-results -->
 

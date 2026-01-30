@@ -4,138 +4,122 @@ import { GeneratorData, ThemePersonality } from '../types';
 import { UNIVERSAL_PATTERNS } from '../config/PatternRegistry';
 import { getUniversalBlogContent, getUniversalFooterContent, getUniversalHeaderContent, getArchiveContent, getSearchContent, getUniversalHomeContent } from '../patterns';
 import { generateMenuPattern } from '../patterns/restaurant-menu';
+import { getFooterColors } from '../patterns/color-mapping';
+import { getModernImageUrl } from '../utils/ImageProvider';
+import { ContentJSON } from '../modules/ContentBuilder';
 
 export class PatternInjector {
     constructor(private rootDir: string) { }
 
-    async injectRecipe(themeDir: string, recipe: import('../types').LayoutRecipe, userData: GeneratorData, personality: ThemePersonality): Promise<void> {
-        console.log(`[Pattern] Injecting Recipe: ${recipe.name}...`);
+    async injectRecipe(themeDir: string, recipe: import('../types').LayoutRecipe, contentJson: any, personality: ThemePersonality, safeName: string, userData: GeneratorData): Promise<void> {
+        console.log(`[Pattern] Strategy (Vertical Focus) for ${safeName}...`);
 
         let templateContent = '';
 
         for (const patternPath of recipe.patterns) {
-            // Deduplication: Skip headers/footers as they are injected via the global wrapper below
-            if (patternPath.includes('header') || patternPath.includes('footer')) {
-                console.log(`[Pattern] Deduplication: Skipping ${patternPath} (handled by global wrapper).`);
-                continue;
-            }
+            if (patternPath.includes('header') || patternPath.includes('footer')) continue;
 
             const fullPath = path.join(themeDir, patternPath);
-
             if (await fs.pathExists(fullPath)) {
                 let content = await fs.readFile(fullPath, 'utf8');
 
-                // 1. Extract Slug (Robust Regex)
                 const slugMatch = content.match(/Slug:\s+([^\r\n]+)/);
                 const slug = slugMatch ? slugMatch[1].trim() : null;
+                if (!slug) continue;
 
-                if (!slug) {
-                    console.warn(`[Pattern] Warning: No slug found for ${patternPath}`);
-                    continue;
+                // 2. Inject Content (Using Builder Slots)
+                for (const [search, replace] of Object.entries(contentJson.slots)) {
+                    // Escape search string for regex and replace all occurrences globally
+                    const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const regex = new RegExp(escapedSearch, 'g');
+                    content = content.replace(regex, replace);
                 }
 
-                // 2. Inject Content (Text Replacement)
-                // Hero Replacement
-                if (patternPath === personality.patterns.hero) {
-                    if (userData.hero_headline) {
-                        content = content.replace(personality.patterns.hero_search_headline, userData.hero_headline);
-                    }
-                    if (personality.patterns.hero_search_pretitle) {
-                        // Replace pre-title with Industry or Empty
-                        const preTitle = userData.industry ? userData.industry.toUpperCase() : 'WELCOME';
-                        content = content.replace(personality.patterns.hero_search_pretitle, preTitle);
-                    }
-                    if (userData.hero_subheadline && personality.patterns.hero_search_sub) {
-                        content = content.replace(personality.patterns.hero_search_sub, userData.hero_subheadline);
-                    }
+                // Global "Etudes" / "architects" cleanup if not already in slots
+                if (!contentJson.slots['Études']) {
+                    content = content.replace(/Études/g, userData.name || 'PressPilot');
                 }
 
-                // Apply Changes to File
+                // IMAGE REPLACEMENT
+                const imgRegex = /src="([^"]*?(?:patterns\/images\/|assets\/images\/)(?!logo)[^"]*?)"/g;
+                let imgMatch;
+                let imgCount = 0;
+                while ((imgMatch = imgRegex.exec(content)) !== null) {
+                    const unsplashUrl = contentJson.hero.images[imgCount % contentJson.hero.images.length];
+                    content = content.replace(imgMatch[1], unsplashUrl);
+                    imgCount++;
+                }
+
                 await fs.writeFile(fullPath, content);
-
-                // 3. Add to Template Sequence
                 templateContent += `<!-- wp:pattern {"slug":"${slug}"} /-->\n`;
-            } else {
-                console.warn(`[Pattern] Warning: Pattern file not found ${patternPath}`);
             }
         }
 
-        // 3.5 Force Universal Footer (The "FooterFactory" Step)
-        const footerPath = path.join(themeDir, 'parts', 'footer.html');
-        await fs.ensureDir(path.dirname(footerPath));
-        const footerName = userData.name || 'PressPilot Site';
-        await fs.writeFile(footerPath, getUniversalFooterContent(footerName).trim());
-        console.log(`[Pattern] FooterFactory: Generated branded footer for ${footerName}`);
-
-        // Prepend Header and Append Footer to the Front Page Template
-        // This ensures the Homepage uses the SAME header/footer as inner pages
-        // FIX: Removed 'theme' and 'tagName' attributes to prevent JSON validation errors and slug mismatches.
-        // We use the 'slug' reference which resolves to the file we just wrote above.
-        const fullContent = `<!-- wp:template-part {"slug":"header"} /-->
+        // FSE Block Grammar Security Part
+        const fullContent = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+<!-- wp:group {"tagName":"main","layout":{"type":"constrained","contentSize":"1000px","wideSize":"1200px"},"align":"full"} -->
+<main class="wp-block-group alignfull">
 ${templateContent}
-<!-- wp:template-part {"slug":"footer"} /-->`;
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
 
-        // 4. Transform to Front Page
-        const frontPagePath = path.join(themeDir, 'templates', 'front-page.html');
-        await fs.writeFile(frontPagePath, fullContent);
-        console.log(`[Pattern] Generated front-page.html with Header/Footer wrapper.`);
+        const templates = ['front-page.html', 'index.html', 'home.html'];
+        for (const tpl of templates) {
+            await fs.writeFile(path.join(themeDir, 'templates', tpl), fullContent);
+        }
+
+        // Force Canonical Parts (Header/Footer)
+        await this.injectGlobalParts(themeDir, userData, safeName, contentJson.pages);
     }
 
-    async injectHeavyMode(themeDir: string, personality: ThemePersonality, userData: GeneratorData, safeName: string): Promise<void> {
-        console.log('[Pattern] Injecting Heavy Mode Patterns...');
 
-        // 1. Universal Heavy Pattern
+    async injectHeavyMode(themeDir: string, personality: ThemePersonality, userData: GeneratorData, safeName: string, contentJson: any): Promise<void> {
+        console.log('[Pattern] Building Vault-Validated Landing Page...');
+
         const heavyPatternSrc = path.join(this.rootDir, UNIVERSAL_PATTERNS.heavy);
         const heavyPatternDest = path.join(themeDir, 'patterns', 'presspilot-heavy.php');
         await fs.copy(heavyPatternSrc, heavyPatternDest);
 
-        // 2. Force Front Page
+        // Forced Home Template
         if (personality.home_template) {
             const homeTemplatePath = path.join(themeDir, personality.home_template);
-
-            // Image Logic
-            let heroImage = undefined;
-            if (userData.images && userData.images.length > 0) {
-                // @ts-ignore
-                const localPath = userData.images[0];
-                const ext = path.extname(localPath);
-                const targetFilename = `hero-home${ext}`;
-                const targetPath = path.join(themeDir, 'assets', 'images', targetFilename);
-
-                await fs.ensureDir(path.dirname(targetPath));
-                await fs.copy(localPath, targetPath);
-
-                heroImage = `/wp-content/themes/${safeName}/assets/images/${targetFilename}`;
-            }
-
             const homeContent = {
                 hero_title: userData.hero_headline,
-                hero_sub: userData.hero_subheadline,
-                hero_image: heroImage
+                hero_sub: userData.hero_subheadline
             };
 
-            await fs.writeFile(homeTemplatePath, getUniversalHomeContent(homeContent).trim());
-            console.log(`[Pattern] Forced Universal Home Pattern.`);
+            const fullContent = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+<!-- wp:group {"tagName":"main","layout":{"type":"constrained","contentSize":"1000px","wideSize":"1200px"},"align":"full"} -->
+<main class="wp-block-group alignfull">
+${getUniversalHomeContent(homeContent).trim()}
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
+
+            await fs.writeFile(homeTemplatePath, fullContent);
         }
 
-        // 3. Force Blog Templates
-        const blogTemplates = ['home.html', 'index.html'];
-        for (const tpl of blogTemplates) {
-            const tplPath = path.join(themeDir, 'templates', tpl);
-            await fs.writeFile(tplPath, getUniversalBlogContent().trim());
-        }
+        // Global Overrides
+        await this.injectGlobalParts(themeDir, userData, safeName, contentJson.pages);
+    }
 
-        // 4. Force Header/Footer
-        const footerPath = path.join(themeDir, 'parts', 'footer.html'); // Ensure parts/footer.html
-        const footerName = userData.name || 'PressPilot Site';
+    private async injectGlobalParts(themeDir: string, userData: GeneratorData, safeName: string, pages?: any[]): Promise<void> {
+        const businessName = userData.name || 'PressPilot Site';
+        const baseTheme = userData.baseName || 'twentytwentyfour';
+
+        const footerPath = path.join(themeDir, 'parts', 'footer.html');
         await fs.ensureDir(path.dirname(footerPath));
-        await fs.writeFile(footerPath, getUniversalFooterContent(footerName).trim());
+        let footerContent = getUniversalFooterContent(businessName, baseTheme).trim();
+        footerContent = footerContent.replace(/\{THEME_SLUG\}/g, safeName);
+        await fs.writeFile(footerPath, footerContent);
 
-        const headerPath = path.join(themeDir, UNIVERSAL_PATTERNS.header);
+        const headerPath = path.join(themeDir, 'parts', 'header.html');
         await fs.ensureDir(path.dirname(headerPath));
-        await fs.writeFile(headerPath, getUniversalHeaderContent(userData.pages).trim());
-
-        console.log('[Pattern] Forced Universal Header & Footer.');
+        const finalPages = pages || userData.pages || [];
+        let headerContent = getUniversalHeaderContent(businessName, finalPages, userData.logo).trim();
+        headerContent = headerContent.replace(/\{THEME_SLUG\}/g, safeName);
+        await fs.writeFile(headerPath, headerContent);
     }
 
     async injectMenus(themeDir: string, userData: GeneratorData, safeName: string): Promise<void> {
@@ -162,23 +146,24 @@ ${menuPatternContent}`;
 
             // Create a "page-menu.html" template that uses this pattern
             // Premium Layout: Dark Header + Content
-            const menuPageTemplate = `<!-- wp:template-part {"slug":"header","theme":"${safeName}","tagName":"header"} /-->
+            const colors = getFooterColors(userData.baseName || 'twentytwentyfour');
+            const menuPageTemplate = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"main","textColor":"base","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-base-color has-main-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
-    <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}}} -->
-    <h1 class="wp-block-heading has-text-align-center" style="font-style:normal;font-weight:700">Our Menu</h1>
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"${colors.darkBg}","textColor":"${colors.lightText}","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-${colors.lightText}-color has-${colors.darkBg}-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontStyle":"normal","fontWeight":"800"}}} -->
+    <h1 class="wp-block-heading has-text-align-center" style="font-style:normal;font-weight:800">Our Menu</h1>
     <!-- /wp:heading -->
 </div>
 <!-- /wp:group -->
 
-<!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
+<!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"1000px","wideSize":"1200px"}} -->
 <main class="wp-block-group" style="margin-top:var(--wp--preset--spacing--50);margin-bottom:var(--wp--preset--spacing--50)">
     <!-- wp:pattern {"slug":"presspilot/menu"} /-->
 </main>
 <!-- /wp:group -->
 
-<!-- wp:template-part {"slug":"footer","theme":"${safeName}","tagName":"footer"} /-->`;
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
 
             const menuTemplatePath = path.join(themeDir, 'templates', 'page-menu.html');
             await fs.writeFile(menuTemplatePath, menuPageTemplate);
@@ -329,6 +314,10 @@ add_action('after_setup_theme', function() {
         }
 
         let content = await fs.readFile(targetPath, 'utf8');
+        if (content.includes(`"url":"${url}"`) || content.includes(`'url':'${url}'`)) {
+            console.log(`[Pattern] Nav link for ${url} already exists in ${targetPath}. Skipping.`);
+            return;
+        }
 
         // NEW LOGIC: Check for Pattern Reference
         // e.g. <!-- wp:pattern {"slug":"ollie/header-light"} /-->
@@ -362,9 +351,9 @@ add_action('after_setup_theme', function() {
         // Regex explanation:
         // 1. <!-- wp:navigation - Matches the start of the block
         // 2. (.*?) - Lazy match any attributes (non-greedy)
-        // 3. (\/?)--> - Captures the self-closing slash if present, and the closing brackets
-        // 4. ([\s\S]*?) - Captures inner content if any (non-greedy)
-        // 5. (?:<!-- \/wp:navigation -->)? - Optional closing tag (non-capturing group)
+        // 3. ( \/)?--> - Captures the self-closing slash if present
+        // 4. ([\s\S]*?) - Captures inner content
+        // 5. (?:<!-- \/wp:navigation -->)? - Optional closing tag
         const navBlockRegex = /<!-- wp:navigation (.*?)( \/)?-->([\s\S]*?)(?:<!-- \/wp:navigation -->)?/;
         const match = content.match(navBlockRegex);
 
@@ -372,21 +361,21 @@ add_action('after_setup_theme', function() {
 
         if (match) {
             const wholeBlock = match[0];
-            const attributes = match[1];
-            const isSelfClosing = match[2] === ' /'; // Check if we captured the " /"
-            const innerContent = match[3];
+            const attributes = match[1].trim();
+            const isSelfClosing = match[2] === ' /' || !wholeBlock.includes('/wp:navigation');
+            const innerContent = isSelfClosing ? '' : match[3];
+
+            // If it's already in the inner content, skip
+            if (innerContent.includes(`"url":"${url}"`) || innerContent.includes(`'url':'${url}'`)) {
+                console.log(`[Pattern] Nav link ${url} detected in inner content. Skipping.`);
+                return;
+            }
 
             let newBlock = '';
-
-            if (isSelfClosing || (!innerContent && !wholeBlock.includes('/wp:navigation'))) {
-                // Formatting for Self-Closing: <!-- wp:navigation {...} /-->
-                // Transform to: <!-- wp:navigation {...} --> \n {CONTENT} \n <!-- /wp:navigation -->
+            if (isSelfClosing) {
+                // Transform to paired block
                 newBlock = `<!-- wp:navigation ${attributes} -->\n${navLinkHtml}\n<!-- /wp:navigation -->`;
             } else {
-                // Standard: <!-- wp:navigation ... --> ... <!-- /wp:navigation -->
-                // We append to the inner content.
-                // BE CAREFUL: If wp:page-list is present, we often want to put our link AFTER it? 
-                // Or simply append to end of inner. Appending is safest for now.
                 newBlock = `<!-- wp:navigation ${attributes} -->${innerContent}\n${navLinkHtml}\n<!-- /wp:navigation -->`;
             }
 

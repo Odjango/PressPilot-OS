@@ -9,6 +9,10 @@ import { StyleEngine } from './engine/StyleEngine';
 import { PatternInjector } from './engine/PatternInjector';
 import { ContentEngine } from './engine/ContentEngine';
 import { AssetCleaner } from './cleanup/AssetCleaner';
+import { PhpEscaper } from './utils/PhpEscaper';
+import { ThemeSelector } from './modules/ThemeSelector';
+import { ContentBuilder } from './modules/ContentBuilder';
+import { StyleBuilder } from './modules/StyleBuilder';
 
 /**
  * PressPilot Generator Orchestrator
@@ -24,112 +28,114 @@ export interface GeneratorOptions {
 }
 
 export async function generateTheme(options: GeneratorOptions = {}) {
-    // 1. SETUP
-    const baseName: BaseTheme = options.base || 'ollie';
-    const mode: GeneratorMode = options.mode || 'standard';
+    const rootDir = process.cwd();
+
+    // 1. INITIALIZE ENGINES & MODULES
+    const selector = new ThemeSelector(rootDir);
+    const contentBuilder = new ContentBuilder();
+    const styleBuilder = new StyleBuilder();
+
+    const chassis = new ChassisLoader(rootDir);
+    const styleEngine = new StyleEngine();
+    const patternInjector = new PatternInjector(rootDir);
+    const contentEngine = new ContentEngine();
+    const assetCleaner = new AssetCleaner();
+
+    // 2. RUN PIPELINE MODULES (Contracts)
     const userData: GeneratorData = options.data || {};
 
-    const personality = PATTERN_REGISTRY[baseName];
-    if (!personality) {
-        throw new Error(`Error: Unknown base theme '${baseName}'.`);
-    }
+    // A. SELECT THEME
+    const selection = await selector.selectTheme(userData);
+    let baseName = options.base || selection.baseTheme;
+    const coreId = options.base ? `manual/${options.base}` : selection.coreThemeId;
 
-    const themeName = userData.name || `PressPilot ${baseName} ${mode}`;
-    // Use provided slug or generate from name
+    userData.baseName = baseName; // Propagate for downstream engines
+    console.log(`[Orchestrator] Selected Core: ${coreId} (Base: ${baseName})`);
+    console.log(`[Orchestrator] Reasoning: ${selection.reasoning}`);
+
+    // B. BUILD CONTENT & STYLE JSON
+    const contentJson = contentBuilder.invoke(baseName, userData);
+    const styleJson = styleBuilder.invoke(baseName, userData);
+
+    // C. SETUP DIRECTORIES
+    const mode: GeneratorMode = options.mode || 'standard';
+    const themeName = styleJson.metadata.themeName;
     const safeName = options.slug || themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
-    const rootDir = process.cwd();
-    // Use provided output dir or default
     const buildDir = options.outDir ? options.outDir : path.join(rootDir, 'output', safeName);
     const zipPath = path.join(path.dirname(buildDir), `${safeName}.zip`);
     const themeDir = path.join(buildDir, safeName);
 
-    console.log(`[Orchestrator] Starting generation for: ${themeName}`);
+    console.log(`[Orchestrator] Starting assembly for: ${themeName}`);
 
     try {
-        // 2. INITIALIZE ENGINES
-        const chassis = new ChassisLoader(rootDir);
-        const styleEngine = new StyleEngine();
-        const patternInjector = new PatternInjector(rootDir);
-        const contentEngine = new ContentEngine();
-        const assetCleaner = new AssetCleaner();
-
-        // 3. EXECUTE PIPELINE
+        // 3. ASSEMBLY (Side Effects)
         console.log(`[Orchestrator] Cleaning build directory: ${themeDir}`);
-        await fs.emptyDir(themeDir); // CRITICAL FIX: Ensure no stale files from previous builds
+        await fs.emptyDir(themeDir);
 
+        // Load Chassis (Using baseName for binary files)
         await chassis.load(baseName, themeDir);
 
-        // CLEANUP STEP: Remove default assets (Saves ~2MB)
+        // Clean default assets
         await assetCleaner.clean(themeDir);
 
-        await styleEngine.applyColors(themeDir, userData, personality);
+        // Apply Styles
+        await styleEngine.applyStyles(themeDir, styleJson);
         await styleEngine.updateMetadata(themeDir, themeName, baseName, mode);
 
-        if (mode === 'heavy') {
-            await patternInjector.injectHeavyMode(themeDir, personality, userData, safeName);
-            await contentEngine.generatePages(themeDir, userData);
-            await contentEngine.injectContentLoader(themeDir, userData);
-        } else {
-            // STANDARD / LIBRARY MODE (Recipe Assembly)
+        // Handle Logo
+        if (userData.logo && userData.logo.startsWith('data:image')) {
+            console.log('[Orchestrator] Extracting logo from base64...');
+            const logoBase64 = userData.logo.split(';base64,').pop();
+            const logoPath = path.join(themeDir, 'assets', 'images', 'logo.png');
+            await fs.ensureDir(path.dirname(logoPath));
+            await fs.writeFile(logoPath, Buffer.from(logoBase64!, 'base64'));
+            userData.logo = `assets/images/logo.png`;
+        }
 
-            // 1. Select Recipe
+        // Apply Content
+        const personality = PATTERN_REGISTRY[baseName];
+
+        if (mode === 'heavy') {
+            await patternInjector.injectHeavyMode(themeDir, personality, userData, safeName, contentJson);
+            await contentEngine.generatePages(themeDir, contentJson);
+            await contentEngine.injectContentLoader(themeDir, contentJson);
+        } else {
+            // STANDARD MODE (Using Recipe Assembly)
             let recipe = null;
             if (personality.recipes) {
-                const industry = userData.industry || 'saas'; // Default to SaaS
+                const industry = userData.industry || 'saas';
                 const availableRecipes = personality.recipes[industry] || personality.recipes['saas'];
-
                 if (availableRecipes && availableRecipes.length > 0) {
-                    // Pick random or first
                     recipe = availableRecipes[0];
                 }
             }
 
-            // PATTERN INJECTION (With Override Support)
             if (options.heroPattern) {
-                // FORCE OVERRIDE
+                // OVERRIDE Logic preserved for now
                 console.log(`[Orchestrator] Forcing Hero Pattern: ${options.heroPattern}`);
-                const heroPath = path.join(themeDir, personality.patterns.hero); // Target location
-
-                // Check if it's a valid file path in our repo
+                const heroPath = path.join(themeDir, personality.patterns.hero);
                 if (await fs.pathExists(options.heroPattern)) {
                     await fs.copy(options.heroPattern, heroPath);
-                    console.log(`[Orchestrator] Overwrote Hero with: ${options.heroPattern}`);
-                } else {
-                    console.warn(`[Orchestrator] Requested hero pattern not found: ${options.heroPattern}`);
                 }
-
-                // Inject Content into the new Hero
+                // (Existing replacement logic simplified here to use slots from contentJson)
                 let heroContent = await fs.readFile(heroPath, 'utf8');
-                heroContent = heroContent.replace(personality.patterns.hero_search_headline, userData.hero_headline || "Welcome");
-                if (personality.patterns.hero_search_pretitle) {
-                    // Replace pre-title with Industry or Empty
-                    const preTitle = userData.industry ? userData.industry.toUpperCase() : 'WELCOME';
-                    heroContent = heroContent.replace(personality.patterns.hero_search_pretitle, preTitle);
-                }
-                if (userData.hero_subheadline && personality.patterns.hero_search_sub) {
-                    heroContent = heroContent.replace(personality.patterns.hero_search_sub, userData.hero_subheadline || "");
+                for (const [search, replace] of Object.entries(contentJson.slots)) {
+                    heroContent = heroContent.replace(search, replace);
                 }
                 await fs.writeFile(heroPath, heroContent);
-
             } else if (recipe) {
-                await patternInjector.injectRecipe(themeDir, recipe, userData, personality);
-            } else {
-                console.warn('[Orchestrator] No recipe found. Skipping default injection to avoid mock data fallback.');
+                await patternInjector.injectRecipe(themeDir, recipe, contentJson, personality, safeName, userData);
             }
 
-            // 2. Generate Pages (Restored Feature)
-            await contentEngine.generatePages(themeDir, userData);
+            await contentEngine.generatePages(themeDir, contentJson);
+            await contentEngine.injectContentLoader(themeDir, contentJson);
 
-            // 3. Inject Safe Content Loader
-            await contentEngine.injectContentLoader(themeDir, userData);
-
-            // 4. Inject Menus
             if (userData.menus && userData.menus.length > 0) {
                 await patternInjector.injectMenus(themeDir, userData, safeName);
             }
 
-            // 5. Industry Specific Injection (Portfolio / Fitness)
+            // Industry Specific logic preserved
             const industry = (userData.industry || '').toLowerCase();
             if (industry === 'portfolio' || industry === 'creative') {
                 await patternInjector.injectGallery(themeDir, safeName);
@@ -138,32 +144,19 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             } else if (industry === 'ecommerce' || industry === 'shop') {
                 await patternInjector.injectWooCommerce(themeDir, safeName);
             }
-
-            // PROOF OF CONTROL REMOVED: Restoring real patterns.
-            await fs.writeFile(path.join(themeDir, 'DEBUG_VERSION.txt'), `Build: ${new Date().toISOString()}`);
         }
 
-        // 3.5. VALIDATION HARDENING (Phase 3)
-        // Ensure "Trust but Verify" rule for FSE output
+        // VALIDATION
         console.log('[Orchestrator] Validating Theme Structure...');
         const { ThemeValidator } = require('./validator/ThemeValidator');
         const validator = new ThemeValidator();
         const report = await validator.validateTheme(themeDir);
 
         if (!report.isValid) {
-            console.error('[Validator] CRITICAL FSE ERRORS FOUND:');
-            report.errors.forEach((err: string) => console.error(`  - ${err}`));
-            console.error('[Validator] Theme Generation Completed with ERRORS.');
-        } else {
-            console.log('[Validator] Theme Passed FSE Validation Check.');
+            console.error('[Validator] CRITICAL FSE ERRORS FOUND');
         }
 
-        if (report.warnings.length > 0) {
-            console.log('[Validator] Warnings:');
-            report.warnings.forEach((warn: string) => console.log(`  - ${warn}`));
-        }
-
-        // 4. FINALIZE (ZIP)
+        // FINALIZE (ZIP)
         const output = fs.createWriteStream(zipPath);
         const archive = archiver('zip', { zlib: { level: 9 } });
 
@@ -175,15 +168,13 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             archive.finalize();
         });
 
-        const result = {
+        return {
             status: "success",
             themeName: themeName,
             downloadPath: zipPath,
             filename: `${safeName}.zip`,
-            themeDir: themeDir // useful for checking
+            themeDir: themeDir
         };
-
-        return result;
 
     } catch (err) {
         console.error('[Orchestrator] Error:', err);

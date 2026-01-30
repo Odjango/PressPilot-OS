@@ -47,7 +47,7 @@ export async function serialize(nodes: BlockNode[]): Promise<string> {
             try {
                 const editorDispatch = wpData.dispatch('core/block-editor');
                 if (editorDispatch) {
-                    editorDispatch.updateSettings({
+                    (editorDispatch as any).updateSettings({
                         alignWide: true,
                         supportsLayout: true,
                         imageEditing: true,

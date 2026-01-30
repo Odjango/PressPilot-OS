@@ -16,6 +16,7 @@ export interface StudioFormInput {
   fontPairId?: string;
   logoBase64?: string;
   logoPath?: string; // Local absolute path for OS usage
+  menus?: any[]; // For restaurant usage
   palette?: {
     primary?: string;
     secondary?: string;
@@ -23,15 +24,12 @@ export interface StudioFormInput {
   };
 }
 
-// ... (omitted lines)
-
 export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPilotSaaSInput {
   const businessName = input?.businessName?.trim();
   const description = input?.businessDescription?.trim();
 
   if (!businessName) throw new Error('Missing Business Name');
   if (!description) throw new Error('Missing Business Description');
-  // ...
 
   const category = resolveBusinessCategory(input?.businessCategory);
 
@@ -51,7 +49,10 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
     },
     modes: {
       business_category: category,
-      restaurant: { enabled: category === 'restaurant_cafe' },
+      restaurant: {
+        enabled: category === 'restaurant_cafe',
+        menus: input?.menus
+      },
       ecommerce: { enabled: category === 'ecommerce' }
     },
     visualControls: {

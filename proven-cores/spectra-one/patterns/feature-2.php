@@ -25,11 +25,11 @@ $images = [
 <!-- /wp:image -->
 
 <!-- wp:heading {"textAlign":"center","level":5,"style":{"spacing":{"margin":{"top":"var:preset|spacing|small"}}},"textColor":"heading","className":"wp-block-heading"} -->
-<h5 class="wp-block-heading has-text-align-center has-heading-color has-text-color" style="margin-top:var(--wp--preset--spacing--small)"><?php esc_html_e( 'Easily Customizable', 'spectra-one' ); ?></h5>
+<h5 class="wp-block-heading has-text-align-center has-heading-color has-text-color" style="margin-top:var(--wp--preset--spacing--small)">Easily Customizable</h5>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"align":"center"} -->
-<p class="has-text-align-center"><?php esc_html_e( 'Tailor your website to your liking with endless options to personalize the design and functionality.', 'spectra-one' ); ?></p>
+<p class="has-text-align-center">Tailor your website to your liking with endless options to personalize the design and functionality.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column -->
 
@@ -39,11 +39,11 @@ $images = [
 <!-- /wp:image -->
 
 <!-- wp:heading {"textAlign":"center","level":5,"style":{"spacing":{"margin":{"top":"var:preset|spacing|small"}}},"textColor":"heading","className":"wp-block-heading"} -->
-<h5 class="wp-block-heading has-text-align-center has-heading-color has-text-color" style="margin-top:var(--wp--preset--spacing--small)"><?php esc_html_e( 'Blazing Fast', 'spectra-one' ); ?></h5>
+<h5 class="wp-block-heading has-text-align-center has-heading-color has-text-color" style="margin-top:var(--wp--preset--spacing--small)">Blazing Fast</h5>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"align":"center"} -->
-<p class="has-text-align-center"><?php esc_html_e( 'Experience lightning-fast page load speeds for optimal user experience and SEO ranking.', 'spectra-one' ); ?></p>
+<p class="has-text-align-center">Experience lightning-fast page load speeds for optimal user experience and SEO ranking.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column -->
 
@@ -53,11 +53,11 @@ $images = [
 <!-- /wp:image -->
 
 <!-- wp:heading {"textAlign":"center","level":5,"style":{"spacing":{"margin":{"top":"var:preset|spacing|small"}}},"textColor":"heading","className":"wp-block-heading"} -->
-<h5 class="wp-block-heading has-text-align-center has-heading-color has-text-color" style="margin-top:var(--wp--preset--spacing--small)"><?php esc_html_e( 'SEO Optimized', 'spectra-one' ); ?></h5>
+<h5 class="wp-block-heading has-text-align-center has-heading-color has-text-color" style="margin-top:var(--wp--preset--spacing--small)">SEO Optimized</h5>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"align":"center"} -->
-<p class="has-text-align-center"><?php esc_html_e( 'Built with search engines in mind, achieve higher rankings and more traffic with optimized code.', 'spectra-one' ); ?></p>
+<p class="has-text-align-center">Built with search engines in mind, achieve higher rankings and more traffic with optimized code.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>

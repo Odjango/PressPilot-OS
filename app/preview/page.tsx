@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { HeroCarousel, HeroPreview } from '@/src/components/HeroCarousel';
 import { Loader2 } from 'lucide-react';
 
-export default function PreviewPage() {
+function PreviewPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const previewId = searchParams.get('id');
@@ -16,11 +16,11 @@ export default function PreviewPage() {
 
     useEffect(() => {
         if (!previewId) {
-            router.push('/dashboard');
+            router.push('/studio');
             return;
         }
 
-        // Fetch preview data from session storage (set by dashboard after generation)
+        // Fetch preview data from session storage (set by studio after generation)
         const previewData = sessionStorage.getItem(`preview-${previewId}`);
         if (previewData) {
             const data = JSON.parse(previewData);
@@ -37,7 +37,6 @@ export default function PreviewPage() {
         sessionStorage.setItem(`selected-style-${previewId}`, style);
 
         // Redirect to checkout (Lemon Squeezy)
-        // For now, redirect to a placeholder checkout page
         router.push(`/checkout?previewId=${previewId}&style=${style}`);
     };
 
@@ -59,10 +58,10 @@ export default function PreviewPage() {
                     <h1 className="text-2xl font-bold text-gray-900 mb-4">Oops!</h1>
                     <p className="text-gray-600 mb-6">{error}</p>
                     <button
-                        onClick={() => router.push('/dashboard')}
+                        onClick={() => router.push('/studio')}
                         className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800"
                     >
-                        Back to Dashboard
+                        Back to Studio
                     </button>
                 </div>
             </div>
@@ -74,7 +73,7 @@ export default function PreviewPage() {
             {/* Header */}
             <div className="max-w-6xl mx-auto px-4 mb-8">
                 <button
-                    onClick={() => router.push('/dashboard')}
+                    onClick={() => router.push('/studio')}
                     className="text-gray-600 hover:text-gray-900 mb-4 flex items-center gap-2"
                 >
                     ← Back to edit
@@ -117,5 +116,20 @@ export default function PreviewPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function PreviewPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <Loader2 className="w-12 h-12 animate-spin text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-600">Loading preview...</p>
+                </div>
+            </div>
+        }>
+            <PreviewPageContent />
+        </Suspense>
     );
 }

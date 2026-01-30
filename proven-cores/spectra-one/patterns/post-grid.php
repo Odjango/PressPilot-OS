@@ -9,7 +9,7 @@
 
 <!-- wp:group {"align":"wide","style":{"spacing":{"blockGap":"var:preset|spacing|large","padding":{"top":"var:preset|spacing|x-large","bottom":"var:preset|spacing|x-large"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignwide" style="padding-top:var(--wp--preset--spacing--x-large);padding-bottom:var(--wp--preset--spacing--x-large)"><!-- wp:heading {"textAlign":"left","align":"wide","textColor":"heading","className":"wp-block-heading"} -->
-<h2 class="wp-block-heading alignwide has-text-align-left has-heading-color has-text-color"><?php esc_html_e( 'Latest from the blog', 'spectra-one' ); ?></h2>
+<h2 class="wp-block-heading alignwide has-text-align-left has-heading-color has-text-color">Latest from the blog</h2>
 <!-- /wp:heading -->
 <!-- wp:query {"queryId":42,"query":{"perPage":3,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false},"displayLayout":{"type":"flex","columns":3},"align":"wide"} -->
 <div class="wp-block-query alignwide"><!-- wp:post-template -->

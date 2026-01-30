@@ -13,7 +13,10 @@ export default function HeaderAuthStatus() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     let isMounted = true;
 
     const resolveUser = async () => {
@@ -50,7 +53,7 @@ export default function HeaderAuthStatus() {
     router.replace("/auth");
   };
 
-  if (loading) {
+  if (!mounted || loading) {
     return <span className="text-sm text-neutral-500">Loading…</span>;
   }
 
@@ -63,6 +66,7 @@ export default function HeaderAuthStatus() {
       <Link
         href="/auth"
         className="inline-flex items-center rounded-full border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-900 transition hover:border-neutral-900 hover:text-black"
+        suppressHydrationWarning
       >
         Sign in
       </Link>

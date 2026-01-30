@@ -21,11 +21,11 @@
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|small","bottom":"var:preset|spacing|x-large"},"blockGap":"var:preset|spacing|medium"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--x-large)"><!-- wp:group {"style":{"spacing":{"padding":{"bottom":"var:preset|spacing|x-small"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="padding-bottom:var(--wp--preset--spacing--x-small)"><!-- wp:paragraph {"align":"center","style":{"typography":{"letterSpacing":"2px","textTransform":"uppercase"}},"textColor":"primary","fontSize":"x-small"} -->
-<p class="has-text-align-center has-primary-color has-text-color has-x-small-font-size" style="letter-spacing:2px;text-transform:uppercase"><?php esc_html_e( 'Testimonials', 'spectra-one' ); ?></p>
+<p class="has-text-align-center has-primary-color has-text-color has-x-small-font-size" style="letter-spacing:2px;text-transform:uppercase">Testimonials</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"textAlign":"center"} -->
-<h2 class="wp-block-heading has-text-align-center"><?php esc_html_e( 'See what people have to say about us', 'spectra-one' ); ?></h2>
+<h2 class="wp-block-heading has-text-align-center">See what people have to say about us</h2>
 <!-- /wp:heading --></div>
 <!-- /wp:group -->
 
@@ -34,15 +34,15 @@
 <div class="wp-block-column"><!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|small","right":"var:preset|spacing|small","bottom":"var:preset|spacing|small","left":"var:preset|spacing|small"}},"border":{"radius":"16px","width":"1px"},"dimensions":{"minHeight":"100%"}},"borderColor":"outline","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between"}} -->
 <div class="wp-block-group has-border-color has-outline-border-color" style="border-width:1px;border-radius:16px;min-height:100%;padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)"><!-- wp:group {"layout":{"type":"constrained","justifyContent":"left"}} -->
 <div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php esc_html_e( '★★★★★', 'spectra-one' ); ?></p>
+<p>★★★★★</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"level":6,"textColor":"heading","className":"wp-block-heading"} -->
-<h6 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'Highly recommended!', 'spectra-one' ); ?></h6>
+<h6 class="wp-block-heading has-heading-color has-text-color">Highly recommended!</h6>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'This theme made the process of building my website a breeze. The drag-and-drop interface was easy to use and the templates were customizable. ', 'spectra-one' ); ?></p>
+<p>This theme made the process of building my website a breeze. The drag-and-drop interface was easy to use and the templates were customizable. </p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -53,11 +53,11 @@
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group"><!-- wp:paragraph {"fontSize":"small"} -->
-<p class="has-small-font-size"><?php esc_html_e( 'Darlene Robertson', 'spectra-one' ); ?></p>
+<p class="has-small-font-size">Darlene Robertson</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"fontSize":"x-small"} -->
-<p class="has-x-small-font-size"><?php esc_html_e( 'Web designer', 'spectra-one' ); ?></p>
+<p class="has-x-small-font-size">Web designer</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>
@@ -68,15 +68,15 @@
 <div class="wp-block-column"><!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|small","right":"var:preset|spacing|small","bottom":"var:preset|spacing|small","left":"var:preset|spacing|small"}},"border":{"radius":"16px","width":"1px"},"dimensions":{"minHeight":"100%"}},"borderColor":"outline","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between"}} -->
 <div class="wp-block-group has-border-color has-outline-border-color" style="border-width:1px;border-radius:16px;min-height:100%;padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)"><!-- wp:group {"layout":{"type":"constrained","justifyContent":"left"}} -->
 <div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php esc_html_e( '★★★★★', 'spectra-one' ); ?></p>
+<p>★★★★★</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"level":6,"textColor":"heading","className":"wp-block-heading"} -->
-<h6 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'Endless customization', 'spectra-one' ); ?></h6>
+<h6 class="wp-block-heading has-heading-color has-text-color">Endless customization</h6>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Endless customization options and responsive design, plus great customer support. Highly recommend!', 'spectra-one' ); ?></p>
+<p>Endless customization options and responsive design, plus great customer support. Highly recommend!</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -87,11 +87,11 @@
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group"><!-- wp:paragraph {"fontSize":"small"} -->
-<p class="has-small-font-size"><?php esc_html_e( 'Ralph Edwards', 'spectra-one' ); ?></p>
+<p class="has-small-font-size">Ralph Edwards</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"fontSize":"x-small"} -->
-<p class="has-x-small-font-size"><?php esc_html_e( 'Marketing Coordinator', 'spectra-one' ); ?></p>
+<p class="has-x-small-font-size">Marketing Coordinator</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>
@@ -102,15 +102,15 @@
 <div class="wp-block-column"><!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|small","right":"var:preset|spacing|small","bottom":"var:preset|spacing|small","left":"var:preset|spacing|small"}},"border":{"radius":"16px","width":"1px"},"dimensions":{"minHeight":"100%"}},"borderColor":"outline","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between"}} -->
 <div class="wp-block-group has-border-color has-outline-border-color" style="border-width:1px;border-radius:16px;min-height:100%;padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)"><!-- wp:group {"layout":{"type":"constrained","justifyContent":"left"}} -->
 <div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php esc_html_e( '★★★★★', 'spectra-one' ); ?></p>
+<p>★★★★★</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"level":6,"textColor":"heading","className":"wp-block-heading"} -->
-<h6 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'Superb quality!', 'spectra-one' ); ?></h6>
+<h6 class="wp-block-heading has-heading-color has-text-color">Superb quality!</h6>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'I\'ve tried countless themes, but none have impressed me as much as this! It\'s incredibly fast, which means my website load in a snap.', 'spectra-one' ); ?></p>
+<p>I've tried countless themes, but none have impressed me as much as this! It's incredibly fast, which means my website load in a snap.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -121,11 +121,11 @@
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group"><!-- wp:paragraph {"fontSize":"small"} -->
-<p class="has-small-font-size"><?php esc_html_e( 'Jenny Wilson', 'spectra-one' ); ?></p>
+<p class="has-small-font-size">Jenny Wilson</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"fontSize":"x-small"} -->
-<p class="has-x-small-font-size"><?php esc_html_e( 'Marketer', 'spectra-one' ); ?></p>
+<p class="has-x-small-font-size">Marketer</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>
@@ -138,15 +138,15 @@
 <div class="wp-block-column"><!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|small","right":"var:preset|spacing|small","bottom":"var:preset|spacing|small","left":"var:preset|spacing|small"}},"border":{"radius":"16px","width":"1px"},"dimensions":{"minHeight":"100%"}},"borderColor":"outline","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between"}} -->
 <div class="wp-block-group has-border-color has-outline-border-color" style="border-width:1px;border-radius:16px;min-height:100%;padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)"><!-- wp:group {"layout":{"type":"constrained","justifyContent":"left"}} -->
 <div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php esc_html_e( '★★★★★', 'spectra-one' ); ?></p>
+<p>★★★★★</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"level":6,"textColor":"heading","className":"wp-block-heading"} -->
-<h6 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'Easy to use', 'spectra-one' ); ?></h6>
+<h6 class="wp-block-heading has-heading-color has-text-color">Easy to use</h6>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'As a small business owner, I needed a website that was affordable. I was able to create a beautiful website that represented my brand.', 'spectra-one' ); ?></p>
+<p>As a small business owner, I needed a website that was affordable. I was able to create a beautiful website that represented my brand.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -157,11 +157,11 @@
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group"><!-- wp:paragraph {"fontSize":"small"} -->
-<p class="has-small-font-size"><?php esc_html_e( 'Ronald Richards', 'spectra-one' ); ?></p>
+<p class="has-small-font-size">Ronald Richards</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"fontSize":"x-small"} -->
-<p class="has-x-small-font-size"><?php esc_html_e( 'Developer', 'spectra-one' ); ?></p>
+<p class="has-x-small-font-size">Developer</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>
@@ -172,15 +172,15 @@
 <div class="wp-block-column"><!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|small","right":"var:preset|spacing|small","bottom":"var:preset|spacing|small","left":"var:preset|spacing|small"}},"border":{"radius":"16px","width":"1px"},"dimensions":{"minHeight":"100%"}},"borderColor":"outline","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between"}} -->
 <div class="wp-block-group has-border-color has-outline-border-color" style="border-width:1px;border-radius:16px;min-height:100%;padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)"><!-- wp:group {"layout":{"type":"constrained","justifyContent":"left"}} -->
 <div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php esc_html_e( '★★★★★', 'spectra-one' ); ?></p>
+<p>★★★★★</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"level":6,"textColor":"heading","className":"wp-block-heading"} -->
-<h6 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'Really love it!', 'spectra-one' ); ?></h6>
+<h6 class="wp-block-heading has-heading-color has-text-color">Really love it!</h6>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'This block-based WordPress theme is a game-changer. I\'ve struggled with complex themes in the past, but this one is easy to use.', 'spectra-one' ); ?></p>
+<p>This block-based WordPress theme is a game-changer. I've struggled with complex themes in the past, but this one is easy to use.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -191,11 +191,11 @@
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group"><!-- wp:paragraph {"fontSize":"small"} -->
-<p class="has-small-font-size"><?php esc_html_e( 'Leslie Alexander', 'spectra-one' ); ?></p>
+<p class="has-small-font-size">Leslie Alexander</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"fontSize":"x-small"} -->
-<p class="has-x-small-font-size"><?php esc_html_e( 'Business owner', 'spectra-one' ); ?></p>
+<p class="has-x-small-font-size">Business owner</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>
@@ -206,15 +206,15 @@
 <div class="wp-block-column"><!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|small","right":"var:preset|spacing|small","bottom":"var:preset|spacing|small","left":"var:preset|spacing|small"}},"border":{"radius":"16px","width":"1px"},"dimensions":{"minHeight":"100%"}},"borderColor":"outline","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between"}} -->
 <div class="wp-block-group has-border-color has-outline-border-color" style="border-width:1px;border-radius:16px;min-height:100%;padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)"><!-- wp:group {"layout":{"type":"constrained","justifyContent":"left"}} -->
 <div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php esc_html_e( '★★★★★', 'spectra-one' ); ?></p>
+<p>★★★★★</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"level":6,"textColor":"heading","className":"wp-block-heading"} -->
-<h6 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'Great on any device', 'spectra-one' ); ?></h6>
+<h6 class="wp-block-heading has-heading-color has-text-color">Great on any device</h6>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'I\'ve used a few different website builders over the years, and this one is by far the best. The responsive design ensures that my website looks great on any device.', 'spectra-one' ); ?></p>
+<p>I've used a few different website builders over the years, and this one is by far the best. The responsive design ensures that my website looks great on any device.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -225,11 +225,11 @@
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group"><!-- wp:paragraph {"fontSize":"small"} -->
-<p class="has-small-font-size"><?php esc_html_e( 'Jacob Jones', 'spectra-one' ); ?></p>
+<p class="has-small-font-size">Jacob Jones</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"fontSize":"x-small"} -->
-<p class="has-x-small-font-size"><?php esc_html_e( 'Freelancer', 'spectra-one' ); ?></p>
+<p class="has-x-small-font-size">Freelancer</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>

@@ -25,19 +25,28 @@ async function testGeneration() {
                 hero_headline: "Safe Loader Verification",
                 hero_subheadline: "This theme should not crash.",
                 pages: [
-                    { title: "Home", slug: "home" },
-                    { title: "About Us", slug: "about" },
-                    { title: "Contact", slug: "contact" },
+                    { title: "Home", slug: "home", template: 'universal-home' },
+                    { title: "About Us", slug: "about", template: 'universal-about' },
+                    { title: "Contact", slug: "contact", template: 'universal-contact' },
+                    { title: "Our Menu", slug: "menu", template: 'universal-menu' },
                 ],
                 menus: [
                     {
-                        name: "Main Menu",
+                        title: "Starters",
                         items: [
-                            { label: "Home", url: "/" },
-                            { label: "About", url: "/about" },
+                            { name: "Garlic Bread", price: "$5.00", description: "Freshly baked with garlic butter" },
+                            { name: "Bruschetta", price: "$8.00", description: "Tomatoes, basil, olive oil" }
+                        ]
+                    },
+                    {
+                        title: "Main Course",
+                        items: [
+                            { name: "Classic Margherita", price: "$15.00", description: "Tomato, mozzarella, basil" },
+                            { name: "Pepperoni Pizza", price: "$18.00" }
                         ]
                     }
                 ]
+
             }
         });
 

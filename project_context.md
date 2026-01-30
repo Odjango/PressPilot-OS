@@ -1,3 +1,6 @@
+“This file is the latest source of truth. All other docs can be considered legacy unless they explicitly say otherwise.”
+
+
 # PROJECT CONTEXT: PressPilot (AI WordPress Theme Generator)
 
 ## 1. PROJECT MISSION
@@ -13,6 +16,8 @@ The logic is strictly modular. The Agent must strictly use these files:
 - **Orchestrator:** `src/generator/index.ts`
 - **Pattern Registry:** `src/generator/config/PatternRegistry.ts` (Defines Layout Recipes)
 - **Assembly Engine:** `src/generator/engine/PatternInjector.ts` (Executes Recipes)
+- **Style Engine:** `src/generator/engine/StyleEngine.ts` (Handles Colors & Fonts)
+    - **ColorHarmonizer:** `src/generator/utils/ColorHarmonizer.ts` (Ensures enterprise-grade palettes)
 - **Content Logic:** `src/generator/engine/ContentEngine.ts`
 - **Role:** Assembles a ready-to-use theme by injecting user content into a selected sequence of proven patterns.
 
@@ -30,6 +35,7 @@ The logic is strictly modular. The Agent must strictly use these files:
 2.  **Zero Dependency:** Do not write code that requires an external plugin.
 3.  **FSE Reference:** Always consult `WORDPRESS_FSE_REFERENCE.md` for validation rules.
 
-## 4. CURRENT GOAL: Tech Stack Refactor
-We have successfully consolidated the generation logic into the Node.js architecture.
-- **Immediate Task:** Build "Restaurant Menu" features into the Node generator (Phase 2).
+## 4. CURRENT GOAL: Stabilization & Enterprise Polish
+We have consolidated the generation logic and are now refining the output for professional quality.
+- **Styling:** Enterprise-grade color harmonization (capped saturation, accessible headers).
+- **Stability:** FSE-compliant navigation (self-closing blocks) to prevent editor errors.

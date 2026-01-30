@@ -1,6 +1,65 @@
 import { PageContent } from '../types';
 
 export const getUniversalMenuContent = (content?: PageContent) => {
+    const menus = content?.menus || [
+        {
+            title: 'Our Menu',
+            items: [
+                { name: 'Margherita Pizza', description: 'Tomato, Mozzarella, Basil', price: '$14.00' },
+                { name: 'Pepperoni Feast', description: 'Tomato, Mozzarella, Pepperoni', price: '$16.00' },
+                { name: 'Vegetarian', description: 'Peppers, Mushrooms, Onions, Olives', price: '$15.00' },
+                { name: 'Tiramisu', description: 'Classic Italian Dessert', price: '$8.00' }
+            ]
+        }
+    ];
+
+    const menuBlocks = menus.map(menu => {
+        const items = menu.items || [];
+        const leftColItems = items.filter((_, i) => i % 2 === 0);
+        const rightColItems = items.filter((_, i) => i % 2 !== 0);
+
+        const renderItem = (item: any) => `
+            <!-- wp:group {"style":{"spacing":{"margin":{"bottom":"var:preset|spacing|40"}},"border":{"bottom":{"color":"var:preset|color|contrast","width":"1px"}}},"layout":{"type":"constrained"}} -->
+            <div class="wp-block-group" style="border-bottom-color:var(--wp--preset--color--contrast);border-bottom-width:1px;margin-bottom:var(--wp--preset--spacing--40)">
+                <!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} -->
+                <div class="wp-block-group">
+                    <!-- wp:heading {"level":4,"style":{"typography":{"fontSize":"1.2rem","fontWeight":"700"}}} -->
+                    <h4 class="wp-block-heading" style="font-size:1.2rem;font-weight:700">${item.name}</h4>
+                    <!-- /wp:heading -->
+                    <!-- wp:paragraph {"style":{"typography":{"fontWeight":"700"}}} -->
+                    <p style="font-weight:700">${item.price}</p>
+                    <!-- /wp:paragraph -->
+                </div>
+                <!-- /wp:group -->
+                <!-- wp:paragraph {"style":{"typography":{"fontStyle":"italic"}},"fontSize":"small"} -->
+                <p class="has-small-font-size" style="font-style:italic">${item.description || ''}</p>
+                <!-- /wp:paragraph -->
+            </div>
+            <!-- /wp:group -->
+        `;
+
+        return `
+            <!-- wp:heading {"textAlign":"center","level":2,"style":{"spacing":{"margin":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|30"}}}} -->
+            <h2 class="wp-block-heading has-text-align-center" style="margin-top:var(--wp--preset--spacing--50);margin-bottom:var(--wp--preset--spacing--30)">${menu.title}</h2>
+            <!-- /wp:heading -->
+
+            <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|50"}}}} -->
+            <div class="wp-block-columns alignwide">
+                <!-- wp:column -->
+                <div class="wp-block-column">
+                    ${leftColItems.map(renderItem).join('')}
+                </div>
+                <!-- /wp:column -->
+                <!-- wp:column -->
+                <div class="wp-block-column">
+                    ${rightColItems.map(renderItem).join('')}
+                </div>
+                <!-- /wp:column -->
+            </div>
+            <!-- /wp:columns -->
+        `;
+    }).join('');
+
     return `
     <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
     <div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
@@ -9,67 +68,8 @@ export const getUniversalMenuContent = (content?: PageContent) => {
         <h1 class="wp-block-heading has-text-align-center" style="margin-bottom:var(--wp--preset--spacing--50)">Our Menu</h1>
         <!-- /wp:heading -->
 
-        <!-- wp:group {"align":"wide","layout":{"type":"grid","columnCount":2,"minimumColumnWidth":null}} -->
-        <div class="wp-block-group alignwide">
-            
-            <!-- wp:group {"style":{"border":{"width":"1px","style":"solid","color":"var:preset|color|contrast"},"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"flex","orientation":"vertical"}} -->
-            <div class="wp-block-group" style="border-style:solid;border-width:1px;border-color:var(--wp--preset--color--contrast);padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
-                <!-- wp:heading {"level":3} -->
-                <h3 class="wp-block-heading">Margherita Pizza</h3>
-                <!-- /wp:heading -->
-                <!-- wp:paragraph {"style":{"typography":{"fontStyle":"italic"}}} -->
-                <p style="font-style:italic">Tomato, Mozzarella, Basil</p>
-                <!-- /wp:paragraph -->
-                <!-- wp:paragraph {"fontSize":"large"} -->
-                <p class="has-large-font-size">$14.00</p>
-                <!-- /wp:paragraph -->
-            </div>
-            <!-- /wp:group -->
+        ${menuBlocks}
 
-            <!-- wp:group {"style":{"border":{"width":"1px","style":"solid","color":"var:preset|color|contrast"},"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"flex","orientation":"vertical"}} -->
-            <div class="wp-block-group" style="border-style:solid;border-width:1px;border-color:var(--wp--preset--color--contrast);padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
-                <!-- wp:heading {"level":3} -->
-                <h3 class="wp-block-heading">Pepperoni Feast</h3>
-                <!-- /wp:heading -->
-                <!-- wp:paragraph {"style":{"typography":{"fontStyle":"italic"}}} -->
-                <p style="font-style:italic">Tomato, Mozzarella, Pepperoni</p>
-                <!-- /wp:paragraph -->
-                <!-- wp:paragraph {"fontSize":"large"} -->
-                <p class="has-large-font-size">$16.00</p>
-                <!-- /wp:paragraph -->
-            </div>
-            <!-- /wp:group -->
-
-             <!-- wp:group {"style":{"border":{"width":"1px","style":"solid","color":"var:preset|color|contrast"},"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"flex","orientation":"vertical"}} -->
-            <div class="wp-block-group" style="border-style:solid;border-width:1px;border-color:var(--wp--preset--color--contrast);padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
-                <!-- wp:heading {"level":3} -->
-                <h3 class="wp-block-heading">Vegetarian</h3>
-                <!-- /wp:heading -->
-                <!-- wp:paragraph {"style":{"typography":{"fontStyle":"italic"}}} -->
-                <p style="font-style:italic">Peppers, Mushrooms, Onions, Olives</p>
-                <!-- /wp:paragraph -->
-                <!-- wp:paragraph {"fontSize":"large"} -->
-                <p class="has-large-font-size">$15.00</p>
-                <!-- /wp:paragraph -->
-            </div>
-            <!-- /wp:group -->
-
-             <!-- wp:group {"style":{"border":{"width":"1px","style":"solid","color":"var:preset|color|contrast"},"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"flex","orientation":"vertical"}} -->
-            <div class="wp-block-group" style="border-style:solid;border-width:1px;border-color:var(--wp--preset--color--contrast);padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
-                <!-- wp:heading {"level":3} -->
-                <h3 class="wp-block-heading">Tiramisu</h3>
-                <!-- /wp:heading -->
-                <!-- wp:paragraph {"style":{"typography":{"fontStyle":"italic"}}} -->
-                <p style="font-style:italic">Classic Italian Dessert</p>
-                <!-- /wp:paragraph -->
-                <!-- wp:paragraph {"fontSize":"large"} -->
-                <p class="has-large-font-size">$8.00</p>
-                <!-- /wp:paragraph -->
-            </div>
-            <!-- /wp:group -->
-
-        </div>
-        <!-- /wp:group -->
     </div>
     <!-- /wp:group -->
     `;

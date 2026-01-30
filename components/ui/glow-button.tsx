@@ -1,11 +1,10 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ButtonHTMLAttributes } from 'react';
 
-interface GlowButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface GlowButtonProps extends HTMLMotionProps<"button"> {
     isLoading?: boolean;
     loadingText?: string;
 }
@@ -33,7 +32,7 @@ export function GlowButton({
         >
             <span className="relative z-10 flex items-center justify-center gap-2">
                 {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
-                {isLoading ? loadingText : children}
+                {isLoading ? (loadingText as React.ReactNode) : (children as React.ReactNode)}
             </span>
             {/* Glow overlay */}
             <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-300 mix-blend-overlay" />

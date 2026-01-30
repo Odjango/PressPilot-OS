@@ -8,7 +8,8 @@ export interface HeroPreview {
     style: string;
     name: string;
     description: string;
-    imageUrl: string;
+    imageUrl?: string;
+    renderItem?: () => React.ReactNode;
 }
 
 interface HeroCarouselProps {
@@ -21,6 +22,9 @@ export function HeroCarousel({ previews, onSelect }: HeroCarouselProps) {
     const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
 
     const currentPreview = previews[currentIndex];
+
+    // Safety check if previews is empty
+    if (!currentPreview) return null;
 
     const handlePrevious = () => {
         setCurrentIndex((prev) => (prev === 0 ? previews.length - 1 : prev - 1));
@@ -45,22 +49,32 @@ export function HeroCarousel({ previews, onSelect }: HeroCarouselProps) {
             </div>
 
             {/* Main Preview Area */}
-            <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden">
-                {/* Preview Image */}
-                <div className="relative aspect-[7/3] bg-gray-100">
-                    <Image
-                        src={currentPreview.imageUrl}
-                        alt={currentPreview.name}
-                        fill
-                        className="object-cover"
-                        priority
-                    />
+            <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden border border-neutral-100">
+                {/* Preview Content */}
+                <div className="relative aspect-[7/3] bg-gray-50">
+                    {currentPreview.renderItem ? (
+                        <div className="absolute inset-0 w-full h-full">
+                            {currentPreview.renderItem()}
+                        </div>
+                    ) : currentPreview.imageUrl ? (
+                        <Image
+                            src={currentPreview.imageUrl}
+                            alt={currentPreview.name}
+                            fill
+                            className="object-cover"
+                            priority
+                        />
+                    ) : (
+                        <div className="flex h-full items-center justify-center text-gray-400">
+                            No Preview Available
+                        </div>
+                    )}
                 </div>
 
                 {/* Navigation Arrows */}
                 <button
                     onClick={handlePrevious}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 z-20 border border-neutral-100"
                     aria-label="Previous hero style"
                 >
                     <ChevronLeft className="w-6 h-6 text-gray-800" />
@@ -68,7 +82,7 @@ export function HeroCarousel({ previews, onSelect }: HeroCarouselProps) {
 
                 <button
                     onClick={handleNext}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 z-20 border border-neutral-100"
                     aria-label="Next hero style"
                 >
                     <ChevronRight className="w-6 h-6 text-gray-800" />
@@ -114,32 +128,35 @@ export function HeroCarousel({ previews, onSelect }: HeroCarouselProps) {
                         key={preview.style}
                         onClick={() => setCurrentIndex(index)}
                         className={`
-                            relative w-24 h-16 rounded-lg overflow-hidden border-2 transition-all
+                            relative w-24 h-16 rounded-lg overflow-hidden border-2 transition-all bg-neutral-50
                             ${currentIndex === index
-                                ? 'border-black scale-110'
-                                : 'border-gray-300 hover:border-gray-400'
+                                ? 'border-black scale-110 shadow-md'
+                                : 'border-gray-200 hover:border-gray-300'
                             }
                         `}
                     >
-                        <Image
-                            src={preview.imageUrl}
-                            alt={preview.name}
-                            fill
-                            className="object-cover"
-                        />
+                        {preview.renderItem ? (
+                            <div className="w-full h-full opacity-50 scale-50 origin-top-left w-[200%] h-[200%] pointer-events-none">
+                                {preview.renderItem()}
+                            </div>
+                        ) : preview.imageUrl ? (
+                            <Image
+                                src={preview.imageUrl}
+                                alt={preview.name}
+                                fill
+                                className="object-cover"
+                            />
+                        ) : null}
+
                         {selectedStyle === preview.style && (
-                            <div className="absolute inset-0 bg-green-600/20 flex items-center justify-center">
-                                <Check className="w-6 h-6 text-green-600" />
+                            <div className="absolute inset-0 bg-green-600/20 flex items-center justify-center z-10">
+                                <Check className="w-6 h-6 text-green-600 drop-shadow-sm" />
                             </div>
                         )}
                     </button>
                 ))}
             </div>
 
-            {/* Keyboard Hint */}
-            <div className="mt-6 text-center text-sm text-gray-500">
-                Use arrow keys ← → to navigate
-            </div>
         </div>
     );
 }

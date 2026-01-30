@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer';
+import puppeteer, { Browser } from 'puppeteer';
 import fs from 'fs-extra';
 import path from 'path';
 import { StorageOperations } from '@/lib/supabase/operations';
@@ -8,7 +8,7 @@ import { StorageOperations } from '@/lib/supabase/operations';
  * Captures hero section previews using Puppeteer
  */
 export class ScreenshotService {
-    private browser: puppeteer.Browser | null = null;
+    private browser: Browser | null = null;
 
     /**
      * Initialize browser instance

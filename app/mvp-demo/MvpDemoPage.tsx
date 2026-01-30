@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation'; // ADD THIS
 import {
   BUSINESS_CATEGORIES,
   type BusinessCategoryId,
@@ -44,6 +45,8 @@ const initialStages: StageState = {
 };
 
 export default function MvpDemoPage() {
+  const router = useRouter(); // ADD THIS
+
   // style presets / kit config
   const [businessTypes, setBusinessTypes] = useState<BusinessType[]>([]);
   const [selectedBusinessTypeId, setSelectedBusinessTypeId] = useState<string | null>(null);
@@ -229,8 +232,6 @@ export default function MvpDemoPage() {
           input: {
             businessName,
             businessDescription,
-            businessName,
-            businessDescription,
             primaryLanguage,
             businessCategory,
             logoPath, // Sending to backend
@@ -258,34 +259,22 @@ export default function MvpDemoPage() {
         throw new Error(json.details || json.error || 'API returned an error.');
       }
 
-      // 5. Handle Success
-      setStages({
-        inputsNormalized: true,
-        variationsGenerated: true,
-        variationSelected: true,
-        kitsRequested: true,
-        downloadsReady: true,
-      });
-
-      // The local API returns: themeUrl_a, themeUrl_b, themeUrl_c
-      setArtifacts((prev) => ({
-        ...prev,
-        themeUrl: json.themeUrl_a || null, // Primary download
-        staticUrl: null,
-        slug: (json.siteArchetype || businessName.toLowerCase().replace(/[^a-z0-9]/g, '-')),
-        businessTypeId: selectedBusinessTypeId
-      }));
-
-      // Note: Auto-download is handled by useEffect now
-      // which will verify artifacts are set before triggering.
+      // 5. Redirect to Status Page (NEW ARCHITECTURE)
+      // The new architecture uses a job queue, so we redirect to the status page
+      // instead of waiting for immediate download
+      if (json.jobId) {
+        console.log('Redirecting to status page for job:', json.jobId);
+        router.push(`/dashboard/status/${json.jobId}`);
+      } else {
+        throw new Error('No jobId returned from API');
+      }
 
     } catch (err: any) {
       console.error('Generation Error:', err);
       setError(err.message || 'Generation failed.');
       setIsGenerating(false); // Stop spinner on error
     }
-    // Finally block removed: we let the useEffect stop the spinner on success, 
-    // or the catch block stop it on error. This prevents race conditions.
+    // Finally block removed: we let the redirect handle the transition
   }
 
   const selectedStyle = businessTypes.find((t) => t.id === selectedBusinessTypeId);

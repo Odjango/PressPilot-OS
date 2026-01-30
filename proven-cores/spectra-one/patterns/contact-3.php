@@ -23,11 +23,11 @@ $images = [
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|xxx-small"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:heading {"textAlign":"center","level":5,"textColor":"white","className":"wp-block-heading"} -->
-<h5 class="wp-block-heading has-text-align-center has-white-color has-text-color"><?php esc_html_e( 'Esther Howard', 'spectra-one' ); ?></h5>
+<h5 class="wp-block-heading has-text-align-center has-white-color has-text-color">Esther Howard</h5>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"align":"center","textColor":"white","fontSize":"x-small"} -->
-<p class="has-text-align-center has-white-color has-text-color has-x-small-font-size"><?php esc_html_e( 'Senior Product Designer at Spectra', 'spectra-one' ); ?></p>
+<p class="has-text-align-center has-white-color has-text-color has-x-small-font-size">Senior Product Designer at Spectra</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -41,19 +41,19 @@ $images = [
 
 <!-- wp:buttons {"layout":{"type":"flex","orientation":"vertical"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|medium"}}}} -->
 <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--medium)"><!-- wp:button {"textColor":"white","width":100,"style":{"border":{"radius":"99px"}},"className":"is-style-outline"} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-100 is-style-outline"><a class="wp-block-button__link has-white-color has-text-color wp-element-button" style="border-radius:99px"><?php esc_html_e( 'Behance', 'spectra-one' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100 is-style-outline"><a class="wp-block-button__link has-white-color has-text-color wp-element-button" style="border-radius:99px">Behance</a></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"textColor":"white","width":100,"style":{"border":{"radius":"99px"}},"className":"is-style-outline"} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-100 is-style-outline"><a class="wp-block-button__link has-white-color has-text-color wp-element-button" style="border-radius:99px"><?php esc_html_e( 'Dribbble', 'spectra-one' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100 is-style-outline"><a class="wp-block-button__link has-white-color has-text-color wp-element-button" style="border-radius:99px">Dribbble</a></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"textColor":"white","width":100,"style":{"border":{"radius":"99px"}},"className":"is-style-outline"} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-100 is-style-outline"><a class="wp-block-button__link has-white-color has-text-color wp-element-button" style="border-radius:99px"><?php esc_html_e( 'Linkedin', 'spectra-one' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100 is-style-outline"><a class="wp-block-button__link has-white-color has-text-color wp-element-button" style="border-radius:99px">Linkedin</a></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"textColor":"white","width":100,"style":{"border":{"radius":"99px"}},"className":"is-style-outline"} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-100 is-style-outline"><a class="wp-block-button__link has-white-color has-text-color wp-element-button" style="border-radius:99px"><?php esc_html_e( 'Github', 'spectra-one' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100 is-style-outline"><a class="wp-block-button__link has-white-color has-text-color wp-element-button" style="border-radius:99px">Github</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group -->

@@ -21,7 +21,7 @@
 
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|x-large","bottom":"var:preset|spacing|x-large"},"blockGap":"var:preset|spacing|large"}},"backgroundColor":"surface","layout":{"type":"constrained"}} -->
 <div class="wp-block-group has-surface-background-color has-background" style="padding-top:var(--wp--preset--spacing--x-large);padding-bottom:var(--wp--preset--spacing--x-large)"><!-- wp:paragraph {"align":"center","style":{"typography":{"textTransform":"uppercase","letterSpacing":"2px","fontStyle":"normal","fontWeight":"500"}},"textColor":"heading","fontSize":"x-small"} -->
-<p class="has-text-align-center has-heading-color has-text-color has-x-small-font-size" style="font-style:normal;font-weight:500;letter-spacing:2px;text-transform:uppercase"><?php esc_html_e( 'Brought to you by the creators of', 'spectra-one' ); ?></p>
+<p class="has-text-align-center has-heading-color has-text-color has-x-small-font-size" style="font-style:normal;font-weight:500;letter-spacing:2px;text-transform:uppercase">Brought to you by the creators of</p>
 <!-- /wp:paragraph -->
 <!-- wp:columns {"verticalAlignment":"center","align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|medium","left":"var:preset|spacing|medium"}}}} -->
 <div class="wp-block-columns alignwide are-vertically-aligned-center"><!-- wp:column {"verticalAlignment":"center"} -->

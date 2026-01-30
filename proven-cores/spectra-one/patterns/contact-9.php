@@ -24,15 +24,15 @@ $images = [
 
 <!-- wp:column {"width":"66.66%","style":{"spacing":{"padding":{"top":"var:preset|spacing|medium","bottom":"var:preset|spacing|medium","left":"var:preset|spacing|medium","right":"var:preset|spacing|medium"},"blockGap":"var:preset|spacing|x-small"}}} -->
 <div class="wp-block-column" style="padding-top:var(--wp--preset--spacing--medium);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--medium);padding-left:var(--wp--preset--spacing--medium);flex-basis:66.66%"><!-- wp:paragraph {"style":{"typography":{"letterSpacing":"2px","textTransform":"uppercase"}},"textColor":"primary","fontSize":"x-small"} -->
-<p class="has-primary-color has-text-color has-x-small-font-size" style="letter-spacing:2px;text-transform:uppercase"><?php esc_html_e( 'Meet the owner', 'spectra-one' ); ?></p>
+<p class="has-primary-color has-text-color has-x-small-font-size" style="letter-spacing:2px;text-transform:uppercase">Meet the owner</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"className":"wp-block-heading"} -->
-<h2 class="wp-block-heading"><?php esc_html_e( 'Leslie Alexander', 'spectra-one' ); ?></h2>
+<h2 class="wp-block-heading">Leslie Alexander</h2>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Leslie loves exploring new foods, devouring motivational books, and hanging out with her loved ones. She\'s a real-life inspiration and proof that hard work and passion pay off!', 'spectra-one' ); ?></p>
+<p>Leslie loves exploring new foods, devouring motivational books, and hanging out with her loved ones. She's a real-life inspiration and proof that hard work and passion pay off!</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:separator {"className":"is-style-swt-separator-wide-thin-line"} -->

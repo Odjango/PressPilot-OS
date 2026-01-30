@@ -13,7 +13,7 @@ type ExtendedJob = {
     project_id: string;
     result?: any;
     generated_theme?: {
-        status: 'active' | 'expired';
+        status: 'active' | 'expired' | 'deleted';
         expires_at: string;
         file_path: string;
     } | null;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/src/lib/supabase/operations';
+import { supabaseAdmin } from '@/lib/supabase/operations';
 import {
     generateSplitHero,
     generateCenteredHero,

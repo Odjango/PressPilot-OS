@@ -43,9 +43,12 @@ export interface SiteRecipe {
 export interface PageContent {
     hero_title?: string;
     hero_sub?: string;
+    hero_image?: string;
     features?: Array<{ title: string; desc: string }>;
     team?: Array<{ name: string; role: string }>;
+    menus?: RestaurantMenu[];
 }
+
 
 export interface PageData {
     title: string;
@@ -78,9 +81,13 @@ export interface GeneratorData {
     pages?: PageData[];
     menus?: RestaurantMenu[];
     industry?: string; // e.g., 'saas', 'restaurant', 'agency'
+    baseName?: string; // Base theme name for color mapping (e.g., 'ollie', 'tove')
+    businessType?: string; // Business type for theme matching (e.g., 'fashion', 'minimal', 'fine-dining')
+    description?: string; // Business description for theme matching
+    [key: string]: unknown; // Allow additional properties
 }
 
-export type BaseTheme = 'ollie' | 'frost' | 'twentytwentyfour' | 'spectra' | 'tove' | 'blockbase';
+export type BaseTheme = 'ollie' | 'frost' | 'twentytwentyfour' | 'spectra' | 'spectra-one' | 'tove' | 'blockbase';
 export type GeneratorMode = 'standard' | 'heavy';
 
 export type PatternReference = string; // Path to pattern file relative to theme root

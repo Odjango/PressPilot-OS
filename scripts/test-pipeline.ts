@@ -28,7 +28,7 @@ async function run() {
         });
 
         if (result.status !== 'success') {
-            throw new Error(`Generator Failed: ${result.message}`);
+            throw new Error(`Generator Failed: ${(result as any).message || 'Unknown Error'}`);
         }
 
         console.log(`✅ Generation Successful. ZIP at: ${result.downloadPath}`);

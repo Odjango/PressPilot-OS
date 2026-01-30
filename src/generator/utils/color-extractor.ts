@@ -3,7 +3,7 @@ import ColorThief from 'colorthief';
 import path from 'path';
 import fs from 'fs-extra';
 
-export async function extractBrandColors(imagePath: string): Promise<{ primary: string; secondary: string } | null> {
+export async function extractBrandColors(imagePath: string): Promise<{ primary: string; secondary: string; accent: string } | null> {
     try {
         console.log(`[ColorExtractor] Analyzing logo: ${imagePath}`);
 

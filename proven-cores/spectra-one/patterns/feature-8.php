@@ -20,20 +20,20 @@
 <div class="wp-block-group alignwide" style="padding-top:var(--wp--preset--spacing--x-large);padding-bottom:var(--wp--preset--spacing--x-large)"><!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|xx-large","left":"var:preset|spacing|xx-large"}}}} -->
 <div class="wp-block-columns alignwide"><!-- wp:column {"verticalAlignment":"center","style":{"spacing":{"blockGap":"var:preset|spacing|small"}}} -->
 <div class="wp-block-column is-vertically-aligned-center"><!-- wp:paragraph {"style":{"typography":{"letterSpacing":"2px","textTransform":"uppercase"}},"textColor":"primary","fontSize":"x-small"} -->
-<p class="has-primary-color has-text-color has-x-small-font-size" style="letter-spacing:2px;text-transform:uppercase"><?php esc_html_e( 'Full Site Editing', 'spectra-one' ); ?></p>
+<p class="has-primary-color has-text-color has-x-small-font-size" style="letter-spacing:2px;text-transform:uppercase">Full Site Editing</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|xx-small"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:heading {"className":"wp-block-heading"} -->
-<h2 class="wp-block-heading"><?php esc_html_e( 'Unleash the power of block editor', 'spectra-one' ); ?></h2>
+<h2 class="wp-block-heading">Unleash the power of block editor</h2>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Customize the entire website layout, including the header, footer, and all other template parts. With FSE, we can create and edit templates for their entire website, including single posts, archive pages, and custom post types.', 'spectra-one' ); ?></p>
+<p>Customize the entire website layout, including the header, footer, and all other template parts. With FSE, we can create and edit templates for their entire website, including single posts, archive pages, and custom post types.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"style":{"elements":{"link":{"color":{"text":"var:preset|color|primary"}}},"spacing":{"margin":{"top":"var:preset|spacing|small"}}}} -->
-<p class="has-link-color" style="margin-top:var(--wp--preset--spacing--small)"><a href="#"><?php esc_html_e( 'Learn More →', 'spectra-one' ); ?></a></p>
+<p class="has-link-color" style="margin-top:var(--wp--preset--spacing--small)"><a href="#">Learn More →</a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -49,7 +49,7 @@
 <!-- /wp:image -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Tailor your website to your liking with endless options.', 'spectra-one' ); ?></p>
+<p>Tailor your website to your liking with endless options.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:column -->
@@ -61,7 +61,7 @@
 <!-- /wp:image -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Experience lightning-fast page load speeds.', 'spectra-one' ); ?></p>
+<p>Experience lightning-fast page load speeds.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:column --></div>

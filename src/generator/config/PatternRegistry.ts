@@ -80,8 +80,8 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
         },
         patterns: {
             hero: 'patterns/hero-one-column.php',
-            hero_search_headline: 'Welcome to Frost',
-            hero_search_sub: 'With its clean, minimal design and powerful feature set, Frost enables agencies to build stylish and sophisticated WordPress websites.'
+            hero_search_headline: 'Welcome to Your Site',
+            hero_search_sub: 'With its clean, minimal design and powerful feature set, This theme enables you to build stylish and sophisticated WordPress websites.'
         },
         home_template: 'templates/home.html',
         recipes: {
@@ -133,9 +133,9 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
             accent: 'tertiary'
         },
         patterns: {
-            hero: 'patterns/hero-banner.php', // Assuming typical pattern
-            hero_search_headline: 'Your Vision, Built',
-            hero_search_sub: 'Create stunning websites.'
+            hero: 'patterns/hero-banner.php',
+            hero_search_headline: 'Launch Your Website Today!',
+            hero_search_sub: 'Create a functional and visually appealing website'
         },
         home_template: 'templates/index.html',
         recipes: {
@@ -198,8 +198,8 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
         },
         patterns: {
             hero: 'patterns/banner-hero.php',
-            hero_search_headline: 'Et magna binilla',
-            hero_search_sub: 'Lorem ipsum dolor sit amet'
+            hero_search_headline: 'A commitment to innovation and sustainability',
+            hero_search_sub: 'Études is a pioneering firm that seamlessly merges creativity and functionality to redefine architectural excellence.'
         },
         home_template: 'templates/home.html',
         recipes: {
@@ -249,36 +249,71 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
             accent: 'tertiary'
         },
         patterns: {
-            hero: 'patterns/hero-text-image.php',
-            hero_search_headline: 'Welcome',
-            hero_search_sub: 'A colorful theme.'
+            hero: 'patterns/hero-cover.php',
+            hero_search_headline: 'Epic Menu,<br>Epic Fall',
+            hero_search_pretitle: 'New!',
+            hero_search_sub: 'Where colorful flavors meet playful ambiance.'
         },
         home_template: 'templates/index.html',
         recipes: {
             'general': [{
                 name: "Colorful Portfolio",
-                description: "Playful layout",
-                patterns: ['patterns/hero-text-image.php', 'patterns/footer-default.php']
+                description: "Playful, creative layout with Tove's signature style",
+                patterns: [
+                    'patterns/header-horizontal.php',
+                    'patterns/hero-cover.php',
+                    'patterns/general-previews-columns.php',
+                    'patterns/cta-horizontal.php',
+                    'patterns/footer-horizontal.php'
+                ]
             }],
             'saas': [{
-                name: "Colorful Portfolio",
-                description: "Playful layout",
-                patterns: ['patterns/hero-text-image.php', 'patterns/footer-default.php']
+                name: "Tove SaaS",
+                description: "Vibrant SaaS layout",
+                patterns: [
+                    'patterns/header-horizontal-button.php',
+                    'patterns/hero-text.php',
+                    'patterns/general-feature-large.php',
+                    'patterns/general-pricing-table.php',
+                    'patterns/general-faq.php',
+                    'patterns/footer-horizontal.php'
+                ]
             }],
             'restaurant': [{
-                name: "Colorful Portfolio",
-                description: "Playful layout",
-                patterns: ['patterns/hero-text-image.php', 'patterns/footer-default.php']
+                name: "Tove Bistro",
+                description: "Playful restaurant layout with menu, hours, and location",
+                patterns: [
+                    'patterns/header-horizontal-button.php',
+                    'patterns/hero-cover.php',
+                    'patterns/general-feature-large.php',
+                    'patterns/restaurant-menu.php',
+                    'patterns/restaurant-opening-hours-big.php',
+                    'patterns/restaurant-location.php',
+                    'patterns/general-testimonials-columns.php',
+                    'patterns/footer-horizontal.php'
+                ]
             }],
             'portfolio': [{
                 name: "Colorful Portfolio",
-                description: "Playful layout",
-                patterns: ['patterns/hero-text-image.php', 'patterns/footer-default.php']
+                description: "Playful creative portfolio",
+                patterns: [
+                    'patterns/header-horizontal.php',
+                    'patterns/hero-text-displaced.php',
+                    'patterns/general-previews-featured.php',
+                    'patterns/general-testimonials-columns.php',
+                    'patterns/footer-horizontal.php'
+                ]
             }],
             'ecommerce': [{
                 name: "Colorful Shop",
-                description: "Playful layout",
-                patterns: ['patterns/hero-text-image.php', 'patterns/footer-default.php']
+                description: "Playful e-commerce layout",
+                patterns: [
+                    'patterns/header-horizontal-button.php',
+                    'patterns/hero-cover-group-bg.php',
+                    'patterns/general-previews-columns-small.php',
+                    'patterns/cta-vertical.php',
+                    'patterns/footer-horizontal.php'
+                ]
             }]
         }
     },

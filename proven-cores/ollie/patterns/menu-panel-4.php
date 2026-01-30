@@ -18,17 +18,17 @@
 <div class="wp-block-column"><!-- wp:group {"metadata":{"name":"Card"},"style":{"border":{"width":"1px","color":"#E2E2D9","radius":"10px"},"spacing":{"padding":{"top":"var:preset|spacing|medium","bottom":"var:preset|spacing|medium","left":"var:preset|spacing|medium","right":"var:preset|spacing|medium"}}},"backgroundColor":"base","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between"}} -->
 <div class="wp-block-group has-border-color has-base-background-color has-background" style="border-color:#E2E2D9;border-width:1px;border-radius:10px;padding-top:var(--wp--preset--spacing--medium);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--medium);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:group {"metadata":{"name":"Text"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:paragraph -->
-<p><strong><?php esc_html_e( 'Insights you can act on', 'ollie' ); ?></strong></p>
+<p><strong>Insights you can act on</strong></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"fontSize":"small"} -->
-<p class="has-small-font-size"><?php esc_html_e( 'Turn data into decisions with our strategic analysis and actionable recommendations.', 'ollie' ); ?></p>
+<p class="has-small-font-size">Turn data into decisions with our strategic analysis and actionable recommendations.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"className":"is-style-secondary-button","fontSize":"x-small"} -->
-<div class="wp-block-button is-style-secondary-button"><a class="wp-block-button__link has-x-small-font-size has-custom-font-size wp-element-button"><?php esc_html_e( 'Read More', 'ollie' ); ?></a></div>
+<div class="wp-block-button is-style-secondary-button"><a class="wp-block-button__link has-x-small-font-size has-custom-font-size wp-element-button">Read More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>
@@ -38,17 +38,17 @@
 <div class="wp-block-column"><!-- wp:group {"metadata":{"name":"Card"},"style":{"border":{"width":"1px","color":"#E2E2D9","radius":"10px"},"spacing":{"padding":{"top":"var:preset|spacing|medium","bottom":"var:preset|spacing|medium","left":"var:preset|spacing|medium","right":"var:preset|spacing|medium"}}},"backgroundColor":"base","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between"}} -->
 <div class="wp-block-group has-border-color has-base-background-color has-background" style="border-color:#E2E2D9;border-width:1px;border-radius:10px;padding-top:var(--wp--preset--spacing--medium);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--medium);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:group {"metadata":{"name":"Text"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:paragraph -->
-<p><strong><?php esc_html_e( 'Proven growth techniques', 'ollie' ); ?></strong></p>
+<p><strong>Proven growth techniques</strong></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"fontSize":"small"} -->
-<p class="has-small-font-size"><?php esc_html_e( 'Our tested growth strategies have helped clients across industries achieve breakthrough results.', 'ollie' ); ?></p>
+<p class="has-small-font-size">Our tested growth strategies have helped clients across industries achieve breakthrough results.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"className":"is-style-secondary-button","fontSize":"x-small"} -->
-<div class="wp-block-button is-style-secondary-button"><a class="wp-block-button__link has-x-small-font-size has-custom-font-size wp-element-button"><?php esc_html_e( 'Read More', 'ollie' ); ?></a></div>
+<div class="wp-block-button is-style-secondary-button"><a class="wp-block-button__link has-x-small-font-size has-custom-font-size wp-element-button">Read More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>
@@ -60,17 +60,17 @@
 <div class="wp-block-column" style="border-radius:10px;flex-basis:20%"><!-- wp:group {"metadata":{"name":"Card"},"style":{"dimensions":{"minHeight":"100%"}},"layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between","justifyContent":"stretch"}} -->
 <div class="wp-block-group" style="min-height:100%"><!-- wp:group {"metadata":{"name":"Text"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:paragraph -->
-<p><strong><?php esc_html_e( 'Unleash Growth', 'ollie' ); ?></strong></p>
+<p><strong>Unleash Growth</strong></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"fontSize":"small"} -->
-<p class="has-small-font-size"><?php esc_html_e( 'Find out how businesses just like yours have grown by 30% or more in just over a month.', 'ollie' ); ?></p>
+<p class="has-small-font-size">Find out how businesses just like yours have grown by 30% or more in just over a month.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"width":100} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button"><?php esc_html_e( 'Get Started', 'ollie' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button">Get Started</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>

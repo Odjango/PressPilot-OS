@@ -1,6 +1,7 @@
 "use client";
 
 import type { PressPilotVariationManifest } from "@/types/presspilot";
+import { Check } from "lucide-react";
 
 type VariationCardProps = {
   variation: PressPilotVariationManifest;
@@ -36,43 +37,60 @@ export default function VariationCard({
     <button
       type="button"
       onClick={onSelect}
-      className={`w-full rounded-2xl border px-4 py-4 text-left transition ${
-        selected
-          ? "border-black bg-neutral-50 ring-2 ring-black"
-          : "border-neutral-200 bg-white hover:border-neutral-900"
-      }`}
+      className={`relative w-full rounded-3xl border-2 p-6 text-left transition-all duration-500 ease-out ${selected
+        ? "border-black bg-white shadow-2xl scale-[1.02] z-10"
+        : "border-neutral-100 bg-white hover:border-neutral-300 hover:shadow-xl"
+        }`}
     >
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-neutral-900">
-          {variation.preview.label}
+      {selected && (
+        <div className="absolute -top-3 -right-3 h-10 w-10 rounded-full bg-black text-white flex items-center justify-center shadow-xl animate-in zoom-in spin-in-90 duration-500">
+          <Check className="h-6 w-6" strokeWidth={3} />
+        </div>
+      )}
+
+      <div className="space-y-6">
+        {/* Visual Preview */}
+        <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-neutral-100 border border-neutral-100 shadow-inner">
+          {variation.preview.imageUrl && (
+            <img
+              src={variation.preview.imageUrl}
+              alt={variation.preview.label}
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
+              {variation.preview.label}
+            </span>
+          </div>
+          <h3 className="text-xl font-black text-neutral-900 leading-tight tracking-tight">
+            {heroHeadline}
+          </h3>
+        </div>
+
+        <p className="line-clamp-2 text-sm text-neutral-500 font-medium leading-relaxed h-10">
+          {heroSubheadline}
         </p>
-        {selected ? (
-          <span className="rounded-full bg-black px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-            Selected
+
+        <div className="flex items-center justify-between pt-4 border-t border-neutral-50">
+          <div className="flex items-center -space-x-3">
+            {palette.map((color, i) => (
+              <div
+                key={`${color}-${i}`}
+                className="h-10 w-10 rounded-full border-4 border-white shadow-sm ring-1 ring-black/5 transition-transform hover:scale-110 hover:z-10"
+                style={{ backgroundColor: color }}
+              />
+            ))}
+          </div>
+          <span className="text-[10px] font-mono font-bold text-neutral-300">
+            {variation.id.slice(0, 8).toUpperCase()}
           </span>
-        ) : null}
-      </div>
-      <p className="mt-2 text-base font-semibold text-neutral-900">
-        {heroHeadline}
-      </p>
-      <p className="mt-1 overflow-hidden text-sm text-neutral-600 text-ellipsis">
-        {heroSubheadline}
-      </p>
-      <p className="mt-2 text-xs text-neutral-500">
-        {variation.preview.description}
-      </p>
-      <div className="mt-4 flex items-center gap-2">
-        {palette.map((color) => (
-          <span
-            key={color}
-            className="h-6 w-6 rounded-full border border-white shadow"
-            style={{ backgroundColor: color }}
-            aria-label={`Color ${color}`}
-          />
-        ))}
+        </div>
       </div>
     </button>
   );
 }
-
-

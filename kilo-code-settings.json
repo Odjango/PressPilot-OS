@@ -1,0 +1,11 @@
+{
+  "providerProfiles": {
+    "openrouter-kimi": {
+      "provider": "openrouter",
+      "model": "moonshotai/kimi-k2.5",
+      "apiBaseUrl": "https://openrouter.ai/api/v1",
+      "apiKey": "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",
+    }
+  },
+  "defaultProfile": "openrouter-kimi"
+}

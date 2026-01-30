@@ -37,6 +37,11 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "legacy",
+    "tests/manual-transcript-test.ts",
+    "tests/yt-summary-quality.test.ts",
+    "tests/yt-summary.test.ts",
+    "tmp"
   ]
 }

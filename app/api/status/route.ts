@@ -33,7 +33,8 @@ export async function GET(request: Request) {
 
         // 2. Fetch Theme (if completed)
         let themeData = null;
-        let signedUrl = null;
+        let themeUrl = null;
+        let staticUrl = null;
 
         if (job.status === 'completed') {
             const { data: theme } = await supabaseAdmin
@@ -45,14 +46,23 @@ export async function GET(request: Request) {
             if (theme) {
                 themeData = theme;
 
-                // Generate Signed URL server-side (Admin can do this)
                 if (theme.status === 'active') {
                     const { data: signed } = await supabaseAdmin.storage
                         .from('generated-themes')
                         .createSignedUrl(theme.file_path, 3600); // 1 hr
 
                     if (signed) {
-                        signedUrl = signed.signedUrl;
+                        themeUrl = signed.signedUrl;
+                    }
+
+                    // Sign Static URL if it exists in job result
+                    if (job.result && job.result.static_path) {
+                        const { data: staticSigned } = await supabaseAdmin.storage
+                            .from('generated-themes')
+                            .createSignedUrl(job.result.static_path, 3600);
+                        if (staticSigned) {
+                            staticUrl = staticSigned.signedUrl;
+                        }
                     }
                 }
             }
@@ -60,8 +70,9 @@ export async function GET(request: Request) {
 
         return NextResponse.json({
             ...job,
-            generated_theme: themeData, // Append theme record
-            download_url: signedUrl     // Append ready-to-use URL
+            generated_theme: themeData,
+            themeUrl: themeUrl,
+            staticUrl: staticUrl
         });
 
     } catch (e) {

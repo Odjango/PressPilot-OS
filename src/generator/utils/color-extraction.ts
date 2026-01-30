@@ -1,5 +1,5 @@
 
-import Jimp from 'jimp';
+import { Jimp } from 'jimp';
 
 export interface ExtractedColors {
     primary: string;
@@ -16,7 +16,7 @@ function rgbToHex(r: number, g: number, b: number): string {
 }
 
 // Simple quantization / dominance finder
-function getDominantColor(image: Jimp): { r: number, g: number, b: number } {
+function getDominantColor(image: any): { r: number, g: number, b: number } {
     const width = image.bitmap.width;
     const height = image.bitmap.height;
 

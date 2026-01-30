@@ -1,51 +1,111 @@
+import { getFooterColors } from './color-mapping';
 
-export const getUniversalFooterContent = (businessName: string) => {
+export const getUniversalFooterContent = (businessName: string, baseTheme: string = 'twentytwentyfour') => {
     const year = new Date().getFullYear();
+    const colors = getFooterColors(baseTheme);
+
+    const footerGroupAttrs = JSON.stringify({
+        align: 'full',
+        style: {
+            spacing: {
+                padding: { top: 'var:preset|spacing|80', bottom: 'var:preset|spacing|40' }
+            }
+        },
+        backgroundColor: colors.darkBg,
+        textColor: colors.lightText,
+        layout: { type: 'constrained' }
+    });
+
+    const innerWideAttrs = JSON.stringify({
+        align: 'wide',
+        layout: { type: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between' }
+    });
+
+    const logoGroupAttrs = JSON.stringify({
+        layout: { type: 'flex', orientation: 'vertical' }
+    });
+
+    const siteTitleAttrs = JSON.stringify({
+        level: 3,
+        style: { typography: { fontStyle: 'normal', fontWeight: '700' } }
+    });
+
+    const taglineAttrs = JSON.stringify({
+        maxWidth: '300px'
+    });
+
+    const linksSectionAttrs = JSON.stringify({
+        layout: { type: 'flex', flexWrap: 'nowrap', blockGap: 'var:preset|spacing|60', verticalAlignment: 'top' }
+    });
+
+    const verticalGroupAttrs = JSON.stringify({
+        layout: { type: 'flex', orientation: 'vertical' }
+    });
+
+    const headingAttrs = JSON.stringify({
+        level: 4,
+        fontSize: 'medium'
+    });
+
+    const socialLinksAttrs = JSON.stringify({
+        iconColor: colors.lightText,
+        iconColorValue: '#ffffff',
+        size: 'has-small-icon-size',
+        className: 'is-style-default',
+        layout: { type: 'flex', justifyContent: 'left', flexWrap: 'nowrap' }
+    });
+
+    const separatorAttrs = JSON.stringify({
+        className: 'is-style-wide'
+    });
+
+    const copyrightParaAttrs = JSON.stringify({
+        fontSize: 'small'
+    });
+
     return `
-    <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|40"}}},"backgroundColor":"main","textColor":"base","layout":{"type":"constrained"}} -->
-    <div class="wp-block-group alignfull has-base-color has-main-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--40)">
-        <!-- wp:group {"align":"wide","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between"}} -->
+    <!-- wp:group ${footerGroupAttrs} -->
+    <div class="wp-block-group alignfull has-${colors.lightText}-color has-${colors.darkBg}-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--40)">
+        <!-- wp:group ${innerWideAttrs} -->
         <div class="wp-block-group alignwide">
-            <!-- wp:group {"layout":{"type":"flex","orientation":"vertical"}} -->
+            <!-- wp:group ${logoGroupAttrs} -->
             <div class="wp-block-group">
-                <!-- wp:site-title {"level":3,"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}}} /-->
-                <!-- wp:paragraph {"maxWidth":"300px"} -->
+                <!-- wp:site-title ${siteTitleAttrs} /-->
+                <!-- wp:paragraph ${taglineAttrs} -->
                 <p class="has-small-font-size" style="max-width:300px">Experience the best flavors in town. Locally sourced, prepared with passion.</p>
                 <!-- /wp:paragraph -->
             </div>
             <!-- /wp:group -->
 
-            <!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","blockGap":"var:preset|spacing|60","verticalAlignment":"top"}} -->
+            <!-- wp:group ${linksSectionAttrs} -->
             <div class="wp-block-group is-vertically-aligned-top">
-                <!-- wp:group {"layout":{"type":"flex","orientation":"vertical"}} -->
+                <!-- wp:group ${verticalGroupAttrs} -->
                 <div class="wp-block-group">
-                    <!-- wp:heading {"level":4,"fontSize":"medium"} -->
+                    <!-- wp:heading ${headingAttrs} -->
                     <h4 class="wp-block-heading has-medium-font-size">Company</h4>
                     <!-- /wp:heading -->
-                    <!-- wp:paragraph {"textColor":"base"} -->
-                    <p class="has-base-color has-text-color"><a href="/about" style="color:var(--wp--preset--color--base);text-decoration:none">About Us</a></p>
+                    <!-- wp:paragraph -->
+                    <p><a href="/about" style="color:inherit;text-decoration:none">About Us</a></p>
                     <!-- /wp:paragraph -->
-                    <!-- wp:paragraph {"textColor":"base"} -->
-                    <p class="has-base-color has-text-color"><a href="/contact" style="color:var(--wp--preset--color--base);text-decoration:none">Contact</a></p>
+                    <!-- wp:paragraph -->
+                    <p><a href="/contact" style="color:inherit;text-decoration:none">Contact</a></p>
                     <!-- /wp:paragraph -->
                 </div>
                 <!-- /wp:group -->
 
-                <!-- wp:group {"layout":{"type":"flex","orientation":"vertical"}} -->
+                <!-- wp:group ${verticalGroupAttrs} -->
                 <div class="wp-block-group">
-                    <!-- wp:heading {"level":4,"fontSize":"medium"} -->
+                    <!-- wp:heading ${headingAttrs} -->
                     <h4 class="wp-block-heading has-medium-font-size">Connect</h4>
                     <!-- /wp:heading -->
-                     <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"left"}} -->
-                    <div class="wp-block-buttons">
-                        <!-- wp:button {"className":"is-style-outline"} -->
-                        <div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="#">Facebook</a></div>
-                        <!-- /wp:button -->
-                        <!-- wp:button {"className":"is-style-outline"} -->
-                        <div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="#">Instagram</a></div>
-                        <!-- /wp:button -->
-                    </div>
-                    <!-- /wp:buttons -->
+                    
+                    <!-- wp:social-links ${socialLinksAttrs} -->
+                    <ul class="wp-block-social-links has-small-icon-size has-icon-color is-style-default">
+                        <!-- wp:social-link {"url":"#","service":"facebook"} /-->
+                        <!-- wp:social-link {"url":"#","service":"instagram"} /-->
+                        <!-- wp:social-link {"url":"#","service":"twitter"} /-->
+                    </ul>
+                    <!-- /wp:social-links -->
                 </div>
                 <!-- /wp:group -->
             </div>
@@ -53,18 +113,22 @@ export const getUniversalFooterContent = (businessName: string) => {
         </div>
         <!-- /wp:group -->
 
-        <!-- wp:separator {"className":"is-style-wide"} -->
+        <!-- wp:separator ${separatorAttrs} -->
         <hr class="wp-block-separator is-style-wide"/>
         <!-- /wp:separator -->
 
-        <!-- wp:group {"align":"wide","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between"}} -->
+        <!-- wp:group ${innerWideAttrs} -->
         <div class="wp-block-group alignwide">
-            <!-- wp:paragraph {"fontSize":"small"} -->
+            <!-- wp:paragraph ${copyrightParaAttrs} -->
             <p class="has-small-font-size">© ${year} ${businessName}. All rights reserved.</p>
+            <!-- /wp:paragraph -->
+            <!-- wp:paragraph ${copyrightParaAttrs} -->
+            <p class="has-small-font-size">Powered by <a href="https://www.presspilotapp.com" target="_blank" rel="noopener noreferrer" style="color:inherit">PressPilot</a></p>
             <!-- /wp:paragraph -->
         </div>
         <!-- /wp:group -->
     </div>
     <!-- /wp:group -->
+    <!-- DEBUG: FOOTER FIX APPLIED 2026-01-30 -->
     `;
 };

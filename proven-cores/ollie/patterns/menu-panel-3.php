@@ -14,7 +14,7 @@
 <div class="wp-block-group alignwide is-style-default has-border-color has-base-background-color has-background" style="border-color:#E3E3F0;border-width:1px;border-radius:10px;padding-right:0;padding-left:0;box-shadow:var(--wp--preset--shadow--small-light)"><!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|medium"},"padding":{"top":"var:preset|spacing|medium","bottom":"var:preset|spacing|medium","left":"var:preset|spacing|medium","right":"var:preset|spacing|medium"}}}} -->
 <div class="wp-block-columns alignwide" style="padding-top:var(--wp--preset--spacing--medium);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--medium);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:column {"style":{"border":{"radius":"10px"},"spacing":{"padding":{"top":"var:preset|spacing|medium","bottom":"var:preset|spacing|medium","left":"0","right":"0"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-column" style="border-radius:10px;padding-top:var(--wp--preset--spacing--medium);padding-right:0;padding-bottom:var(--wp--preset--spacing--medium);padding-left:0"><!-- wp:paragraph -->
-<p><strong><?php esc_html_e( 'Quick Resources', 'ollie' ); ?></strong></p>
+<p><strong>Quick Resources</strong></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:separator {"className":"is-style-separator-thin","backgroundColor":"border-light"} -->
@@ -23,40 +23,40 @@
 
 <!-- wp:group {"metadata":{"name":"Links"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php esc_html_e( 'Projects', 'ollie' ); ?></p>
+<p>Projects</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Templates', 'ollie' ); ?></p>
+<p>Templates</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Team', 'ollie' ); ?></p>
+<p>Team</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Integrations', 'ollie' ); ?></p>
+<p>Integrations</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Pricing', 'ollie' ); ?></p>
+<p>Pricing</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'FAQs', 'ollie' ); ?></p>
+<p>FAQs</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"width":75,"className":"is-style-secondary-button"} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-75 is-style-secondary-button"><a class="wp-block-button__link wp-element-button"><?php esc_html_e( 'Browse All', 'ollie' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-75 is-style-secondary-button"><a class="wp-block-button__link wp-element-button">Browse All</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:column -->
 
 <!-- wp:column {"style":{"border":{"radius":"10px"},"spacing":{"padding":{"top":"var:preset|spacing|medium","bottom":"var:preset|spacing|medium","left":"0","right":"0"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-column" style="border-radius:10px;padding-top:var(--wp--preset--spacing--medium);padding-right:0;padding-bottom:var(--wp--preset--spacing--medium);padding-left:0"><!-- wp:paragraph -->
-<p><strong><?php esc_html_e( 'Learn Our Product', 'ollie' ); ?></strong></p>
+<p><strong>Learn Our Product</strong></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:separator {"className":"is-style-separator-thin","backgroundColor":"border-light"} -->
@@ -65,33 +65,33 @@
 
 <!-- wp:group {"metadata":{"name":"Links"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php esc_html_e( 'Documentation', 'ollie' ); ?></p>
+<p>Documentation</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Playground', 'ollie' ); ?></p>
+<p>Playground</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Dashboard', 'ollie' ); ?></p>
+<p>Dashboard</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Community', 'ollie' ); ?></p>
+<p>Community</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Enterprise', 'ollie' ); ?></p>
+<p>Enterprise</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Marketplace', 'ollie' ); ?></p>
+<p>Marketplace</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"width":75,"className":"is-style-secondary-button"} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-75 is-style-secondary-button"><a class="wp-block-button__link wp-element-button"><?php esc_html_e( 'Browse All', 'ollie' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-75 is-style-secondary-button"><a class="wp-block-button__link wp-element-button">Browse All</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:column -->
@@ -99,11 +99,11 @@
 <!-- wp:column {"style":{"border":{"radius":"10px"},"spacing":{"padding":{"top":"var:preset|spacing|medium","bottom":"var:preset|spacing|medium","left":"var:preset|spacing|medium","right":"var:preset|spacing|medium"}}},"backgroundColor":"tertiary","layout":{"type":"constrained"}} -->
 <div class="wp-block-column has-tertiary-background-color has-background" style="border-radius:10px;padding-top:var(--wp--preset--spacing--medium);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--medium);padding-left:var(--wp--preset--spacing--medium)"><!-- wp:group {"metadata":{"name":"Text"},"style":{"spacing":{"margin":{"top":"0","bottom":"0"},"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group" style="margin-top:0;margin-bottom:0"><!-- wp:paragraph {"fontSize":"base"} -->
-<p class="has-base-font-size"><strong><?php esc_html_e( 'Success Stories', 'ollie' ); ?></strong></p>
+<p class="has-base-font-size"><strong>Success Stories</strong></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph {"fontSize":"x-small"} -->
-<p class="has-x-small-font-size"><?php esc_html_e( 'See how companies like yours increased productivity by 40% overnight.', 'ollie' ); ?></p>
+<p class="has-x-small-font-size">See how companies like yours increased productivity by 40% overnight.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -113,7 +113,7 @@
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"width":100,"className":"ollie-no-shrink is-style-button-light"} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-100 ollie-no-shrink is-style-button-light"><a class="wp-block-button__link wp-element-button"><?php esc_html_e( 'Start Free Trial', 'ollie' ); ?></a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100 ollie-no-shrink is-style-button-light"><a class="wp-block-button__link wp-element-button">Start Free Trial</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:column --></div>

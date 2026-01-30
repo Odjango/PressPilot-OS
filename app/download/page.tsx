@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Download, CheckCircle, FileText, Loader2 } from 'lucide-react';
 
-export default function DownloadPage() {
+function DownloadPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const previewId = searchParams.get('previewId');
@@ -215,3 +215,21 @@ export default function DownloadPage() {
         </div>
     );
 }
+
+export default function DownloadPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+                <div className="text-center">
+                    <Loader2 className="w-12 h-12 animate-spin text-gray-400 mx-auto mb-4" />
+                    <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                        Loading Download Page
+                    </h1>
+                </div>
+            </div>
+        }>
+            <DownloadPageContent />
+        </Suspense>
+    );
+}
+

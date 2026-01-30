@@ -23,6 +23,24 @@ const nextConfig = {
     'jsdom',
   ],
 
+  // Allow images from Supabase storage
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cvrmocmvelfacjigzrfu.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+
   // Skip TypeScript errors during build
   // Skip TypeScript errors during build
   typescript: {
@@ -39,6 +57,15 @@ const nextConfig = {
       });
     }
     return config;
+  },
+  async redirects() {
+    return [
+      {
+        source: '/studio/new',
+        destination: '/studio',
+        permanent: true,
+      },
+    ];
   },
 };
 

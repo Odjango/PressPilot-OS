@@ -74,6 +74,7 @@ export interface PressPilotSaaSInput {
     custom_colors?: {
       primary?: string;
       secondary?: string;
+      accent?: string;
     };
     font_pair_id: string;
     layout_density: 'cozy' | 'balanced' | 'spacious';
@@ -88,6 +89,7 @@ export interface PressPilotSaaSInput {
       supports_takeout?: boolean;
       supports_delivery?: boolean;
       menu_sections?: RestaurantMenuSection[];
+      menus?: any[];
       menu_pdf_url?: string;
       reservation_link?: string;
       order_online_link?: string;
@@ -147,6 +149,7 @@ export interface PressPilotNormalizedContext {
     custom_colors?: {
       primary?: string;
       secondary?: string;
+      accent?: string;
     };
     font_pair_id: string;
     layout_density: 'cozy' | 'balanced' | 'spacious';
@@ -183,6 +186,7 @@ export interface PressPilotVariationPreviewMeta {
   label: string;
   description: string;
   thumbnail_url?: string;
+  imageUrl?: string;
 }
 
 export interface PressPilotVariationManifest {

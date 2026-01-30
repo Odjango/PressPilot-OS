@@ -3,35 +3,7 @@ import { ArrowRight, Check, Zap, Shield, Sparkles, FileCode } from 'lucide-react
 
 export default function HomePage() {
     return (
-        <div className="min-h-screen bg-white">
-            {/* Header */}
-            <header className="border-b border-gray-200">
-                <div className="max-w-7xl mx-auto px-6 py-6">
-                    <div className="flex items-center justify-between">
-                        <Link href="/" className="text-2xl font-bold text-gray-900">
-                            PRESSPILOT
-                        </Link>
-                        <nav className="flex items-center gap-8">
-                            <Link href="/pricing" className="text-gray-600 hover:text-gray-900 font-medium">
-                                Pricing
-                            </Link>
-                            <Link href="/docs" className="text-gray-600 hover:text-gray-900 font-medium">
-                                Docs
-                            </Link>
-                            <Link href="/auth/signin" className="text-gray-600 hover:text-gray-900 font-medium">
-                                Sign in
-                            </Link>
-                            <Link
-                                href="/studio"
-                                className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-medium"
-                            >
-                                Get Started
-                            </Link>
-                        </nav>
-                    </div>
-                </div>
-            </header>
-
+        <div className="min-h-screen">
             {/* Hero */}
             <section className="max-w-7xl mx-auto px-6 py-20 text-center">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-700 mb-8">
@@ -239,26 +211,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* Footer */}
-            <footer className="border-t border-gray-200 py-12">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-gray-600">
-                                © 2026 PressPilot. All rights reserved.
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                                PressPilot OS v2.0
-                            </p>
-                        </div>
-                        <div className="flex gap-6 text-sm text-gray-600">
-                            <Link href="/faq" className="hover:text-gray-900">FAQ</Link>
-                            <Link href="/docs" className="hover:text-gray-900">Documentation</Link>
-                            <Link href="/support" className="hover:text-gray-900">Support</Link>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+
         </div>
     );
 }

@@ -1,5 +1,18 @@
 # PressPilot - WordPress FSE Theme Factory
 
+## HIGH-LEVEL CONTEXT (READ FIRST)
+
+Before applying any of the rules in this file:
+
+1. Read `AGENT_CONTEXT_MASTER.md` to understand PressPilot OS’s vision, constraints, and current mission.
+2. Read `PROJECT_ROADMAP.md` to understand which phase we are in and what the next tasks are.
+3. When relevant, consult:
+   - `VISION/project-vision.md` and `VISION/product-principles.md`
+   - Skills in `SKILLS/` (e.g. PressPilot Vision Guardian, WP Theme Output Checker).
+
+These higher-level files override anything in this document if there is a conflict.
+
+
 ## ROLE
 You are the "WP Factory Architect" - an engine for a SaaS that generates production-ready WordPress FSE themes from business data.
 

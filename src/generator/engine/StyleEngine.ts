@@ -1,87 +1,50 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { ThemePersonality } from '../types';
-import { GeneratorData } from '../types';
+import { StyleJSON } from '../modules/StyleBuilder';
 
 export class StyleEngine {
 
-    async applyColors(themeDir: string, userData: GeneratorData, personality: ThemePersonality): Promise<void> {
+    async applyStyles(themeDir: string, styleJson: StyleJSON): Promise<void> {
         const themeJsonPath = path.join(themeDir, 'theme.json');
 
         if (await fs.pathExists(themeJsonPath)) {
             const themeJson = await fs.readJson(themeJsonPath);
-            const palette = themeJson.settings.color.palette;
 
-            let updated = false;
-
-            if (userData.primary) {
-                const brandSlug = personality.colors.brand;
-                const brandColor = palette.find((c: any) => c.slug === brandSlug);
-                if (brandColor) {
-                    brandColor.color = userData.primary;
-                    updated = true;
-                }
-
-                const altSlug = personality.colors.brand_alt;
-                const altColor = palette.find((c: any) => c.slug === altSlug);
-                if (altColor) {
-                    altColor.color = userData.primary;
-                    updated = true;
-                }
-            }
-            if (userData.secondary) {
-                const accentSlug = personality.colors.accent;
-                const accentColor = palette.find((c: any) => c.slug === accentSlug);
-                if (accentColor) {
-                    accentColor.color = userData.secondary;
-                    updated = true;
-                }
+            // 1. Apply Palette
+            if (styleJson.palette.length > 0) {
+                themeJson.settings.color.palette = styleJson.palette;
             }
 
-            if (updated) {
-                await fs.writeJson(themeJsonPath, themeJson, { spaces: 4 });
-                console.log(`[Style] Updated theme.json colors.`);
+            // 2. Apply Custom Styles
+            if (styleJson.styles) {
+                themeJson.styles = {
+                    ...themeJson.styles,
+                    ...styleJson.styles
+                };
             }
+
+            await fs.writeJson(themeJsonPath, themeJson, { spaces: 4 });
+            console.log(`[StyleEngine] Applied style JSON to theme.json.`);
         }
     }
 
     async updateMetadata(themeDir: string, themeName: string, baseName: string, mode: string): Promise<void> {
-        // 1. site-info.json
         const siteInfo = { name: themeName, base: baseName, mode: mode };
         await fs.writeJson(path.join(themeDir, 'site-info.json'), siteInfo, { spaces: 4 });
 
-        // 2. style.css
         const styleCssPath = path.join(themeDir, 'style.css');
         if (await fs.pathExists(styleCssPath)) {
             let styleContent = await fs.readFile(styleCssPath, 'utf8');
             styleContent = styleContent.replace(/Theme Name:.*$/m, `Theme Name: ${themeName}`);
-
-            // Cache Busting: Update Version
-            const timestamp = Math.floor(Date.now() / 1000);
-            styleContent = styleContent.replace(/Version:.*$/m, `Version: 1.0.${timestamp}`);
-
-            // Safety Patch for Testimonial Visibility (Fixes white-on-white issue)
-            const safetyCss = `
-/* PressPilot Safety Patch */
-.wp-block-quote, .wp-block-pullquote {
-    color: var(--wp--preset--color--main) !important;
-    background-color: var(--wp--preset--color--tertiary) !important;
-    padding: 2rem !important;
-    border-radius: 2px !important;
-    border-left: 2px solid var(--wp--preset--color--primary) !important;
-}
-.wp-block-quote p {
-    color: var(--wp--preset--color--main) !important;
-}
-.wp-block-quote cite {
-    color: var(--wp--preset--color--secondary) !important;
-    font-style: normal !important;
-}
+            // Minimalist Safety Only: Ensuring basic layout reset
+            const minimalLayoutStyles = `
+/* PressPilot Standard Layout Helper */
+body { margin: 0; overflow-x: hidden; width: 100%; }
+.wp-site-blocks { display: flex; flex-direction: column; min-height: 100vh; width: 100%; overflow-x: hidden; }
 `;
-            styleContent += safetyCss;
-
+            styleContent += minimalLayoutStyles;
             await fs.writeFile(styleCssPath, styleContent);
-            console.log(`[Style] Updated style.css metadata and applied safety CSS (Version: 1.0.${timestamp}).`);
+            console.log(`[StyleEngine] Updated style.css with minimal refined layout helper.`);
         }
     }
 }

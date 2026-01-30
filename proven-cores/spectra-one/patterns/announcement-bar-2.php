@@ -11,7 +11,7 @@
 <div class="wp-block-group has-primary-background-color has-background" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--xxx-small);padding-bottom:var(--wp--preset--spacing--xxx-small)"><!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|xx-small","left":"var:preset|spacing|xx-small"}}}} -->
 <div class="wp-block-columns alignwide"><!-- wp:column -->
 <div class="wp-block-column"><!-- wp:paragraph {"textColor":"background","className":"swt-text-align-center","fontSize":"x-small"} -->
-<p class="swt-text-align-center has-background-color has-text-color has-x-small-font-size"><?php esc_html_e( 'Announcement message can be here..', 'spectra-one' ); ?></p>
+<p class="swt-text-align-center has-background-color has-text-color has-x-small-font-size">Announcement message can be here..</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column -->
 

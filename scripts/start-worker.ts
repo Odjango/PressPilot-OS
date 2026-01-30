@@ -1,13 +1,18 @@
 
 import { createClient } from '@supabase/supabase-js';
-import { generateTheme } from '../src/generator/index';
+import { generateTheme } from '../src/generator';
+import { StructureValidator } from '../src/generator/validators/StructureValidator';
 import { BlockValidator } from '../src/generator/validators/BlockValidator';
 import { TokenValidator } from '../src/generator/validators/TokenValidator';
-import { StructureValidator } from '../src/generator/validators/StructureValidator';
 import JSZip from 'jszip';
 import fs from 'fs-extra';
 import dotenv from 'dotenv';
 import path from 'path';
+import { buildStaticSite } from '../lib/presspilot/staticSite';
+import { getVariationById } from '../lib/presspilot/variationRegistry';
+import { applyBusinessInputs } from '../lib/presspilot/context';
+import { resolveBusinessCopy } from '../lib/presspilot/kit';
+import { buildSaaSInputFromStudioInput } from '../lib/presspilot/studioAdapter';
 
 // Load env vars
 dotenv.config({ path: '.env.local' });
@@ -80,12 +85,13 @@ async function processJob(job: any) {
             // 2. Generate (REAL)
             console.log(`[${WORKER_ID}] 🏭 Generating Theme...`);
 
-            // Map project data to generator format
-            // Project data is stored in 'data' column
+            // Data is already transformed by the API, use it directly
             const generatorData = project.data || {};
 
-            // Ensure we have a valid name
+            // Fallback to project name if not set
             if (!generatorData.name) generatorData.name = project.name;
+
+            console.log(`[${WORKER_ID}] 📝 Business: ${generatorData.name}, Industry: ${generatorData.industry}`);
 
             const result = await generateTheme({
                 data: generatorData,
@@ -161,28 +167,97 @@ async function processJob(job: any) {
                 }
             }
 
-            // 4. Upload
+            // 4. Create Static Bundle (RE-ENABLED for Preview Accuracy)
+            console.log(`[${WORKER_ID}] 📦 Creating Static Bundle...`);
+
+            // Build Context & Variation for Static Site
+            const saasInput = buildSaaSInputFromStudioInput({
+                businessName: generatorData.name,
+                businessDescription: generatorData.hero_subheadline || project.name,
+                businessCategory: generatorData.industry,
+                heroTitle: generatorData.hero_headline,
+                palette: generatorData.colors,
+                logoPath: generatorData.logo,
+                menus: generatorData.menus
+            });
+
+            const context = applyBusinessInputs(saasInput);
+
+            // Get the variation used (or default)
+            const variationId = job.payload?.variationId || 'saas-bright';
+            const variationEntry: any = getVariationById(variationId) || { id: 'saas-bright', title: 'Default' };
+
+            const variationManifest: any = {
+                id: variationEntry.id,
+                tokens: {
+                    palette_id: saasInput.visualControls.palette_id,
+                    font_pair_id: saasInput.visualControls.font_pair_id,
+                    layout_density: saasInput.visualControls.layout_density,
+                    corner_style: saasInput.visualControls.corner_style
+                },
+                preview: {
+                    id: variationEntry.id,
+                    label: variationEntry.title,
+                    description: saasInput.narrative.description_long
+                }
+            };
+
+            const staticResult = await buildStaticSite(context, variationManifest, {
+                businessTypeId: generatorData.industry
+            });
+
+            const staticZipBuffer = await fs.readFile(staticResult.staticZipPath);
+
+            // Upload Theme (Restored)
             const filePath = `themes/${job.project_id}/${job.id}.zip`;
-            const { error: uploadError } = await supabase.storage
+            console.log(`[${WORKER_ID}] 🔼 Uploading Theme Zip...`);
+            const { error: themeUploadError } = await supabase.storage
                 .from('generated-themes')
                 .upload(filePath, zipBuffer, { contentType: 'application/zip', upsert: true });
 
-            if (uploadError) throw uploadError;
+            if (themeUploadError) {
+                console.error(`[${WORKER_ID}] ❌ Theme Upload Error:`, themeUploadError);
+                throw themeUploadError;
+            }
+
+            // Upload Static Preview
+            const staticPath = `previews/${job.project_id}/${job.id}.zip`;
+            console.log(`[${WORKER_ID}] 🔼 Uploading Static Preview...`);
+            const { error: staticUploadError } = await supabase.storage
+                .from('generated-themes')
+                .upload(staticPath, staticZipBuffer, { contentType: 'application/zip', upsert: true });
+
+            if (staticUploadError) {
+                console.warn(`[${WORKER_ID}] ⚠️ Static Preview Upload failed, but continuing:`, staticUploadError);
+            }
 
             // 5. Complete
-            await supabase.from('jobs').update({
+            const { error: updateError } = await supabase.from('jobs').update({
                 status: 'completed',
-                result: { download_path: filePath },
+                result: {
+                    download_path: filePath,
+                    static_path: staticPath
+                },
                 updated_at: new Date().toISOString()
             }).eq('id', job.id);
 
+            if (updateError) {
+                console.error(`[${WORKER_ID}] ❌ Job Status Update Error:`, updateError);
+                throw updateError;
+            }
+
             // 6. Record Generated Theme
-            await supabase.from('generated_themes').insert({
+            const { error: recordError } = await supabase.from('generated_themes').insert({
                 job_id: job.id,
                 file_path: filePath,
                 status: 'active',
                 expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24h
             });
+
+            if (recordError) {
+                console.error(`[${WORKER_ID}] ❌ Record Insert Error:`, recordError);
+                throw recordError;
+            }
 
             console.log(`[${WORKER_ID}] ✅ Job Completed: ${job.id}`);
         })();

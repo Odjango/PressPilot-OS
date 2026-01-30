@@ -26,14 +26,14 @@
 <!-- /wp:column -->
 <!-- wp:column {"verticalAlignment":"center","style":{"spacing":{"blockGap":"var:preset|spacing|small"}}} -->
 <div class="wp-block-column is-vertically-aligned-center"><!-- wp:paragraph {"style":{"typography":{"letterSpacing":"2px","textTransform":"uppercase"}},"textColor":"primary","fontSize":"x-small"} -->
-<p class="has-primary-color has-text-color has-x-small-font-size" style="letter-spacing:2px;text-transform:uppercase"><?php esc_html_e( 'Full Site Editing', 'spectra-one' ); ?></p>
+<p class="has-primary-color has-text-color has-x-small-font-size" style="letter-spacing:2px;text-transform:uppercase">Full Site Editing</p>
 <!-- /wp:paragraph -->
 <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|xx-small"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:heading {"className":"wp-block-heading"} -->
-<h2 class="wp-block-heading"><?php esc_html_e( 'Unleash the power of block editor', 'spectra-one' ); ?></h2>
+<h2 class="wp-block-heading">Unleash the power of block editor</h2>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Get online quickly with easy-to-use Full Site Editor builder', 'spectra-one' ); ?></p>
+<p>Get online quickly with easy-to-use Full Site Editor builder</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 <!-- wp:columns -->
@@ -44,10 +44,10 @@
 <!-- /wp:column -->
 <!-- wp:column {"width":"95%","style":{"spacing":{"blockGap":"var:preset|spacing|xx-small"}}} -->
 <div class="wp-block-column" style="flex-basis:95%"><!-- wp:heading {"level":6,"textColor":"heading","className":"wp-block-heading"} -->
-<h6 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'Easily Customizable', 'spectra-one' ); ?></h6>
+<h6 class="wp-block-heading has-heading-color has-text-color">Easily Customizable</h6>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Tailor your website to your liking with endless options to personalize the design and functionality.', 'spectra-one' ); ?></p>
+<p>Tailor your website to your liking with endless options to personalize the design and functionality.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
@@ -59,10 +59,10 @@
 <!-- /wp:column -->
 <!-- wp:column {"width":"95%","style":{"spacing":{"blockGap":"var:preset|spacing|xx-small"}}} -->
 <div class="wp-block-column" style="flex-basis:95%"><!-- wp:heading {"level":6,"textColor":"heading","className":"wp-block-heading"} -->
-<h6 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'Blazing Fast', 'spectra-one' ); ?></h6>
+<h6 class="wp-block-heading has-heading-color has-text-color">Blazing Fast</h6>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Experience lightning-fast page load speeds for optimal user experience and SEO ranking.', 'spectra-one' ); ?></p>
+<p>Experience lightning-fast page load speeds for optimal user experience and SEO ranking.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
@@ -74,10 +74,10 @@
 <!-- /wp:column -->
 <!-- wp:column {"width":"95%","style":{"spacing":{"blockGap":"var:preset|spacing|xx-small"}}} -->
 <div class="wp-block-column" style="flex-basis:95%"><!-- wp:heading {"level":6,"textColor":"heading","className":"wp-block-heading"} -->
-<h6 class="wp-block-heading has-heading-color has-text-color"><?php esc_html_e( 'SEO Optimized', 'spectra-one' ); ?></h6>
+<h6 class="wp-block-heading has-heading-color has-text-color">SEO Optimized</h6>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Built with search engines in mind, achieve higher rankings and more traffic with optimized code.', 'spectra-one' ); ?></p>
+<p>Built with search engines in mind, achieve higher rankings and more traffic with optimized code.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>

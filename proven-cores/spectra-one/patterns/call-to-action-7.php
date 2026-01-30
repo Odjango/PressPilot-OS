@@ -24,20 +24,20 @@ $images = [
 
 <!-- wp:column {"verticalAlignment":"center","width":"70%"} -->
 <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:70%"><!-- wp:paragraph {"style":{"typography":{"letterSpacing":"2px","textTransform":"uppercase"}},"textColor":"background","fontSize":"x-small"} -->
-<p class="has-background-color has-text-color has-x-small-font-size" style="letter-spacing:2px;text-transform:uppercase"><?php esc_html_e( 'Full Site Editing', 'spectra-one' ); ?></p>
+<p class="has-background-color has-text-color has-x-small-font-size" style="letter-spacing:2px;text-transform:uppercase">Full Site Editing</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"textColor":"background","className":"wp-block-heading"} -->
-<h2 class="wp-block-heading has-background-color has-text-color"><?php esc_html_e( 'Everything you need to create amazing websites', 'spectra-one' ); ?></h2>
+<h2 class="wp-block-heading has-background-color has-text-color">Everything you need to create amazing websites</h2>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"textColor":"background"} -->
-<p class="has-background-color has-text-color"><?php esc_html_e( 'Interactive design tools and its many customization options to customize anything and everything needed to build the fully-functional website of your dreams.', 'spectra-one' ); ?></p>
+<p class="has-background-color has-text-color">Interactive design tools and its many customization options to customize anything and everything needed to build the fully-functional website of your dreams.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|small"}}}} -->
 <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--small)"><!-- wp:button {"className":"is-style-swt-button-secondary"} -->
-<div class="wp-block-button is-style-swt-button-secondary"><a class="wp-block-button__link wp-element-button"><?php esc_html_e( 'Install Spectra Theme', 'spectra-one' ); ?></a></div>
+<div class="wp-block-button is-style-swt-button-secondary"><a class="wp-block-button__link wp-element-button">Install Spectra Theme</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:column --></div>

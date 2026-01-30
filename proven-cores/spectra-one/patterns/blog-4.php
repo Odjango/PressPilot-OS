@@ -10,7 +10,7 @@
 <div class="wp-block-group alignwide"
     style="padding-top:var(--wp--preset--spacing--x-large);padding-bottom:var(--wp--preset--spacing--x-large)">
     <!-- wp:heading {"textAlign":"left","level":1,"align":"wide","className":"wp-block-heading"} -->
-    <h1 class="alignwide has-text-align-left wp-block-heading"><?php esc_html_e( 'Latest Posts', 'spectra-one' ); ?></h1>
+    <h1 class="alignwide has-text-align-left wp-block-heading">Latest Posts</h1>
     <!-- /wp:heading -->
     <!-- wp:query {"queryId":97,"query":{"perPage":9,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false},"displayLayout":{"type":"list","columns":3},"align":"wide","layout":{"type":"default"}} -->
     <div class="wp-block-query alignwide">

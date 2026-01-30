@@ -30,7 +30,7 @@ async function run() {
             });
 
             if (result.status !== 'success') {
-                throw new Error(`Generation Failed: ${result.message}`);
+                throw new Error(`Generation Failed: ${(result as any).message || 'Unknown Error'}`);
             }
 
             // 2. INSPECT CONTENT

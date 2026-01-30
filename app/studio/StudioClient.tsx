@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import type { PressPilotVariationSet, VariationId } from "@/types/presspilot";
@@ -11,9 +11,17 @@ import {
   getBusinessCategoryById,
 } from '@/app/mvp-demo/businessCategories';
 import VariationCard from "./VariationCard";
+import { HeroCarousel } from "@/src/components/HeroCarousel";
 import ColorPalettePreview from "./components/ColorPalettePreview";
 import FontStylePreview from "./components/FontStylePreview";
 import { PALETTES } from "@/lib/theme/palettes";
+import MenuUploader from "./components/MenuUploader";
+import LogoUploader from "./components/LogoUploader";
+import { RestaurantMenu } from "@/src/generator/types";
+import StepProgress from "./components/StepProgress";
+import { ArrowLeft, ArrowRight, Wand2, Download, CheckCircle2, Sparkles, Info, X } from "lucide-react";
+import { toast } from "sonner";
+
 
 type StudioProject = {
   id: string;
@@ -65,15 +73,207 @@ export default function StudioClient({ slug }: Props) {
   const [customHeroTitle, setCustomHeroTitle] = useState<string>("");
   const [customPaletteId, setCustomPaletteId] = useState<string | null>(null);
   const [customFontPairId, setCustomFontPairId] = useState<string | null>(null);
+  const [customLogoBase64, setCustomLogoBase64] = useState<string>("");
+  const [logoColors, setLogoColors] = useState<string[]>([]);
 
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [artifacts, setArtifacts] = useState<ArtifactResponse | null>(null);
+  const [menus, setMenus] = useState<RestaurantMenu[]>([]);
+
+  // Refs for Color Pickers
+  const colorPickerRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  // Live Preview Renderer
+  const renderHeroPreview = (styleId: string, label: string, description: string) => {
+    // Colors
+    const primary = logoColors[0] || '#000000';
+    const secondary = logoColors[1] || '#ffffff';
+    const accent = logoColors[2] || '#666666';
+
+    const Logo = () => customLogoBase64 ? (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={customLogoBase64} alt="Brand Logo" className="h-16 w-auto object-contain max-w-[200px]" />
+    ) : (
+      <div className="text-2xl font-black tracking-tighter" style={{ color: primary }}>LOGO</div>
+    );
+
+    // Variation A: SPLIT (Balanced)
+    if (styleId === 'variation_a') {
+      return (
+        <div className="w-full h-full flex bg-neutral-50 relative overflow-hidden">
+          {/* Left Content */}
+          <div className="w-1/2 flex flex-col justify-center p-12 z-10">
+            <div className="mb-6"><Logo /></div>
+            <h3 className="text-4xl font-black mb-4 leading-tight text-neutral-900">
+              {customHeroTitle || label}
+            </h3>
+            <p className="text-sm font-medium text-neutral-500 mb-8 max-w-sm leading-relaxed">
+              {description}
+            </p>
+            <div className="flex gap-3">
+              <div className="px-6 py-2.5 rounded-lg text-sm font-bold shadow-lg transform hover:-translate-y-1 transition-transform" style={{ backgroundColor: primary, color: '#fff' }}>
+                Get Started
+              </div>
+              <div className="px-6 py-2.5 rounded-lg text-sm font-bold border-2" style={{ borderColor: isLight(secondary) ? '#e5e5e5' : secondary, color: primary }}>
+                Learn More
+              </div>
+            </div>
+          </div>
+          {/* Right Visual */}
+          <div className="w-1/2 relative bg-white">
+            <div className="absolute inset-0 opacity-10" style={{
+              backgroundImage: `radial-gradient(${accent} 1px, transparent 1px)`,
+              backgroundSize: '20px 20px'
+            }} />
+            <div className="absolute inset-0 flex items-center justify-center">
+              {customLogoBase64 ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={customLogoBase64} alt="Brand Graphic" className="w-2/3 h-auto opacity-90 drop-shadow-2xl transform rotate-3 scale-110" />
+              ) : (
+                <div className="w-64 h-64 rounded-full flex items-center justify-center text-4xl font-black opacity-10" style={{ backgroundColor: primary, color: 'white' }}>
+                  IMG
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (styleId === 'variation_b') {
+      return (
+        <div className="w-full h-full relative overflow-hidden flex flex-col justify-center items-center text-center p-12"
+          style={{ backgroundColor: primary }}
+        >
+          {/* Background Abstract */}
+          <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+            <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full blur-3xl mix-blend-overlay" style={{ backgroundColor: accent }} />
+            <div className="absolute top-1/2 right-0 w-80 h-80 rounded-full blur-3xl mix-blend-overlay" style={{ backgroundColor: secondary }} />
+          </div>
+
+          <div className="relative z-10 max-w-2xl bg-white/10 backdrop-blur-md p-12 rounded-3xl border border-white/10 shadow-2xl">
+            <div className="flex justify-center mb-6 scale-90 opacity-90 brightness-200 contrast-200 grayscale">
+              <Logo />
+            </div>
+            <h3 className="text-4xl font-black mb-4 leading-tight text-white drop-shadow-md">
+              {customHeroTitle || label}
+            </h3>
+            <p className="text-sm font-medium text-white/80 mb-8 leading-relaxed max-w-lg mx-auto">
+              {description}
+            </p>
+            <div className="px-8 py-3 rounded-full text-sm font-bold shadow-xl transform hover:scale-105 transition-transform inline-block"
+              style={{
+                backgroundColor: secondary,
+                color: isLight(secondary) ? '#000' : '#fff'
+              }}>
+              Explore Now
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Variation C: MINIMAL (Clean)
+    return (
+      <div className="w-full h-full bg-white flex flex-col items-center justify-center relative p-12">
+        <div className="absolute top-0 w-full h-2" style={{ background: `linear-gradient(to right, ${primary}, ${accent})` }} />
+
+        <div className="text-center max-w-xl">
+          <div className="mb-8 flex justify-center scale-110 transition-transform duration-700 hover:rotate-6">
+            <Logo />
+          </div>
+
+          <div className="space-y-4">
+            <span className="text-[10px] font-black tracking-[0.2em] uppercase text-neutral-400">Welcome to</span>
+            <h3 className="text-5xl font-black tracking-tighter text-neutral-900">
+              {project?.name || 'Your Brand'}
+            </h3>
+          </div>
+
+          <div className="mt-12 flex justify-center gap-8">
+            <div className="text-center group cursor-pointer">
+              <div className="w-12 h-12 rounded-2xl bg-neutral-50 flex items-center justify-center mb-2 group-hover:bg-black group-hover:text-white transition-colors">
+                <ArrowRight className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Services</span>
+            </div>
+            <div className="text-center group cursor-pointer">
+              <div className="w-12 h-12 rounded-2xl bg-neutral-50 flex items-center justify-center mb-2 group-hover:bg-black group-hover:text-white transition-colors">
+                <ArrowRight className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Contact</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Helper for text contrast
+  const isLight = (color: string) => {
+    const hex = color.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return brightness > 155;
+  };
+  const [currentStep, setCurrentStep] = useState(1);
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [jobStatus, setJobStatus] = useState<string>("pending");
+  const [pollCount, setPollCount] = useState(0);
+
+  // Polling logic for Step 4
+  useEffect(() => {
+    if (currentStep === 4 && jobId && jobStatus !== "completed" && jobStatus !== "failed") {
+      const timer = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/status?id=${jobId}`);
+          if (!res.ok) return;
+          const data = await res.json();
+          setJobStatus(data.status);
+
+          if (data.status === "completed") {
+            setArtifacts({
+              themeUrl: data.themeUrl,
+              staticUrl: data.staticUrl,
+              slug: data.project_id
+            });
+            toast.success("Generation complete! Your kit is ready.");
+          } else if (data.status === "failed") {
+            toast.error("Generation failed. Please try again.");
+          }
+
+          setPollCount(prev => prev + 1);
+        } catch (err) {
+          console.error("Polling error:", err);
+        }
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentStep, jobId, jobStatus, pollCount]);
+
+  const steps = [
+    { id: 1, label: "Context" },
+    { id: 2, label: "Variations" },
+    { id: 3, label: "Refine" },
+    { id: 4, label: "Deliver" }
+  ];
+
+
 
   const variationList = useMemo(
     () => variations?.variationSet.variations ?? [],
-    [variations],
+    [variations]
   );
+
+  const updateBrandColor = (index: number, newColor: string) => {
+    const next = [...logoColors];
+    next[index] = newColor;
+    setLogoColors(next);
+    setCustomPaletteId('brand');
+  };
   const selectedVariation = useMemo(() => {
     if (!variationList.length || !selectedVariationId) {
       return variationList[0] ?? null;
@@ -88,24 +288,41 @@ export default function StudioClient({ slug }: Props) {
   // Sync customization state when variation changes
   useEffect(() => {
     if (selectedVariation) {
-      setCustomHeroTitle(selectedVariation.preview.label);
-      setCustomPaletteId(selectedVariation.tokens.palette_id);
+      // Only set hero title if not already customized
+      if (!customHeroTitle) {
+        setCustomHeroTitle(project?.name || selectedVariation.preview.label);
+      }
       setCustomFontPairId(selectedVariation.tokens.font_pair_id);
+
+      // Default to Brand Kit if colors were extracted, otherwise use variation default
+      if (logoColors.length > 0) {
+        setCustomPaletteId('brand');
+      } else {
+        setCustomPaletteId(selectedVariation.tokens.palette_id);
+      }
     }
-  }, [selectedVariation]);
+  }, [selectedVariation, logoColors.length]);
 
   const studioInput = useCallback((): StudioFormInput => {
     return {
       businessName: project?.name ?? '',
       businessDescription: brief,
       primaryLanguage: DEFAULT_LANGUAGE,
-      businessCategory: DEFAULT_CATEGORY,
+      businessCategory: selectedBusinessCategoryId || DEFAULT_CATEGORY,
       slug: project?.slug,
       heroTitle: customHeroTitle,
       paletteId: customPaletteId ?? undefined,
-      fontPairId: customFontPairId ?? undefined
+      fontPairId: customFontPairId ?? undefined,
+      logoBase64: customLogoBase64 || undefined,
+      palette: logoColors.length > 0 ? {
+        primary: logoColors[0],
+        secondary: logoColors[1],
+        accent: logoColors[2]
+      } : undefined,
+      menus: menus.length > 0 ? menus : undefined
     };
-  }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId]);
+  }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId, customLogoBase64, logoColors, menus]);
+
 
   const handleAssign = useCallback(async () => {
     setAssigning(true);
@@ -139,13 +356,18 @@ export default function StudioClient({ slug }: Props) {
       setSelectedVariationId(
         typed.variationSet.variations[0]?.id ?? null,
       );
+      // Auto-advance to step 2 on success
+      setCurrentStep(2);
+      toast.success("Design directions generated!");
     } catch (error) {
       console.error("[StudioClient] variations error", error);
       setAssignError("Couldn’t fetch variations. Please try again.");
+      toast.error("Couldn't fetch variations.");
     } finally {
       setAssigning(false);
     }
   }, [studioInput]);
+
 
   const handleGenerate = useCallback(async () => {
     if (!variations || !selectedVariation?.id) return;
@@ -175,27 +397,29 @@ export default function StudioClient({ slug }: Props) {
           input: studioInput(),
         }),
       });
-      const payload = (await response.json().catch(() => ({}))) as
-        | ArtifactResponse
-        | Record<string, unknown>;
+      const payload = (await response.json().catch(() => ({}))) as any;
 
       if (!response.ok) {
-        const errorPayload = payload as { error?: string; details?: string };
-        const errorMessage = errorPayload.error ?? "Unable to generate kit.";
-        const errorDetails = errorPayload.details ? ` (${errorPayload.details})` : "";
-        throw new Error(errorMessage + errorDetails);
+        throw new Error(payload.error || "Unable to start generation.");
       }
 
-      setArtifacts(payload as ArtifactResponse);
+      setJobId(payload.jobId);
+      setJobStatus("pending");
+
+      // Advance to step 4 on success
+      setCurrentStep(4);
+      toast.success("Theme generation started!");
     } catch (error) {
       console.error("[StudioClient] generate error", error);
       setGenerateError(
         error instanceof Error ? error.message : "Failed to generate kit.",
       );
+      toast.error("Failed to start generation.");
     } finally {
       setGenerating(false);
     }
   }, [selectedVariation?.id, studioInput, variations, selectedBusinessCategoryId]);
+
 
   useEffect(() => {
     let mounted = true;
@@ -203,22 +427,23 @@ export default function StudioClient({ slug }: Props) {
     async function loadProject() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-          // If no session, redirect to auth (client-side check)
-          router.replace('/auth');
-          return;
+        const accessToken = session?.access_token || 'bypass-token';
+
+        // Fetch project via API which handles bypass logic
+        const response = await fetch(`/api/projects?slug=${slug}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || 'Failed to load project');
         }
 
-        const { data, error } = await supabase
-          .from('pp_projects')
-          .select('id,owner_email,name,slug,status,created_at')
-          .eq('slug', slug)
-          .maybeSingle();
+        const { project: data } = await response.json();
 
         if (!mounted) return;
-
-        if (error) throw error;
-        if (!data) throw new Error('Project not found');
 
         setProject(data as StudioProject);
 
@@ -288,285 +513,477 @@ export default function StudioClient({ slug }: Props) {
     !!variations && !!selectedVariation?.id && !assigning && !generating;
 
   return (
-    <div className="space-y-8" dir="auto">
-      <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <div className="flex flex-col gap-2">
-          <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-            Project
-          </p>
-          <h2 className="text-2xl font-semibold text-neutral-900">
-            {project.name}
-          </h2>
-          <p className="text-sm text-neutral-500">
-            Slug:{" "}
-            <code className="rounded bg-neutral-100 px-2 py-1 text-xs">
-              {project.slug}
-            </code>
-          </p>
-        </div>
-
-        <div className="mt-6 space-y-3">
-          <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-            Business Category
-          </label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {BUSINESS_CATEGORIES.map((cat) => {
-              const selected = cat.id === selectedBusinessCategoryId;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setSelectedBusinessCategoryId(cat.id)}
-                  className={[
-                    'text-left rounded-xl border px-3 py-3 transition',
-                    selected
-                      ? 'border-emerald-400 bg-emerald-50 shadow-sm'
-                      : 'border-neutral-200 hover:border-neutral-400 hover:bg-neutral-50',
-                  ].join(' ')}
-                >
-                  <div className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                    {cat.shortLabel}
-                  </div>
-                  <div className="mt-1 text-sm font-medium text-neutral-900">
-                    {cat.label}
-                  </div>
-                </button>
-              );
-            })}
+    <div className="max-w-4xl mx-auto" dir="auto">
+      <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-[10px] font-bold text-white shadow-lg">PP</span>
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-neutral-400">PressPilot Studio</span>
           </div>
-        </div>
-
-        <div className="mt-6 space-y-3">
-          <label
-            htmlFor="studio-brief"
-            className="text-xs font-semibold uppercase tracking-wide text-neutral-500"
-          >
-            Business brief / niche / tone
-          </label>
-          <textarea
-            id="studio-brief"
-            value={brief}
-            onChange={(event) => setBrief(event.target.value)}
-            rows={5}
-            className="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 focus:border-black focus:outline-none"
-          />
-          <p className="text-xs text-neutral-500">
-            This feeds the MVP engine to pick palettes, typography, and hero
-            copy.
+          <h1 className="text-4xl font-black text-neutral-900 tracking-tight">
+            {project.name}
+          </h1>
+          <p className="text-sm font-medium text-neutral-400">
+            Project ID: <span className="font-mono">{project.id.slice(0, 8)}</span>
           </p>
         </div>
-
-        <div className="mt-6 flex flex-wrap gap-4">
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex flex-col items-end">
+            <span className="text-[10px] font-bold text-neutral-300 uppercase tracking-widest leading-none">Status</span>
+            <span className="text-xs font-black text-emerald-500 uppercase tracking-wider">{project.status}</span>
+          </div>
+          <div className="h-10 w-[1px] bg-neutral-100 hidden sm:block mx-2" />
           <button
-            type="button"
-            onClick={handleAssign}
-            disabled={assigning}
-            className="inline-flex items-center justify-center rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-neutral-900 disabled:cursor-not-allowed disabled:bg-neutral-400"
+            onClick={() => router.push('/projects')}
+            className="rounded-xl border border-neutral-200 bg-white px-5 py-2.5 text-xs font-bold text-neutral-600 hover:border-black hover:text-black transition-all shadow-sm"
           >
-            {assigning ? "Assigning to AI…" : "Assign to AI"}
-          </button>
-          <button
-            type="button"
-            onClick={handleGenerate}
-            disabled={!canGenerate}
-            className="inline-flex items-center justify-center rounded-full border border-neutral-200 px-6 py-3 text-sm font-semibold text-neutral-900 transition hover:border-neutral-900 hover:text-black disabled:cursor-not-allowed disabled:border-neutral-200 disabled:text-neutral-400"
-          >
-            {generating ? "Generating kit…" : "Generate full kit"}
+            Dashboard
           </button>
         </div>
-        <p className="mt-2 text-xs text-neutral-500">
-          {selectedVariation
-            ? `Selected variation: ${selectedVariation.preview.label}`
-            : "No variation selected yet."}
-        </p>
-
-        {generateError ? (
-          <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700">
-            {generateError}
-          </p>
-        ) : null}
       </div>
 
-      <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-neutral-900">
-            AI variations
-          </h3>
-          <span className="text-xs uppercase tracking-wide text-neutral-500">
-            Select a direction
-          </span>
-        </div>
-        {assignError ? (
-          <p className="mt-4 text-sm text-red-600">{assignError}</p>
-        ) : null}
-        {assigning ? (
-          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <div
-                key={`skeleton-${index}`}
-                className="h-44 animate-pulse rounded-2xl border border-neutral-200 bg-neutral-50"
-              />
-            ))}
-          </div>
-        ) : variationList.length ? (
-          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {variationList.map((variation) => (
-              <VariationCard
-                key={variation.id}
-                variation={variation}
-                selected={variation.id === selectedVariation?.id}
-                onSelect={() => setSelectedVariationId(variation.id)}
-              />
-            ))}
-          </div>
-        ) : (
-          <p className="mt-4 text-sm text-neutral-500">
-            Run “Assign to AI” to preview palette, hero copy, and layout ideas
-            for this project.
-          </p>
-        )}
-      </section>
+      <StepProgress steps={steps} currentStep={currentStep} />
 
-      <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-neutral-900">
-            Style & palette
-          </h3>
-          <span className="text-xs uppercase tracking-wide text-neutral-500">
-            Preview
-          </span>
-        </div>
-        {styleTokens ? (
-          <div className="mt-4 grid gap-8 lg:grid-cols-2">
-            {/* Palette Selector */}
-            <div>
-              <h4 className="text-sm font-semibold text-neutral-900 mb-3">Color Palette</h4>
-              <div className="grid grid-cols-1 gap-3">
-                {PALETTES.map((palette) => (
-                  <button
-                    key={palette.id}
-                    onClick={() => setCustomPaletteId(palette.id)}
-                    className={`flex items-center justify-between rounded-xl border p-3 transition ${customPaletteId === palette.id
-                      ? "border-emerald-400 bg-emerald-50 ring-1 ring-emerald-400"
-                      : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50"
-                      }`}
-                  >
-                    <span className="text-sm font-medium text-neutral-700">{palette.label}</span>
-                    <ColorPalettePreview paletteId={palette.id} />
-                  </button>
-                ))}
+      <div className="min-h-[400px]">
+        {/* STEP 1: CONTEXT */}
+        {currentStep === 1 && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
+              <div className="flex flex-col gap-2 mb-8">
+                <p className="text-xs font-bold uppercase tracking-widest text-neutral-400">
+                  Step 1: The Vision
+                </p>
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-black to-neutral-500 bg-clip-text text-transparent">
+                  Define your business
+                </h2>
               </div>
-            </div>
 
-            {/* Font Preview */}
-            <div>
-              <h4 className="text-sm font-semibold text-neutral-900 mb-3">Typography</h4>
-              <FontStylePreview fontPairId={customFontPairId || 'system-sans'} />
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <label className="text-sm font-bold text-neutral-900 flex items-center gap-2">
+                    <span className="flex h-5 w-5 items-center justify-center rounded bg-black text-[10px] text-white">1</span>
+                    Business Category
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {BUSINESS_CATEGORIES.map((cat) => {
+                      const selected = cat.id === selectedBusinessCategoryId;
+                      return (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => setSelectedBusinessCategoryId(cat.id)}
+                          className={`text-left rounded-2xl border p-4 transition-all duration-300 group ${selected
+                            ? 'border-black bg-black text-white shadow-lg scale-[1.02]'
+                            : 'border-neutral-100 hover:border-neutral-300 hover:bg-neutral-50'
+                            }`}
+                        >
+                          <div className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${selected ? 'text-white/60' : 'text-neutral-400'}`}>
+                            {cat.shortLabel}
+                          </div>
+                          <div className={`text-base font-bold ${selected ? 'text-white' : 'text-neutral-900 group-hover:text-black'}`}>
+                            {cat.label}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-              <div className="mt-4">
-                <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                  Font Pairing
-                </label>
-                <select
-                  value={customFontPairId || ''}
-                  onChange={(e) => setCustomFontPairId(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-black focus:outline-none"
+                <div className="space-y-4">
+                  <label htmlFor="studio-brief" className="text-sm font-bold text-neutral-900 flex items-center gap-2">
+                    <span className="flex h-5 w-5 items-center justify-center rounded bg-black text-[10px] text-white">2</span>
+                    The Brief
+                  </label>
+                  <textarea
+                    id="studio-brief"
+                    value={brief}
+                    onChange={(event) => setBrief(event.target.value)}
+                    rows={5}
+                    placeholder="Describe the personality of your business..."
+                    className="w-full rounded-2xl border border-neutral-200 bg-neutral-50/30 px-6 py-4 text-base text-neutral-900 focus:border-black focus:bg-white focus:outline-none focus:ring-4 focus:ring-black/5 transition-all"
+                  />
+                  <p className="text-xs text-neutral-400 italic">
+                    PressPilot uses this to select the perfect typography and color palettes.
+                  </p>
+                </div>
+
+                <div className="pt-2">
+                  <LogoUploader
+                    value={customLogoBase64}
+                    onChange={(val, colors) => {
+                      setCustomLogoBase64(val);
+                      if (colors) setLogoColors(colors);
+                    }}
+                  />
+                </div>
+
+                {selectedBusinessCategoryId === 'restaurant_cafe' && (
+                  <div className="pt-4">
+                    <MenuUploader menus={menus} onChange={setMenus} />
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-12 flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleAssign}
+                  disabled={assigning || !brief.trim()}
+                  className="group flex items-center gap-3 rounded-full bg-black px-10 py-5 text-base font-bold text-white transition-all hover:bg-neutral-800 hover:scale-105 disabled:bg-neutral-200 disabled:scale-100 disabled:cursor-not-allowed shadow-xl shadow-black/10"
                 >
-                  <option value="system-sans">System Sans (Clean & Modern)</option>
-                  <option value="serif-display">Serif Display (Elegant & Classic)</option>
-                  <option value="system-mono">System Mono (Tech & Code)</option>
-                </select>
+                  {assigning ? (
+                    <>
+                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+                      Assigning to AI...
+                    </>
+                  ) : (
+                    <>
+                      Continue to Variations
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </button>
+              </div>
+              {assignError && (
+                <p className="mt-4 text-sm font-medium text-red-500 bg-red-50 p-4 rounded-xl border border-red-100 text-center animate-in fade-in zoom-in duration-300">
+                  {assignError}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* STEP 2: VARIATIONS */}
+        {currentStep === 2 && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <div className="flex flex-col gap-2">
+                <p className="text-xs font-bold uppercase tracking-widest text-neutral-400">
+                  Step 2: Architecture
+                </p>
+                <h2 className="text-3xl font-bold text-neutral-900">
+                  Review your tailored Hero designs
+                </h2>
+                <div className="flex items-start gap-2 text-neutral-500 max-w-2xl mt-1">
+                  <p className="text-sm leading-relaxed">
+                    Our AI has calculated three distinct design directions based on your business brief. Each variation modifies the layout density, typography hierarchy, and color harmonization to best serve your specific goals.
+                  </p>
+                </div>
+              </div>
+
+              {logoColors.length > 0 && (
+                <div className="flex flex-col items-end gap-2">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400">Brand DNA Detected</p>
+                  <div className="flex items-center gap-1.5 p-2 bg-neutral-50 rounded-xl border border-neutral-100">
+                    {logoColors.map((c, i) => (
+                      <div key={i} className="h-5 w-5 rounded-full border border-white shadow-sm" style={{ backgroundColor: c }} />
+                    ))}
+                    <Sparkles className="w-3 h-3 text-neutral-400 ml-1" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="relative group">
+              <HeroCarousel
+                previews={variationList.map(v => ({
+                  style: v.id,
+                  name: v.id === 'variation_a' && logoColors.length > 0 ? 'Brand Vision' : v.preview.label,
+                  description: v.preview.description,
+                  imageUrl: v.preview.imageUrl || '',
+                  // If we have custom colors, use the dynamic renderer
+                  renderItem: logoColors.length > 0 ? () => renderHeroPreview(v.id, v.preview.label, v.preview.description) : undefined
+                }))}
+                onSelect={(style) => setSelectedVariationId(style as VariationId)}
+              />
+            </div>
+
+            <div className="mt-12 flex items-center justify-between border-t border-neutral-100 pt-8">
+              <button
+                onClick={() => setCurrentStep(1)}
+                className="flex items-center gap-2 text-sm font-bold text-neutral-400 hover:text-black transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Vision
+              </button>
+              <button
+                disabled={!selectedVariationId}
+                onClick={() => setCurrentStep(3)}
+                className="flex items-center gap-3 rounded-full bg-black px-10 py-5 text-base font-bold text-white transition-all hover:bg-neutral-800 hover:scale-105 disabled:bg-neutral-200 shadow-xl shadow-black/10"
+              >
+                Refine Design
+                <ArrowRight className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 3: REFINE */}
+        {currentStep === 3 && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+            <div className="flex flex-col gap-2">
+              <p className="text-xs font-bold uppercase tracking-widest text-neutral-400">
+                Step 3: Fine-Tuning
+              </p>
+              <h2 className="text-3xl font-bold text-neutral-900">
+                Polish the aesthetics
+              </h2>
+            </div>
+
+            <div className="grid gap-8 lg:grid-cols-3">
+              {/* Sidebar: Controls */}
+              <div className="lg:col-span-1 space-y-8">
+                <div className="rounded-3xl border border-neutral-100 bg-white p-6 shadow-sm space-y-6">
+                  <div className="space-y-4">
+                    <label className="text-xs font-bold uppercase tracking-widest text-neutral-400">
+                      Color Palette
+                    </label>
+                    <div className="grid grid-cols-1 gap-2">
+                      {logoColors.length > 0 && (
+                        <button
+                          onClick={() => setCustomPaletteId('brand')}
+                          className={`flex items-center justify-between rounded-xl border p-3 transition-all ${customPaletteId === 'brand'
+                            ? "border-black bg-neutral-50 ring-1 ring-black"
+                            : "border-emerald-100 bg-emerald-50/30 hover:border-emerald-200"
+                            }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <Sparkles className="w-3 h-3 text-emerald-500" />
+                            <span className="text-xs font-bold text-neutral-900">Brand Kit</span>
+                          </div>
+
+                          <div className="flex gap-2">
+                            {logoColors.map((c, i) => (
+                              <div key={i} className="relative group/swatch">
+                                <div
+                                  className="h-6 w-6 rounded-full border-2 border-white shadow-sm cursor-pointer transition-transform hover:scale-110"
+                                  style={{ backgroundColor: c }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    // Trigger via ref
+                                    colorPickerRefs.current[i]?.click();
+                                  }}
+                                />
+                                <input
+                                  ref={(el) => { colorPickerRefs.current[i] = el; }}
+                                  type="color"
+                                  value={c}
+                                  onChange={(e) => updateBrandColor(i, e.target.value)}
+                                  className="opacity-0 pointer-events-none absolute"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </button>
+                      )}
+                      {PALETTES.map((palette) => (
+                        <button
+                          key={palette.id}
+                          onClick={() => setCustomPaletteId(palette.id)}
+                          className={`flex items-center justify-between rounded-xl border p-3 transition-all ${customPaletteId === palette.id
+                            ? "border-black bg-neutral-50 ring-1 ring-black"
+                            : "border-neutral-100 hover:border-neutral-200"
+                            }`}
+                        >
+                          <span className="text-xs font-bold text-neutral-900">{palette.label}</span>
+                          <ColorPalettePreview paletteId={palette.id} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="text-xs font-bold uppercase tracking-widest text-neutral-400">
+                      Typography
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={customFontPairId || ''}
+                        onChange={(e) => setCustomFontPairId(e.target.value)}
+                        className="w-full appearance-none rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-sm font-medium focus:border-black focus:outline-none transition-all cursor-pointer hover:bg-white"
+                      >
+                        <option value="system-sans">Clean Sans</option>
+                        <option value="serif-display">Elegant Serif</option>
+                        <option value="system-mono">Modern Mono</option>
+                      </select>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500">
+                        <ArrowRight className="w-4 h-4 transform rotate-90" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="text-xs font-bold uppercase tracking-widest text-neutral-400">
+                      Hero Headline
+                    </label>
+                    <input
+                      type="text"
+                      value={customHeroTitle}
+                      onChange={(e) => setCustomHeroTitle(e.target.value)}
+                      className="w-full rounded-xl border border-neutral-100 bg-neutral-50/50 px-4 py-3 text-sm font-medium focus:border-black focus:outline-none transition-all"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Main: Live Preview (Simulation) */}
+              <div className="lg:col-span-2 space-y-6">
+                <div className="rounded-3xl border border-neutral-100 bg-white p-8 shadow-sm">
+                  <div className="flex items-center justify-between mb-8">
+                    <label className="text-xs font-bold uppercase tracking-widest text-neutral-400">
+                      Live Preview Simulation
+                    </label>
+                    <div className="flex gap-1.5">
+                      <div className="h-2 w-2 rounded-full bg-red-400" />
+                      <div className="h-2 w-2 rounded-full bg-yellow-400" />
+                      <div className="h-2 w-2 rounded-full bg-green-400" />
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-neutral-50 bg-neutral-50/20 p-12 text-center space-y-8">
+                    <div className="space-y-4">
+                      <h4 className="text-4xl font-black tracking-tight text-neutral-900 leading-tight">
+                        {customHeroTitle || project.name}
+                      </h4>
+                      <p className="text-lg text-neutral-500 max-w-lg mx-auto leading-relaxed font-medium">
+                        {heroSubtitle}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+                      {heroCtas.slice(0, 2).map((cta, index) => (
+                        <div
+                          key={`${cta.label}-${index}`}
+                          className={`rounded-full px-8 py-3 text-sm font-bold transition-all ${index === 0
+                            ? "bg-black text-white hover:scale-105"
+                            : "border-2 border-neutral-100 text-neutral-900"
+                            }`}
+                        >
+                          {cta.label}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="pt-8">
+                      <FontStylePreview fontPairId={customFontPairId || 'system-sans'} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={() => setCurrentStep(2)}
+                    className="flex items-center gap-2 text-sm font-bold text-neutral-400 hover:text-black transition-colors"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to Variations
+                  </button>
+                  <button
+                    disabled={generating}
+                    onClick={handleGenerate}
+                    className="flex items-center gap-3 rounded-full bg-black px-10 py-5 text-base font-bold text-white transition-all hover:bg-neutral-800 hover:shadow-2xl hover:scale-105 disabled:bg-neutral-200 shadow-xl shadow-black/10"
+                  >
+                    {generating ? (
+                      <>
+                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+                        Generating Theme...
+                      </>
+                    ) : (
+                      <>
+                        Generate Final Kits
+                        <Wand2 className="h-5 w-5" />
+                      </>
+                    )}
+                  </button>
+                </div>
+                {generateError && (
+                  <p className="mt-4 text-sm font-medium text-red-500 bg-red-50 p-4 rounded-xl border border-red-100 text-center">
+                    {generateError}
+                  </p>
+                )}
               </div>
             </div>
           </div>
-        ) : (
-          <p className="mt-4 text-sm text-neutral-500">
-            Run “Assign to AI” to preview palette, fonts, and density for this
-            project.
-          </p>
         )}
-      </section>
 
-      <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-neutral-900">
-            Hero preview
-          </h3>
-          {variations?.styleVariation ? (
-            <span className="text-xs uppercase tracking-wide text-neutral-500">
-              {variations.styleVariation}
-            </span>
-          ) : null}
-        </div>
+        {/* STEP 4: DELIVER */}
+        {currentStep === 4 && (
+          <div className="mx-auto max-w-2xl space-y-12 py-12 text-center animate-in fade-in slide-in-from-bottom-8 duration-700">
+            <div className="space-y-4">
+              <div className="flex justify-center">
+                {jobStatus === "completed" ? (
+                  <div className="h-24 w-24 rounded-full bg-black text-white flex items-center justify-center shadow-2xl animate-in zoom-in duration-500">
+                    <CheckCircle2 className="h-12 w-12" />
+                  </div>
+                ) : jobStatus === "failed" ? (
+                  <div className="h-24 w-24 rounded-full bg-red-600 text-white flex items-center justify-center shadow-2xl">
+                    <X className="h-12 w-12" />
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <div className="h-24 w-24 rounded-full border-4 border-neutral-100 border-t-black animate-spin" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Sparkles className="h-8 w-8 text-black animate-pulse" />
+                    </div>
+                  </div>
+                )}
+              </div>
+              <h2 className="text-4xl font-black text-neutral-900 tracking-tight">
+                {jobStatus === "completed"
+                  ? "Your Kit is Ready"
+                  : jobStatus === "failed"
+                    ? "Generation Failed"
+                    : "Building Your Assets"}
+              </h2>
+              <p className="mx-auto max-w-md text-neutral-500 font-medium">
+                {jobStatus === "completed"
+                  ? "Download your professional WordPress theme and static site bundle below."
+                  : jobStatus === "failed"
+                    ? "There was an error while generating your theme. Please try again or contact support."
+                    : "PressPilot is currently compiling your custom block theme, injecting patterns, and generating your static site."}
+              </p>
+            </div>
 
-        <div className="mt-4 mb-6">
-          <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-            Hero Title
-          </label>
-          <input
-            type="text"
-            value={customHeroTitle}
-            onChange={(e) => setCustomHeroTitle(e.target.value)}
-            className="mt-1 block w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-black focus:outline-none"
-            placeholder="Enter a catchy headline..."
-          />
-        </div>
+            <div className="flex justify-center">
+              <div className={`group relative flex flex-col items-center rounded-3xl border-2 p-8 transition-all duration-500 max-w-sm w-full ${jobStatus === "completed"
+                ? "border-black bg-white shadow-2xl hover:-translate-y-2 scale-100"
+                : "border-neutral-100 bg-neutral-50 opacity-40 scale-95"
+                }`}>
+                <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-neutral-100 group-hover:bg-black group-hover:text-white transition-colors duration-500">
+                  <Download className="h-10 w-10" />
+                </div>
+                <h3 className="mb-2 text-xl font-bold">WordPress Theme</h3>
+                <p className="mb-8 text-sm text-neutral-500 font-medium h-10 text-center">
+                  Standalone block theme (.zip) with all your custom styles.
+                </p>
+                <button
+                  disabled={jobStatus !== "completed"}
+                  onClick={() => window.open(artifacts?.themeUrl || '', "_blank")}
+                  className="w-full rounded-2xl bg-black px-6 py-4 text-sm font-black text-white transition-all hover:scale-105 active:scale-95 disabled:opacity-20 shadow-xl shadow-black/20"
+                >
+                  Download Theme
+                </button>
+              </div>
+            </div>
 
-        <div className="mt-4 rounded-2xl border border-neutral-100 bg-gradient-to-b from-neutral-50 to-white p-6 shadow-inner">
-          <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-            Preview
-          </p>
-          <h4 className="mt-2 text-2xl font-semibold text-neutral-900">
-            {customHeroTitle || project.name}
-          </h4>
-          <p className="mt-3 text-sm text-neutral-600">{heroSubtitle}</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {heroCtas.slice(0, 2).map((cta, index) => (
-              <span
-                key={`${cta.label}-${index}`}
-                className={`inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold ${index === 0
-                  ? "bg-black text-white"
-                  : "border border-neutral-300 text-neutral-700"
-                  }`}
-              >
-                {cta.label}
-              </span>
-            ))}
+            {jobStatus === "completed" && (
+              <div className="pt-12 fade-in animate-in duration-1000">
+                <button
+                  onClick={() => {
+                    setCurrentStep(1);
+                    setJobId(null);
+                    setJobStatus("pending");
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-bold text-neutral-400 hover:text-black transition-colors group"
+                >
+                  <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                  Generate Another Design
+                </button>
+              </div>
+            )}
           </div>
-        </div>
-      </section>
-
-      <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-neutral-900">Downloads</h3>
-          <span className="text-xs uppercase tracking-wide text-neutral-500">
-            theme.zip + static.zip
-          </span>
-        </div>
-        {artifacts?.themeUrl && artifacts?.staticUrl ? (
-          <div className="mt-4 flex flex-wrap gap-4">
-            <a
-              href={artifacts.themeUrl}
-              className="inline-flex items-center rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-neutral-900"
-            >
-              Download WordPress theme (.zip)
-            </a>
-            <a
-              href={artifacts.staticUrl}
-              className="inline-flex items-center rounded-full border border-neutral-200 px-6 py-3 text-sm font-semibold text-neutral-900 transition hover:border-neutral-900 hover:text-black"
-            >
-              Download static site (.zip)
-            </a>
-          </div>
-        ) : (
-          <p className="mt-4 text-sm text-neutral-500">
-            Run “Generate full kit” to unlock download links for this project’s
-            WordPress theme and static export.
-          </p>
         )}
-      </section>
+      </div>
     </div>
   );
 }
-
-

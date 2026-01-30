@@ -3,9 +3,11 @@ import Link from "next/link";
 // import { Inter, JetBrains_Mono } from "next/font/google"; // Removed to fix build timeout
 
 import HeaderAuthStatus from "@/components/HeaderAuthStatus";
+import GlobalHeader from "@/components/GlobalHeader";
 import { ThemeProvider } from "@/components/theme-provider";
 // import { ModeToggle } from "@/components/ui/mode-toggle";
 
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata = {
@@ -13,26 +15,11 @@ export const metadata = {
   description: "Structure Your Vision.",
 };
 
-/* 
-// Fonts removed to prevent Google API timeouts during build
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains",
-  display: "swap",
-});
-*/
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="light" style={{ colorScheme: 'light' }} suppressHydrationWarning>
       <body
-        className={`font-sans bg-white text-black antialiased selection:bg-black selection:text-cream`}
+        className={`font-sans bg-white text-black antialiased selection:bg-black selection:text-white`}
       >
         <ThemeProvider
           attribute="class"
@@ -41,10 +28,28 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           enableSystem={false}
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col bg-white text-black transition-colors duration-300">
+          <div className="flex min-h-screen flex-col bg-white">
+            <GlobalHeader />
             <main className="flex-1">{children}</main>
-            <footer className="py-8 text-center text-xs font-mono text-neutral-400 border-t border-black/5 dark:border-white/5 bg-cream dark:bg-black transition-colors duration-300">
-              <p>PRESSPILOT OS v2.0</p>
+            <Toaster position="top-right" richColors closeButton />
+            <footer className="border-t border-black/5 bg-gray-50/50 py-12">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+                  <div className="flex items-center gap-2 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
+                    <div className="flex h-6 w-6 items-center justify-center rounded bg-black text-white text-[10px] font-bold">PP</div>
+                    <span className="text-sm font-bold tracking-tight text-gray-900 uppercase">PressPilot OS</span>
+                  </div>
+                  <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-xs font-medium text-gray-500">
+                    <Link href="/faq" className="hover:text-black">FAQ</Link>
+                    <Link href="/docs" className="hover:text-black">Documentation</Link>
+                    <Link href="/support" className="hover:text-black">Support</Link>
+                    <Link href="/terms" className="hover:text-black">Terms</Link>
+                  </div>
+                  <p className="text-xs font-mono text-gray-400">
+                    v2.0.4-stable
+                  </p>
+                </div>
+              </div>
             </footer>
           </div>
         </ThemeProvider>
@@ -52,3 +57,4 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     </html>
   );
 }
+

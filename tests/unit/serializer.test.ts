@@ -75,21 +75,24 @@ const expectedHTML = `<!-- wp:group {"tagName":"main","layout":{"type":"constrai
 </main>
 <!-- /wp:group -->`;
 
-console.log("Running Serializer Unit Test...");
+(async () => {
+    console.log("Running Serializer Unit Test...");
 
-const actualHTML = serialize(exampleAST);
+    const actualHTML = await serialize(exampleAST);
 
-// Normalize whitespace for comparison (remove newlines for simpler check if strictly formatting differs slightly)
-// strictly, our serializer adds \n.
-// Let's print output.
+    // Normalize whitespace for comparison (remove newlines for simpler check if strictly formatting differs slightly)
+    // strictly, our serializer adds \n.
+    // Let's print output.
 
-if (actualHTML === expectedHTML) { // Requires exact match
-    console.log("✅ Serializer Test Passed: Output matches Golden Spec.");
-} else {
-    console.error("❌ Serializer Test Failed.");
-    console.log("--- ACTUAL ---");
-    console.log(actualHTML);
-    console.log("--- EXPECTED ---");
-    console.log(expectedHTML);
-    process.exit(1);
-}
+    if (actualHTML === expectedHTML) { // Requires exact match
+        console.log("✅ Serializer Test Passed: Output matches Golden Spec.");
+        process.exit(0);
+    } else {
+        console.error("❌ Serializer Test Failed.");
+        console.log("--- ACTUAL ---");
+        console.log(actualHTML);
+        console.log("--- EXPECTED ---");
+        console.log(expectedHTML);
+        process.exit(1);
+    }
+})();

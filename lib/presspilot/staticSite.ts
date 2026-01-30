@@ -41,6 +41,17 @@ export async function buildStaticSite(
 
   await fs.writeFile(path.join(assetsDir, 'styles.css'), buildStyles(variation), 'utf8');
 
+  // Handle Logo Extraction
+  if (context.visual.logo_url && context.visual.logo_url.startsWith('data:image')) {
+    const imagesDir = path.join(assetsDir, 'images');
+    await fs.mkdir(imagesDir, { recursive: true });
+
+    const logoBase64 = context.visual.logo_url.split(';base64,').pop();
+    if (logoBase64) {
+      await fs.writeFile(path.join(imagesDir, 'logo.png'), Buffer.from(logoBase64, 'base64'));
+    }
+  }
+
   const html = buildHtml(context, copy, options);
   await fs.writeFile(path.join(siteDir, 'index.html'), html, 'utf8');
 
@@ -115,32 +126,31 @@ function buildStyles(variation: PressPilotVariationManifest) {
   };
 
   return `:root {
-  --presspilot-bg: ${bg};
-  --presspilot-soft: ${soft};
-  --presspilot-foreground: ${foreground};
-  --presspilot-muted: ${muted};
-  --presspilot-border: ${border};
-  --presspilot-primary: ${primary};
-  --presspilot-accent: ${accent};
+  --wp--preset--color--base: ${bg};
+  --wp--preset--color--soft-bg: ${soft};
+  --wp--preset--color--contrast: ${foreground};
+  --wp--preset--color--muted: ${muted};
+  --wp--preset--color--border: ${border};
+  --wp--preset--color--primary: ${primary};
+  --wp--preset--color--accent: ${accent};
   --presspilot-radius: ${borderRadius};
   --presspilot-max-width: 1100px;
   --presspilot-font-heading: ${headingFont};
   --presspilot-font-body: ${bodyFont};
 
   /* Spacing */
-  --spacing-20: ${spacing[20]};
-  --spacing-30: ${spacing[30]};
-  --spacing-40: ${spacing[40]};
-  --spacing-50: ${spacing[50]};
-  --spacing-60: ${spacing[60]};
+  --wp--preset--spacing--20: ${spacing[20]};
+  --wp--preset--spacing--30: ${spacing[30]};
+  --wp--preset--spacing--40: ${spacing[40]};
+  --wp--preset--spacing--50: ${spacing[50]};
+  --wp--preset--spacing--60: ${spacing[60]};
 
   /* Typography */
-  --font-xs: ${fontSizes.xs};
-  --font-sm: ${fontSizes.sm};
-  --font-base: ${fontSizes.base};
-  --font-lg: ${fontSizes.lg};
-  --font-xl: ${fontSizes.xl};
-  --font-xxl: ${fontSizes.xxl};
+  --wp--preset--font-size--small: ${fontSizes.sm};
+  --wp--preset--font-size--medium: ${fontSizes.base};
+  --wp--preset--font-size--large: ${fontSizes.lg};
+  --wp--preset--font-size--x-large: ${fontSizes.xl};
+  --wp--preset--font-size--xx-large: ${fontSizes.xxl};
 }
 
 * {
@@ -150,9 +160,9 @@ function buildStyles(variation: PressPilotVariationManifest) {
 body {
   margin: 0;
   font-family: var(--presspilot-font-body);
-  background: var(--presspilot-bg);
-  color: var(--presspilot-foreground);
-  font-size: var(--font-base);
+  background: var(--wp--preset--color--base);
+  color: var(--wp--preset--color--contrast);
+  font-size: var(--wp--preset--font-size--medium);
   line-height: 1.6;
 }
 
@@ -161,7 +171,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.15;
   margin-bottom: 0.75em;
-  color: var(--presspilot-foreground);
+  color: var(--wp--preset--color--contrast);
 }
 
 a {
@@ -172,9 +182,8 @@ a {
 header {
   position: sticky;
   top: 0;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+  background: var(--wp--preset--color--base);
+  border-bottom: 1px solid var(--wp--preset--color--border);
   z-index: 10;
 }
 
@@ -197,11 +206,11 @@ header nav .nav-links {
 header nav a {
   font-size: 0.95rem;
   font-weight: 500;
-  color: var(--presspilot-muted);
+  color: var(--wp--preset--color--muted);
 }
 
 header nav a:hover {
-  color: var(--presspilot-foreground);
+  color: var(--wp--preset--color--contrast);
 }
 
 main {
@@ -211,47 +220,47 @@ main {
 .presspilot-section {
   max-width: var(--presspilot-max-width);
   margin: 0 auto;
-  padding: var(--spacing-60) var(--spacing-40);
+  padding: var(--wp--preset--spacing--60) var(--wp--preset--spacing--40);
 }
 
 .presspilot-section + .presspilot-section {
-  border-top: 1px solid rgba(17, 24, 39, 0.05);
+  border-top: 1px solid var(--wp--preset--color--border);
 }
 
 .section-subhead {
-  color: var(--presspilot-muted);
+  color: var(--wp--preset--color--muted);
   margin: 0 auto;
   max-width: 640px;
   text-align: center;
   line-height: 1.6;
-  font-size: var(--font-sm);
+  font-size: var(--wp--preset--font-size--small);
 }
 
 .hero-basic {
   text-align: center;
-  padding-top: var(--spacing-60);
-  padding-bottom: var(--spacing-60);
+  padding-top: var(--wp--preset--spacing--60);
+  padding-bottom: var(--wp--preset--spacing--60);
 }
 
 .hero-basic .hero-eyebrow {
-  color: var(--presspilot-muted);
-  font-size: var(--font-xs);
+  color: var(--wp--preset--color--muted);
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   margin-bottom: 1rem;
 }
 
 .hero-basic .hero-title {
-  font-size: var(--font-xxl);
+  font-size: var(--wp--preset--font-size--xx-large);
   margin: 0 0 1rem;
 }
 
 .hero-basic .hero-subtitle {
   margin: 0 auto 2rem;
   max-width: 720px;
-  color: var(--presspilot-muted);
+  color: var(--wp--preset--color--muted);
   line-height: 1.6;
-  font-size: var(--font-lg);
+  font-size: var(--wp--preset--font-size--large);
 }
 
 .hero-basic .hero-ctas {
@@ -274,9 +283,9 @@ main {
 }
 
 .btn.primary {
-  background: var(--presspilot-primary);
-  color: #fff;
-  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.25);
+  background: var(--wp--preset--color--primary);
+  color: var(--wp--preset--color--base);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 .btn.secondary {
@@ -294,54 +303,54 @@ main {
 .features-grid .feature-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--spacing-40);
-  margin-top: var(--spacing-40);
+  gap: var(--wp--preset--spacing--40);
+  margin-top: var(--wp--preset--spacing--40);
 }
 
 .features-grid .feature-card {
-  background: var(--presspilot-soft);
-  border: 1px solid var(--presspilot-border);
+  background: var(--wp--preset--color--soft-bg);
+  border: 1px solid var(--wp--preset--color--border);
   border-radius: var(--presspilot-radius);
-  padding: var(--spacing-30);
+  padding: var(--wp--preset--spacing--30);
 }
 
 .features-grid .feature-card h3 {
-  font-size: var(--font-lg);
+  font-size: var(--wp--preset--font-size--large);
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
 
 .features-grid .feature-card p {
-  font-size: var(--font-sm);
+  font-size: var(--wp--preset--font-size--small);
   margin: 0;
-  color: var(--presspilot-muted);
+  color: var(--wp--preset--color--muted);
 }
 
 .pricing-columns .pricing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--spacing-40);
-  margin-top: var(--spacing-40);
+  gap: var(--wp--preset--spacing--40);
+  margin-top: var(--wp--preset--spacing--40);
 }
 
 .pricing-card {
-  border: 1px solid var(--presspilot-border);
+  border: 1px solid var(--wp--preset--color--border);
   border-radius: var(--presspilot-radius);
-  padding: var(--spacing-40);
-  background: var(--presspilot-soft);
+  padding: var(--wp--preset--spacing--40);
+  background: var(--wp--preset--color--soft-bg);
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
 .pricing-card.highlight {
-  border-color: var(--presspilot-primary);
-  box-shadow: 0 25px 60px rgba(37, 99, 235, 0.15);
+  border-color: var(--wp--preset--color--primary);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.05);
   border-width: 2px;
 }
 
 .pricing-card .price {
-  font-size: var(--font-xl);
+  font-size: var(--wp--preset--font-size--x-large);
   margin: 0;
   font-weight: 700;
 }
@@ -349,82 +358,82 @@ main {
 .pricing-card ul {
   padding-left: 1.2rem;
   margin: 0;
-  color: var(--presspilot-muted);
-  font-size: var(--font-sm);
+  color: var(--wp--preset--color--muted);
+  font-size: var(--wp--preset--font-size--small);
 }
 
 .blog-teasers .blog-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--spacing-30);
-  margin-top: var(--spacing-40);
+  gap: var(--wp--preset--spacing--30);
+  margin-top: var(--wp--preset--spacing--40);
 }
 
 .blog-card {
-  border: 1px solid var(--presspilot-border);
+  border: 1px solid var(--wp--preset--color--border);
   border-radius: var(--presspilot-radius);
-  padding: var(--spacing-30);
-  background: var(--presspilot-soft);
+  padding: var(--wp--preset--spacing--30);
+  background: var(--wp--preset--color--soft-bg);
 }
 
 .blog-card h3 {
-  font-size: var(--font-lg);
+  font-size: var(--wp--preset--font-size--large);
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
 .blog-card p {
-  font-size: var(--font-sm);
+  font-size: var(--wp--preset--font-size--small);
   margin: 0;
-  color: var(--presspilot-muted);
+  color: var(--wp--preset--color--muted);
 }
 
 .blog-card small {
   display: block;
-  color: var(--presspilot-muted);
+  color: var(--wp--preset--color--muted);
   margin-bottom: 0.5rem;
-  font-size: var(--font-xs);
+  font-size: 0.8rem;
 }
 
 .cta-contact {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--spacing-40);
-  background: var(--presspilot-soft);
+  gap: var(--wp--preset--spacing--40);
+  background: var(--wp--preset--color--soft-bg);
   border-radius: var(--presspilot-radius);
-  border: 1px solid var(--presspilot-border);
-  padding: var(--spacing-60) var(--spacing-40);
+  border: 1px solid var(--wp--preset--color--border);
+  padding: var(--wp--preset--spacing--60) var(--wp--preset--spacing--40);
 }
 
 .cta-contact__copy h2 {
   margin-top: 0;
-  font-size: var(--font-xl);
+  font-size: var(--wp--preset--font-size--x-large);
 }
 
 .cta-contact__copy p {
-  font-size: var(--font-sm);
+  font-size: var(--wp--preset--font-size--small);
 }
 
 .cta-contact__copy ul {
   list-style: none;
   padding: 0;
   margin: 1rem 0 0;
-  font-size: var(--font-sm);
+  font-size: var(--wp--preset--font-size--small);
 }
 
 .cta-contact__card {
-  border: 1px dashed var(--presspilot-border);
+  border: 1px dashed var(--wp--preset--color--border);
   border-radius: var(--presspilot-radius);
-  padding: var(--spacing-40);
-  background: var(--presspilot-bg);
+  padding: var(--wp--preset--spacing--40);
+  background: var(--wp--preset--color--base);
 }
 
 footer {
-  border-top: 1px solid rgba(17, 24, 39, 0.08);
-  padding: 2rem 1.5rem;
+  background: var(--wp--preset--color--contrast);
+  color: var(--wp--preset--color--base);
+  padding: 4rem 1.5rem;
   text-align: center;
-  color: var(--presspilot-muted);
-  font-size: var(--font-sm);
+  font-size: var(--wp--preset--font-size--small);
 }
 `;
 }
@@ -455,6 +464,11 @@ function buildHtml(
   } else {
     menuItems = [...(businessCategory?.defaultMenu || ['Home', 'About', 'Blog', 'Contact'])];
 
+    // Ensure 'Shop' is in nav if it's ecommerce
+    if (isEcommerce && !menuItems.some(item => item.toLowerCase() === 'shop')) {
+      menuItems.push('Shop');
+    }
+
     // Ensure 'Menu' is in the nav if it's a restaurant (only for fallback path)
     if (isRestaurant && !menuItems.some(item => item.toLowerCase() === 'menu')) {
       const homeIndex = menuItems.findIndex(item => item.toLowerCase() === 'home');
@@ -484,21 +498,64 @@ function buildHtml(
   // Add menu section for restaurants (before pricing)
   if (isRestaurant) {
     sections.push(`  <section id="menu" class="presspilot-section menu-section">
-    <div style="max-width: 1100px; margin: 0 auto; padding: 4rem 1.5rem;">
-      <h2 style="text-align: center; font-size: 2rem; margin-bottom: 1rem;">Menu</h2>
-      <p style="text-align: center; color: var(--presspilot-muted); margin-bottom: 3rem;">Explore our delicious offerings.</p>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
-        <div style="border: 1px solid var(--presspilot-border); border-radius: var(--presspilot-radius); padding: 2rem; background: var(--presspilot-soft);">
-          <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Coffee & Beverages</h3>
-          <p style="color: var(--presspilot-muted); font-size: 0.95rem;">Espresso, cappuccino, and specialty drinks.</p>
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <h2 style="text-align: center; font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">The Menu</h2>
+      <p style="text-align: center; color: var(--wp--preset--color--muted); margin-bottom: 3.5rem;">Handcrafted for your delight.</p>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem;">
+        <div>
+          <h3 style="padding-bottom: 0.5rem; border-bottom: 2px solid var(--wp--preset--color--border); margin-bottom: 1.5rem;">Main Dishes</h3>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+             <div>
+                <strong style="display: block;">Classic Margherita</strong>
+                <small style="color: var(--wp--preset--color--muted);">Tomato, basil, fresh mozzarella</small>
+             </div>
+             <strong>$14</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+             <div>
+                <strong style="display: block;">Artisan Pepperoni</strong>
+                <small style="color: var(--wp--preset--color--muted);">Spicy honey, aged pepperoni</small>
+             </div>
+             <strong>$17</strong>
+          </div>
         </div>
-        <div style="border: 1px solid var(--presspilot-border); border-radius: var(--presspilot-radius); padding: 2rem; background: var(--presspilot-soft);">
-          <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Pastries & Treats</h3>
-          <p style="color: var(--presspilot-muted); font-size: 0.95rem;">Fresh baked goods and sweet treats.</p>
+        
+        <div>
+           <h3 style="padding-bottom: 0.5rem; border-bottom: 2px solid var(--wp--preset--color--border); margin-bottom: 1.5rem;">Desserts</h3>
+           <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+             <div>
+                <strong style="display: block;">House Tiramisu</strong>
+                <small style="color: var(--wp--preset--color--muted);">Espresso-soaked ladyfingers</small>
+             </div>
+             <strong>$9</strong>
+          </div>
         </div>
-        <div style="border: 1px solid var(--presspilot-border); border-radius: var(--presspilot-radius); padding: 2rem; background: var(--presspilot-soft);">
-          <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Light Meals</h3>
-          <p style="color: var(--presspilot-muted); font-size: 0.95rem;">Sandwiches, salads, and daily specials.</p>
+      </div>
+    </div>
+  </section>`);
+  }
+
+  // Add E-commerce section (Shop Grid)
+  if (isEcommerce) {
+    sections.push(`  <section id="shop" class="presspilot-section shop-section">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <h2 style="text-align: center; font-size: 2.5rem; font-weight: 800; margin-bottom: 3.5rem;">Latest Collections</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem;">
+        <div style="text-align: center;">
+          <div style="background: var(--wp--preset--color--soft-bg); aspect-ratio: 1; border-radius: var(--presspilot-radius); margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; font-size: 3rem;">👕</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Classic Essentials</h3>
+          <p style="color: var(--wp--preset--color--muted); font-weight: 600;">$45.00</p>
+        </div>
+        <div style="text-align: center;">
+          <div style="background: var(--wp--preset--color--soft-bg); aspect-ratio: 1; border-radius: var(--presspilot-radius); margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🧢</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Urban Cap</h3>
+          <p style="color: var(--wp--preset--color--muted); font-weight: 600;">$25.00</p>
+        </div>
+        <div style="text-align: center;">
+          <div style="background: var(--wp--preset--color--soft-bg); aspect-ratio: 1; border-radius: var(--presspilot-radius); margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; font-size: 3rem;">👟</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Active Trainers</h3>
+          <p style="color: var(--wp--preset--color--muted); font-weight: 600;">$89.00</p>
         </div>
       </div>
     </div>
@@ -523,7 +580,10 @@ function buildHtml(
     <!-- Generated by PressPilot · archetype: ${context.siteArchetype} -->
     <header>
       <nav>
-        <strong>${context.brand.name}</strong>
+        ${context.visual.has_logo
+      ? `<img src="./assets/images/logo.png" alt="${context.brand.name}" style="height: 40px; width: auto; display: block;" />`
+      : `<strong style="font-size: 1.25rem; letter-spacing: -0.02em;">${context.brand.name}</strong>`
+    }
         <div class="nav-links">
           ${navLinks}
         </div>

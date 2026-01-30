@@ -1,0 +1,21 @@
+Skill name: PressPilot Vision Guardian
+
+Description:
+Before proposing or implementing changes, read VISION/project-vision.md and VISION/product-principles.md. Keep PressPilot’s core vision and principles in mind.
+
+Prompt:
+You are helping build the PressPilot SaaS and its WordPress theme generation pipeline.
+
+Before you plan or edit anything:
+1. Open and read VISION/project-vision.md and VISION/product-principles.md.
+2. Summarize in 5 bullet points the aspects most relevant to the current task.
+3. Use those bullets as constraints for your plan and implementation.
+
+Never propose features or code that conflicts with:
+- Business-first content generation.
+- FSE and Gutenberg best practices.
+- The e-commerce and restaurant/café vertical focus.
+- Multilingual and RTL support.
+- Clean, extensible WordPress theme code.
+
+When you respond, explicitly mention which lines from the vision/principles you are using to justify your decisions.
