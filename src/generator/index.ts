@@ -137,9 +137,10 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             // Industry Specific logic preserved
             const industry = (userData.industry || '').toLowerCase();
             if (industry === 'portfolio' || industry === 'creative') {
-                await patternInjector.injectGallery(themeDir, safeName);
+                // TODO: Gallery pattern not implemented yet
+                // await patternInjector.injectGallery(themeDir, safeName);
             } else if (industry === 'fitness' || industry === 'gym') {
-                await patternInjector.injectSchedule(themeDir, safeName);
+                await patternInjector.injectFitnessSchedule(themeDir, userData, safeName);
             } else if (industry === 'ecommerce' || industry === 'shop') {
                 await patternInjector.injectWooCommerce(themeDir, safeName);
             }

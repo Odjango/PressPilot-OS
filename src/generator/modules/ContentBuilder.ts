@@ -14,6 +14,7 @@ export interface ContentJSON {
     slots: Record<string, string>; // Pattern search/replace pairs
     baseName: string;
     businessName: string;
+    industry: string; // Added industry field
 }
 
 export class ContentBuilder {
@@ -26,13 +27,13 @@ export class ContentBuilder {
         // 1. Map Hero Content
         const hero_headline = userData.hero_headline || 'Build your site with clicks, not code.';
         const hero_subheadline = userData.hero_subheadline || 'Easily create beautiful, fully-customizable websites.';
-        const industry = (userData.industry || 'saas').toUpperCase();
+        const industry = (userData.industry || 'saas').toLowerCase();
 
         if (personality) {
             slots[personality.patterns.hero_search_headline] = hero_headline;
             slots[personality.patterns.hero_search_sub] = hero_subheadline;
             if (personality.patterns.hero_search_pretitle) {
-                slots[personality.patterns.hero_search_pretitle] = industry;
+                slots[personality.patterns.hero_search_pretitle] = industry.toUpperCase();
             }
         }
 
@@ -47,7 +48,7 @@ export class ContentBuilder {
         const menus = userData.menus || [];
 
         // Industry-specific Page Injection
-        const vertical = (userData.industry || '').toLowerCase();
+        const vertical = industry;
 
         if (vertical === 'restaurant' || vertical === 'cafe' || vertical === 'restaurant_cafe') {
             if (!pages.find(p => p.slug === 'menu')) {
@@ -55,7 +56,7 @@ export class ContentBuilder {
             }
         } else if (vertical === 'portfolio' || vertical === 'agency' || vertical === 'creative') {
             if (!pages.find(p => p.slug === 'gallery')) {
-                pages.push({ title: 'Gallery', slug: 'gallery', template: 'universal-about' }); // Wrapper for gallery
+                pages.push({ title: 'Gallery', slug: 'gallery', template: 'universal-about' });
             }
         }
 
@@ -63,7 +64,7 @@ export class ContentBuilder {
         slots['{{BUSINESS_NAME}}'] = userData.name || 'My PressPilot Site';
         slots['{{HERO_TITLE}}'] = hero_headline;
         slots['{{HERO_TEXT}}'] = hero_subheadline;
-        slots['{{HERO_PRETITLE}}'] = industry;
+        slots['{{HERO_PRETITLE}}'] = industry.toUpperCase();
         slots['{{HERO_CTA}}'] = 'Get Started';
         slots['{{LOGO_URL}}'] = userData.logo || '';
         slots['{{SERVICES_TITLE}}'] = 'Our Services';
@@ -103,14 +104,15 @@ export class ContentBuilder {
             hero: {
                 headline: hero_headline,
                 subheadline: hero_subheadline,
-                pretitle: industry,
+                pretitle: industry.toUpperCase(),
                 images: images
             },
             pages: pages,
             menus: menus,
             slots: slots,
             baseName: baseTheme,
-            businessName: userData.name || 'My PressPilot Site'
+            businessName: userData.name || 'My PressPilot Site',
+            industry: industry // Now passing industry through
         };
     }
 }

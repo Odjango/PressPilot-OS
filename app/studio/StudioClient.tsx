@@ -790,6 +790,14 @@ export default function StudioClient({ slug }: Props) {
                         </button>
                       ))}
                     </div>
+                    {selectedBusinessCategoryId === 'ecommerce_store' && (
+                      <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                        <p className="font-medium">💡 Demo Mode</p>
+                        <p className="mt-1 text-xs text-amber-700">
+                          This creates a demo e-commerce site with placeholder products. For real transactions, install WooCommerce after activating the theme — full support is already built in.
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-4">

@@ -48,7 +48,7 @@
 
                     <!-- wp:button {"className":"is-style-secondary-button"} -->
                     <div class="wp-block-button is-style-secondary-button">
-                        class="wp-block-button__link wp-element-button">Learn More</a>
+                        <a class="wp-block-button__link wp-element-button">Learn More</a>
                     </div>
                     <!-- /wp:button -->
                 </div>

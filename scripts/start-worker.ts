@@ -1,6 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js';
-import { generateTheme } from '../src/generator';
+import { generateTheme } from '../src/generator/index';
 import { StructureValidator } from '../src/generator/validators/StructureValidator';
 import { BlockValidator } from '../src/generator/validators/BlockValidator';
 import { TokenValidator } from '../src/generator/validators/TokenValidator';

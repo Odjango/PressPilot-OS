@@ -9,11 +9,48 @@ export class ContentEngine {
     async injectContentLoader(themeDir: string, contentJson: ContentJSON): Promise<void> {
         const siteTitle = contentJson.businessName;
         const tagline = contentJson.hero.subheadline || '';
-        const logoPath = contentJson.slots['{{LOGO_URL}}'] || ''; // ContentBuilder should have mapped this
+        const logoPath = contentJson.slots['{{LOGO_URL}}'] || '';
 
         console.log(`[ContentEngine] Generating setup script for '${siteTitle}'...`);
 
-        const loaderPhp = generateContentLoader(contentJson.pages || [], siteTitle, tagline, logoPath);
+        // Ensure pages array exists (make a copy to avoid mutating original)
+        const pages = contentJson.pages ? [...contentJson.pages] : [];
+
+        // For ecommerce industry, add Shop, Cart, and Checkout pages
+        const industry = contentJson.industry || '';
+        if (industry.toLowerCase() === 'ecommerce') {
+            const hasShopPage = pages.some(p => p.slug === 'shop' || (p.title && p.title.toLowerCase() === 'shop'));
+            if (!hasShopPage) {
+                console.log(`[ContentEngine] Industry is ecommerce, adding Shop page to setup.`);
+                pages.push({
+                    title: 'Shop',
+                    slug: 'shop',
+                    template: 'universal-shop'
+                });
+            }
+
+            const hasCartPage = pages.some(p => p.slug === 'cart' || (p.title && p.title.toLowerCase() === 'cart'));
+            if (!hasCartPage) {
+                console.log(`[ContentEngine] Industry is ecommerce, adding Cart page to setup.`);
+                pages.push({
+                    title: 'Cart',
+                    slug: 'cart',
+                    template: 'universal-shop'
+                });
+            }
+
+            const hasCheckoutPage = pages.some(p => p.slug === 'checkout' || (p.title && p.title.toLowerCase() === 'checkout'));
+            if (!hasCheckoutPage) {
+                console.log(`[ContentEngine] Industry is ecommerce, adding Checkout page to setup.`);
+                pages.push({
+                    title: 'Checkout',
+                    slug: 'checkout',
+                    template: 'universal-shop'
+                });
+            }
+        }
+
+        const loaderPhp = generateContentLoader(pages, siteTitle, tagline, logoPath);
 
         const functionsPath = path.join(themeDir, 'functions.php');
         if (await fs.pathExists(functionsPath)) {
@@ -22,8 +59,6 @@ export class ContentEngine {
             let cleanLoaderPhp = loaderPhp.replace('<?php', '').trim();
 
             if (!hasNamespace) {
-                // Simplify the setup function call string for non-namespaced themes
-                // This regex handles both '. ' and '.' cases.
                 cleanLoaderPhp = cleanLoaderPhp.replace(/\$func = \( __NAMESPACE__ \? __NAMESPACE__ \. '\\\\' : '' \) \. '/g, "$func = '");
                 cleanLoaderPhp = cleanLoaderPhp.replace(/\$setup_func = \( __NAMESPACE__ \? __NAMESPACE__ \. '\\\\' : '' \) \.\s*'/g, "$setup_func = '");
                 cleanLoaderPhp = cleanLoaderPhp.replace(/__NAMESPACE__\s*\.\s*/g, '');
