@@ -118,7 +118,7 @@ ${getUniversalHomeContent(homeContent).trim()}
         const headerPath = path.join(themeDir, 'parts', 'header.html');
         await fs.ensureDir(path.dirname(headerPath));
         const finalPages = pages || userData.pages || [];
-        let headerContent = getUniversalHeaderContent(businessName, finalPages, userData.logo).trim();
+        console.log("[DEBUG] Logo path:", userData.logo ? userData.logo.substring(0, 50) + "..." : "NO LOGO"); let headerContent = getUniversalHeaderContent(businessName, finalPages, userData.logo).trim();
         headerContent = headerContent.replace(/\{THEME_SLUG\}/g, safeName);
         await fs.writeFile(headerPath, headerContent);
     }

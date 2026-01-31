@@ -68,7 +68,7 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
     },
     visualAssets: {
       has_logo: !!input?.logoBase64 || !!input?.logoPath,
-      logo_file_url: input?.logoPath, // Map path for extraction
+      logo_file_url: input?.logoBase64 || input?.logoPath, // Map path for extraction
       image_source_preference: 'mixed',
       image_keywords: [category, 'business']
     }
