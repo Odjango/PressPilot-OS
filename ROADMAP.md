@@ -43,3 +43,15 @@ PressPilot is a SaaS platform that allows non-coders to generate custom WordPres
 ## Phase 9: The "Go Live" Checklist
 - [ ] Full End-to-End Test (Payment -> Credit Add -> Generation -> Email).
 - [ ] UI Polish (Loading states, Error messages).
+## Pre-Launch Security Checklist
+
+### Git Branch Protection (GitHub Settings)
+- [ ] Require pull request reviews before merging to main
+- [ ] Require status checks to pass (TypeScript, build)
+- [ ] Prevent force pushes to main
+- [ ] Require branches to be up to date before merging
+
+### How to enable:
+1. Go to GitHub repo → Settings → Branches
+2. Add rule for "main" branch
+3. Enable required checks
