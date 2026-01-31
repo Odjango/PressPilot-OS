@@ -1,10 +1,8 @@
 /**
  * PressPilot Color Mapping Registry
  * 
- * Theme-specific color slug mappings to ensure proper contrast
- * for footers and other dark-background sections.
- * 
- * Prevents white-on-white bugs by using correct color tokens per theme.
+ * DYNAMIC color detection from theme.json palettes.
+ * Finds darkest/lightest colors automatically for guaranteed contrast.
  */
 
 export interface ThemeColors {
@@ -13,45 +11,93 @@ export interface ThemeColors {
 }
 
 /**
- * Theme-specific color mappings
- * Each theme may use different slug names for dark/light colors
+ * Calculate relative luminance of a hex color
+ * Used to determine if a color is "dark" or "light"
  */
-export const THEME_COLOR_MAP: Record<string, ThemeColors> = {
-    // Ollie: Uses "main" for dark backgrounds
-    ollie: { darkBg: 'main', lightText: 'base' },
+function getLuminance(hex: string): number {
+    const rgb = hexToRgb(hex);
+    if (!rgb) return 0.5;
+    const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
 
-    // Tove: Uses "foreground" for dark and "background" for light
-    tove: { darkBg: 'foreground', lightText: 'background' },
+function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
 
-    // Frost: Standard contrast/base naming
-    frost: { darkBg: 'contrast', lightText: 'base' },
+/**
+ * Analyze a theme's palette and find best dark/light color pair
+ */
+export function analyzeThemePalette(palette: Array<{ slug: string; color: string }>): ThemeColors {
+    if (!palette || palette.length === 0) {
+        return { darkBg: 'contrast', lightText: 'base' };
+    }
 
-    // Spectra-One: Standard contrast/base naming
-    'spectra-one': { darkBg: 'contrast', lightText: 'base' },
+    // Calculate luminance for each color
+    const analyzed = palette.map(c => ({
+        slug: c.slug,
+        color: c.color,
+        luminance: getLuminance(c.color)
+    }));
 
-    // Blockbase: Standard contrast/base naming
-    blockbase: { darkBg: 'contrast', lightText: 'base' },
+    // Sort by luminance (darkest first)
+    analyzed.sort((a, b) => a.luminance - b.luminance);
 
-    // Twenty Twenty-Four: Standard contrast/base naming
-    twentytwentyfour: { darkBg: 'contrast', lightText: 'base' },
+    // Darkest color for backgrounds
+    const darkest = analyzed[0];
+    // Lightest color for text
+    const lightest = analyzed[analyzed.length - 1];
+
+    // Ensure good contrast (luminance difference > 0.5)
+    if (lightest.luminance - darkest.luminance < 0.4) {
+        // Fallback to safe defaults if palette lacks contrast
+        return { darkBg: 'contrast', lightText: 'base' };
+    }
+
+    return {
+        darkBg: darkest.slug,
+        lightText: lightest.slug
+    };
+}
+
+/**
+ * Theme-specific OVERRIDES only when auto-detection fails
+ * These are manually verified fallbacks
+ */
+const THEME_OVERRIDES: Record<string, ThemeColors> = {
+    // Only add overrides if auto-detection produces bad results
 };
 
 /**
- * Get the correct footer colors for a given base theme
- * @param baseName - The base theme name (e.g., 'ollie', 'tove', 'frost')
- * @returns ThemeColors object with correct dark background and light text slugs
+ * Get colors for a theme - tries auto-detection first, then overrides, then defaults
  */
-export function getFooterColors(baseName: string): ThemeColors {
-    // Normalize the base name (lowercase, handle variations)
+export function getFooterColors(baseName: string, palette?: Array<{ slug: string; color: string }>): ThemeColors {
     const normalizedName = baseName.toLowerCase().replace(/[^a-z0-9-]/g, '');
-
-    // Look up theme-specific colors, fallback to TT4 defaults
-    return THEME_COLOR_MAP[normalizedName] || { darkBg: 'contrast', lightText: 'base' };
+    
+    // If palette provided, analyze it dynamically
+    if (palette && palette.length > 0) {
+        return analyzeThemePalette(palette);
+    }
+    
+    // Check for manual overrides
+    if (THEME_OVERRIDES[normalizedName]) {
+        return THEME_OVERRIDES[normalizedName];
+    }
+    
+    // Safe defaults
+    return { darkBg: 'contrast', lightText: 'base' };
 }
 
 /**
  * Validate that a color slug exists in theme.json palette
- * This can be used by the validator to catch missing color errors
  */
 export function validateColorSlug(slug: string, palette: Array<{ slug: string }>): boolean {
     return palette.some(color => color.slug === slug);
