@@ -1,4 +1,6 @@
 
+import { validateEnv } from "../lib/env-check";
+validateEnv();
 import { createClient } from '@supabase/supabase-js';
 import { generateTheme } from '../src/generator/index';
 import { StructureValidator } from '../src/generator/validators/StructureValidator';
