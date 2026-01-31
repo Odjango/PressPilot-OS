@@ -145,3 +145,6 @@ generated-themes/
 themes/*.zip
 output/
 *.zip
+
+# Sentry Config File
+.env.sentry-build-plugin
