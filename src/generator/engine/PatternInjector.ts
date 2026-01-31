@@ -5,6 +5,7 @@ import { UNIVERSAL_PATTERNS } from '../config/PatternRegistry';
 import { getUniversalBlogContent, getUniversalFooterContent, getUniversalHeaderContent, getArchiveContent, getSearchContent, getUniversalHomeContent } from '../patterns';
 import { generateMenuPattern } from '../patterns/restaurant-menu';
 import { getFooterColors } from '../patterns/color-mapping';
+import { getThemePalette } from '../utils/theme-palette';
 import { getModernImageUrl } from '../utils/ImageProvider';
 import { ContentJSON } from '../modules/ContentBuilder';
 
@@ -146,7 +147,8 @@ ${menuPatternContent}`;
 
             // Create a "page-menu.html" template that uses this pattern
             // Premium Layout: Dark Header + Content
-            const colors = getFooterColors(userData.baseName || 'twentytwentyfour');
+            const palette = await getThemePalette(themeDir);
+            const colors = getFooterColors(userData.baseName || "twentytwentyfour", palette);
             const menuPageTemplate = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"${colors.darkBg}","textColor":"${colors.lightText}","layout":{"type":"constrained"}} -->
@@ -174,7 +176,7 @@ ${menuPatternContent}`;
     async injectFitnessSchedule(themeDir: string, userData: GeneratorData, safeName: string): Promise<void> {
         console.log(`[PatternMatcher] Injecting Fitness Schedule for '${safeName}'...`);
 
-        const colors = getFooterColors(userData.baseName || 'twentytwentyfour');
+        const palette2 = await getThemePalette(themeDir); const colors = getFooterColors(userData.baseName || 'twentytwentyfour', palette2);
 
         const schedulePatternHtml = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
