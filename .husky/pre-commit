@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# TypeScript check
+echo "📝 Checking TypeScript..."
+npx tsc --noEmit --skipLibCheck || {
+    echo "❌ TypeScript errors found. Fix them before committing."
+    exit 1
+}
+
+echo "✅ All checks passed!"

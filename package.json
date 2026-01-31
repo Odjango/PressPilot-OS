@@ -14,7 +14,8 @@
     "theme:build": "npx tsx scripts/validateGenerator.ts golden-spec && npx tsx scripts/buildWpTheme.ts",
     "validate-theme": "node validator/presspilot-validator.js",
     "test:themes": "node scripts/generate-and-validate-test-themes.js",
-    "generate": "tsx src/generator/index.ts"
+    "generate": "tsx src/generator/index.ts",
+    "prepare": "husky"
   },
   "bin": {
     "presspilot-validate": "validator/presspilot-validator.js"
@@ -63,7 +64,9 @@
     "autoprefixer": "^10.4.22",
     "eslint": "^9.0.0",
     "eslint-config-next": "^16.1.1",
+    "husky": "^9.1.7",
     "jsdom-global": "^3.0.2",
+    "lint-staged": "^16.2.7",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.17",
     "ts-node": "^10.9.2",
