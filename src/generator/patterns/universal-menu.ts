@@ -1,17 +1,15 @@
 import { PageContent } from '../types';
 
 export const getUniversalMenuContent = (content?: PageContent) => {
-    const menus = content?.menus || [
-        {
-            title: 'Our Menu',
-            items: [
-                { name: 'Margherita Pizza', description: 'Tomato, Mozzarella, Basil', price: '$14.00' },
-                { name: 'Pepperoni Feast', description: 'Tomato, Mozzarella, Pepperoni', price: '$16.00' },
-                { name: 'Vegetarian', description: 'Peppers, Mushrooms, Onions, Olives', price: '$15.00' },
-                { name: 'Tiramisu', description: 'Classic Italian Dessert', price: '$8.00' }
-            ]
-        }
-    ];
+    const menus = (content?.menus && content.menus.length > 0) ? content.menus : [{
+        title: 'Our Menu',
+        items: [
+            { name: 'Margherita Pizza', description: 'Tomato, Mozzarella, Basil', price: '$14.00' },
+            { name: 'Pepperoni Feast', description: 'Tomato, Mozzarella, Pepperoni', price: '$16.00' },
+            { name: 'Vegetarian', description: 'Peppers, Mushrooms, Onions, Olives', price: '$15.00' },
+            { name: 'Tiramisu', description: 'Classic Italian Dessert', price: '$8.00' }
+        ]
+    }];
 
     const menuBlocks = menus.map(menu => {
         const items = menu.items || [];
@@ -39,10 +37,6 @@ export const getUniversalMenuContent = (content?: PageContent) => {
         `;
 
         return `
-            <!-- wp:heading {"textAlign":"center","level":2,"style":{"spacing":{"margin":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|30"}}}} -->
-            <h2 class="wp-block-heading has-text-align-center" style="margin-top:var(--wp--preset--spacing--50);margin-bottom:var(--wp--preset--spacing--30)">${menu.title}</h2>
-            <!-- /wp:heading -->
-
             <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|50"}}}} -->
             <div class="wp-block-columns alignwide">
                 <!-- wp:column -->

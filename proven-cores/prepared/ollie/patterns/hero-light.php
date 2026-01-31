@@ -37,7 +37,7 @@
                 <!-- /wp:group -->
 
                 <!-- wp:paragraph {"align":"center","textColor":"secondary"} -->
-                <p class="has-text-align-center has-secondary-color has-text-color">Easily create beautiful, fully-customizable websites.</p>
+                <p class="has-text-align-center has-secondary-color has-text-color">{{HERO_TEXT}}</p>
                 <!-- /wp:paragraph -->
 
                 <!-- wp:buttons {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"flex","justifyContent":"center"}} -->
@@ -47,8 +47,8 @@
                     <!-- /wp:button -->
 
                     <!-- wp:button {"className":"is-style-secondary-button"} -->
-                    <div class="wp-block-button is-style-secondary-button"><a
-                            class="wp-block-button__link wp-element-button">Learn More</a>
+                    <div class="wp-block-button is-style-secondary-button">
+                        class="wp-block-button__link wp-element-button">Learn More</a>
                     </div>
                     <!-- /wp:button -->
                 </div>
