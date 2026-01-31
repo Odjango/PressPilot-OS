@@ -1,6 +1,6 @@
 import { getFooterColors } from './color-mapping';
 
-export const getUniversalFooterContent = (businessName: string, baseTheme: string = 'twentytwentyfour', pages?: Array<{title: string, slug: string}>) => {
+export const getUniversalFooterContent = (businessName: string, baseTheme: string = 'twentytwentyfour', pages?: Array<{title: string, slug: string}>, logoPath?: string) => {
     const year = new Date().getFullYear();
     const colors = getFooterColors(baseTheme);
 
@@ -15,6 +15,13 @@ export const getUniversalFooterContent = (businessName: string, baseTheme: strin
         .map(p => `<!-- wp:navigation-link {"label":"${p.title}","url":"${p.slug.startsWith('/') ? p.slug : '/' + p.slug}","style":{"typography":{"textDecoration":"underline"}}} /-->`)
         .join('\n                    ');
 
+    // Use actual logo image if provided
+    const logoBlock = logoPath 
+        ? `<!-- wp:image {"sizeSlug":"medium","linkDestination":"custom","className":"site-logo"} -->
+<figure class="wp-block-image size-medium site-logo"><a href="/"><img src="${logoPath}" alt="${businessName} logo" style="width:80px;height:auto;"/></a></figure>
+<!-- /wp:image -->`
+        : '';
+
     return `
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|50"}}},"backgroundColor":"${colors.lightText}","textColor":"${colors.darkBg}","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull has-${colors.darkBg}-color has-${colors.lightText}-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--50)">
@@ -26,7 +33,7 @@ export const getUniversalFooterContent = (businessName: string, baseTheme: strin
         <div class="wp-block-column" style="flex-basis:33%">
             <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"top"}} -->
             <div class="wp-block-group">
-                <!-- wp:site-logo {"width":80} /-->
+                ${logoBlock}
                 <!-- wp:group {"layout":{"type":"flex","orientation":"vertical","justifyContent":"left"}} -->
                 <div class="wp-block-group">
                     <!-- wp:site-title {"style":{"typography":{"fontStyle":"normal","fontWeight":"700","fontSize":"1.5rem"}}} /-->
