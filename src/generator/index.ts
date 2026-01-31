@@ -89,7 +89,7 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             const logoPath = path.join(themeDir, 'assets', 'images', 'logo.png');
             await fs.ensureDir(path.dirname(logoPath));
             await fs.writeFile(logoPath, Buffer.from(logoBase64!, 'base64'));
-            userData.logo = `assets/images/logo.png`;
+            // Logo file saved, base64 preserved in userData.logo for HTML templates
         }
 
         // Apply Content
