@@ -111,7 +111,7 @@ ${getUniversalHomeContent(homeContent).trim()}
 
         const footerPath = path.join(themeDir, 'parts', 'footer.html');
         await fs.ensureDir(path.dirname(footerPath));
-        let footerContent = getUniversalFooterContent(businessName, baseTheme).trim();
+        let footerContent = getUniversalFooterContent(businessName, baseTheme, pages || userData.pages || [], userData.logo).trim();
         footerContent = footerContent.replace(/\{THEME_SLUG\}/g, safeName);
         await fs.writeFile(footerPath, footerContent);
 
