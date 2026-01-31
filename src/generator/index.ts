@@ -1,4 +1,3 @@
-
 import fs from 'fs-extra';
 import path from 'path';
 import archiver from 'archiver';
@@ -189,8 +188,9 @@ if (require.main === module) {
         const dataArg = args.find(arg => arg.startsWith('--data='));
         const baseArg = args.find(arg => arg.startsWith('--base='));
         const modeArg = args.find(arg => arg.startsWith('--mode='));
+        const slugArg = args.find(arg => arg.startsWith('--slug='));
 
-        let base: BaseTheme = 'ollie';
+        let base: BaseTheme | undefined = undefined;
         if (baseArg) base = baseArg.split('=')[1].toLowerCase() as BaseTheme;
 
         let mode: GeneratorMode = 'standard';
@@ -206,8 +206,10 @@ if (require.main === module) {
             }
         }
 
+        const slug = slugArg ? slugArg.split('=')[1] : undefined;
+
         try {
-            const result = await generateTheme({ base, mode, data });
+            const result = await generateTheme({ base, mode, data, slug });
             console.log(JSON.stringify(result));
         } catch (e) {
             process.exit(1);
