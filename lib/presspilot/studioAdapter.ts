@@ -4,6 +4,28 @@ import {
   PressPilotSaaSInputV2,
   SupportedLanguageCode
 } from '@/types/presspilot';
+import type { TT4PaletteId, TT4FontProfile, TT4Mood } from '@/lib/theme/palettes';
+
+/**
+ * Brand Kit slot names for user color overrides
+ * Maps to backend BrandKitSlot type
+ */
+export type BrandKitSlot =
+  | 'primary'
+  | 'accent'
+  | 'background'
+  | 'surface'
+  | 'text'
+  | 'heading'
+  | 'muted'
+  | 'border'
+  | 'cta-bg'
+  | 'cta-text';
+
+export interface BrandKitEdit {
+  slot: BrandKitSlot;
+  hex: string;
+}
 
 export interface StudioFormInput {
   businessName?: string;
@@ -22,6 +44,34 @@ export interface StudioFormInput {
     secondary?: string;
     accent?: string;
   };
+
+  // ========================================================================
+  // TT4-Aligned Studio UI Inputs
+  // ========================================================================
+
+  /**
+   * Selected palette preset ID (TT4-aligned)
+   * Options: 'brand-kit' | 'saas-bright' | 'local-biz-soft' | 'restaurant-soft' | 'ecommerce-bold'
+   */
+  selectedPaletteId?: TT4PaletteId;
+
+  /**
+   * User-edited brand kit overrides
+   * Allows fine-tuning specific color slots after palette selection
+   */
+  userEditedBrandKit?: BrandKitEdit[];
+
+  /**
+   * Font profile selection (TT4-aligned)
+   * Options: 'elegant' | 'modern' | 'bold' | 'friendly'
+   */
+  fontProfile?: TT4FontProfile;
+
+  /**
+   * Mood/style variation selection
+   * Options: 'warm' | 'fresh' | 'minimal' | 'dark'
+   */
+  mood?: TT4Mood;
 }
 
 export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPilotSaaSInput {
@@ -64,7 +114,12 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
         primary: input.palette.primary,
         secondary: input.palette.secondary,
         accent: input.palette.accent
-      } : undefined
+      } : undefined,
+      // TT4-aligned design system inputs
+      selectedPaletteId: input?.selectedPaletteId,
+      userEditedBrandKit: input?.userEditedBrandKit,
+      fontProfile: input?.fontProfile,
+      mood: input?.mood
     },
     visualAssets: {
       has_logo: !!input?.logoBase64 || !!input?.logoPath,

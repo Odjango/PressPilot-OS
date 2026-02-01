@@ -14,7 +14,7 @@ import VariationCard from "./VariationCard";
 import { HeroCarousel } from "@/src/components/HeroCarousel";
 import ColorPalettePreview from "./components/ColorPalettePreview";
 import FontStylePreview from "./components/FontStylePreview";
-import { PALETTES } from "@/lib/theme/palettes";
+import { PALETTES, MOOD_OPTIONS, FONT_PROFILE_OPTIONS, type TT4Mood, type TT4FontProfile, type TT4PaletteId } from "@/lib/theme/palettes";
 import MenuUploader from "./components/MenuUploader";
 import LogoUploader from "./components/LogoUploader";
 import { RestaurantMenu } from "@/src/generator/types";
@@ -75,6 +75,10 @@ export default function StudioClient({ slug }: Props) {
   const [customFontPairId, setCustomFontPairId] = useState<string | null>(null);
   const [customLogoBase64, setCustomLogoBase64] = useState<string>("");
   const [logoColors, setLogoColors] = useState<string[]>([]);
+
+  // TT4-Aligned Design System State
+  const [selectedMood, setSelectedMood] = useState<TT4Mood>('minimal');
+  const [selectedFontProfile, setSelectedFontProfile] = useState<TT4FontProfile>('modern');
 
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
@@ -304,6 +308,20 @@ export default function StudioClient({ slug }: Props) {
   }, [selectedVariation, logoColors.length]);
 
   const studioInput = useCallback((): StudioFormInput => {
+    // Map UI palette selection to TT4 palette ID
+    const selectedPaletteId: TT4PaletteId | undefined = customPaletteId === 'brand'
+      ? 'brand-kit'
+      : (customPaletteId as TT4PaletteId) || undefined;
+
+    // Build userEditedBrandKit from logoColors if using brand-kit
+    const userEditedBrandKit = customPaletteId === 'brand' && logoColors.length > 0
+      ? [
+        { slot: 'primary' as const, hex: logoColors[0] },
+        { slot: 'accent' as const, hex: logoColors[2] || logoColors[1] },
+        { slot: 'background' as const, hex: '#ffffff' }
+      ]
+      : undefined;
+
     return {
       businessName: project?.name ?? '',
       businessDescription: brief,
@@ -319,9 +337,15 @@ export default function StudioClient({ slug }: Props) {
         secondary: logoColors[1],
         accent: logoColors[2]
       } : undefined,
-      menus: menus.length > 0 ? menus : undefined
+      menus: menus.length > 0 ? menus : undefined,
+
+      // TT4-Aligned Design System Fields
+      selectedPaletteId,
+      userEditedBrandKit,
+      fontProfile: selectedFontProfile,
+      mood: selectedMood
     };
-  }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId, customLogoBase64, logoColors, menus]);
+  }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId, customLogoBase64, logoColors, menus, selectedBusinessCategoryId, selectedFontProfile, selectedMood]);
 
 
   const handleAssign = useCallback(async () => {
@@ -804,20 +828,52 @@ export default function StudioClient({ slug }: Props) {
                     <label className="text-xs font-bold uppercase tracking-widest text-neutral-400">
                       Typography
                     </label>
-                    <div className="relative">
-                      <select
-                        value={customFontPairId || ''}
-                        onChange={(e) => setCustomFontPairId(e.target.value)}
-                        className="w-full appearance-none rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 text-sm font-medium focus:border-black focus:outline-none transition-all cursor-pointer hover:bg-white"
-                      >
-                        <option value="system-sans">Clean Sans</option>
-                        <option value="serif-display">Elegant Serif</option>
-                        <option value="system-mono">Modern Mono</option>
-                      </select>
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500">
-                        <ArrowRight className="w-4 h-4 transform rotate-90" />
-                      </div>
+                    <div className="grid grid-cols-1 gap-2">
+                      {FONT_PROFILE_OPTIONS.map((profile) => (
+                        <button
+                          key={profile.id}
+                          onClick={() => {
+                            setSelectedFontProfile(profile.id);
+                            setCustomFontPairId(profile.id);
+                          }}
+                          className={`flex items-center justify-between rounded-xl border p-3 transition-all ${selectedFontProfile === profile.id
+                            ? "border-black bg-neutral-50 ring-1 ring-black"
+                            : "border-neutral-100 hover:border-neutral-200"
+                            }`}
+                        >
+                          <div className="text-left">
+                            <span className="text-xs font-bold text-neutral-900 block">{profile.label}</span>
+                            <span className="text-[10px] text-neutral-400">{profile.description}</span>
+                          </div>
+                          <span className="text-[10px] font-mono text-neutral-300">{profile.headingFont}</span>
+                        </button>
+                      ))}
                     </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="text-xs font-bold uppercase tracking-widest text-neutral-400">
+                      Default Mood
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {MOOD_OPTIONS.map((mood) => (
+                        <button
+                          key={mood.id}
+                          onClick={() => setSelectedMood(mood.id)}
+                          className={`flex flex-col items-center rounded-xl border p-3 transition-all ${selectedMood === mood.id
+                            ? "border-black bg-neutral-50 ring-1 ring-black"
+                            : "border-neutral-100 hover:border-neutral-200"
+                            }`}
+                        >
+                          <span className="text-lg mb-1">{mood.icon}</span>
+                          <span className="text-xs font-bold text-neutral-900">{mood.label}</span>
+                          <span className="text-[10px] text-neutral-400 text-center">{mood.description}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-neutral-400 italic">
+                      All 4 moods ship with your theme. This sets the default.
+                    </p>
                   </div>
 
                   <div className="space-y-4">

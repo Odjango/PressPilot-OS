@@ -12,6 +12,7 @@ import { PhpEscaper } from './utils/PhpEscaper';
 import { ThemeSelector } from './modules/ThemeSelector';
 import { ContentBuilder } from './modules/ContentBuilder';
 import { StyleBuilder } from './modules/StyleBuilder';
+import { VariationBuilder } from './modules/VariationBuilder';
 
 /**
  * PressPilot Generator Orchestrator
@@ -81,6 +82,10 @@ export async function generateTheme(options: GeneratorOptions = {}) {
         // Apply Styles
         await styleEngine.applyStyles(themeDir, styleJson);
         await styleEngine.updateMetadata(themeDir, themeName, baseName, mode);
+
+        // Generate Style Variations
+        const variations = VariationBuilder.generateVariations(userData.mood);
+        await VariationBuilder.writeVariations(themeDir, variations, userData.mood);
 
         // Handle Logo
         if (userData.logo && userData.logo.startsWith('data:image')) {

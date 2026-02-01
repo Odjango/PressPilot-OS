@@ -80,6 +80,11 @@ export interface PressPilotSaaSInput {
     layout_density: 'cozy' | 'balanced' | 'spacious';
     corner_style: 'rounded' | 'mixed' | 'sharp';
     primary_ctas?: CTAItem[];
+    // TT4-Aligned Design System Inputs
+    selectedPaletteId?: 'brand-kit' | 'saas-bright' | 'local-biz-soft' | 'restaurant-soft' | 'ecommerce-bold';
+    userEditedBrandKit?: Array<{ slot: string; hex: string }>;
+    fontProfile?: 'elegant' | 'modern' | 'bold' | 'friendly';
+    mood?: 'warm' | 'fresh' | 'minimal' | 'dark';
   };
   modes: {
     business_category: BusinessCategory;

@@ -120,5 +120,29 @@ export function transformSaaSInputToGeneratorData(input: PressPilotSaaSInput): G
         generatorData.logo = input.visualAssets.logo_file_url;
     }
 
+    // ========================================================================
+    // TT4-Aligned Design System Inputs
+    // ========================================================================
+
+    // Pass selectedPaletteId (brand-kit, saas-bright, local-biz-soft, restaurant-soft, ecommerce-bold)
+    if (input.visualControls?.selectedPaletteId) {
+        generatorData.selectedPaletteId = input.visualControls.selectedPaletteId as any;
+    }
+
+    // Pass userEditedBrandKit (array of {slot, hex} overrides)
+    if (input.visualControls?.userEditedBrandKit) {
+        generatorData.userEditedBrandKit = input.visualControls.userEditedBrandKit as any;
+    }
+
+    // Pass fontProfile (elegant, modern, bold, friendly)
+    if (input.visualControls?.fontProfile) {
+        generatorData.fontProfile = input.visualControls.fontProfile as any;
+    }
+
+    // Pass mood (warm, fresh, minimal, dark)
+    if (input.visualControls?.mood) {
+        generatorData.mood = input.visualControls.mood as any;
+    }
+
     return generatorData;
 }

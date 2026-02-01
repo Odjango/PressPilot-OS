@@ -10,22 +10,117 @@ export class StyleEngine {
         if (await fs.pathExists(themeJsonPath)) {
             const themeJson = await fs.readJson(themeJsonPath);
 
-            // 1. Apply Palette
-            if (styleJson.palette.length > 0) {
+            // Ensure settings object structure exists
+            if (!themeJson.settings) themeJson.settings = {};
+            if (!themeJson.settings.color) themeJson.settings.color = {};
+            if (!themeJson.settings.spacing) themeJson.settings.spacing = {};
+            if (!themeJson.settings.shadow) themeJson.settings.shadow = {};
+            if (!themeJson.settings.typography) themeJson.settings.typography = {};
+
+            // ================================================================
+            // 1. Apply Color Palette
+            // ================================================================
+            if (styleJson.palette && styleJson.palette.length > 0) {
                 themeJson.settings.color.palette = styleJson.palette;
+                console.log(`[StyleEngine] Applied ${styleJson.palette.length} color tokens.`);
             }
 
-            // 2. Apply Custom Styles
-            if (styleJson.styles) {
-                themeJson.styles = {
-                    ...themeJson.styles,
-                    ...styleJson.styles
-                };
+            // ================================================================
+            // 2. Apply Gradients
+            // ================================================================
+            if (styleJson.gradients && styleJson.gradients.length > 0) {
+                themeJson.settings.color.gradients = styleJson.gradients;
+                console.log(`[StyleEngine] Applied ${styleJson.gradients.length} gradient presets.`);
             }
+
+            // ================================================================
+            // 3. Apply Spacing Scale
+            // ================================================================
+            if (styleJson.spacingSizes && styleJson.spacingSizes.length > 0) {
+                themeJson.settings.spacing.spacingSizes = styleJson.spacingSizes;
+                // Ensure spacing is enabled
+                themeJson.settings.spacing.padding = true;
+                themeJson.settings.spacing.margin = true;
+                themeJson.settings.spacing.blockGap = true;
+                console.log(`[StyleEngine] Applied ${styleJson.spacingSizes.length}-step spacing scale.`);
+            }
+
+            // ================================================================
+            // 4. Apply Shadow Presets
+            // ================================================================
+            if (styleJson.shadows && styleJson.shadows.length > 0) {
+                themeJson.settings.shadow.presets = styleJson.shadows;
+                // Enable custom shadows
+                themeJson.settings.shadow.defaultPresets = true;
+                console.log(`[StyleEngine] Applied ${styleJson.shadows.length} shadow presets.`);
+            }
+
+            // ================================================================
+            // 5. Apply Font Size Scale
+            // ================================================================
+            if (styleJson.fontSizes && styleJson.fontSizes.length > 0) {
+                themeJson.settings.typography.fontSizes = styleJson.fontSizes;
+                // Enable fluid typography
+                themeJson.settings.typography.fluid = true;
+                console.log(`[StyleEngine] Applied ${styleJson.fontSizes.length}-step font size scale.`);
+            }
+
+            // ================================================================
+            // 6. Apply Custom Styles (elements, blocks, typography)
+            // ================================================================
+            if (styleJson.styles) {
+                // Deep merge styles to preserve existing base theme styles
+                themeJson.styles = this.deepMerge(themeJson.styles || {}, styleJson.styles);
+                console.log(`[StyleEngine] Applied element and block styles.`);
+            }
+
+            // ================================================================
+            // 7. Ensure Layout Settings
+            // ================================================================
+            if (!themeJson.settings.layout) {
+                themeJson.settings.layout = {};
+            }
+            // Set default layout widths if not already set
+            if (!themeJson.settings.layout.contentSize) {
+                themeJson.settings.layout.contentSize = '800px';
+            }
+            if (!themeJson.settings.layout.wideSize) {
+                themeJson.settings.layout.wideSize = '1200px';
+            }
+
+            // ================================================================
+            // 8. Enable Appearance Tools
+            // ================================================================
+            themeJson.settings.appearanceTools = true;
 
             await fs.writeJson(themeJsonPath, themeJson, { spaces: 4 });
-            console.log(`[StyleEngine] Applied style JSON to theme.json.`);
+            console.log(`[StyleEngine] Applied full design system to theme.json.`);
         }
+    }
+
+    /**
+     * Deep merge two objects, with source values overwriting target values
+     */
+    private deepMerge(target: any, source: any): any {
+        const output = { ...target };
+
+        for (const key in source) {
+            if (source.hasOwnProperty(key)) {
+                if (
+                    source[key] &&
+                    typeof source[key] === 'object' &&
+                    !Array.isArray(source[key])
+                ) {
+                    // Recursively merge nested objects
+                    output[key] = this.deepMerge(target[key] || {}, source[key]);
+                } else {
+                    // Direct assignment for primitives and arrays
+                    output[key] = source[key];
+                }
+            }
+        }
+
+        return output;
     }
 
     async updateMetadata(themeDir: string, themeName: string, baseName: string, mode: string): Promise<void> {
