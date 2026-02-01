@@ -81,6 +81,13 @@ export class PatternInjector {
                     'class="wp-block-cover__background$1$2"'
                 );
 
+                // Fix core/cover element order: WordPress expects <img> BEFORE <span>
+                // Pattern has <span>...<img>, but Gutenberg save outputs <img>...<span>
+                content = content.replace(
+                    /(<span[^>]*class="wp-block-cover__background[^"]*"[^>]*><\/span>)\s*(<img[^>]*class="wp-block-cover__image-background[^"]*"[^>]*\/>)/g,
+                    '$2\n    $1'
+                );
+
                 // Skip CTA patterns from global replacements to preserve Buttons/Button block grammar
                 // Global string replacements can corrupt block markup, causing "Attempt recovery" error
                 if (slug.includes('cta-') || slug.includes('cta/') || slug.includes('/cta')) {
@@ -151,10 +158,18 @@ ${templateContent}
                 hero_sub: userData.hero_subheadline
             };
 
+            let homeMarkup = getUniversalHomeContent(homeContent).trim();
+
+            // Normalize cover block element order (img before span) for Gutenberg compatibility
+            homeMarkup = homeMarkup.replace(
+                /(<span[^>]*class="wp-block-cover__background[^"]*"[^>]*><\/span>)\s*(<img[^>]*class="wp-block-cover__image-background[^"]*"[^>]*\/>)/g,
+                '$2\n    $1'
+            );
+
             const fullContent = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 <!-- wp:group {"tagName":"main","layout":{"type":"constrained","contentSize":"1000px","wideSize":"1200px"},"align":"full"} -->
 <main class="wp-block-group alignfull">
-${getUniversalHomeContent(homeContent).trim()}
+${homeMarkup}
 </main>
 <!-- /wp:group -->
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;

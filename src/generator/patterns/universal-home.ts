@@ -6,8 +6,8 @@ export const getUniversalHomeContent = (content?: PageContent) => {
 
     return `<!-- wp:cover {"url":"https://s.w.org/images/core/5.3/MtBlanc1.jpg","dimRatio":60,"overlayColor":"black","align":"full","layout":{"type":"constrained"}} -->
 <div class="wp-block-cover alignfull">
-    <span aria-hidden="true" class="wp-block-cover__background has-black-background-color has-background-dim"></span>
     <img class="wp-block-cover__image-background" src="https://s.w.org/images/core/5.3/MtBlanc1.jpg" alt="" data-object-fit="cover"/>
+    <span aria-hidden="true" class="wp-block-cover__background has-black-background-color has-background-dim"></span>
     <div class="wp-block-cover__inner-container">
         <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"4rem"}}} -->
         <h1 class="wp-block-heading has-text-align-center" style="font-size:4rem">${title}</h1>
