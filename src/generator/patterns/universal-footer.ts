@@ -17,9 +17,9 @@ export const getUniversalFooterContent = (businessName: string, baseTheme: strin
 
     // Use actual logo image if provided
     const logoBlock = logoPath 
-        ? `<!-- wp:image {"sizeSlug":"medium","linkDestination":"custom","className":"site-logo"} -->
-<figure class="wp-block-image size-medium site-logo"><a href="/"><img src="${logoPath}" alt="${businessName} logo" style="width:80px;height:auto;"/></a></figure>
-<!-- /wp:image -->`
+        ? `<!-- wp:html -->
+<a href="/" class="site-logo-link"><img src="${logoPath}" alt="${businessName} logo" class="site-logo" style="width:80px;height:auto;object-fit:contain;"/></a>
+<!-- /wp:html -->`
         : '';
 
     return `
