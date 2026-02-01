@@ -9,6 +9,50 @@ import { getThemePalette } from '../utils/theme-palette';
 import { getModernImageUrl } from '../utils/ImageProvider';
 import { ContentJSON } from '../modules/ContentBuilder';
 
+/**
+ * Detects if a string is a base64 data URI
+ */
+function isBase64DataUri(str: string): boolean {
+    return str?.startsWith('data:image/');
+}
+
+/**
+ * Extracts the file extension from a base64 data URI
+ */
+function getExtensionFromDataUri(dataUri: string): string {
+    const match = dataUri.match(/data:image\/(\w+)/);
+    if (match) {
+        const format = match[1].toLowerCase();
+        // Normalize jpeg to jpg
+        return format === 'jpeg' ? 'jpg' : format;
+    }
+    return 'png'; // Default to png
+}
+
+/**
+ * Saves a base64 data URI as an actual image file in the theme
+ * Returns the relative path for use in wp:image blocks
+ */
+async function saveBase64AsFile(themeDir: string, dataUri: string): Promise<string> {
+    const ext = getExtensionFromDataUri(dataUri);
+    const base64Data = dataUri.replace(/^data:image\/\w+;base64,/, '');
+    const buffer = Buffer.from(base64Data, 'base64');
+
+    const assetsDir = path.join(themeDir, 'assets', 'images');
+    await fs.ensureDir(assetsDir);
+
+    const fileName = `logo.${ext}`;
+    const filePath = path.join(assetsDir, fileName);
+    await fs.writeFile(filePath, buffer);
+
+    console.log(`[Pattern] Saved logo to ${filePath}`);
+
+    // Return theme-relative URI for use in blocks
+    // WordPress expects file:./assets/images/logo.ext or we can use get_theme_file_uri
+    // For static HTML templates, we use a placeholder that works with FSE
+    return `assets/images/${fileName}`;
+}
+
 export class PatternInjector {
     constructor(private rootDir: string) { }
 
@@ -109,16 +153,31 @@ ${getUniversalHomeContent(homeContent).trim()}
         const businessName = userData.name || 'PressPilot Site';
         const baseTheme = userData.baseName || 'twentytwentyfour';
 
+        // Handle logo: convert base64 data URI to actual file if needed
+        let logoPath = userData.logo;
+        if (logoPath && isBase64DataUri(logoPath)) {
+            console.log("[Pattern] Detected base64 logo, saving as file...");
+            const relativePath = await saveBase64AsFile(themeDir, logoPath);
+            // Use PHP to get the correct theme file URI at runtime
+            logoPath = `<?php echo esc_url(get_theme_file_uri('${relativePath}')); ?>`;
+        } else if (logoPath) {
+            // If it's already a file path, ensure it uses get_theme_file_uri
+            if (!logoPath.includes('<?php') && !logoPath.startsWith('http')) {
+                logoPath = `<?php echo esc_url(get_theme_file_uri('${logoPath}')); ?>`;
+            }
+        }
+
         const footerPath = path.join(themeDir, 'parts', 'footer.html');
         await fs.ensureDir(path.dirname(footerPath));
-        let footerContent = getUniversalFooterContent(businessName, baseTheme, pages || userData.pages || [], userData.logo).trim();
+        let footerContent = getUniversalFooterContent(businessName, baseTheme, pages || userData.pages || [], logoPath).trim();
         footerContent = footerContent.replace(/\{THEME_SLUG\}/g, safeName);
         await fs.writeFile(footerPath, footerContent);
 
         const headerPath = path.join(themeDir, 'parts', 'header.html');
         await fs.ensureDir(path.dirname(headerPath));
         const finalPages = pages || userData.pages || [];
-        console.log("[DEBUG] Logo path:", userData.logo ? userData.logo.substring(0, 50) + "..." : "NO LOGO"); let headerContent = getUniversalHeaderContent(businessName, finalPages, userData.logo).trim();
+        console.log("[DEBUG] Logo path:", logoPath ? logoPath.substring(0, 50) + "..." : "NO LOGO");
+        let headerContent = getUniversalHeaderContent(businessName, finalPages, logoPath).trim();
         headerContent = headerContent.replace(/\{THEME_SLUG\}/g, safeName);
         await fs.writeFile(headerPath, headerContent);
     }

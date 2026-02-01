@@ -15,11 +15,12 @@ export const getUniversalFooterContent = (businessName: string, baseTheme: strin
         .map(p => `<!-- wp:navigation-link {"label":"${p.title}","url":"${p.slug.startsWith('/') ? p.slug : '/' + p.slug}","style":{"typography":{"textDecoration":"underline"}}} /-->`)
         .join('\n                    ');
 
-    // Use actual logo image if provided
-    const logoBlock = logoPath 
-        ? `<!-- wp:image {"width":"80px","sizeSlug":"full","linkDestination":"home"} -->
-<figure class="wp-block-image size-medium site-logo"><a href="/"><img src="${logoPath}" alt="${businessName} logo" style="width:80px;height:auto;"/></a></figure>
-<!-- /wp:image -->`
+    // Use wp:html block for logo to allow PHP and prevent block validation errors
+    // Per WORDPRESS_FSE_REFERENCE.md Section 3: wp:html blocks can contain PHP safely
+    const logoBlock = logoPath
+        ? `<!-- wp:html -->
+<a href="/" style="display:inline-block;"><img src="${logoPath}" alt="${businessName} logo" style="width:80px;height:auto;"/></a>
+<!-- /wp:html -->`
         : '';
 
     return `

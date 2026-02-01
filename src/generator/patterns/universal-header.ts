@@ -14,11 +14,12 @@ export const getUniversalHeaderContent = (businessName: string, pages: { title: 
         return `<!-- wp:navigation-link ${linkAttrs} /-->`;
     }).join('\n');
 
-    // FSE-compliant logo: width in JSON, no inline styles on img tag
-    const logoBlock = logoPath 
-        ? `<!-- wp:image {"width":"80px","sizeSlug":"full","linkDestination":"home"} -->
-<figure class="wp-block-image size-full is-resized"><a href="/"><img src="${logoPath}" alt="${businessName} logo" class="wp-image-logo"/></a></figure>
-<!-- /wp:image -->`
+    // Use wp:html block for logo to allow PHP and prevent block validation errors
+    // Per WORDPRESS_FSE_REFERENCE.md Section 3: wp:html blocks can contain PHP safely
+    const logoBlock = logoPath
+        ? `<!-- wp:html -->
+<a href="/" style="display:inline-block;"><img src="${logoPath}" alt="${businessName} logo" style="width:80px;height:auto;"/></a>
+<!-- /wp:html -->`
         : '';
 
     return `
