@@ -14,7 +14,7 @@ import VariationCard from "./VariationCard";
 import { HeroCarousel } from "@/src/components/HeroCarousel";
 import ColorPalettePreview from "./components/ColorPalettePreview";
 import FontStylePreview from "./components/FontStylePreview";
-import { PALETTES, MOOD_OPTIONS, FONT_PROFILE_OPTIONS, type TT4Mood, type TT4FontProfile, type TT4PaletteId } from "@/lib/theme/palettes";
+import { PALETTES, MOOD_OPTIONS, FONT_PROFILE_OPTIONS, MOOD_PALETTES, getPreviewColors, type TT4Mood, type TT4FontProfile, type TT4PaletteId, type PreviewColors } from "@/lib/theme/palettes";
 import MenuUploader from "./components/MenuUploader";
 import LogoUploader from "./components/LogoUploader";
 import { RestaurantMenu } from "@/src/generator/types";
@@ -87,6 +87,11 @@ export default function StudioClient({ slug }: Props) {
 
   // Refs for Color Pickers
   const colorPickerRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  // Compute preview colors based on palette + mood selection
+  const previewColors = useMemo(() => {
+    return getPreviewColors(customPaletteId, selectedMood, logoColors);
+  }, [customPaletteId, selectedMood, logoColors]);
 
   // Live Preview Renderer
   const renderHeroPreview = (styleId: string, label: string, description: string) => {
@@ -856,20 +861,29 @@ export default function StudioClient({ slug }: Props) {
                       Default Mood
                     </label>
                     <div className="grid grid-cols-2 gap-2">
-                      {MOOD_OPTIONS.map((mood) => (
-                        <button
-                          key={mood.id}
-                          onClick={() => setSelectedMood(mood.id)}
-                          className={`flex flex-col items-center rounded-xl border p-3 transition-all ${selectedMood === mood.id
-                            ? "border-black bg-neutral-50 ring-1 ring-black"
-                            : "border-neutral-100 hover:border-neutral-200"
-                            }`}
-                        >
-                          <span className="text-lg mb-1">{mood.icon}</span>
-                          <span className="text-xs font-bold text-neutral-900">{mood.label}</span>
-                          <span className="text-[10px] text-neutral-400 text-center">{mood.description}</span>
-                        </button>
-                      ))}
+                      {MOOD_OPTIONS.map((mood) => {
+                        const moodColors = MOOD_PALETTES[mood.id];
+                        return (
+                          <button
+                            type="button"
+                            key={mood.id}
+                            onClick={() => setSelectedMood(mood.id)}
+                            className={`flex flex-col items-center rounded-xl border-2 p-3 transition-all ${selectedMood === mood.id
+                              ? "ring-2 ring-black ring-offset-2"
+                              : "hover:scale-105"
+                              }`}
+                            style={{
+                              backgroundColor: moodColors.base,
+                              borderColor: selectedMood === mood.id ? moodColors.accent : moodColors['contrast-3'],
+                              color: moodColors.contrast
+                            }}
+                          >
+                            <span className="text-lg mb-1">{mood.icon}</span>
+                            <span className="text-xs font-bold">{mood.label}</span>
+                            <span className="text-[10px] opacity-70 text-center">{mood.description}</span>
+                          </button>
+                        );
+                      })}
                     </div>
                     <p className="text-[10px] text-neutral-400 italic">
                       All 4 moods ship with your theme. This sets the default.
@@ -904,12 +918,25 @@ export default function StudioClient({ slug }: Props) {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-neutral-50 bg-neutral-50/20 p-12 text-center space-y-8">
+                  {/* Hero Section with Dynamic Colors */}
+                  <div
+                    className="rounded-2xl p-12 text-center space-y-8 transition-colors duration-300"
+                    style={{
+                      backgroundColor: previewColors.accent3,
+                      border: `1px solid ${previewColors.contrast3}`
+                    }}
+                  >
                     <div className="space-y-4">
-                      <h4 className="text-4xl font-black tracking-tight text-neutral-900 leading-tight">
+                      <h4
+                        className="text-4xl font-black tracking-tight leading-tight"
+                        style={{ color: previewColors.base }}
+                      >
                         {customHeroTitle || project.name}
                       </h4>
-                      <p className="text-lg text-neutral-500 max-w-lg mx-auto leading-relaxed font-medium">
+                      <p
+                        className="text-lg max-w-lg mx-auto leading-relaxed font-medium"
+                        style={{ color: previewColors.base, opacity: 0.9 }}
+                      >
                         {heroSubtitle}
                       </p>
                     </div>
@@ -918,10 +945,15 @@ export default function StudioClient({ slug }: Props) {
                       {heroCtas.slice(0, 2).map((cta, index) => (
                         <div
                           key={`${cta.label}-${index}`}
-                          className={`rounded-full px-8 py-3 text-sm font-bold transition-all ${index === 0
-                            ? "bg-black text-white hover:scale-105"
-                            : "border-2 border-neutral-100 text-neutral-900"
-                            }`}
+                          className="rounded-full px-8 py-3 text-sm font-bold transition-all hover:scale-105 cursor-pointer"
+                          style={index === 0
+                            ? { backgroundColor: previewColors.accent, color: previewColors.base }
+                            : {
+                                backgroundColor: 'transparent',
+                                color: previewColors.base,
+                                border: `2px solid ${previewColors.base}`
+                              }
+                          }
                         >
                           {cta.label}
                         </div>
@@ -931,6 +963,19 @@ export default function StudioClient({ slug }: Props) {
                     <div className="pt-8">
                       <FontStylePreview fontPairId={customFontPairId || 'system-sans'} />
                     </div>
+                  </div>
+
+                  {/* Section Band Preview */}
+                  <div
+                    className="rounded-xl p-4 mt-4 transition-colors duration-300"
+                    style={{ backgroundColor: previewColors.accent2 }}
+                  >
+                    <p
+                      className="text-xs font-medium text-center"
+                      style={{ color: previewColors.contrast }}
+                    >
+                      Section preview • {selectedMood} mood
+                    </p>
                   </div>
                 </div>
 

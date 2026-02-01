@@ -130,3 +130,153 @@ export function getMoodById(id: string): MoodOption | undefined {
 export function getFontProfileById(id: string): FontProfileOption | undefined {
     return FONT_PROFILE_OPTIONS.find(f => f.id === id);
 }
+
+// ============================================================================
+// Mood Palettes for Live Preview
+// Matches backend src/generator/modules/VariationBuilder.ts VARIATION_PALETTES
+// ============================================================================
+
+/**
+ * Complete TT4-style palettes for each mood variation.
+ * Used by the Studio live preview to show mood changes in real-time.
+ */
+export const MOOD_PALETTES: Record<TT4Mood, {
+    base: string;
+    'base-2': string;
+    contrast: string;
+    'contrast-2': string;
+    'contrast-3': string;
+    accent: string;
+    'accent-2': string;
+    'accent-3': string;
+}> = {
+    warm: {
+        base: '#FFFBF5',
+        'base-2': '#FFF7ED',
+        contrast: '#292524',
+        'contrast-2': '#78716C',
+        'contrast-3': '#D6D3D1',
+        accent: '#D97706',
+        'accent-2': '#FCD34D',
+        'accent-3': '#B45309'
+    },
+    fresh: {
+        base: '#F0FDFA',
+        'base-2': '#FFFFFF',
+        contrast: '#134E4A',
+        'contrast-2': '#5EEAD4',
+        'contrast-3': '#99F6E4',
+        accent: '#059669',
+        'accent-2': '#6EE7B7',
+        'accent-3': '#047857'
+    },
+    minimal: {
+        base: '#FFFFFF',
+        'base-2': '#F9FAFB',
+        contrast: '#111827',
+        'contrast-2': '#6B7280',
+        'contrast-3': '#E5E7EB',
+        accent: '#374151',
+        'accent-2': '#9CA3AF',
+        'accent-3': '#1F2937'
+    },
+    dark: {
+        base: '#0F172A',
+        'base-2': '#1E293B',
+        contrast: '#F1F5F9',
+        'contrast-2': '#94A3B8',
+        'contrast-3': '#334155',
+        accent: '#60A5FA',
+        'accent-2': '#93C5FD',
+        'accent-3': '#3B82F6'
+    }
+};
+
+// ============================================================================
+// Preview Colors Helper
+// ============================================================================
+
+export interface PreviewColors {
+    base: string;
+    base2: string;
+    contrast: string;
+    contrast2: string;
+    contrast3: string;
+    accent: string;
+    accent2: string;
+    accent3: string;
+}
+
+/**
+ * Get preview colors for the Studio live preview panel.
+ *
+ * Priority:
+ * 1. If mood is not 'minimal' (default), use MOOD_PALETTES[mood]
+ * 2. If palette is selected (not brand), use PALETTES colors
+ * 3. If brand-kit, use logoColors
+ * 4. Fallback to minimal mood
+ */
+export function getPreviewColors(
+    paletteId: string | null,
+    mood: TT4Mood,
+    logoColors?: string[]
+): PreviewColors {
+    // If mood is not minimal (default), mood takes priority for preview
+    if (mood !== 'minimal') {
+        const moodPalette = MOOD_PALETTES[mood];
+        return {
+            base: moodPalette.base,
+            base2: moodPalette['base-2'],
+            contrast: moodPalette.contrast,
+            contrast2: moodPalette['contrast-2'],
+            contrast3: moodPalette['contrast-3'],
+            accent: moodPalette.accent,
+            accent2: moodPalette['accent-2'],
+            accent3: moodPalette['accent-3']
+        };
+    }
+
+    // If palette selected (not brand-kit), use palette colors
+    if (paletteId && paletteId !== 'brand' && paletteId !== 'brand-kit') {
+        const palette = PALETTES.find(p => p.id === paletteId);
+        if (palette) {
+            const getColor = (slug: string) => palette.colors.find(c => c.slug === slug)?.color;
+            return {
+                base: getColor('base') || '#ffffff',
+                base2: getColor('base-2') || '#f9f9f9',
+                contrast: getColor('contrast') || '#111111',
+                contrast2: '#6B7280',
+                contrast3: '#E5E7EB',
+                accent: getColor('accent') || '#374151',
+                accent2: getColor('accent-4') || '#9CA3AF',
+                accent3: getColor('accent-3') || '#1F2937'
+            };
+        }
+    }
+
+    // If brand-kit with logo colors
+    if ((paletteId === 'brand' || paletteId === 'brand-kit') && logoColors && logoColors.length >= 3) {
+        return {
+            base: '#ffffff',
+            base2: '#f9f9f9',
+            contrast: '#111111',
+            contrast2: '#6B7280',
+            contrast3: '#E5E7EB',
+            accent: logoColors[0],
+            accent2: logoColors[2],
+            accent3: logoColors[1]
+        };
+    }
+
+    // Fallback to minimal mood palette
+    return {
+        base: MOOD_PALETTES.minimal.base,
+        base2: MOOD_PALETTES.minimal['base-2'],
+        contrast: MOOD_PALETTES.minimal.contrast,
+        contrast2: MOOD_PALETTES.minimal['contrast-2'],
+        contrast3: MOOD_PALETTES.minimal['contrast-3'],
+        accent: MOOD_PALETTES.minimal.accent,
+        accent2: MOOD_PALETTES.minimal['accent-2'],
+        accent3: MOOD_PALETTES.minimal['accent-3']
+    };
+}
