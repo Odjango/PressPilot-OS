@@ -74,6 +74,14 @@ export class PatternInjector {
                 const slug = slugMatch ? slugMatch[1].trim() : null;
                 if (!slug) continue;
 
+                // Skip CTA patterns from global replacements to preserve Buttons/Button block grammar
+                // Global string replacements can corrupt block markup, causing "Attempt recovery" error
+                if (slug.includes('cta-') || slug.includes('cta/') || slug.includes('/cta')) {
+                    templateContent += `<!-- wp:pattern {"slug":"${slug}"} /-->\n`;
+                    await fs.writeFile(fullPath, content);
+                    continue;
+                }
+
                 // 2. Inject Content (Using Builder Slots)
                 for (const [search, replace] of Object.entries(contentJson.slots)) {
                     // Escape search string for regex and replace all occurrences globally
