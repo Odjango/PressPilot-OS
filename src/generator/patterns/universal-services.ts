@@ -38,11 +38,11 @@ export const getUniversalServicesContent = (content?: PageContent) => {
     return `
     <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
     <div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
-        <!-- wp:heading {"textAlign":"center","level":1,"fontSize":"x-large"} -->
-        <h1 class="wp-block-heading has-text-align-center has-x-large-font-size">${title}</h1>
+        <!-- wp:heading {"textAlign":"center","level":1,"textColor":"base","fontSize":"x-large"} -->
+        <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color has-x-large-font-size">${title}</h1>
         <!-- /wp:heading -->
-        <!-- wp:paragraph {"align":"center","fontSize":"large"} -->
-        <p class="has-text-align-center has-large-font-size">${sub}</p>
+        <!-- wp:paragraph {"align":"center","textColor":"base","fontSize":"large"} -->
+        <p class="has-text-align-center has-base-color has-text-color has-large-font-size">${sub}</p>
         <!-- /wp:paragraph -->
     </div>
     <!-- /wp:group -->

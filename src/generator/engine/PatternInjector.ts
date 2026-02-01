@@ -4,8 +4,6 @@ import { GeneratorData, ThemePersonality } from '../types';
 import { UNIVERSAL_PATTERNS } from '../config/PatternRegistry';
 import { getUniversalBlogContent, getUniversalFooterContent, getUniversalHeaderContent, getArchiveContent, getSearchContent, getUniversalHomeContent } from '../patterns';
 import { generateMenuPattern } from '../patterns/restaurant-menu';
-import { getFooterColors } from '../patterns/color-mapping';
-import { getThemePalette } from '../utils/theme-palette';
 import { getModernImageUrl } from '../utils/ImageProvider';
 import { ContentJSON } from '../modules/ContentBuilder';
 
@@ -31,7 +29,11 @@ function getExtensionFromDataUri(dataUri: string): string {
 
 /**
  * Saves a base64 data URI as an actual image file in the theme
- * Returns the relative path for use in wp:image blocks
+ * Returns a URL path with {THEME_SLUG} placeholder for use in HTML template parts
+ *
+ * IMPORTANT: FSE template parts (.html files) don't execute PHP, so we use a
+ * static URL with a placeholder that gets replaced by the theme slug.
+ * This creates a valid WordPress theme asset URL.
  */
 async function saveBase64AsFile(themeDir: string, dataUri: string): Promise<string> {
     const ext = getExtensionFromDataUri(dataUri);
@@ -47,10 +49,10 @@ async function saveBase64AsFile(themeDir: string, dataUri: string): Promise<stri
 
     console.log(`[Pattern] Saved logo to ${filePath}`);
 
-    // Return theme-relative URI for use in blocks
-    // WordPress expects file:./assets/images/logo.ext or we can use get_theme_file_uri
-    // For static HTML templates, we use a placeholder that works with FSE
-    return `assets/images/${fileName}`;
+    // Return WordPress theme asset URL with placeholder
+    // {THEME_SLUG} gets replaced in injectGlobalParts after header/footer content is generated
+    // This creates a valid URL like: /wp-content/themes/my-theme/assets/images/logo.png
+    return `/wp-content/themes/{THEME_SLUG}/assets/images/${fileName}`;
 }
 
 export class PatternInjector {
@@ -153,33 +155,153 @@ ${getUniversalHomeContent(homeContent).trim()}
         const businessName = userData.name || 'PressPilot Site';
         const baseTheme = userData.baseName || 'twentytwentyfour';
 
-        // Handle logo: convert base64 data URI to actual file if needed
-        let logoPath = userData.logo;
-        if (logoPath && isBase64DataUri(logoPath)) {
+        // Handle logo: save base64 to file and set up auto-registration
+        // wp:site-logo block reads from WordPress Site Identity (custom_logo theme_mod)
+        let hasLogo = false;
+        let logoFileName = '';
+
+        if (userData.logo && isBase64DataUri(userData.logo)) {
             console.log("[Pattern] Detected base64 logo, saving as file...");
-            const relativePath = await saveBase64AsFile(themeDir, logoPath);
-            // Use PHP to get the correct theme file URI at runtime
-            logoPath = `<?php echo esc_url(get_theme_file_uri('${relativePath}')); ?>`;
-        } else if (logoPath) {
-            // If it's already a file path, ensure it uses get_theme_file_uri
-            if (!logoPath.includes('<?php') && !logoPath.startsWith('http')) {
-                logoPath = `<?php echo esc_url(get_theme_file_uri('${logoPath}')); ?>`;
-            }
+            const ext = getExtensionFromDataUri(userData.logo);
+            logoFileName = `logo.${ext}`;
+            await saveBase64AsFile(themeDir, userData.logo);
+            hasLogo = true;
+
+            // Auto-setup logo on theme activation using after_switch_theme hook
+            // This uploads the logo to media library and sets it as custom_logo
+            await this.addLogoAutoSetup(themeDir, logoFileName, safeName);
+        } else if (userData.logo) {
+            // External URL provided - still mark as having logo
+            hasLogo = true;
+            console.log("[Pattern] Logo URL provided:", userData.logo.substring(0, 50) + "...");
         }
+
+        console.log("[DEBUG] Has logo:", hasLogo);
 
         const footerPath = path.join(themeDir, 'parts', 'footer.html');
         await fs.ensureDir(path.dirname(footerPath));
-        let footerContent = getUniversalFooterContent(businessName, baseTheme, pages || userData.pages || [], logoPath).trim();
+        let footerContent = getUniversalFooterContent(businessName, baseTheme, pages || userData.pages || [], hasLogo).trim();
         footerContent = footerContent.replace(/\{THEME_SLUG\}/g, safeName);
         await fs.writeFile(footerPath, footerContent);
 
         const headerPath = path.join(themeDir, 'parts', 'header.html');
         await fs.ensureDir(path.dirname(headerPath));
         const finalPages = pages || userData.pages || [];
-        console.log("[DEBUG] Logo path:", logoPath ? logoPath.substring(0, 50) + "..." : "NO LOGO");
-        let headerContent = getUniversalHeaderContent(businessName, finalPages, logoPath).trim();
+        let headerContent = getUniversalHeaderContent(businessName, finalPages, hasLogo).trim();
         headerContent = headerContent.replace(/\{THEME_SLUG\}/g, safeName);
         await fs.writeFile(headerPath, headerContent);
+    }
+
+    /**
+     * Auto-setup logo on theme activation using after_switch_theme hook
+     * Uploads the logo from assets/images/ to WordPress media library
+     * and sets it as the custom_logo theme_mod
+     *
+     * Uses pure PHP (no tag switching) to avoid parse errors in namespaced files
+     */
+    private async addLogoAutoSetup(themeDir: string, logoFileName: string, safeName: string): Promise<void> {
+        const functionsPath = path.join(themeDir, 'functions.php');
+        // Prefix with 'pp_' to ensure valid PHP function name (can't start with number)
+        const funcName = 'pp_' + safeName.replace(/-/g, '_');
+
+        const autoSetupCode = `
+/**
+ * PressPilot: Auto-setup logo on theme activation
+ * Logo file: assets/images/${logoFileName}
+ * Uses wp_upload_bits() for reliable file upload in all WordPress environments
+ */
+function ${funcName}_setup_logo() {
+    // Only run once - check if we've already set up
+    if (get_option('${funcName}_logo_setup_done')) {
+        return;
+    }
+
+    $logo_path = get_template_directory() . '/assets/images/${logoFileName}';
+    if (!file_exists($logo_path)) {
+        error_log('PressPilot Logo Setup: File not found at ' . $logo_path);
+        return;
+    }
+
+    // Skip if logo already set by user
+    if (get_theme_mod('custom_logo')) {
+        update_option('${funcName}_logo_setup_done', true);
+        return;
+    }
+
+    // Include required WordPress functions
+    require_once(ABSPATH . 'wp-admin/includes/image.php');
+    require_once(ABSPATH . 'wp-admin/includes/file.php');
+    require_once(ABSPATH . 'wp-admin/includes/media.php');
+
+    // Read file content
+    $file_content = file_get_contents($logo_path);
+    if ($file_content === false) {
+        error_log('PressPilot Logo Setup: Could not read file');
+        return;
+    }
+
+    $filename = basename($logo_path);
+
+    // Use wp_upload_bits - the WordPress-native way to upload files
+    // Works reliably in WordPress Playground and all WP environments
+    $upload = wp_upload_bits($filename, null, $file_content);
+
+    if (!empty($upload['error'])) {
+        error_log('PressPilot Logo Setup: Upload error - ' . $upload['error']);
+        return;
+    }
+
+    // Get file type
+    $filetype = wp_check_filetype($filename, null);
+
+    // Create attachment post
+    $attachment = array(
+        'post_mime_type' => $filetype['type'],
+        'post_title'     => sanitize_file_name(pathinfo($filename, PATHINFO_FILENAME)),
+        'post_content'   => '',
+        'post_status'    => 'inherit'
+    );
+
+    $attach_id = wp_insert_attachment($attachment, $upload['file']);
+
+    if (!is_wp_error($attach_id) && $attach_id > 0) {
+        // Generate attachment metadata
+        $attach_data = wp_generate_attachment_metadata($attach_id, $upload['file']);
+        wp_update_attachment_metadata($attach_id, $attach_data);
+
+        // Set as site logo
+        set_theme_mod('custom_logo', $attach_id);
+        error_log('PressPilot Logo Setup: Success! Attachment ID: ' . $attach_id);
+    } else {
+        error_log('PressPilot Logo Setup: Failed to create attachment');
+    }
+
+    update_option('${funcName}_logo_setup_done', true);
+}
+// Use namespace-aware callback (works with namespaced themes like Ollie)
+$${funcName}_setup_func = ( __NAMESPACE__ ? __NAMESPACE__ . '\\\\' : '' ) . '${funcName}_setup_logo';
+add_action('after_switch_theme', $${funcName}_setup_func);
+
+// Also run on init to ensure it runs on any page load (frontend or admin)
+function ${funcName}_maybe_setup_logo() {
+    if (!get_option('${funcName}_logo_setup_done') && !get_theme_mod('custom_logo')) {
+        ${funcName}_setup_logo();
+    }
+}
+$${funcName}_init_func = ( __NAMESPACE__ ? __NAMESPACE__ . '\\\\' : '' ) . '${funcName}_maybe_setup_logo';
+add_action('init', $${funcName}_init_func);
+`;
+
+        if (await fs.pathExists(functionsPath)) {
+            let content = await fs.readFile(functionsPath, 'utf8');
+            // Check if auto-setup already exists
+            if (!content.includes('_setup_logo')) {
+                // Append to end
+                content += '\n' + autoSetupCode;
+                await fs.writeFile(functionsPath, content);
+                console.log("[Pattern] Added logo auto-setup to functions.php");
+            }
+        }
     }
 
     async injectMenus(themeDir: string, userData: GeneratorData, safeName: string): Promise<void> {
@@ -206,14 +328,13 @@ ${menuPatternContent}`;
 
             // Create a "page-menu.html" template that uses this pattern
             // Premium Layout: Dark Header + Content
-            const palette = await getThemePalette(themeDir);
-            const colors = getFooterColors(userData.baseName || "twentytwentyfour", palette);
+            // Use semantic colors "contrast" (dark) and "base" (light) for guaranteed readability
             const menuPageTemplate = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"${colors.darkBg}","textColor":"${colors.lightText}","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-${colors.lightText}-color has-${colors.darkBg}-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
-    <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontStyle":"normal","fontWeight":"800"}}} -->
-    <h1 class="wp-block-heading has-text-align-center" style="font-style:normal;font-weight:800">Our Menu</h1>
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:heading {"textAlign":"center","level":1,"textColor":"base","style":{"typography":{"fontStyle":"normal","fontWeight":"800"}}} -->
+    <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-style:normal;font-weight:800">Our Menu</h1>
     <!-- /wp:heading -->
 </div>
 <!-- /wp:group -->
@@ -235,14 +356,13 @@ ${menuPatternContent}`;
     async injectFitnessSchedule(themeDir: string, userData: GeneratorData, safeName: string): Promise<void> {
         console.log(`[PatternMatcher] Injecting Fitness Schedule for '${safeName}'...`);
 
-        const palette2 = await getThemePalette(themeDir); const colors = getFooterColors(userData.baseName || 'twentytwentyfour', palette2);
-
+        // Use semantic colors "contrast" (dark) and "base" (light) for guaranteed readability
         const schedulePatternHtml = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"${colors.darkBg}","textColor":"${colors.lightText}","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-${colors.lightText}-color has-${colors.darkBg}-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
-    <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontStyle":"normal","fontWeight":"800"}}} -->
-    <h1 class="wp-block-heading has-text-align-center" style="font-style:normal;font-weight:800">Class Schedule</h1>
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:heading {"textAlign":"center","level":1,"textColor":"base","style":{"typography":{"fontStyle":"normal","fontWeight":"800"}}} -->
+    <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-style:normal;font-weight:800">Class Schedule</h1>
     <!-- /wp:heading -->
 </div>
 <!-- /wp:group -->

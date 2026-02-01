@@ -68,7 +68,7 @@ export const buildHeaderTemplate = async (themeDir: string, businessName: string
     const filename = 'header.html';
     const filePath = path.join(themeDir, 'parts', filename);
 
-    let content = getUniversalHeaderContent(businessName, pages as any, logo);
+    let content = getUniversalHeaderContent(businessName, pages as any, !!logo);
 
     // Replace theme slug placeholder for branding assets
     content = content.replace(/{THEME_SLUG}/g, themeSlug);
@@ -81,7 +81,7 @@ export const buildHeaderTemplate = async (themeDir: string, businessName: string
 export const buildFooterTemplate = async (themeDir: string, businessName: string, baseName: string = 'twentytwentyfour', themeSlug: string = 'presspilot-theme', tagline?: string, logo?: string) => {
     const filename = 'footer.html';
     const filePath = path.join(themeDir, 'parts', filename);
-    let content = getUniversalFooterContent(businessName, baseName);
+    let content = getUniversalFooterContent(businessName, baseName, undefined, !!logo);
     content = content.replace(/{THEME_SLUG}/g, themeSlug);
 
     await fs.ensureDir(path.dirname(filePath));

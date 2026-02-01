@@ -8,11 +8,11 @@ export const getUniversalContactContent = (content?: PageContent) => {
     return `
     <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
     <div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
-        <!-- wp:heading {"textAlign":"center","level":1,"fontSize":"x-large"} -->
-        <h1 class="wp-block-heading has-text-align-center has-x-large-font-size">${title}</h1>
+        <!-- wp:heading {"textAlign":"center","level":1,"textColor":"base","fontSize":"x-large"} -->
+        <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color has-x-large-font-size">${title}</h1>
         <!-- /wp:heading -->
-        <!-- wp:paragraph {"align":"center","fontSize":"large"} -->
-        <p class="has-text-align-center has-large-font-size">${sub}</p>
+        <!-- wp:paragraph {"align":"center","textColor":"base","fontSize":"large"} -->
+        <p class="has-text-align-center has-base-color has-text-color has-large-font-size">${sub}</p>
         <!-- /wp:paragraph -->
     </div>
     <!-- /wp:group -->
@@ -25,7 +25,7 @@ export const getUniversalContactContent = (content?: PageContent) => {
             <!-- wp:column {"width":"50%","style":{"spacing":{"padding":{"right":"var:preset|spacing|40"}}}} -->
             <div class="wp-block-column" style="padding-right:var(--wp--preset--spacing--40);flex-basis:50%">
                 <!-- wp:heading {"level":3} -->
-                <h3 class="wp-block-heading">Get Requirements</h3>
+                <h3 class="wp-block-heading">Get In Touch</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph -->
                 <p>Email: <a href="mailto:contact@presspilot.com">contact@presspilot.com</a><br>Phone: +1 555-0199</p>
@@ -46,10 +46,9 @@ export const getUniversalContactContent = (content?: PageContent) => {
 
             <!-- wp:column {"width":"50%"} -->
             <div class="wp-block-column" style="flex-basis:50%">
-                <!-- wp:image {"aspectRatio":"16/9","scale":"cover","sizeSlug":"large","linkDestination":"none","backgroundColor":"tertiary"} -->
-                <!-- wp:image {"aspectRatio":"16/9","scale":"cover","sizeSlug":"large","linkDestination":"none","backgroundColor":"tertiary"} -->
-                <figure class="wp-block-image size-large"><img src="${content?.hero_image || 'https://placehold.co/800x450/EEE/31343C.png?text=Map+Location'}" alt="Map" style="aspect-ratio:16/9;object-fit:cover"/></figure>
-                <!-- /wp:image -->                <!-- /wp:image -->
+                <!-- wp:image {"sizeSlug":"large"} -->
+                <figure class="wp-block-image size-large"><img src="${content?.hero_image || 'https://placehold.co/800x450/EEE/31343C.png?text=Map+Location'}" alt="Map location"/></figure>
+                <!-- /wp:image -->
             </div>
             <!-- /wp:column -->
 

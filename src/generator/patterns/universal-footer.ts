@@ -1,6 +1,6 @@
 import { getFooterColors } from './color-mapping';
 
-export const getUniversalFooterContent = (businessName: string, baseTheme: string = 'twentytwentyfour', pages?: Array<{title: string, slug: string}>, logoPath?: string) => {
+export const getUniversalFooterContent = (businessName: string, baseTheme: string = 'twentytwentyfour', pages?: Array<{title: string, slug: string}>, hasLogo?: boolean) => {
     const year = new Date().getFullYear();
     const colors = getFooterColors(baseTheme);
 
@@ -15,12 +15,10 @@ export const getUniversalFooterContent = (businessName: string, baseTheme: strin
         .map(p => `<!-- wp:navigation-link {"label":"${p.title}","url":"${p.slug.startsWith('/') ? p.slug : '/' + p.slug}","style":{"typography":{"textDecoration":"underline"}}} /-->`)
         .join('\n                    ');
 
-    // Use wp:html block for logo to allow PHP and prevent block validation errors
-    // Per WORDPRESS_FSE_REFERENCE.md Section 3: wp:html blocks can contain PHP safely
-    const logoBlock = logoPath
-        ? `<!-- wp:html -->
-<a href="/" style="display:inline-block;"><img src="${logoPath}" alt="${businessName} logo" style="width:80px;height:auto;"/></a>
-<!-- /wp:html -->`
+    // Use wp:site-logo block - self-closing, WordPress handles the image
+    // Logo is set programmatically via functions.php on theme activation
+    const logoBlock = hasLogo
+        ? `<!-- wp:site-logo {"width":60,"className":"site-logo"} /-->`
         : '';
 
     return `

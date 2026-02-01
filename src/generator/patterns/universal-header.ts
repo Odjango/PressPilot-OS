@@ -1,4 +1,4 @@
-export const getUniversalHeaderContent = (businessName: string, pages: { title: string, slug: string }[], logoPath?: string) => {
+export const getUniversalHeaderContent = (businessName: string, pages: { title: string, slug: string }[], hasLogo?: boolean) => {
     // Generate Navigation Links provided by the Recipe
     const landingPages = [...pages];
     if (!landingPages.find(p => p.slug === 'home' || p.slug === '')) {
@@ -14,18 +14,16 @@ export const getUniversalHeaderContent = (businessName: string, pages: { title: 
         return `<!-- wp:navigation-link ${linkAttrs} /-->`;
     }).join('\n');
 
-    // Use wp:html block for logo to allow PHP and prevent block validation errors
-    // Per WORDPRESS_FSE_REFERENCE.md Section 3: wp:html blocks can contain PHP safely
-    const logoBlock = logoPath
-        ? `<!-- wp:html -->
-<a href="/" style="display:inline-block;"><img src="${logoPath}" alt="${businessName} logo" style="width:80px;height:auto;"/></a>
-<!-- /wp:html -->`
+    // Use wp:site-logo block - self-closing, WordPress handles the image
+    // Logo is set programmatically via functions.php on theme activation
+    const logoBlock = hasLogo
+        ? `<!-- wp:site-logo {"width":80,"className":"site-logo"} /-->`
         : '';
 
     return `
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"flex","justifyContent":"space-between","flexWrap":"nowrap"}} -->
 <div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--50)">
-    
+
     <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap"},"style":{"spacing":{"blockGap":"15px"}}} -->
     <div class="wp-block-group">
         ${logoBlock}

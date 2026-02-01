@@ -69,6 +69,15 @@ export class StyleBuilder {
                 },
                 color: {
                     text: "var:preset|color|main"
+                },
+                // Block-specific styling per FSE best practices
+                blocks: {
+                    // Site Logo block styling for consistent sizing
+                    "core/site-logo": {
+                        border: {
+                            radius: "0px"
+                        }
+                    }
                 }
             };
         }
