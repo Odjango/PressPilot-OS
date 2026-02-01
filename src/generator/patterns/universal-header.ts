@@ -14,11 +14,11 @@ export const getUniversalHeaderContent = (businessName: string, pages: { title: 
         return `<!-- wp:navigation-link ${linkAttrs} /-->`;
     }).join('\n');
 
-    // Use wp:html block for logo - WordPress won't validate raw HTML = no block errors ever
+    // FSE-compliant logo: width in JSON, no inline styles on img tag
     const logoBlock = logoPath 
-        ? `<!-- wp:html -->
-<a href="/" class="site-logo-link"><img src="${logoPath}" alt="${businessName} logo" class="site-logo" style="width:80px;height:auto;object-fit:contain;"/></a>
-<!-- /wp:html -->`
+        ? `<!-- wp:image {"width":"80px","sizeSlug":"full","linkDestination":"home"} -->
+<figure class="wp-block-image size-full is-resized"><a href="/"><img src="${logoPath}" alt="${businessName} logo" class="wp-image-logo"/></a></figure>
+<!-- /wp:image -->`
         : '';
 
     return `
