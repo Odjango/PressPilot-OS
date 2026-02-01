@@ -111,27 +111,39 @@ const SHADOW_PRESETS: ShadowPreset[] = [
 class TT4TokenMapper {
     /**
      * Map user inputs to TT4-style color palette
+     *
+     * IMPORTANT: Only override preset colors with harmonized colors when:
+     * 1. Using brand-kit palette (user wants custom brand colors)
+     * 2. User explicitly provided custom colors (hasUserColors = true)
      */
     static mapToTT4(
         harmonized: HarmonizedPalette,
         selectedPaletteId: string,
-        userEditedBrandKit?: BrandKitEdit[]
+        userEditedBrandKit?: BrandKitEdit[],
+        hasUserColors?: boolean
     ): ColorPreset[] {
         // Get base palette from presets
         const basePalette = { ...getPaletteById(selectedPaletteId) };
 
-        // For brand-kit or when harmonized colors available, map them to TT4 slots
-        if (selectedPaletteId === 'brand-kit' || harmonized.primary) {
+        // ONLY use ColorHarmonizer output when:
+        // 1. Palette is brand-kit (which means user wants custom colors from their brand)
+        // 2. OR user explicitly provided colors (primary, secondary, accent in input)
+        const shouldUseHarmonizedColors = selectedPaletteId === 'brand-kit' || hasUserColors === true;
+
+        if (shouldUseHarmonizedColors) {
+            console.log(`[TT4TokenMapper] Using harmonized colors (brand-kit or user-provided)`);
             basePalette['accent'] = harmonized.primary;
             basePalette['accent-2'] = harmonized.primary_light;
             basePalette['accent-3'] = harmonized.primary_dark;
             basePalette['accent-4'] = harmonized.secondary;
             basePalette['accent-5'] = harmonized.accent;
-            // Keep base/contrast from preset unless using brand-kit
+            // Also override base/contrast for brand-kit
             if (selectedPaletteId === 'brand-kit') {
                 basePalette['base'] = harmonized.base;
                 basePalette['contrast'] = harmonized.main;
             }
+        } else {
+            console.log(`[TT4TokenMapper] Using preset palette colors for: ${selectedPaletteId}`);
         }
 
         // Apply user overrides if provided
@@ -267,6 +279,9 @@ export class StyleBuilder {
 
         // Generate color palette
         if (userData.primary || selectedPaletteId !== 'brand-kit') {
+            // Check if user explicitly provided custom colors
+            const hasUserColors = Boolean(userData.primary || userData.secondary || userData.accent);
+
             // Generate harmonized palette from user colors (or use defaults)
             const harmonized = ColorHarmonizer.generatePalette(
                 userData.primary || '#2563eb',
@@ -274,8 +289,8 @@ export class StyleBuilder {
                 userData.accent
             );
 
-            // Map to TT4 tokens
-            const tt4Palette = TT4TokenMapper.mapToTT4(harmonized, selectedPaletteId, userEditedBrandKit);
+            // Map to TT4 tokens - only use harmonized colors for brand-kit or when user provided colors
+            const tt4Palette = TT4TokenMapper.mapToTT4(harmonized, selectedPaletteId, userEditedBrandKit, hasUserColors);
 
             // Generate legacy aliases for backward compatibility
             const legacyAliases = TT4TokenMapper.generateLegacyAliases(tt4Palette);

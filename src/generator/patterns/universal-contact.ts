@@ -1,13 +1,20 @@
 
 import { PageContent } from '../types';
 
+/**
+ * Universal Contact Pattern - TT4-Aligned
+ *
+ * Uses TT4 semantic color tokens for visual palette differentiation:
+ * - Hero: Uses accent-3 (dark accent) for branded header
+ * - Contact Info Section: Uses accent-2 background for visual warmth
+ */
 export const getUniversalContactContent = (content?: PageContent) => {
     const title = content?.hero_title || 'Contact Us';
     const sub = content?.hero_sub || 'We would love to hear from you.';
 
     return `
-    <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
-    <div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"accent-3","textColor":"base","layout":{"type":"constrained"}} -->
+    <div class="wp-block-group alignfull has-base-color has-accent-3-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
         <!-- wp:heading {"textAlign":"center","level":1,"textColor":"base","fontSize":"x-large"} -->
         <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color has-x-large-font-size">${title}</h1>
         <!-- /wp:heading -->
@@ -17,30 +24,38 @@ export const getUniversalContactContent = (content?: PageContent) => {
     </div>
     <!-- /wp:group -->
 
-    <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained"}} -->
-    <div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"base-2","layout":{"type":"constrained"}} -->
+    <div class="wp-block-group alignfull has-base-2-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
         <!-- wp:group {"align":"wide","layout":{"type":"flex","flexWrap":"wrap","verticalAlignment":"top"}} -->
         <div class="wp-block-group alignwide">
-            
+
             <!-- wp:column {"width":"50%","style":{"spacing":{"padding":{"right":"var:preset|spacing|40"}}}} -->
             <div class="wp-block-column" style="padding-right:var(--wp--preset--spacing--40);flex-basis:50%">
-                <!-- wp:heading {"level":3} -->
-                <h3 class="wp-block-heading">Get In Touch</h3>
+                <!-- wp:heading {"level":3,"textColor":"accent"} -->
+                <h3 class="wp-block-heading has-accent-color has-text-color">Get In Touch</h3>
                 <!-- /wp:heading -->
-                <!-- wp:paragraph -->
-                <p>Email: <a href="mailto:contact@presspilot.com">contact@presspilot.com</a><br>Phone: +1 555-0199</p>
+                <!-- wp:paragraph {"textColor":"contrast-2"} -->
+                <p class="has-contrast-2-color has-text-color">Email: <a href="mailto:contact@presspilot.com">contact@presspilot.com</a><br>Phone: +1 555-0199</p>
                 <!-- /wp:paragraph -->
-                
-                <!-- wp:separator -->
-                <hr class="wp-block-separator has-alpha-channel-opacity"/>
+
+                <!-- wp:separator {"backgroundColor":"contrast-3"} -->
+                <hr class="wp-block-separator has-text-color has-contrast-3-color has-alpha-channel-opacity has-contrast-3-background-color has-background"/>
                 <!-- /wp:separator -->
 
-                <!-- wp:heading {"level":3} -->
-                <h3 class="wp-block-heading">Office</h3>
+                <!-- wp:heading {"level":3,"textColor":"accent"} -->
+                <h3 class="wp-block-heading has-accent-color has-text-color">Office</h3>
                 <!-- /wp:heading -->
-                <!-- wp:paragraph -->
-                <p>123 Innovation Dr.<br>Tech City, TC 90210</p>
+                <!-- wp:paragraph {"textColor":"contrast-2"} -->
+                <p class="has-contrast-2-color has-text-color">123 Innovation Dr.<br>Tech City, TC 90210</p>
                 <!-- /wp:paragraph -->
+
+                <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
+                <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--30)">
+                    <!-- wp:button {"backgroundColor":"accent","textColor":"base"} -->
+                    <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button">Send Message</a></div>
+                    <!-- /wp:button -->
+                </div>
+                <!-- /wp:buttons -->
             </div>
             <!-- /wp:column -->
 

@@ -27,14 +27,14 @@ export const getUniversalAboutContent = (content?: PageContent) => {
         `).join('');
 
         teamHtml = `
-        <!-- wp:group {"align":"wide","layout":{"type":"constrained"}} -->
-        <div class="wp-block-group alignwide">
-            <!-- wp:heading {"textAlign":"center","align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|40"}}}} -->
-            <h2 class="wp-block-heading alignwide has-text-align-center" style="margin-top:var(--wp--preset--spacing--60);margin-bottom:var(--wp--preset--spacing--40)">Meet the Team</h2>
+        <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"accent-2","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group alignfull has-accent-2-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+            <!-- wp:heading {"textAlign":"center","align":"wide","textColor":"contrast"} -->
+            <h2 class="wp-block-heading alignwide has-text-align-center has-contrast-color has-text-color">Meet the Team</h2>
             <!-- /wp:heading -->
 
-            <!-- wp:group {"align":"wide","layout":{"type":"grid","columnCount":3,"minimumColumnWidth":null}} -->
-            <div class="wp-block-group alignwide">
+            <!-- wp:group {"align":"wide","layout":{"type":"grid","columnCount":3,"minimumColumnWidth":null},"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
+            <div class="wp-block-group alignwide" style="margin-top:var(--wp--preset--spacing--40)">
                 ${teamMembers}
             </div>
             <!-- /wp:group -->
@@ -44,8 +44,8 @@ export const getUniversalAboutContent = (content?: PageContent) => {
     }
 
     return `
-    <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"contrast","textColor":"base","layout":{"type":"constrained"}} -->
-    <div class="wp-block-group alignfull has-base-color has-contrast-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"accent-3","textColor":"base","layout":{"type":"constrained"}} -->
+    <div class="wp-block-group alignfull has-base-color has-accent-3-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
         <!-- wp:heading {"textAlign":"center","level":1,"textColor":"base","fontSize":"x-large"} -->
         <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color has-x-large-font-size">${title}</h1>
         <!-- /wp:heading -->
