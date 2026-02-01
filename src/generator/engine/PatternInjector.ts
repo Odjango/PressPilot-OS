@@ -74,6 +74,13 @@ export class PatternInjector {
                 const slug = slugMatch ? slugMatch[1].trim() : null;
                 if (!slug) continue;
 
+                // Normalize core/cover background class to match Gutenberg save output
+                // Removes has-background-dim-XX classes that cause block validation errors
+                content = content.replace(
+                    /class="wp-block-cover__background([^"]*?)has-background-dim-\d+([^"]*)"/g,
+                    'class="wp-block-cover__background$1$2"'
+                );
+
                 // Skip CTA patterns from global replacements to preserve Buttons/Button block grammar
                 // Global string replacements can corrupt block markup, causing "Attempt recovery" error
                 if (slug.includes('cta-') || slug.includes('cta/') || slug.includes('/cta')) {

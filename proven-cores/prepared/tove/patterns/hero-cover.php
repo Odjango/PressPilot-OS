@@ -8,7 +8,7 @@
 <!-- wp:cover {"dimRatio":50,"overlayColor":"foreground","minHeight":75,"minHeightUnit":"vh","align":"full"} -->
 <div class="wp-block-cover alignfull" style="min-height:75vh">
 	<span aria-hidden="true"
-		class="wp-block-cover__background has-foreground-background-color has-background-dim-50 has-background-dim"></span>
+		class="wp-block-cover__background has-foreground-background-color has-background-dim"></span>
 	<div class="wp-block-cover__inner-container">
 		<!-- wp:group {"layout":{"type":"constrained"}} -->
 		<div class="wp-block-group">
