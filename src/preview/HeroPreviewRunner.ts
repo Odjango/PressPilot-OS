@@ -124,10 +124,18 @@ export class HeroPreviewRunner {
                 viewport: { width: 1400, height: 900 }
             });
 
-            // 6. Install and activate theme
-            const installed = await this.wpEnv.installTheme(page, this.options.zipPath);
+            // 6. Install theme via direct copy (bypasses WordPress upload permissions)
+            const installed = await this.wpEnv.installThemeViaCopy(
+                this.options.themeDir,
+                this.options.themeSlug
+            );
             if (!installed) {
-                console.warn('[HeroPreviewRunner] Theme may already be installed, trying to activate...');
+                // Fallback to web upload if docker copy fails
+                console.warn('[HeroPreviewRunner] Direct copy failed, trying web upload...');
+                const webInstalled = await this.wpEnv.installTheme(page, this.options.zipPath);
+                if (!webInstalled) {
+                    console.warn('[HeroPreviewRunner] Web upload also failed, trying to activate anyway...');
+                }
             }
 
             const activated = await this.wpEnv.activateTheme(page, this.options.themeSlug);
