@@ -204,16 +204,23 @@ export class HeroPreviewRunner {
     }
 
     /**
-     * Capture the hero section (wp:cover or first alignfull block)
+     * Capture the hero section (wp:cover or first alignfull block with background)
      * Falls back to viewport capture if no hero found
      */
     private async captureHeroSection(page: Page, outputPath: string): Promise<void> {
-        // Try to find the hero section - multiple selectors for different layout types
+        // Try to find the hero section - use specific selectors that target actual hero blocks
+        // All our injected heroes have has-background class, so we check for that first
+        // This ensures we match our heroes before footer/other sections
         const heroSelectors = [
-            '.wp-block-cover.alignfull',           // Full-bleed hero
-            '.wp-block-group.alignfull:first-of-type', // Full-width band or minimal
-            '.wp-block-cover',                      // Any cover block
-            '.wp-block-group.alignfull'             // Any alignfull group
+            // Cover blocks with has-background (fullBleed hero)
+            '.wp-block-cover.alignfull.has-background',
+            // Group blocks with background - but only in main content (not footer)
+            // main > first group with has-background should be our hero
+            'main .wp-block-group.alignfull.has-background',
+            // Fallback: any cover block in main
+            'main .wp-block-cover.alignfull',
+            // Ultimate fallback
+            '.wp-block-cover.alignfull'
         ];
 
         let heroElement = null;
@@ -222,6 +229,7 @@ export class HeroPreviewRunner {
             const element = page.locator(selector).first();
             if (await element.isVisible({ timeout: 2000 }).catch(() => false)) {
                 heroElement = element;
+                console.log(`[HeroPreviewRunner] Found hero with selector: ${selector}`);
                 break;
             }
         }
@@ -230,6 +238,7 @@ export class HeroPreviewRunner {
             // Capture just the hero section
             await heroElement.screenshot({ path: outputPath });
         } else {
+            console.log('[HeroPreviewRunner] No hero element found, capturing viewport');
             // Fallback: capture top portion of viewport (header + hero area)
             await page.screenshot({
                 path: outputPath,

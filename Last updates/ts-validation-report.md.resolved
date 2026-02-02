@@ -1,0 +1,53 @@
+# TypeScript & Code Quality Validation Infrastructure (Handover Report)
+
+This report details the specialized scripts and automated gates implemented (primarily on Jan 31, 2026) to manage TypeScript integrity and WordPress Block Grammar compliance in the PressPilot-OS project.
+
+---
+
+## 1. Automated Gatekeeper (Husky)
+We have implemented a strict pre-commit hook using **Husky** to ensure no code reaches the repository with TypeScript errors.
+
+- **Hook**: [.husky/pre-commit](file:///Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/.husky/pre-commit)
+- **Command**: `npx tsc --noEmit --skipLibCheck`
+- **Purpose**: This prevents "TypeScript problems" at the source by blocking commits if the compiler finds any type mismatches or syntax errors.
+
+---
+
+## 2. Specialized Validators (The "Hard Gates")
+Beyond standard TS checking, we use custom scripts to validate the **logic and output** of the theme generator.
+
+### A. WordPress FSE Validator ([scripts/validateGenerator.ts](file:///Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/scripts/validateGenerator.ts))
+This is the most critical logic validator. It enforces "Hard Gates" on the generated theme output or templates.
+- **Run with**: `npx tsx scripts/validateGenerator.ts <path-to-theme>`
+- **Checks**:
+  - **Structural Gate**: Uses a stack-based parser to ensure every `<!-- wp:block -->` has a matching `<!-- /wp:block -->`.
+  - **JSON Gate**: Validates that all block attributes are valid, non-corrupted JSON.
+  - **Hard Rules Gate**: Blocks forbidden attributes (like `"ref"`) and ensures all `var(--wp--preset)` variables exist in the theme's `theme.json`.
+  - **Discipline Gate**: Enforces a maximum nesting depth (8 levels) to prevent WordPress editor instability.
+
+### B. Library Validator ([scripts/validate-proven-cores.ts](file:///Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/scripts/validate-proven-cores.ts))
+Ensures the "Golden Skeletons" in `proven-cores/` are error-free.
+- **Purpose**: Scans all PHP/HTML files in the library for malformed block comments before they are used as blueprints for theme generation.
+
+### C. Token Security ([src/generator/validators/TokenValidator.ts](file:///Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/src/generator/validators/TokenValidator.ts))
+A runtime module integrated into the generation engine.
+- **Purpose**: Sanitizes and validates data tokens passed from the Studio to the Generator, preventing corrupted strings or illegal characters from breaking the FSE block grammar.
+
+---
+
+## 3. Deployment & Build Integration
+The [package.json](file:///Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/package.json) includes scripts that chain these validations:
+
+- **`npm run lint`**: Runs Next.js standard linting.
+- **`npm run theme:build`**: Automatically runs [validateGenerator.ts](file:///Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/scripts/validateGenerator.ts) against a "golden-spec" before proceeding with the build.
+- **`npm run test:themes`**: Generates and validates a battery of test themes.
+
+---
+
+## 4. End-to-End Regression Scripts
+To "fix" problems proactively, we use regression scripts that stress-test recent implementations:
+- **[scripts/test-kooko-pizza.ts](file:///Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/scripts/test-kooko-pizza.ts)**: Validates restaurant-specific logic.
+- **[scripts/generate-test-restaurants.ts](file:///Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/scripts/generate-test-restaurants.ts)**: Generates multiple variations to check for edge cases in color mapping and layout.
+
+> [!IMPORTANT]
+> **To the New AI Agent**: Always run `npx tsc --noEmit` locally before proposing changes to ensure you haven't introduced regressions. The Husky hook will block your commit if you do.

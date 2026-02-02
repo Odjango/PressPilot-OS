@@ -59,17 +59,15 @@ add_filter('render_block', function(\$block_content, \$block) {
         isset(\$block['attrs']['slug']) &&
         strpos(\$block['attrs']['slug'], 'hero') !== false;
 
-    // Match cover blocks with alignfull
+    // Match cover blocks with alignfull AND min-height (hero-specific)
+    // Avoid matching random cover blocks by requiring min-height style
     \$is_cover = \$block['blockName'] === 'core/cover' &&
-        strpos(\$block_content, 'alignfull') !== false;
-
-    // Match group blocks with alignfull (but not containing a cover)
-    \$is_hero_group = \$block['blockName'] === 'core/group' &&
         strpos(\$block_content, 'alignfull') !== false &&
-        strpos(\$block_content, 'hero') === false;
+        (strpos(\$block_content, 'min-height') !== false || strpos(\$block_content, 'padding-top:var(--wp--preset--spacing--60)') !== false);
 
-    // Replace if any hero block type is matched
-    if (\$is_hero_pattern || \$is_cover || (\$is_hero_group && !strpos(\$block_content, 'wp-block-cover'))) {
+    // Replace ONLY cover blocks that look like hero sections
+    // Do NOT replace generic group blocks (they could be headers, footers, etc.)
+    if (\$is_hero_pattern || \$is_cover) {
         \$hero_replaced = true;
         return pp_get_hero_variant(PP_HERO_PREVIEW_LAYOUT);
     }
@@ -97,24 +95,27 @@ function pp_get_hero_variant(\$layout) {
 }
 
 function pp_hero_full_bleed(\$title, \$sub, \$image) {
+    // Full-bleed hero: Image background with dark overlay, centered white text, dual CTAs
+    // Uses inline colors as fallback when theme.json colors are not defined
+    // Added has-background class so Playwright selector matches this before footer
     return '<!-- wp:cover {"url":"' . esc_attr(\$image) . '","dimRatio":75,"overlayColor":"accent-3","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained","contentSize":"900px"}} -->
-<div class="wp-block-cover alignfull" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+<div class="wp-block-cover alignfull has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
     <img class="wp-block-cover__image-background" src="' . esc_attr(\$image) . '" alt="" data-object-fit="cover"/>
-    <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-70 has-background-dim"></span>
+    <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-70 has-background-dim" style="background-color:#1a1a2e"></span>
     <div class="wp-block-cover__inner-container">
         <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2.5rem, 5vw, 4rem)"}},"textColor":"base"} -->
-        <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2.5rem, 5vw, 4rem)">' . esc_html(\$title) . '</h1>
+        <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2.5rem, 5vw, 4rem);color:#ffffff">' . esc_html(\$title) . '</h1>
         <!-- /wp:heading -->
         <!-- wp:paragraph {"align":"center","fontSize":"large","textColor":"base"} -->
-        <p class="has-text-align-center has-base-color has-text-color has-large-font-size">' . esc_html(\$sub) . '</p>
+        <p class="has-text-align-center has-base-color has-text-color has-large-font-size" style="color:#ffffff">' . esc_html(\$sub) . '</p>
         <!-- /wp:paragraph -->
         <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
         <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--30)">
             <!-- wp:button {"backgroundColor":"accent","textColor":"base"} -->
-            <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button">Get Started</a></div>
+            <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="background-color:#ffffff;color:#1a1a2e">Get Started</a></div>
             <!-- /wp:button -->
             <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"base","textColor":"base","className":"is-style-outline"} -->
-            <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px">Learn More</a></div>
+            <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px;border-color:#ffffff;color:#ffffff">Learn More</a></div>
             <!-- /wp:button -->
         </div>
         <!-- /wp:buttons -->
@@ -124,21 +125,23 @@ function pp_hero_full_bleed(\$title, \$sub, \$image) {
 }
 
 function pp_hero_full_width(\$title, \$sub) {
+    // Full-width band: Solid dark color background (no image), centered text, dual CTAs
+    // Uses inline background-color as fallback when theme.json lacks "accent-3" color
     return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"accent-3","layout":{"type":"constrained","contentSize":"900px"}} -->
-<div class="wp-block-group alignfull has-accent-3-background-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
+<div class="wp-block-group alignfull has-accent-3-background-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50);background-color:#1a1a2e">
     <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2.5rem, 5vw, 4rem)"}},"textColor":"base"} -->
-    <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2.5rem, 5vw, 4rem)">' . esc_html(\$title) . '</h1>
+    <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2.5rem, 5vw, 4rem);color:#ffffff">' . esc_html(\$title) . '</h1>
     <!-- /wp:heading -->
     <!-- wp:paragraph {"align":"center","fontSize":"large","textColor":"base"} -->
-    <p class="has-text-align-center has-base-color has-text-color has-large-font-size">' . esc_html(\$sub) . '</p>
+    <p class="has-text-align-center has-base-color has-text-color has-large-font-size" style="color:#ffffff">' . esc_html(\$sub) . '</p>
     <!-- /wp:paragraph -->
     <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
     <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--30)">
         <!-- wp:button {"backgroundColor":"accent","textColor":"base"} -->
-        <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button">Get Started</a></div>
+        <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="background-color:#ffffff;color:#1a1a2e">Get Started</a></div>
         <!-- /wp:button -->
         <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"base","textColor":"base","className":"is-style-outline"} -->
-        <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px">Learn More</a></div>
+        <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px;border-color:#ffffff;color:#ffffff">Learn More</a></div>
         <!-- /wp:button -->
     </div>
     <!-- /wp:buttons -->
@@ -147,25 +150,27 @@ function pp_hero_full_width(\$title, \$sub) {
 }
 
 function pp_hero_split(\$title, \$sub, \$image) {
+    // Split hero: White background with two columns (text left, image right)
+    // Uses inline background-color as fallback when theme.json lacks "base" color
     return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
+<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50);background-color:#ffffff">
     <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|50"}}}} -->
     <div class="wp-block-columns alignwide">
         <!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
         <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%">
             <!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(2.25rem, 4vw, 3.5rem)"}},"textColor":"contrast"} -->
-            <h1 class="wp-block-heading has-contrast-color has-text-color" style="font-size:clamp(2.25rem, 4vw, 3.5rem)">' . esc_html(\$title) . '</h1>
+            <h1 class="wp-block-heading has-contrast-color has-text-color" style="font-size:clamp(2.25rem, 4vw, 3.5rem);color:#111111">' . esc_html(\$title) . '</h1>
             <!-- /wp:heading -->
             <!-- wp:paragraph {"fontSize":"large","textColor":"contrast-2"} -->
-            <p class="has-contrast-2-color has-text-color has-large-font-size">' . esc_html(\$sub) . '</p>
+            <p class="has-contrast-2-color has-text-color has-large-font-size" style="color:#555555">' . esc_html(\$sub) . '</p>
             <!-- /wp:paragraph -->
             <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
             <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--30)">
                 <!-- wp:button {"backgroundColor":"accent","textColor":"base"} -->
-                <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button">Get Started</a></div>
+                <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="background-color:#111111;color:#ffffff">Get Started</a></div>
                 <!-- /wp:button -->
                 <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"accent","textColor":"accent","className":"is-style-outline"} -->
-                <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-accent-color has-text-color has-border-color has-accent-border-color wp-element-button" style="border-width:2px">Learn More</a></div>
+                <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-accent-color has-text-color has-border-color has-accent-border-color wp-element-button" style="border-width:2px;border-color:#111111;color:#111111">Learn More</a></div>
                 <!-- /wp:button -->
             </div>
             <!-- /wp:buttons -->
@@ -185,18 +190,20 @@ function pp_hero_split(\$title, \$sub, \$image) {
 }
 
 function pp_hero_minimal(\$title, \$sub) {
+    // Minimal hero: Clean white background with large centered text and single CTA
+    // Uses inline background-color as fallback when theme.json lacks "base" color
     return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"base","layout":{"type":"constrained","contentSize":"800px"}} -->
-<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60);background-color:#ffffff">
     <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2.75rem, 6vw, 4.5rem)","lineHeight":"1.1"}},"textColor":"contrast"} -->
-    <h1 class="wp-block-heading has-text-align-center has-contrast-color has-text-color" style="font-size:clamp(2.75rem, 6vw, 4.5rem);line-height:1.1">' . esc_html(\$title) . '</h1>
+    <h1 class="wp-block-heading has-text-align-center has-contrast-color has-text-color" style="font-size:clamp(2.75rem, 6vw, 4.5rem);line-height:1.1;color:#111111">' . esc_html(\$title) . '</h1>
     <!-- /wp:heading -->
     <!-- wp:paragraph {"align":"center","fontSize":"large","textColor":"contrast-2","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
-    <p class="has-text-align-center has-contrast-2-color has-text-color has-large-font-size" style="margin-top:var(--wp--preset--spacing--20)">' . esc_html(\$sub) . '</p>
+    <p class="has-text-align-center has-contrast-2-color has-text-color has-large-font-size" style="margin-top:var(--wp--preset--spacing--20);color:#555555">' . esc_html(\$sub) . '</p>
     <!-- /wp:paragraph -->
     <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
     <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--40)">
         <!-- wp:button {"backgroundColor":"accent","textColor":"base","style":{"border":{"radius":"6px"},"spacing":{"padding":{"left":"var:preset|spacing|40","right":"var:preset|spacing|40","top":"var:preset|spacing|20","bottom":"var:preset|spacing|20"}}}} -->
-        <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="border-radius:6px;padding-top:var(--wp--preset--spacing--20);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--40)">Get Started</a></div>
+        <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="border-radius:6px;padding-top:var(--wp--preset--spacing--20);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--40);background-color:#111111;color:#ffffff">Get Started</a></div>
         <!-- /wp:button -->
     </div>
     <!-- /wp:buttons -->

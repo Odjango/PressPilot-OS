@@ -4,6 +4,9 @@ import path from 'path';
 import fs from 'fs-extra';
 import { execSync } from 'child_process';
 
+// Sample base64 logo for testing logo handling (red circle icon)
+const SAMPLE_LOGO_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABhElEQVR4nO2ZsU7DMBCGvwpYGFhYWJAYeAJGBt6AhYGBgYWFhSdgZOANWBgYGFhYWBgYWFhYGBhY+gRUiEJpGsc+O3b/T7Jkxfb9d3aciw2BQCAQCNQRXArUA0ABHAKngE9gGzgCFoFH4BN4A26BK+AG+KkT4DuwBXwBs0A3MF8C94F3qk8UcZoB7gCngAdgHjisUALdALp4P9ALdONPATp5t6uZAR6AbeAIWKE+WZC3YnkNuADeA1/AHrBLPbIgb8XyFjiucNxfgb8k8AQ8BY6BVeoZWDi2wCEwAhwDx8AqtQt8D8T2gAPgCFilvoE/s2gKOARGgWNglXoHtoENYAo4BlaoJSAsO3EIDALHwAq1B4RlLQ6AI2AcOAaWqUNgWH5mEjgGpoFV6gMQliMxCIwCU8Ay9QEIy9EYBoaBQ2CYOgEEZW8MAwfACDAILFIfgKCciSFgEBgChqgvQFBuyhBwAJxS0b+TQUhPyj0wCPQBfVTsnwWBQCAQCATqjl+ZbcxmFOQQWQAAAABJRU5ErkJggg==';
+
 async function testKookoPizza() {
     console.log('[Test] Starting Kooko Pizza Generation (Using Prepared Core)...');
 
@@ -25,6 +28,7 @@ async function testKookoPizza() {
             data: {
                 name: "Kooko Pizza",
                 industry: "restaurant",
+                logo: SAMPLE_LOGO_BASE64,
                 hero_headline: "The Best Pizza in Town",
                 hero_subheadline: "Try our fresh organic ingredients today.",
                 description: "Hand-crafted pizzas with authentic Italian recipes since 1995.",

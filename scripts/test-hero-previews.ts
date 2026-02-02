@@ -309,7 +309,7 @@ async function generateHtmlReport(results: TestResult[], outputPath: string): Pr
         <div class="previews">
             ${result.previews.map(p => `
             <div class="preview">
-                <img src="${p.screenshotUrl}" alt="${p.label}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2220%22>No Image</text></svg>'"/>
+                <img src="file://${p.screenshotPath}" alt="${p.label}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2220%22>No Image</text></svg>'"/>
                 <div class="preview-label">${p.label}</div>
             </div>
             `).join('')}
