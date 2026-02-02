@@ -53,12 +53,23 @@ add_filter('render_block', function(\$block_content, \$block) {
     static \$hero_replaced = false;
     if (\$hero_replaced) return \$block_content;
 
-    // Check if this is a hero block (first cover or full-width group)
-    \$is_cover = \$block['blockName'] === 'core/cover' && strpos(\$block_content, 'alignfull') !== false;
-    \$is_hero_group = \$block['blockName'] === 'core/group' && strpos(\$block_content, 'alignfull') !== false && strpos(\$block_content, 'hero') === false;
+    // Match hero pattern blocks directly (highest priority)
+    // This catches patterns like "tove/hero-cover" BEFORE WordPress expands them
+    \$is_hero_pattern = \$block['blockName'] === 'core/pattern' &&
+        isset(\$block['attrs']['slug']) &&
+        strpos(\$block['attrs']['slug'], 'hero') !== false;
 
-    // Only replace if it's likely the hero section (first alignfull block at top of content)
-    if (\$is_cover || (\$is_hero_group && !strpos(\$block_content, 'wp-block-cover'))) {
+    // Match cover blocks with alignfull
+    \$is_cover = \$block['blockName'] === 'core/cover' &&
+        strpos(\$block_content, 'alignfull') !== false;
+
+    // Match group blocks with alignfull (but not containing a cover)
+    \$is_hero_group = \$block['blockName'] === 'core/group' &&
+        strpos(\$block_content, 'alignfull') !== false &&
+        strpos(\$block_content, 'hero') === false;
+
+    // Replace if any hero block type is matched
+    if (\$is_hero_pattern || \$is_cover || (\$is_hero_group && !strpos(\$block_content, 'wp-block-cover'))) {
         \$hero_replaced = true;
         return pp_get_hero_variant(PP_HERO_PREVIEW_LAYOUT);
     }
