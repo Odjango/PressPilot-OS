@@ -4,7 +4,7 @@ import {
   PressPilotSaaSInputV2,
   SupportedLanguageCode
 } from '@/types/presspilot';
-import type { TT4PaletteId, TT4FontProfile, TT4Mood, TT4HeroLayout } from '@/lib/theme/palettes';
+import type { TT4PaletteId, TT4FontProfile, TT4Mood, TT4HeroLayout, TT4BrandStyle } from '@/lib/theme/palettes';
 
 /**
  * Brand Kit slot names for user color overrides
@@ -78,6 +78,12 @@ export interface StudioFormInput {
    * Options: 'fullBleed' | 'fullWidth' | 'split' | 'minimal'
    */
   heroLayout?: TT4HeroLayout;
+
+  /**
+   * Brand style selection (restaurant vertical only)
+   * Determines base theme: 'playful' (Tove) vs 'modern' (Frost)
+   */
+  brandStyle?: TT4BrandStyle;
 }
 
 export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPilotSaaSInput {
@@ -126,7 +132,8 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
       userEditedBrandKit: input?.userEditedBrandKit,
       fontProfile: input?.fontProfile,
       mood: input?.mood,
-      heroLayout: input?.heroLayout
+      heroLayout: input?.heroLayout,
+      brandStyle: input?.brandStyle
     },
     visualAssets: {
       has_logo: !!input?.logoBase64 || !!input?.logoPath,

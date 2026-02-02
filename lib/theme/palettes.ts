@@ -123,6 +123,41 @@ export function getHeroLayoutById(id: string): HeroLayoutOption | undefined {
 }
 
 /**
+ * Brand style options for restaurant vertical
+ * Controls base theme selection: Tove (playful) vs Frost (modern)
+ */
+export type TT4BrandStyle = 'playful' | 'modern';
+
+export interface BrandStyleOption {
+    id: TT4BrandStyle;
+    label: string;
+    description: string;
+    icon: string;
+    coreTheme: string;
+}
+
+export const BRAND_STYLE_OPTIONS: BrandStyleOption[] = [
+    {
+        id: 'playful',
+        label: 'Playful & Warm',
+        description: 'Colorful, inviting feel for cafes, bakeries, family restaurants',
+        icon: '🎨',
+        coreTheme: 'tove'
+    },
+    {
+        id: 'modern',
+        label: 'Modern & Minimal',
+        description: 'Clean, photo-driven look for upscale dining, contemporary venues',
+        icon: '✨',
+        coreTheme: 'frost'
+    }
+];
+
+export function getBrandStyleById(id: string): BrandStyleOption | undefined {
+    return BRAND_STYLE_OPTIONS.find(s => s.id === id);
+}
+
+/**
  * Font profile options
  * Maps to backend FontProfile type
  */

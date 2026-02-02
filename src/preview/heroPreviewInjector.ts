@@ -95,22 +95,21 @@ function pp_get_hero_variant(\$layout) {
 }
 
 function pp_hero_full_bleed(\$title, \$sub, \$image) {
-    // Full-bleed hero: Image background with dark overlay, centered white text, dual CTAs
-    // Uses inline colors as fallback when theme.json colors are not defined
-    // Added has-background class so Playwright selector matches this before footer
-    return '<!-- wp:cover {"url":"' . esc_attr(\$image) . '","dimRatio":75,"overlayColor":"accent-3","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained","contentSize":"900px"}} -->
-<div class="wp-block-cover alignfull has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    // Full-bleed hero: 80vh min-height, LEFT-aligned text, large heading
+    // Key differentiators: immersive height, text-align-left, spacing|70
+    return '<!-- wp:cover {"url":"' . esc_attr(\$image) . '","dimRatio":75,"overlayColor":"accent-3","minHeight":80,"minHeightUnit":"vh","contentPosition":"center left","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
+<div class="wp-block-cover alignfull has-background is-position-center-left" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:80vh">
     <img class="wp-block-cover__image-background" src="' . esc_attr(\$image) . '" alt="" data-object-fit="cover"/>
     <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-70 has-background-dim" style="background-color:#1a1a2e"></span>
     <div class="wp-block-cover__inner-container">
-        <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2.5rem, 5vw, 4rem)"}},"textColor":"base"} -->
-        <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2.5rem, 5vw, 4rem);color:#ffffff">' . esc_html(\$title) . '</h1>
+        <!-- wp:heading {"textAlign":"left","level":1,"style":{"typography":{"fontSize":"clamp(3rem, 6vw, 5rem)","lineHeight":"1.1"}},"textColor":"base"} -->
+        <h1 class="wp-block-heading has-text-align-left has-base-color has-text-color" style="font-size:clamp(3rem, 6vw, 5rem);line-height:1.1;color:#ffffff">' . esc_html(\$title) . '</h1>
         <!-- /wp:heading -->
-        <!-- wp:paragraph {"align":"center","fontSize":"large","textColor":"base"} -->
-        <p class="has-text-align-center has-base-color has-text-color has-large-font-size" style="color:#ffffff">' . esc_html(\$sub) . '</p>
+        <!-- wp:paragraph {"fontSize":"large","textColor":"base","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+        <p class="has-base-color has-text-color has-large-font-size" style="margin-top:var(--wp--preset--spacing--20);color:#ffffff">' . esc_html(\$sub) . '</p>
         <!-- /wp:paragraph -->
-        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
-        <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--30)">
+        <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
+        <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
             <!-- wp:button {"backgroundColor":"accent","textColor":"base"} -->
             <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="background-color:#ffffff;color:#1a1a2e">Get Started</a></div>
             <!-- /wp:button -->
@@ -125,20 +124,20 @@ function pp_hero_full_bleed(\$title, \$sub, \$image) {
 }
 
 function pp_hero_full_width(\$title, \$sub) {
-    // Full-width band: Solid dark color background (no image), centered text, dual CTAs
-    // Uses inline background-color as fallback when theme.json lacks "accent-3" color
-    return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"accent-3","layout":{"type":"constrained","contentSize":"900px"}} -->
-<div class="wp-block-group alignfull has-accent-3-background-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50);background-color:#1a1a2e">
-    <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2.5rem, 5vw, 4rem)"}},"textColor":"base"} -->
-    <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2.5rem, 5vw, 4rem);color:#ffffff">' . esc_html(\$title) . '</h1>
+    // Full-width band: COMPACT solid color band (no image), centered text
+    // Key differentiators: shorter padding|40, smaller font, inverted button, 800px width
+    return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40"}}},"backgroundColor":"accent-3","layout":{"type":"constrained","contentSize":"800px"}} -->
+<div class="wp-block-group alignfull has-accent-3-background-color has-background" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);background-color:#1a1a2e">
+    <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2rem, 4vw, 3rem)"}},"textColor":"base"} -->
+    <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2rem, 4vw, 3rem);color:#ffffff">' . esc_html(\$title) . '</h1>
     <!-- /wp:heading -->
-    <!-- wp:paragraph {"align":"center","fontSize":"large","textColor":"base"} -->
-    <p class="has-text-align-center has-base-color has-text-color has-large-font-size" style="color:#ffffff">' . esc_html(\$sub) . '</p>
+    <!-- wp:paragraph {"align":"center","fontSize":"medium","textColor":"base"} -->
+    <p class="has-text-align-center has-base-color has-text-color has-medium-font-size" style="color:#ffffff">' . esc_html(\$sub) . '</p>
     <!-- /wp:paragraph -->
-    <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
-    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--30)">
-        <!-- wp:button {"backgroundColor":"accent","textColor":"base"} -->
-        <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="background-color:#ffffff;color:#1a1a2e">Get Started</a></div>
+    <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--20)">
+        <!-- wp:button {"backgroundColor":"base","textColor":"accent-3"} -->
+        <div class="wp-block-button"><a class="wp-block-button__link has-accent-3-color has-base-background-color has-text-color has-background wp-element-button" style="background-color:#ffffff;color:#1a1a2e">Get Started</a></div>
         <!-- /wp:button -->
         <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"base","textColor":"base","className":"is-style-outline"} -->
         <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px;border-color:#ffffff;color:#ffffff">Learn More</a></div>
@@ -150,27 +149,27 @@ function pp_hero_full_width(\$title, \$sub) {
 }
 
 function pp_hero_split(\$title, \$sub, \$image) {
-    // Split hero: White background with two columns (text left, image right)
-    // Uses inline background-color as fallback when theme.json lacks "base" color
-    return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50);background-color:#ffffff">
-    <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|50"}}}} -->
+    // Split hero: 2-column layout (text left, image right)
+    // Key differentiators: spacing|60, 20px image radius, box-shadow, 8px button radius
+    return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60);background-color:#ffffff">
+    <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|60"}}}} -->
     <div class="wp-block-columns alignwide">
         <!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
         <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%">
-            <!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(2.25rem, 4vw, 3.5rem)"}},"textColor":"contrast"} -->
-            <h1 class="wp-block-heading has-contrast-color has-text-color" style="font-size:clamp(2.25rem, 4vw, 3.5rem);color:#111111">' . esc_html(\$title) . '</h1>
+            <!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(2.5rem, 5vw, 4rem)","lineHeight":"1.15"}},"textColor":"contrast"} -->
+            <h1 class="wp-block-heading has-contrast-color has-text-color" style="font-size:clamp(2.5rem, 5vw, 4rem);line-height:1.15;color:#111111">' . esc_html(\$title) . '</h1>
             <!-- /wp:heading -->
-            <!-- wp:paragraph {"fontSize":"large","textColor":"contrast-2"} -->
-            <p class="has-contrast-2-color has-text-color has-large-font-size" style="color:#555555">' . esc_html(\$sub) . '</p>
+            <!-- wp:paragraph {"fontSize":"large","textColor":"contrast-2","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+            <p class="has-contrast-2-color has-text-color has-large-font-size" style="margin-top:var(--wp--preset--spacing--20);color:#555555">' . esc_html(\$sub) . '</p>
             <!-- /wp:paragraph -->
-            <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
-            <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--30)">
-                <!-- wp:button {"backgroundColor":"accent","textColor":"base"} -->
-                <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="background-color:#111111;color:#ffffff">Get Started</a></div>
+            <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
+            <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
+                <!-- wp:button {"backgroundColor":"accent","textColor":"base","style":{"border":{"radius":"8px"}}} -->
+                <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="border-radius:8px;background-color:#111111;color:#ffffff">Get Started</a></div>
                 <!-- /wp:button -->
-                <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"accent","textColor":"accent","className":"is-style-outline"} -->
-                <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-accent-color has-text-color has-border-color has-accent-border-color wp-element-button" style="border-width:2px;border-color:#111111;color:#111111">Learn More</a></div>
+                <!-- wp:button {"style":{"border":{"width":"2px","radius":"8px"}},"borderColor":"accent","textColor":"accent","className":"is-style-outline"} -->
+                <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-accent-color has-text-color has-border-color has-accent-border-color wp-element-button" style="border-width:2px;border-radius:8px;border-color:#111111;color:#111111">Learn More</a></div>
                 <!-- /wp:button -->
             </div>
             <!-- /wp:buttons -->
@@ -178,8 +177,8 @@ function pp_hero_split(\$title, \$sub, \$image) {
         <!-- /wp:column -->
         <!-- wp:column {"width":"50%"} -->
         <div class="wp-block-column" style="flex-basis:50%">
-            <!-- wp:image {"sizeSlug":"large","style":{"border":{"radius":"12px"}}} -->
-            <figure class="wp-block-image size-large has-custom-border"><img src="' . esc_attr(\$image) . '" alt="" style="border-radius:12px"/></figure>
+            <!-- wp:image {"sizeSlug":"large","style":{"border":{"radius":"20px"},"shadow":"0 10px 40px rgba(0,0,0,0.15)"}} -->
+            <figure class="wp-block-image size-large has-custom-border"><img src="' . esc_attr(\$image) . '" alt="" style="border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.15)"/></figure>
             <!-- /wp:image -->
         </div>
         <!-- /wp:column -->
@@ -190,20 +189,20 @@ function pp_hero_split(\$title, \$sub, \$image) {
 }
 
 function pp_hero_minimal(\$title, \$sub) {
-    // Minimal hero: Clean white background with large centered text and single CTA
-    // Uses inline background-color as fallback when theme.json lacks "base" color
-    return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"base","layout":{"type":"constrained","contentSize":"800px"}} -->
-<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60);background-color:#ffffff">
-    <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2.75rem, 6vw, 4.5rem)","lineHeight":"1.1"}},"textColor":"contrast"} -->
-    <h1 class="wp-block-heading has-text-align-center has-contrast-color has-text-color" style="font-size:clamp(2.75rem, 6vw, 4.5rem);line-height:1.1;color:#111111">' . esc_html(\$title) . '</h1>
+    // Minimal hero: Maximum whitespace, typography-first design
+    // Key differentiators: spacing|80, 700px width, huge heading, single PILL button (100px radius)
+    return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"}}},"backgroundColor":"base","layout":{"type":"constrained","contentSize":"700px"}} -->
+<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80);background-color:#ffffff">
+    <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(3rem, 7vw, 5rem)","lineHeight":"1.05","letterSpacing":"-0.02em"}},"textColor":"contrast"} -->
+    <h1 class="wp-block-heading has-text-align-center has-contrast-color has-text-color" style="font-size:clamp(3rem, 7vw, 5rem);line-height:1.05;letter-spacing:-0.02em;color:#111111">' . esc_html(\$title) . '</h1>
     <!-- /wp:heading -->
-    <!-- wp:paragraph {"align":"center","fontSize":"large","textColor":"contrast-2","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
-    <p class="has-text-align-center has-contrast-2-color has-text-color has-large-font-size" style="margin-top:var(--wp--preset--spacing--20);color:#555555">' . esc_html(\$sub) . '</p>
+    <!-- wp:paragraph {"align":"center","fontSize":"large","textColor":"contrast-2","style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
+    <p class="has-text-align-center has-contrast-2-color has-text-color has-large-font-size" style="margin-top:var(--wp--preset--spacing--30);color:#555555">' . esc_html(\$sub) . '</p>
     <!-- /wp:paragraph -->
-    <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
-    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--40)">
-        <!-- wp:button {"backgroundColor":"accent","textColor":"base","style":{"border":{"radius":"6px"},"spacing":{"padding":{"left":"var:preset|spacing|40","right":"var:preset|spacing|40","top":"var:preset|spacing|20","bottom":"var:preset|spacing|20"}}}} -->
-        <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="border-radius:6px;padding-top:var(--wp--preset--spacing--20);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--40);background-color:#111111;color:#ffffff">Get Started</a></div>
+    <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|50"}}}} -->
+    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--50)">
+        <!-- wp:button {"backgroundColor":"contrast","textColor":"base","style":{"border":{"radius":"100px"},"spacing":{"padding":{"left":"var:preset|spacing|50","right":"var:preset|spacing|50","top":"var:preset|spacing|20","bottom":"var:preset|spacing|20"}}}} -->
+        <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-contrast-background-color has-text-color has-background wp-element-button" style="border-radius:100px;padding-top:var(--wp--preset--spacing--20);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--50);background-color:#111111;color:#ffffff">Get Started</a></div>
         <!-- /wp:button -->
     </div>
     <!-- /wp:buttons -->

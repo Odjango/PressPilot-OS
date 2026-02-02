@@ -149,5 +149,10 @@ export function transformSaaSInputToGeneratorData(input: PressPilotSaaSInput): G
         generatorData.heroLayout = input.visualControls.heroLayout as any;
     }
 
+    // Pass brandStyle (playful, modern) - restaurant vertical only
+    if (input.visualControls?.brandStyle) {
+        generatorData.brandStyle = input.visualControls.brandStyle as any;
+    }
+
     return generatorData;
 }

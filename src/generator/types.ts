@@ -99,6 +99,13 @@ export type Mood = 'warm' | 'fresh' | 'minimal' | 'dark';
 export type HeroLayout = 'fullBleed' | 'fullWidth' | 'split' | 'minimal';
 
 /**
+ * Brand style options for restaurant vertical
+ * 'playful' → Tove-based (warm, colorful)
+ * 'modern' → Frost-based (clean, photo-driven)
+ */
+export type BrandStyle = 'playful' | 'modern';
+
+/**
  * User slot names for brand kit editing
  */
 export type BrandKitSlot =
@@ -180,6 +187,15 @@ export interface GeneratorData {
      * Default: 'fullBleed'
      */
     heroLayout?: HeroLayout;
+
+    /**
+     * Brand style selection (restaurant vertical only)
+     * Controls base theme selection for restaurant sites
+     * 'playful' → Tove-based (warm, colorful)
+     * 'modern' → Frost-based (clean, photo-driven)
+     * Default: 'playful'
+     */
+    brandStyle?: BrandStyle;
 
     [key: string]: unknown; // Allow additional properties
 }

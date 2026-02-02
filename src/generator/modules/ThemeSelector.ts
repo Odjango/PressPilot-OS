@@ -56,7 +56,15 @@ export class ThemeSelector {
         let targetBase: BaseTheme | null = null;
 
         if (vertical === 'restaurant' || vertical === 'cafe' || vertical === 'restaurant_cafe') {
-            targetBase = 'tove';
+            // Restaurant brandStyle routing: playful → Tove, modern → Frost
+            const brandStyle = data.brandStyle || 'playful';
+            if (brandStyle === 'modern') {
+                targetBase = 'frost';
+                console.log(`[ThemeSelector] Restaurant + Modern brandStyle -> Frost`);
+            } else {
+                targetBase = 'tove';
+                console.log(`[ThemeSelector] Restaurant + Playful brandStyle -> Tove`);
+            }
         } else if (vertical === 'portfolio' || vertical === 'agency' || vertical === 'creative') {
             targetBase = 'frost';
         } else if (vertical === 'ecommerce' || vertical === 'shop') {

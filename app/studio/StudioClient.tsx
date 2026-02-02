@@ -14,7 +14,7 @@ import VariationCard from "./VariationCard";
 import { HeroCarousel } from "@/src/components/HeroCarousel";
 import ColorPalettePreview from "./components/ColorPalettePreview";
 import FontStylePreview, { getFontStyles } from "./components/FontStylePreview";
-import { PALETTES, MOOD_OPTIONS, FONT_PROFILE_OPTIONS, MOOD_PALETTES, HERO_LAYOUT_OPTIONS, getPreviewColors, type TT4Mood, type TT4FontProfile, type TT4PaletteId, type TT4HeroLayout, type PreviewColors } from "@/lib/theme/palettes";
+import { PALETTES, MOOD_OPTIONS, FONT_PROFILE_OPTIONS, MOOD_PALETTES, HERO_LAYOUT_OPTIONS, BRAND_STYLE_OPTIONS, getPreviewColors, type TT4Mood, type TT4FontProfile, type TT4PaletteId, type TT4HeroLayout, type TT4BrandStyle, type PreviewColors } from "@/lib/theme/palettes";
 import MenuUploader from "./components/MenuUploader";
 import LogoUploader from "./components/LogoUploader";
 import { RestaurantMenu } from "@/src/generator/types";
@@ -84,6 +84,7 @@ export default function StudioClient({ slug }: Props) {
   const [selectedMood, setSelectedMood] = useState<TT4Mood>('minimal');
   const [selectedFontProfile, setSelectedFontProfile] = useState<TT4FontProfile>('modern');
   const [selectedHeroLayout, setSelectedHeroLayout] = useState<TT4HeroLayout>('fullBleed');
+  const [selectedBrandStyle, setSelectedBrandStyle] = useState<TT4BrandStyle>('playful');
 
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
@@ -432,9 +433,11 @@ export default function StudioClient({ slug }: Props) {
       userEditedBrandKit,
       fontProfile: selectedFontProfile,
       mood: selectedMood,
-      heroLayout: selectedHeroLayout
+      heroLayout: selectedHeroLayout,
+      // Restaurant-only: brandStyle determines Tove (playful) vs Frost (modern)
+      brandStyle: selectedBusinessCategoryId === 'restaurant_cafe' ? selectedBrandStyle : undefined
     };
-  }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId, customLogoBase64, logoColors, menus, selectedBusinessCategoryId, selectedFontProfile, selectedMood, selectedHeroLayout, paletteOverrides]);
+  }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId, customLogoBase64, logoColors, menus, selectedBusinessCategoryId, selectedFontProfile, selectedMood, selectedHeroLayout, selectedBrandStyle, paletteOverrides]);
 
   // Handler for generating hero previews (Phase 10)
   const handleGeneratePreviews = useCallback(async () => {
@@ -764,7 +767,37 @@ export default function StudioClient({ slug }: Props) {
                 </div>
 
                 {selectedBusinessCategoryId === 'restaurant_cafe' && (
-                  <div className="pt-4">
+                  <div className="space-y-6 pt-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                    {/* Brand Style Selector - Restaurant Only */}
+                    <div className="space-y-3">
+                      <label className="text-sm font-bold text-neutral-900 flex items-center gap-2">
+                        <span className="flex h-5 w-5 items-center justify-center rounded bg-emerald-500 text-[10px] text-white">R</span>
+                        Restaurant Style
+                      </label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {BRAND_STYLE_OPTIONS.map((style) => {
+                          const selected = style.id === selectedBrandStyle;
+                          return (
+                            <button
+                              key={style.id}
+                              type="button"
+                              onClick={() => setSelectedBrandStyle(style.id)}
+                              className={`text-left rounded-2xl border p-4 transition-all ${
+                                selected ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500/20' : 'border-neutral-100 hover:border-neutral-300'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3 mb-2">
+                                <span className="text-2xl">{style.icon}</span>
+                                <span className="text-base font-bold">{style.label}</span>
+                              </div>
+                              <p className="text-xs text-neutral-500">{style.description}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Menu Uploader */}
                     <MenuUploader menus={menus} onChange={setMenus} />
                   </div>
                 )}
