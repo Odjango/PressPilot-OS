@@ -22,22 +22,17 @@ export default function ColorPalettePreview({ paletteId, className = '' }: Color
         );
     }
 
-    // We want to show: Primary, Secondary (Accent), Background, Foreground, Muted
-    // Mapping:
-    // Primary -> primary
-    // Secondary -> accent
-    // Background -> background
-    // Foreground -> foreground
-    // Muted -> muted
+    // TT4-aligned color display - show distinctive accent colors first
+    // Actual slugs in PALETTES: base, base-2, contrast, accent, accent-3, accent-4
 
     const getColor = (slug: string) => palette.colors.find(c => c.slug === slug)?.color || '#cccccc';
 
+    // Show the most visually distinctive colors (accents) first, then base
     const previewColors = [
-        { slug: 'primary', color: getColor('primary') },
-        { slug: 'accent', color: getColor('accent') },
-        { slug: 'background', color: getColor('background') },
-        { slug: 'foreground', color: getColor('foreground') },
-        { slug: 'muted', color: getColor('muted') },
+        { slug: 'accent', color: getColor('accent') },        // Primary accent (bold color)
+        { slug: 'accent-4', color: getColor('accent-4') },    // Secondary/pop color
+        { slug: 'accent-3', color: getColor('accent-3') },    // Dark accent
+        { slug: 'base', color: getColor('base') },            // Background
     ];
 
     return (

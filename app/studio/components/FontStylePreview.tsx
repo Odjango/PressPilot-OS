@@ -6,32 +6,54 @@ interface FontStylePreviewProps {
     className?: string;
 }
 
+/**
+ * Get font family CSS values for a given font profile ID.
+ * Supports both TT4 profiles and legacy font IDs.
+ */
+export function getFontStyles(id: string): { heading: string; body: string } {
+    switch (id) {
+        // TT4 font profiles (match lib/theme/palettes.ts FONT_PROFILE_OPTIONS)
+        case 'elegant':
+            return {
+                heading: '"Cardo", "Georgia", "Times New Roman", serif',
+                body: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
+            };
+        case 'modern':
+            return {
+                heading: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
+                body: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
+            };
+        case 'bold':
+            return {
+                heading: '"Jost", "Arial Black", "Helvetica Neue", sans-serif',
+                body: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
+            };
+        case 'friendly':
+            return {
+                heading: '"Instrument Sans", "Trebuchet MS", "Helvetica Neue", sans-serif',
+                body: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
+            };
+        // Legacy font profiles (backwards compatibility)
+        case 'serif-display':
+            return {
+                heading: '"Playfair Display", "Times New Roman", serif',
+                body: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
+            };
+        case 'system-mono':
+            return {
+                heading: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+                body: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
+            };
+        case 'system-sans':
+        default:
+            return {
+                heading: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
+                body: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
+            };
+    }
+}
+
 export default function FontStylePreview({ fontPairId, className = '' }: FontStylePreviewProps) {
-    // Map fontPairId to actual font families for preview
-    // This is a simplified mapping for the UI preview.
-    // In a real app, this might come from a font registry.
-
-    const getFontStyles = (id: string) => {
-        switch (id) {
-            case 'serif-display':
-                return {
-                    heading: '"Playfair Display", "Times New Roman", serif',
-                    body: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
-                };
-            case 'system-mono':
-                return {
-                    heading: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-                    body: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
-                };
-            case 'system-sans':
-            default:
-                return {
-                    heading: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
-                    body: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
-                };
-        }
-    };
-
     const styles = getFontStyles(fontPairId);
 
     return (

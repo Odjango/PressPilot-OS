@@ -1,7 +1,8 @@
-import { GeneratorData, ThemePersonality, BaseTheme, BrandKitEdit } from '../types';
+import { GeneratorData, ThemePersonality, BaseTheme, BrandKitEdit, Mood } from '../types';
 import { ColorHarmonizer, HarmonizedPalette } from '../utils/ColorHarmonizer';
 import { PATTERN_REGISTRY } from '../config/PatternRegistry';
 import { FontProvider, FONT_SIZE_SCALE, FontSizePreset } from '../utils/FontProvider';
+import { VariationBuilder } from './VariationBuilder';
 import {
     TT4ColorPalette,
     PALETTE_PRESETS,
@@ -290,7 +291,24 @@ export class StyleBuilder {
             );
 
             // Map to TT4 tokens - only use harmonized colors for brand-kit or when user provided colors
-            const tt4Palette = TT4TokenMapper.mapToTT4(harmonized, selectedPaletteId, userEditedBrandKit, hasUserColors);
+            let tt4Palette = TT4TokenMapper.mapToTT4(harmonized, selectedPaletteId, userEditedBrandKit, hasUserColors);
+
+            // Apply mood colors to main theme if mood is specified (not 'minimal')
+            // This makes the default theme reflect the user's mood choice immediately
+            if (mood && mood !== 'minimal') {
+                const moodPalette = VariationBuilder.getVariationPalette(mood as Mood);
+                if (moodPalette) {
+                    console.log(`[StyleBuilder] Applying ${mood} mood colors to main theme`);
+                    // Override TT4 palette with mood colors
+                    tt4Palette = tt4Palette.map(colorPreset => {
+                        const moodColor = moodPalette[colorPreset.slug];
+                        if (moodColor) {
+                            return { ...colorPreset, color: moodColor };
+                        }
+                        return colorPreset;
+                    });
+                }
+            }
 
             // Generate legacy aliases for backward compatibility
             const legacyAliases = TT4TokenMapper.generateLegacyAliases(tt4Palette);

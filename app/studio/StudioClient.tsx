@@ -19,7 +19,7 @@ import MenuUploader from "./components/MenuUploader";
 import LogoUploader from "./components/LogoUploader";
 import { RestaurantMenu } from "@/src/generator/types";
 import StepProgress from "./components/StepProgress";
-import { ArrowLeft, ArrowRight, Wand2, Download, CheckCircle2, Sparkles, Info, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Wand2, Download, CheckCircle2, Sparkles, Info, X, Loader2, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 
 
@@ -89,6 +89,17 @@ export default function StudioClient({ slug }: Props) {
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [artifacts, setArtifacts] = useState<ArtifactResponse | null>(null);
   const [menus, setMenus] = useState<RestaurantMenu[]>([]);
+
+  // Hero Preview State (Phase 10)
+  const [heroPreviewLoading, setHeroPreviewLoading] = useState(false);
+  const [heroPreviewError, setHeroPreviewError] = useState<string | null>(null);
+  const [heroPreviews, setHeroPreviews] = useState<Array<{
+    layout: TT4HeroLayout;
+    screenshotUrl: string;
+    label: string;
+    description: string;
+  }> | null>(null);
+  const [previewSessionId, setPreviewSessionId] = useState<string | null>(null);
 
   // Refs for Color Pickers
   const colorPickerRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -250,9 +261,9 @@ export default function StudioClient({ slug }: Props) {
   const [jobStatus, setJobStatus] = useState<string>("pending");
   const [pollCount, setPollCount] = useState(0);
 
-  // Polling logic for Step 4
+  // Polling logic for Step 5 (Deliver)
   useEffect(() => {
-    if (currentStep === 4 && jobId && jobStatus !== "completed" && jobStatus !== "failed") {
+    if (currentStep === 5 && jobId && jobStatus !== "completed" && jobStatus !== "failed") {
       const timer = setTimeout(async () => {
         try {
           const res = await fetch(`/api/status?id=${jobId}`);
@@ -284,7 +295,8 @@ export default function StudioClient({ slug }: Props) {
     { id: 1, label: "Context" },
     { id: 2, label: "Variations" },
     { id: 3, label: "Refine" },
-    { id: 4, label: "Deliver" }
+    { id: 4, label: "Hero Preview" },
+    { id: 5, label: "Deliver" }
   ];
 
 
@@ -424,6 +436,39 @@ export default function StudioClient({ slug }: Props) {
     };
   }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId, customLogoBase64, logoColors, menus, selectedBusinessCategoryId, selectedFontProfile, selectedMood, selectedHeroLayout, paletteOverrides]);
 
+  // Handler for generating hero previews (Phase 10)
+  const handleGeneratePreviews = useCallback(async () => {
+    setHeroPreviewLoading(true);
+    setHeroPreviewError(null);
+    setHeroPreviews(null);
+
+    try {
+      const response = await fetch('/api/studio/hero-previews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input: studioInput() })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.details || 'Preview generation failed');
+      }
+
+      const data = await response.json();
+      setHeroPreviews(data.previews);
+      setPreviewSessionId(data.sessionId);
+      setCurrentStep(4); // Advance to Hero Preview step
+      toast.success("Hero previews generated! Select your favorite layout.");
+
+    } catch (error) {
+      console.error('[StudioClient] preview generation error:', error);
+      const message = error instanceof Error ? error.message : 'Failed to generate previews';
+      setHeroPreviewError(message);
+      toast.error(message);
+    } finally {
+      setHeroPreviewLoading(false);
+    }
+  }, [studioInput]);
 
   const handleAssign = useCallback(async () => {
     setAssigning(true);
@@ -507,8 +552,8 @@ export default function StudioClient({ slug }: Props) {
       setJobId(payload.jobId);
       setJobStatus("pending");
 
-      // Advance to step 4 on success
-      setCurrentStep(4);
+      // Advance to step 5 (Deliver) on success
+      setCurrentStep(5);
       toast.success("Theme generation started!");
     } catch (error) {
       console.error("[StudioClient] generate error", error);
@@ -1147,26 +1192,26 @@ export default function StudioClient({ slug }: Props) {
                     Back to Variations
                   </button>
                   <button
-                    disabled={generating}
-                    onClick={handleGenerate}
+                    disabled={heroPreviewLoading}
+                    onClick={handleGeneratePreviews}
                     className="flex items-center gap-3 rounded-full bg-black px-10 py-5 text-base font-bold text-white transition-all hover:bg-neutral-800 hover:shadow-2xl hover:scale-105 disabled:bg-neutral-200 shadow-xl shadow-black/10"
                   >
-                    {generating ? (
+                    {heroPreviewLoading ? (
                       <>
-                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
-                        Generating Theme...
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        Rendering Previews...
                       </>
                     ) : (
                       <>
-                        Generate Final Kits
-                        <Wand2 className="h-5 w-5" />
+                        Preview Real Heroes
+                        <ImageIcon className="h-5 w-5" />
                       </>
                     )}
                   </button>
                 </div>
-                {generateError && (
+                {heroPreviewError && (
                   <p className="mt-4 text-sm font-medium text-red-500 bg-red-50 p-4 rounded-xl border border-red-100 text-center">
-                    {generateError}
+                    {heroPreviewError}
                   </p>
                 )}
               </div>
@@ -1174,8 +1219,128 @@ export default function StudioClient({ slug }: Props) {
           </div>
         )}
 
-        {/* STEP 4: DELIVER */}
+        {/* STEP 4: HERO PREVIEW */}
         {currentStep === 4 && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+            <div className="flex flex-col gap-2">
+              <p className="text-xs font-bold uppercase tracking-widest text-neutral-400">
+                Step 4: Real Preview
+              </p>
+              <h2 className="text-3xl font-bold text-neutral-900">
+                Choose Your Hero Layout
+              </h2>
+              <p className="text-sm text-neutral-500 max-w-2xl">
+                These are actual WordPress-rendered screenshots of your theme.
+                Select the hero layout that best represents your brand.
+              </p>
+            </div>
+
+            {heroPreviews && heroPreviews.length > 0 ? (
+              <HeroCarousel
+                previews={heroPreviews.map(p => ({
+                  style: p.layout,
+                  name: p.label,
+                  description: p.description,
+                  imageUrl: p.screenshotUrl
+                }))}
+                onSelect={(layout) => setSelectedHeroLayout(layout as TT4HeroLayout)}
+              />
+            ) : (
+              <div className="flex items-center justify-center py-20">
+                <div className="text-center space-y-4">
+                  <div className="h-16 w-16 mx-auto rounded-full bg-neutral-100 flex items-center justify-center">
+                    <ImageIcon className="h-8 w-8 text-neutral-400" />
+                  </div>
+                  <p className="text-sm text-neutral-500">No previews available</p>
+                  <button
+                    onClick={handleGeneratePreviews}
+                    disabled={heroPreviewLoading}
+                    className="inline-flex items-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-bold text-white"
+                  >
+                    {heroPreviewLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      'Generate Previews'
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Hero Layout Selection Indicator */}
+            {heroPreviews && heroPreviews.length > 0 && (
+              <div className="rounded-2xl border border-neutral-100 bg-white p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-neutral-400 mb-1">
+                      Selected Layout
+                    </p>
+                    <p className="text-lg font-bold text-neutral-900">
+                      {HERO_LAYOUT_OPTIONS.find(l => l.id === selectedHeroLayout)?.label || 'Full-Bleed Hero'}
+                    </p>
+                    <p className="text-sm text-neutral-500">
+                      {HERO_LAYOUT_OPTIONS.find(l => l.id === selectedHeroLayout)?.description}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    {HERO_LAYOUT_OPTIONS.map((layout) => (
+                      <button
+                        key={layout.id}
+                        onClick={() => setSelectedHeroLayout(layout.id)}
+                        className={`h-10 w-10 rounded-xl border-2 flex items-center justify-center text-lg transition-all ${
+                          selectedHeroLayout === layout.id
+                            ? 'border-black bg-black text-white'
+                            : 'border-neutral-200 hover:border-neutral-400'
+                        }`}
+                        title={layout.label}
+                      >
+                        {layout.icon}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between border-t border-neutral-100 pt-8">
+              <button
+                onClick={() => setCurrentStep(3)}
+                className="flex items-center gap-2 text-sm font-bold text-neutral-400 hover:text-black transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Refine
+              </button>
+              <button
+                onClick={handleGenerate}
+                disabled={generating}
+                className="flex items-center gap-3 rounded-full bg-black px-10 py-5 text-base font-bold text-white transition-all hover:bg-neutral-800 hover:scale-105 disabled:bg-neutral-200 shadow-xl shadow-black/10"
+              >
+                {generating ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Generating Theme...
+                  </>
+                ) : (
+                  <>
+                    Generate Final Theme
+                    <Wand2 className="h-5 w-5" />
+                  </>
+                )}
+              </button>
+            </div>
+            {generateError && (
+              <p className="mt-4 text-sm font-medium text-red-500 bg-red-50 p-4 rounded-xl border border-red-100 text-center">
+                {generateError}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* STEP 5: DELIVER */}
+        {currentStep === 5 && (
           <div className="mx-auto max-w-2xl space-y-12 py-12 text-center animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="space-y-4">
               <div className="flex justify-center">

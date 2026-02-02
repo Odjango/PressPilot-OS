@@ -1,3 +1,11 @@
+/**
+ * NOTE: Keep in sync with PHP variants in:
+ * src/preview/heroPreviewInjector.ts (pp_hero_* functions)
+ *
+ * This TypeScript file generates hero markup at build time for the final theme.
+ * The PHP mirror generates the same markup at runtime for hero preview screenshots.
+ * Both must produce identical HTML/block structures for visual consistency.
+ */
 import { PageContent, HeroLayout } from '../types';
 
 /**

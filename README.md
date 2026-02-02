@@ -43,6 +43,28 @@ npm run dev
 npm run build
 ```
 
+### Local WordPress for Hero Previews
+
+The **Real Hero Preview** feature (Studio Step 4) requires a local WordPress instance to render pixel-accurate theme screenshots.
+
+**Default Configuration:**
+- **URL:** `http://localhost:8089`
+- **Credentials:** `admin` / `password123`
+
+**Start WordPress via Docker:**
+```bash
+docker-compose up -d wordpress
+```
+
+**Environment Variables (optional):**
+```bash
+WP_PREVIEW_URL=http://localhost:8089
+WP_PREVIEW_USER=admin
+WP_PREVIEW_PASS=password123
+```
+
+When WordPress is unavailable, the hero preview feature gracefully falls back—users can still proceed with the simulated preview in Step 3 and generate themes without real screenshots.
+
 ## 📦 Deployment
 
 The project is configured for **Docker** deployment (Coolify/Portainer).

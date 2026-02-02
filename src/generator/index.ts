@@ -13,6 +13,7 @@ import { ThemeSelector } from './modules/ThemeSelector';
 import { ContentBuilder } from './modules/ContentBuilder';
 import { StyleBuilder } from './modules/StyleBuilder';
 import { VariationBuilder } from './modules/VariationBuilder';
+import { prefetchImages } from './utils/ImageProvider';
 
 /**
  * PressPilot Generator Orchestrator
@@ -52,6 +53,10 @@ export async function generateTheme(options: GeneratorOptions = {}) {
     userData.baseName = baseName; // Propagate for downstream engines
     console.log(`[Orchestrator] Selected Core: ${coreId} (Base: ${baseName})`);
     console.log(`[Orchestrator] Reasoning: ${selection.reasoning}`);
+
+    // Pre-fetch Unsplash images for this industry (populates cache for ContentBuilder)
+    await prefetchImages(userData.industry || 'general');
+    console.log(`[Orchestrator] Pre-fetched images for industry: ${userData.industry || 'general'}`);
 
     // B. BUILD CONTENT & STYLE JSON
     const contentJson = contentBuilder.invoke(baseName, userData);
