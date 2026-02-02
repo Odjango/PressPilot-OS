@@ -1,3 +1,16 @@
+/**
+ * Universal Header Pattern - TT4-Aligned
+ *
+ * Creates a sticky header with solid background for reliable readability
+ * over full-bleed hero sections. Uses the "presspilot-header" class for
+ * CSS styling (sticky position, z-index, backdrop blur).
+ *
+ * Header Overlay Best Practices:
+ * 1. Solid white/base background (not transparent)
+ * 2. Higher z-index than hero (1000+)
+ * 3. Sticky positioning for scroll behavior
+ * 4. Backdrop blur for modern glass effect
+ */
 export const getUniversalHeaderContent = (businessName: string, pages: { title: string, slug: string }[], hasLogo?: boolean) => {
     // Generate Navigation Links provided by the Recipe
     const landingPages = [...pages];
@@ -21,21 +34,21 @@ export const getUniversalHeaderContent = (businessName: string, pages: { title: 
         : '';
 
     return `
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"flex","justifyContent":"space-between","flexWrap":"nowrap"}} -->
-<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--50)">
+<!-- wp:group {"tagName":"header","className":"presspilot-header","align":"full","backgroundColor":"base","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}},"border":{"bottom":{"color":"var:preset|color|contrast-3","width":"1px"}}},"layout":{"type":"flex","justifyContent":"space-between","flexWrap":"nowrap"}} -->
+<header class="wp-block-group alignfull presspilot-header has-base-background-color has-background" style="border-bottom-color:var(--wp--preset--color--contrast-3);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--50)">
 
     <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap"},"style":{"spacing":{"blockGap":"15px"}}} -->
     <div class="wp-block-group">
         ${logoBlock}
-        <!-- wp:site-title {"level":0,"style":{"typography":{"fontStyle":"normal","fontWeight":"700","fontSize":"1.5rem"}}} /-->
+        <!-- wp:site-title {"level":0,"style":{"typography":{"fontStyle":"normal","fontWeight":"700","fontSize":"1.5rem"}},"textColor":"contrast"} /-->
     </div>
     <!-- /wp:group -->
 
-    <!-- wp:navigation {"layout":{"type":"flex","justifyContent":"right","orientation":"horizontal"},"style":{"typography":{"fontWeight":"600","fontSize":"1rem"}}} -->
+    <!-- wp:navigation {"textColor":"contrast","layout":{"type":"flex","justifyContent":"right","orientation":"horizontal"},"style":{"typography":{"fontWeight":"600","fontSize":"1rem"}}} -->
     ${navLinks}
     <!-- /wp:navigation -->
 
-</div>
+</header>
 <!-- /wp:group -->
 `;
 };

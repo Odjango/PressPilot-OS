@@ -99,6 +99,30 @@ export const MOOD_OPTIONS: MoodOption[] = [
 ];
 
 /**
+ * Hero layout options for homepage hero section
+ * Maps to backend HeroLayout type
+ */
+export type TT4HeroLayout = 'fullBleed' | 'fullWidth' | 'split' | 'minimal';
+
+export interface HeroLayoutOption {
+    id: TT4HeroLayout;
+    label: string;
+    description: string;
+    icon: string;
+}
+
+export const HERO_LAYOUT_OPTIONS: HeroLayoutOption[] = [
+    { id: 'fullBleed', label: 'Full-Bleed Hero', description: 'Image fills the top of the page', icon: '🖼️' },
+    { id: 'fullWidth', label: 'Full-Width Band', description: 'Bold hero band below header', icon: '📐' },
+    { id: 'split', label: 'Split Hero', description: 'Text and image side by side', icon: '⬛' },
+    { id: 'minimal', label: 'Minimal', description: 'Clean text-only hero', icon: '📝' }
+];
+
+export function getHeroLayoutById(id: string): HeroLayoutOption | undefined {
+    return HERO_LAYOUT_OPTIONS.find(h => h.id === id);
+}
+
+/**
  * Font profile options
  * Maps to backend FontProfile type
  */

@@ -85,14 +85,32 @@ export class ContentEngine {
     async generatePages(themeDir: string, contentJson: ContentJSON): Promise<void> {
         if (contentJson.pages && contentJson.pages.length > 0) {
             console.log(`[ContentEngine] Building templates for ${contentJson.pages.length} custom pages...`);
-            for (const page of contentJson.pages) {
+
+            // Map hero images to pages (each page gets a different image)
+            const heroImages = contentJson.hero?.images || [];
+
+            for (let i = 0; i < contentJson.pages.length; i++) {
+                const page = contentJson.pages[i];
+
+                // Initialize page.content if not present
+                if (!page.content) {
+                    page.content = {};
+                }
+
+                // Assign hero image from the pool (cycling through available images)
+                if (heroImages.length > 0 && !page.content.hero_image) {
+                    page.content.hero_image = heroImages[i % heroImages.length];
+                }
+
+                // Add menus for menu pages
                 if (page.template === 'universal-menu' && contentJson.menus) {
                     page.content = {
                         ...page.content,
                         menus: contentJson.menus
                     };
                 }
-                await buildPageTemplate(themeDir, page, contentJson.baseName);
+
+                await buildPageTemplate(themeDir, page, contentJson.baseName, contentJson.heroLayout);
             }
         }
     }

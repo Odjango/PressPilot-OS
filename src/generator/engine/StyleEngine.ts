@@ -136,10 +136,39 @@ export class StyleEngine {
 /* PressPilot Standard Layout Helper */
 body { margin: 0; overflow-x: hidden; width: 100%; }
 .wp-site-blocks { display: flex; flex-direction: column; min-height: 100vh; width: 100%; overflow-x: hidden; }
+
+/* =============================================
+   Sticky Header for Hero Overlay Support
+   ============================================= */
+
+/* Header positioning for full-bleed hero support */
+.presspilot-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Semi-transparent background for glass effect */
+.presspilot-header.has-base-background-color {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Dark mode header support */
+body.is-dark-theme .presspilot-header.has-base-background-color,
+.presspilot-header.has-base-background-color[data-dark="true"] {
+    background-color: rgba(15, 23, 42, 0.95) !important;
+}
+
+/* Ensure hero sections stay below header */
+.wp-block-cover {
+    z-index: 1;
+}
 `;
             styleContent += minimalLayoutStyles;
             await fs.writeFile(styleCssPath, styleContent);
-            console.log(`[StyleEngine] Updated style.css with minimal refined layout helper.`);
+            console.log(`[StyleEngine] Updated style.css with minimal refined layout helper and header CSS.`);
         }
     }
 }

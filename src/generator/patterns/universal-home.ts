@@ -1,42 +1,20 @@
-import { PageContent } from '../types';
+import { PageContent, HeroLayout } from '../types';
+import { getHeroByLayout } from './hero-variants';
 
 /**
  * Universal Home Pattern - TT4-Aligned
  *
  * Uses TT4 semantic color tokens for visual differentiation between palettes:
- * - Hero: Uses accent-3 (dark accent) for overlay, making hero feel branded
+ * - Hero: Dynamic layout based on heroLayout selection (fullBleed, fullWidth, split, minimal)
  * - Feature Section: Uses base-2 for subtle surface distinction
  * - CTA Band: Uses accent background with base text for strong visual impact
  * - Values Section: Uses accent-2 (light accent) for secondary branded section
  */
-export const getUniversalHomeContent = (content?: PageContent) => {
-    const title = content?.hero_title || 'Welcome';
-    const sub = content?.hero_sub || 'We enable businesses to grow.';
+export const getUniversalHomeContent = (content?: PageContent, heroLayout?: HeroLayout) => {
+    // Get hero section based on layout selection (defaults to fullBleed)
+    const heroSection = getHeroByLayout(heroLayout, content);
 
-    return `<!-- wp:cover {"url":"https://s.w.org/images/core/5.3/MtBlanc1.jpg","dimRatio":70,"overlayColor":"accent-3","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-cover alignfull" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
-    <img class="wp-block-cover__image-background" src="https://s.w.org/images/core/5.3/MtBlanc1.jpg" alt="" data-object-fit="cover"/>
-    <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-70 has-background-dim"></span>
-    <div class="wp-block-cover__inner-container">
-        <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2.5rem, 5vw, 4rem)"}},"textColor":"base"} -->
-        <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2.5rem, 5vw, 4rem)">${title}</h1>
-        <!-- /wp:heading -->
-        <!-- wp:paragraph {"align":"center","fontSize":"large","textColor":"base"} -->
-        <p class="has-text-align-center has-base-color has-text-color has-large-font-size">${sub}</p>
-        <!-- /wp:paragraph -->
-        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
-        <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--30)">
-            <!-- wp:button {"backgroundColor":"accent","textColor":"base"} -->
-            <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button">Get Started</a></div>
-            <!-- /wp:button -->
-            <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"base","textColor":"base","className":"is-style-outline"} -->
-            <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px">Learn More</a></div>
-            <!-- /wp:button -->
-        </div>
-        <!-- /wp:buttons -->
-    </div>
-</div>
-<!-- /wp:cover -->
+    return `${heroSection}
 
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"backgroundColor":"base-2","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull has-base-2-background-color has-background" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">

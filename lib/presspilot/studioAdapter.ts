@@ -4,7 +4,7 @@ import {
   PressPilotSaaSInputV2,
   SupportedLanguageCode
 } from '@/types/presspilot';
-import type { TT4PaletteId, TT4FontProfile, TT4Mood } from '@/lib/theme/palettes';
+import type { TT4PaletteId, TT4FontProfile, TT4Mood, TT4HeroLayout } from '@/lib/theme/palettes';
 
 /**
  * Brand Kit slot names for user color overrides
@@ -72,6 +72,12 @@ export interface StudioFormInput {
    * Options: 'warm' | 'fresh' | 'minimal' | 'dark'
    */
   mood?: TT4Mood;
+
+  /**
+   * Hero layout selection
+   * Options: 'fullBleed' | 'fullWidth' | 'split' | 'minimal'
+   */
+  heroLayout?: TT4HeroLayout;
 }
 
 export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPilotSaaSInput {
@@ -119,7 +125,8 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
       selectedPaletteId: input?.selectedPaletteId,
       userEditedBrandKit: input?.userEditedBrandKit,
       fontProfile: input?.fontProfile,
-      mood: input?.mood
+      mood: input?.mood,
+      heroLayout: input?.heroLayout
     },
     visualAssets: {
       has_logo: !!input?.logoBase64 || !!input?.logoPath,

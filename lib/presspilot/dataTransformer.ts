@@ -144,5 +144,10 @@ export function transformSaaSInputToGeneratorData(input: PressPilotSaaSInput): G
         generatorData.mood = input.visualControls.mood as any;
     }
 
+    // Pass heroLayout (fullBleed, fullWidth, split, minimal)
+    if (input.visualControls?.heroLayout) {
+        generatorData.heroLayout = input.visualControls.heroLayout as any;
+    }
+
     return generatorData;
 }

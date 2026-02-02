@@ -12,8 +12,7 @@ import { PageContent } from '../types';
 export const getUniversalServicesContent = (content?: PageContent) => {
     const title = content?.hero_title || 'Our Services';
     const sub = content?.hero_sub || 'World-class solutions for your business needs.';
-    // If a hero image is provided, use it as a cover, otherwise use the standard colored header
-    const heroImage = content?.hero_image; // Optional layout shift
+    const heroImage = content?.hero_image || '{{HERO_IMAGE_3}}';
 
     // Service Features / Pricing Grid
     // Using simple "Columns" or "Grid" (wp:group with layout:grid)
@@ -44,16 +43,20 @@ export const getUniversalServicesContent = (content?: PageContent) => {
     `).join('');
 
     return `
-    <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"accent","textColor":"base","layout":{"type":"constrained"}} -->
-    <div class="wp-block-group alignfull has-base-color has-accent-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
-        <!-- wp:heading {"textAlign":"center","level":1,"textColor":"base","fontSize":"x-large"} -->
-        <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color has-x-large-font-size">${title}</h1>
-        <!-- /wp:heading -->
-        <!-- wp:paragraph {"align":"center","textColor":"base","fontSize":"large"} -->
-        <p class="has-text-align-center has-base-color has-text-color has-large-font-size">${sub}</p>
-        <!-- /wp:paragraph -->
+    <!-- wp:cover {"url":"${heroImage}","dimRatio":70,"overlayColor":"accent","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained"}} -->
+    <div class="wp-block-cover alignfull" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+        <span aria-hidden="true" class="wp-block-cover__background has-accent-background-color has-background-dim-70 has-background-dim"></span>
+        <img class="wp-block-cover__image-background" alt="" src="${heroImage}" data-object-fit="cover"/>
+        <div class="wp-block-cover__inner-container">
+            <!-- wp:heading {"textAlign":"center","level":1,"textColor":"base","fontSize":"x-large"} -->
+            <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color has-x-large-font-size">${title}</h1>
+            <!-- /wp:heading -->
+            <!-- wp:paragraph {"align":"center","textColor":"base","fontSize":"large"} -->
+            <p class="has-text-align-center has-base-color has-text-color has-large-font-size">${sub}</p>
+            <!-- /wp:paragraph -->
+        </div>
     </div>
-    <!-- /wp:group -->
+    <!-- /wp:cover -->
 
     <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"accent-2","layout":{"type":"constrained"}} -->
     <div class="wp-block-group alignfull has-accent-2-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">

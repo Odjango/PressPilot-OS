@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { PageData, UniversalPageTemplate } from './types';
+import { PageData, UniversalPageTemplate, HeroLayout } from './types';
 // Patterns will be imported here in the next step
 import { getUniversalAboutContent } from './patterns/universal-about';
 import { getUniversalServicesContent } from './patterns/universal-services';
@@ -10,7 +10,7 @@ import { getUniversalMenuContent } from './patterns/universal-menu';
 import { getUniversalReservationContent } from './patterns/universal-reservation';
 import { getUniversalFooterContent } from './patterns/universal-footer';
 
-export const buildPageTemplate = async (themeDir: string, page: PageData, baseName: string = 'twentytwentyfour') => {
+export const buildPageTemplate = async (themeDir: string, page: PageData, baseName: string = 'twentytwentyfour', heroLayout?: HeroLayout) => {
     const filename = `page-${page.slug}.html`;
     const filePath = path.join(themeDir, 'templates', filename);
 
@@ -19,7 +19,7 @@ export const buildPageTemplate = async (themeDir: string, page: PageData, baseNa
     // Switch for templates
     switch (page.template) {
         case 'universal-home':
-            innerContent = getUniversalHomeContent(page.content);
+            innerContent = getUniversalHomeContent(page.content, heroLayout);
             break;
         case 'universal-about':
             innerContent = getUniversalAboutContent(page.content);

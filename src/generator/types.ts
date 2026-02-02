@@ -94,6 +94,11 @@ export type FontProfile = 'elegant' | 'modern' | 'bold' | 'friendly';
 export type Mood = 'warm' | 'fresh' | 'minimal' | 'dark';
 
 /**
+ * Hero layout options for homepage hero section
+ */
+export type HeroLayout = 'fullBleed' | 'fullWidth' | 'split' | 'minimal';
+
+/**
  * User slot names for brand kit editing
  */
 export type BrandKitSlot =
@@ -167,6 +172,14 @@ export interface GeneratorData {
      * All 4 variations are always shipped; this sets initial
      */
     mood?: Mood;
+
+    /**
+     * Hero layout selection
+     * Controls the homepage hero section structure
+     * Options: 'fullBleed' | 'fullWidth' | 'split' | 'minimal'
+     * Default: 'fullBleed'
+     */
+    heroLayout?: HeroLayout;
 
     [key: string]: unknown; // Allow additional properties
 }

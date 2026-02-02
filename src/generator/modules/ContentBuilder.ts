@@ -1,4 +1,4 @@
-import { GeneratorData, PageData, RestaurantMenu, ThemePersonality } from '../types';
+import { GeneratorData, PageData, RestaurantMenu, ThemePersonality, HeroLayout } from '../types';
 import { PATTERN_REGISTRY } from '../config/PatternRegistry';
 import { getModernImageUrl } from '../utils/ImageProvider';
 
@@ -15,6 +15,7 @@ export interface ContentJSON {
     baseName: string;
     businessName: string;
     industry: string; // Added industry field
+    heroLayout?: HeroLayout; // Hero layout selection (fullBleed, fullWidth, split, minimal)
 }
 
 export class ContentBuilder {
@@ -37,11 +38,18 @@ export class ContentBuilder {
             }
         }
 
-        // 2. Prepare Images
+        // 2. Prepare Images (uses cached Unsplash images or fallback)
         const images: string[] = [];
         for (let i = 0; i < 5; i++) {
             images.push(getModernImageUrl(userData.industry || 'general', i));
         }
+
+        // Add hero images to slots for pattern injection
+        slots['{{HERO_IMAGE}}'] = images[0];
+        slots['{{HERO_IMAGE_2}}'] = images[1];
+        slots['{{HERO_IMAGE_3}}'] = images[2];
+        slots['{{HERO_IMAGE_4}}'] = images[3];
+        slots['{{HERO_IMAGE_5}}'] = images[4];
 
         // 3. Prepare Pages and Menus
         const pages = [...(userData.pages || [])];
@@ -112,7 +120,8 @@ export class ContentBuilder {
             slots: slots,
             baseName: baseTheme,
             businessName: userData.name || 'My PressPilot Site',
-            industry: industry // Now passing industry through
+            industry: industry, // Now passing industry through
+            heroLayout: userData.heroLayout // Hero layout selection
         };
     }
 }

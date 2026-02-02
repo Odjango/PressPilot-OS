@@ -13,8 +13,8 @@ import {
 import VariationCard from "./VariationCard";
 import { HeroCarousel } from "@/src/components/HeroCarousel";
 import ColorPalettePreview from "./components/ColorPalettePreview";
-import FontStylePreview from "./components/FontStylePreview";
-import { PALETTES, MOOD_OPTIONS, FONT_PROFILE_OPTIONS, MOOD_PALETTES, getPreviewColors, type TT4Mood, type TT4FontProfile, type TT4PaletteId, type PreviewColors } from "@/lib/theme/palettes";
+import FontStylePreview, { getFontStyles } from "./components/FontStylePreview";
+import { PALETTES, MOOD_OPTIONS, FONT_PROFILE_OPTIONS, MOOD_PALETTES, HERO_LAYOUT_OPTIONS, getPreviewColors, type TT4Mood, type TT4FontProfile, type TT4PaletteId, type TT4HeroLayout, type PreviewColors } from "@/lib/theme/palettes";
 import MenuUploader from "./components/MenuUploader";
 import LogoUploader from "./components/LogoUploader";
 import { RestaurantMenu } from "@/src/generator/types";
@@ -76,9 +76,14 @@ export default function StudioClient({ slug }: Props) {
   const [customLogoBase64, setCustomLogoBase64] = useState<string>("");
   const [logoColors, setLogoColors] = useState<string[]>([]);
 
+  // Brand Kit Preservation - store original logo colors separately from palette customizations
+  const [originalBrandKitColors, setOriginalBrandKitColors] = useState<string[]>([]);
+  const [paletteOverrides, setPaletteOverrides] = useState<{paletteId: string, colors: string[]} | null>(null);
+
   // TT4-Aligned Design System State
   const [selectedMood, setSelectedMood] = useState<TT4Mood>('minimal');
   const [selectedFontProfile, setSelectedFontProfile] = useState<TT4FontProfile>('modern');
+  const [selectedHeroLayout, setSelectedHeroLayout] = useState<TT4HeroLayout>('fullBleed');
 
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
@@ -88,10 +93,22 @@ export default function StudioClient({ slug }: Props) {
   // Refs for Color Pickers
   const colorPickerRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+  // Store original brand kit colors when logo colors are first extracted
+  useEffect(() => {
+    if (logoColors.length > 0 && originalBrandKitColors.length === 0) {
+      setOriginalBrandKitColors([...logoColors]);
+    }
+  }, [logoColors, originalBrandKitColors.length]);
+
   // Compute preview colors based on palette + mood selection
+  // Handles both Brand Kit and palette override colors
   const previewColors = useMemo(() => {
+    // If using a customized preset palette, use the override colors
+    if (paletteOverrides && customPaletteId === paletteOverrides.paletteId + '-custom') {
+      return getPreviewColors('brand', selectedMood, paletteOverrides.colors);
+    }
     return getPreviewColors(customPaletteId, selectedMood, logoColors);
-  }, [customPaletteId, selectedMood, logoColors]);
+  }, [customPaletteId, selectedMood, logoColors, paletteOverrides]);
 
   // Live Preview Renderer
   const renderHeroPreview = (styleId: string, label: string, description: string) => {
@@ -283,6 +300,43 @@ export default function StudioClient({ slug }: Props) {
     setLogoColors(next);
     setCustomPaletteId('brand');
   };
+
+  // Copy preset palette colors for customization WITHOUT overwriting Brand Kit
+  const copyPaletteToLogoColors = (paletteId: string) => {
+    const palette = PALETTES.find(p => p.id === paletteId);
+    if (!palette) return;
+
+    const getColor = (slug: string) => palette.colors.find(c => c.slug === slug)?.color;
+
+    // Map to 3-color array matching logoColors structure
+    const newColors = [
+      getColor('accent') || '#374151',      // Primary -> accent
+      getColor('accent-3') || '#1F2937',    // Secondary -> accent-3
+      getColor('accent-4') || '#9CA3AF',    // Tertiary -> accent-4 (pop color)
+    ];
+
+    // Store as palette override instead of overwriting logoColors
+    setPaletteOverrides({ paletteId, colors: newColors });
+    setCustomPaletteId(paletteId + '-custom'); // e.g., 'saas-bright-custom'
+  };
+
+  // Restore original Brand Kit colors
+  const restoreBrandKit = () => {
+    if (originalBrandKitColors.length > 0) {
+      setLogoColors([...originalBrandKitColors]);
+    }
+    setPaletteOverrides(null);
+    setCustomPaletteId('brand');
+  };
+
+  // Update palette override colors (when editing a customized preset)
+  const updatePaletteOverrideColor = (index: number, newColor: string) => {
+    if (!paletteOverrides) return;
+    const newColors = [...paletteOverrides.colors];
+    newColors[index] = newColor;
+    setPaletteOverrides({ ...paletteOverrides, colors: newColors });
+  };
+
   const selectedVariation = useMemo(() => {
     if (!variationList.length || !selectedVariationId) {
       return variationList[0] ?? null;
@@ -313,19 +367,36 @@ export default function StudioClient({ slug }: Props) {
   }, [selectedVariation, logoColors.length]);
 
   const studioInput = useCallback((): StudioFormInput => {
+    // Check if using a customized preset palette (ends with '-custom')
+    const isCustomizedPreset = customPaletteId?.endsWith('-custom');
+    const basePaletteId = isCustomizedPreset
+      ? customPaletteId.replace('-custom', '')
+      : customPaletteId;
+
     // Map UI palette selection to TT4 palette ID
     const selectedPaletteId: TT4PaletteId | undefined = customPaletteId === 'brand'
       ? 'brand-kit'
-      : (customPaletteId as TT4PaletteId) || undefined;
+      : isCustomizedPreset
+        ? 'brand-kit' // Customized presets use brand-kit mode with override colors
+        : (basePaletteId as TT4PaletteId) || undefined;
 
-    // Build userEditedBrandKit from logoColors if using brand-kit
-    const userEditedBrandKit = customPaletteId === 'brand' && logoColors.length > 0
-      ? [
+    // Build userEditedBrandKit from appropriate color source
+    let userEditedBrandKit;
+    if (isCustomizedPreset && paletteOverrides) {
+      // Using customized preset colors
+      userEditedBrandKit = [
+        { slot: 'primary' as const, hex: paletteOverrides.colors[0] },
+        { slot: 'accent' as const, hex: paletteOverrides.colors[2] || paletteOverrides.colors[1] },
+        { slot: 'background' as const, hex: '#ffffff' }
+      ];
+    } else if (customPaletteId === 'brand' && logoColors.length > 0) {
+      // Using original brand kit colors
+      userEditedBrandKit = [
         { slot: 'primary' as const, hex: logoColors[0] },
         { slot: 'accent' as const, hex: logoColors[2] || logoColors[1] },
         { slot: 'background' as const, hex: '#ffffff' }
-      ]
-      : undefined;
+      ];
+    }
 
     return {
       businessName: project?.name ?? '',
@@ -348,9 +419,10 @@ export default function StudioClient({ slug }: Props) {
       selectedPaletteId,
       userEditedBrandKit,
       fontProfile: selectedFontProfile,
-      mood: selectedMood
+      mood: selectedMood,
+      heroLayout: selectedHeroLayout
     };
-  }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId, customLogoBase64, logoColors, menus, selectedBusinessCategoryId, selectedFontProfile, selectedMood]);
+  }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId, customLogoBase64, logoColors, menus, selectedBusinessCategoryId, selectedFontProfile, selectedMood, selectedHeroLayout, paletteOverrides]);
 
 
   const handleAssign = useCallback(async () => {
@@ -806,18 +878,70 @@ export default function StudioClient({ slug }: Props) {
                         </button>
                       )}
                       {PALETTES.map((palette) => (
-                        <button
-                          key={palette.id}
-                          onClick={() => setCustomPaletteId(palette.id)}
-                          className={`flex items-center justify-between rounded-xl border p-3 transition-all ${customPaletteId === palette.id
-                            ? "border-black bg-neutral-50 ring-1 ring-black"
-                            : "border-neutral-100 hover:border-neutral-200"
-                            }`}
-                        >
-                          <span className="text-xs font-bold text-neutral-900">{palette.label}</span>
-                          <ColorPalettePreview paletteId={palette.id} />
-                        </button>
+                        <div key={palette.id} className="space-y-1">
+                          <button
+                            type="button"
+                            onClick={() => setCustomPaletteId(palette.id)}
+                            className={`w-full flex items-center justify-between rounded-xl border p-3 transition-all ${customPaletteId === palette.id
+                              ? "border-black bg-neutral-50 ring-1 ring-black"
+                              : "border-neutral-100 hover:border-neutral-200"
+                              }`}
+                          >
+                            <span className="text-xs font-bold text-neutral-900">{palette.label}</span>
+                            <ColorPalettePreview paletteId={palette.id} />
+                          </button>
+                          {customPaletteId === palette.id && (
+                            <button
+                              type="button"
+                              onClick={() => copyPaletteToLogoColors(palette.id)}
+                              className="w-full text-xs text-blue-600 hover:text-blue-800 hover:underline py-1 text-left pl-3"
+                            >
+                              ✏️ Customize these colors
+                            </button>
+                          )}
+                          {/* Show customized palette with color pickers */}
+                          {paletteOverrides?.paletteId === palette.id && customPaletteId === palette.id + '-custom' && (
+                            <div className="flex items-center justify-between rounded-xl border border-blue-200 bg-blue-50/50 p-3 mt-1">
+                              <span className="text-xs font-bold text-blue-700">Custom {palette.label}</span>
+                              <div className="flex gap-2">
+                                {paletteOverrides.colors.map((c, i) => (
+                                  <div key={i} className="relative group/swatch">
+                                    <div
+                                      className="h-6 w-6 rounded-full border-2 border-white shadow-sm cursor-pointer transition-transform hover:scale-110"
+                                      style={{ backgroundColor: c }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        const input = document.getElementById(`palette-override-${i}`) as HTMLInputElement;
+                                        input?.click();
+                                      }}
+                                    />
+                                    <input
+                                      id={`palette-override-${i}`}
+                                      type="color"
+                                      value={c}
+                                      onChange={(e) => updatePaletteOverrideColor(i, e.target.value)}
+                                      className="opacity-0 pointer-events-none absolute"
+                                      title={`Edit color ${i + 1}`}
+                                      aria-label={`Edit color ${i + 1}`}
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       ))}
+
+                      {/* Restore Brand Kit button - shown when we have original colors and are not using Brand Kit */}
+                      {originalBrandKitColors.length > 0 && customPaletteId !== 'brand' && (
+                        <button
+                          type="button"
+                          onClick={restoreBrandKit}
+                          className="w-full text-xs text-emerald-600 hover:text-emerald-800 hover:underline py-2 text-center border border-emerald-100 rounded-xl bg-emerald-50/30 mt-2"
+                        >
+                          ↩️ Restore Original Brand Kit
+                        </button>
+                      )}
                     </div>
                     {selectedBusinessCategoryId === 'ecommerce_store' && (
                       <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
@@ -890,6 +1014,34 @@ export default function StudioClient({ slug }: Props) {
                     </p>
                   </div>
 
+                  {/* Hero Layout Selection */}
+                  <div className="space-y-4">
+                    <label className="text-xs font-bold uppercase tracking-widest text-neutral-400">
+                      Hero Layout
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {HERO_LAYOUT_OPTIONS.map((layout) => (
+                        <button
+                          type="button"
+                          key={layout.id}
+                          onClick={() => setSelectedHeroLayout(layout.id)}
+                          className={`flex flex-col items-center rounded-xl border-2 p-3 transition-all ${
+                            selectedHeroLayout === layout.id
+                              ? "border-black bg-neutral-50 ring-2 ring-black ring-offset-2"
+                              : "border-neutral-200 hover:border-neutral-300 hover:scale-105"
+                          }`}
+                        >
+                          <span className="text-lg mb-1">{layout.icon}</span>
+                          <span className="text-xs font-bold text-neutral-900">{layout.label}</span>
+                          <span className="text-[10px] text-neutral-500 text-center">{layout.description}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-neutral-400 italic">
+                      Controls how the hero section appears on your homepage.
+                    </p>
+                  </div>
+
                   <div className="space-y-4">
                     <label className="text-xs font-bold uppercase tracking-widest text-neutral-400">
                       Hero Headline
@@ -929,13 +1081,20 @@ export default function StudioClient({ slug }: Props) {
                     <div className="space-y-4">
                       <h4
                         className="text-4xl font-black tracking-tight leading-tight"
-                        style={{ color: previewColors.base }}
+                        style={{
+                          color: previewColors.base,
+                          fontFamily: getFontStyles(selectedFontProfile).heading
+                        }}
                       >
                         {customHeroTitle || project.name}
                       </h4>
                       <p
                         className="text-lg max-w-lg mx-auto leading-relaxed font-medium"
-                        style={{ color: previewColors.base, opacity: 0.9 }}
+                        style={{
+                          color: previewColors.base,
+                          opacity: 0.9,
+                          fontFamily: getFontStyles(selectedFontProfile).body
+                        }}
                       >
                         {heroSubtitle}
                       </p>
@@ -961,7 +1120,7 @@ export default function StudioClient({ slug }: Props) {
                     </div>
 
                     <div className="pt-8">
-                      <FontStylePreview fontPairId={customFontPairId || 'system-sans'} />
+                      <FontStylePreview fontPairId={selectedFontProfile} />
                     </div>
                   </div>
 

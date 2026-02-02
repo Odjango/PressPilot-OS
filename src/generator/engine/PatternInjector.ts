@@ -151,7 +151,8 @@ ${templateContent}
                 hero_sub: userData.hero_subheadline
             };
 
-            let homeMarkup = getUniversalHomeContent(homeContent).trim();
+            // Pass heroLayout (defaults to fullBleed if not specified)
+            let homeMarkup = getUniversalHomeContent(homeContent, userData.heroLayout).trim();
 
             // Normalize cover block element order (img before span) for Gutenberg compatibility
             homeMarkup = homeMarkup.replace(

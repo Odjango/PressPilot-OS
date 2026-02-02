@@ -85,6 +85,7 @@ export interface PressPilotSaaSInput {
     userEditedBrandKit?: Array<{ slot: string; hex: string }>;
     fontProfile?: 'elegant' | 'modern' | 'bold' | 'friendly';
     mood?: 'warm' | 'fresh' | 'minimal' | 'dark';
+    heroLayout?: 'fullBleed' | 'fullWidth' | 'split' | 'minimal';
   };
   modes: {
     business_category: BusinessCategory;
