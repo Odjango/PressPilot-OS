@@ -102,6 +102,31 @@ export class PatternInjector {
                     content = content.replace(/Études/g, userData.name || 'PressPilot');
                 }
 
+                // Tove base theme content replacement
+                // Replace Niofika Café brand name throughout (similar to Études handling above)
+                content = content.replace(/Niofika Café/g, userData.name || 'Our Business');
+                content = content.replace(/Niofika/g, userData.name || 'Our Business');
+
+                // Replace Stockholm addresses with generic placeholders
+                content = content.replace(/Hammarby Kaj 10/g, userData.address || '123 Main Street');
+                content = content.replace(/120 32 Stockholm/g, userData.city || 'City, State 12345');
+                content = content.replace(/Hammarby Sjöstad/g, userData.neighborhood || 'Downtown');
+                content = content.replace(/Stockholm/g, userData.city || 'Your City');
+
+                // Replace Swedish contact info with generic placeholders
+                content = content.replace(/hammarby@niofika\.se/g, userData.email || 'info@yourbusiness.com');
+                content = content.replace(/08-123 45 67/g, userData.phone || '(555) 123-4567');
+
+                // Replace testimonial attributions
+                content = content.replace(/Coffee Snob/g, 'Happy Customer');
+
+                // Replace café-specific content for non-café businesses
+                if (userData.industry !== 'cafe') {
+                    content = content.replace(/the best coffee/g, 'the best service');
+                    content = content.replace(/your morning cup of coffee/g, 'what you need');
+                    content = content.replace(/preorder your coffee/g, 'place your order');
+                }
+
                 // IMAGE REPLACEMENT
                 const imgRegex = /src="([^"]*?(?:patterns\/images\/|assets\/images\/)(?!logo)[^"]*?)"/g;
                 let imgMatch;
