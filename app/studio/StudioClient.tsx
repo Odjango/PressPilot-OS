@@ -91,6 +91,17 @@ export default function StudioClient({ slug }: Props) {
   const [artifacts, setArtifacts] = useState<ArtifactResponse | null>(null);
   const [menus, setMenus] = useState<RestaurantMenu[]>([]);
 
+  // Contact Information State (Phase 13 - Best Practices)
+  const [contactEmail, setContactEmail] = useState<string>("");
+  const [contactPhone, setContactPhone] = useState<string>("");
+  const [contactAddress, setContactAddress] = useState<string>("");
+  const [contactCity, setContactCity] = useState<string>("");
+  const [contactState, setContactState] = useState<string>("");
+  const [contactZip, setContactZip] = useState<string>("");
+  const [socialFacebook, setSocialFacebook] = useState<string>("");
+  const [socialInstagram, setSocialInstagram] = useState<string>("");
+  const [showContactFields, setShowContactFields] = useState<boolean>(false);
+
   // Hero Preview State (Phase 10)
   const [heroPreviewLoading, setHeroPreviewLoading] = useState(false);
   const [heroPreviewError, setHeroPreviewError] = useState<string | null>(null);
@@ -435,9 +446,21 @@ export default function StudioClient({ slug }: Props) {
       mood: selectedMood,
       heroLayout: selectedHeroLayout,
       // Restaurant-only: brandStyle determines Tove (playful) vs Frost (modern)
-      brandStyle: selectedBusinessCategoryId === 'restaurant_cafe' ? selectedBrandStyle : undefined
+      brandStyle: selectedBusinessCategoryId === 'restaurant_cafe' ? selectedBrandStyle : undefined,
+
+      // Contact Information (Phase 13 - Best Practices)
+      contactEmail: contactEmail || undefined,
+      contactPhone: contactPhone || undefined,
+      contactAddress: contactAddress || undefined,
+      contactCity: contactCity || undefined,
+      contactState: contactState || undefined,
+      contactZip: contactZip || undefined,
+      socialLinks: (socialFacebook || socialInstagram) ? {
+        facebook: socialFacebook || undefined,
+        instagram: socialInstagram || undefined
+      } : undefined
     };
-  }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId, customLogoBase64, logoColors, menus, selectedBusinessCategoryId, selectedFontProfile, selectedMood, selectedHeroLayout, selectedBrandStyle, paletteOverrides]);
+  }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId, customLogoBase64, logoColors, menus, selectedBusinessCategoryId, selectedFontProfile, selectedMood, selectedHeroLayout, selectedBrandStyle, paletteOverrides, contactEmail, contactPhone, contactAddress, contactCity, contactState, contactZip, socialFacebook, socialInstagram]);
 
   // Handler for generating hero previews (Phase 10)
   const handleGeneratePreviews = useCallback(async () => {
@@ -764,6 +787,92 @@ export default function StudioClient({ slug }: Props) {
                       if (colors) setLogoColors(colors);
                     }}
                   />
+                </div>
+
+                {/* Contact Information Section (Phase 13 - Best Practices) */}
+                <div className="pt-4 border-t border-neutral-100">
+                  <button
+                    type="button"
+                    onClick={() => setShowContactFields(!showContactFields)}
+                    className="w-full flex items-center justify-between text-left"
+                  >
+                    <label className="text-sm font-bold text-neutral-900 flex items-center gap-2 cursor-pointer">
+                      <span className="flex h-5 w-5 items-center justify-center rounded bg-neutral-600 text-[10px] text-white">3</span>
+                      Contact Info
+                      <span className="text-xs font-normal text-neutral-400">(Optional)</span>
+                    </label>
+                    <span className="text-neutral-400 text-sm">{showContactFields ? '−' : '+'}</span>
+                  </button>
+
+                  {showContactFields && (
+                    <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input
+                          type="email"
+                          value={contactEmail}
+                          onChange={(e) => setContactEmail(e.target.value)}
+                          placeholder="Business email"
+                          className="rounded-xl border border-neutral-200 bg-neutral-50/30 px-4 py-3 text-sm text-neutral-900 focus:border-black focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 transition-all"
+                        />
+                        <input
+                          type="tel"
+                          value={contactPhone}
+                          onChange={(e) => setContactPhone(e.target.value)}
+                          placeholder="Phone number"
+                          className="rounded-xl border border-neutral-200 bg-neutral-50/30 px-4 py-3 text-sm text-neutral-900 focus:border-black focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 transition-all"
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        value={contactAddress}
+                        onChange={(e) => setContactAddress(e.target.value)}
+                        placeholder="Street address"
+                        className="w-full rounded-xl border border-neutral-200 bg-neutral-50/30 px-4 py-3 text-sm text-neutral-900 focus:border-black focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 transition-all"
+                      />
+                      <div className="grid grid-cols-3 gap-3">
+                        <input
+                          type="text"
+                          value={contactCity}
+                          onChange={(e) => setContactCity(e.target.value)}
+                          placeholder="City"
+                          className="rounded-xl border border-neutral-200 bg-neutral-50/30 px-4 py-3 text-sm text-neutral-900 focus:border-black focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 transition-all"
+                        />
+                        <input
+                          type="text"
+                          value={contactState}
+                          onChange={(e) => setContactState(e.target.value)}
+                          placeholder="State"
+                          className="rounded-xl border border-neutral-200 bg-neutral-50/30 px-4 py-3 text-sm text-neutral-900 focus:border-black focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 transition-all"
+                        />
+                        <input
+                          type="text"
+                          value={contactZip}
+                          onChange={(e) => setContactZip(e.target.value)}
+                          placeholder="ZIP"
+                          className="rounded-xl border border-neutral-200 bg-neutral-50/30 px-4 py-3 text-sm text-neutral-900 focus:border-black focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 transition-all"
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input
+                          type="url"
+                          value={socialFacebook}
+                          onChange={(e) => setSocialFacebook(e.target.value)}
+                          placeholder="Facebook URL"
+                          className="rounded-xl border border-neutral-200 bg-neutral-50/30 px-4 py-3 text-sm text-neutral-900 focus:border-black focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 transition-all"
+                        />
+                        <input
+                          type="url"
+                          value={socialInstagram}
+                          onChange={(e) => setSocialInstagram(e.target.value)}
+                          placeholder="Instagram URL"
+                          className="rounded-xl border border-neutral-200 bg-neutral-50/30 px-4 py-3 text-sm text-neutral-900 focus:border-black focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/5 transition-all"
+                        />
+                      </div>
+                      <p className="text-xs text-neutral-400 italic">
+                        This info will appear in your Contact page and footer. Leave blank for generic placeholders.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {selectedBusinessCategoryId === 'restaurant_cafe' && (

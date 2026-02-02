@@ -10,8 +10,16 @@ import { PageContent } from '../types';
  */
 export const getUniversalContactContent = (content?: PageContent) => {
     const title = content?.hero_title || 'Contact Us';
-    const sub = content?.hero_sub || 'We would love to hear from you.';
-    const heroImage = content?.hero_image || '{{HERO_IMAGE_4}}';
+    const sub = content?.hero_sub || `Contact ${content?.business_name || 'us'} today.`;
+    const heroImage = content?.hero_image || 'https://picsum.photos/seed/contact/1200/800';
+
+    // Use content fields directly (populated by ContentBuilder)
+    const email = content?.email || 'contact@example.com';
+    const phone = content?.phone || '(555) 123-4567';
+    const address = content?.address || '123 Main Street';
+    const city = content?.city || 'City';
+    const state = content?.state || 'ST';
+    const zip = content?.zip || '12345';
 
     return `
     <!-- wp:cover {"url":"${heroImage}","dimRatio":70,"overlayColor":"accent-3","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained"}} -->
@@ -40,7 +48,7 @@ export const getUniversalContactContent = (content?: PageContent) => {
                 <h3 class="wp-block-heading has-accent-color has-text-color">Get In Touch</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph {"textColor":"contrast-2"} -->
-                <p class="has-contrast-2-color has-text-color">Email: <a href="mailto:contact@presspilot.com">contact@presspilot.com</a><br>Phone: +1 555-0199</p>
+                <p class="has-contrast-2-color has-text-color">Email: <a href="mailto:${email}">${email}</a><br>Phone: ${phone}</p>
                 <!-- /wp:paragraph -->
 
                 <!-- wp:separator {"backgroundColor":"contrast-3"} -->
@@ -51,7 +59,7 @@ export const getUniversalContactContent = (content?: PageContent) => {
                 <h3 class="wp-block-heading has-accent-color has-text-color">Office</h3>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph {"textColor":"contrast-2"} -->
-                <p class="has-contrast-2-color has-text-color">123 Innovation Dr.<br>Tech City, TC 90210</p>
+                <p class="has-contrast-2-color has-text-color">${address}<br>${city}, ${state} ${zip}</p>
                 <!-- /wp:paragraph -->
 
                 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}}}} -->
@@ -67,7 +75,7 @@ export const getUniversalContactContent = (content?: PageContent) => {
             <!-- wp:column {"width":"50%"} -->
             <div class="wp-block-column" style="flex-basis:50%">
                 <!-- wp:image {"sizeSlug":"large"} -->
-                <figure class="wp-block-image size-large"><img src="${content?.hero_image || 'https://placehold.co/800x450/EEE/31343C.png?text=Map+Location'}" alt="Map location"/></figure>
+                <figure class="wp-block-image size-large"><img src="${heroImage}" alt="Map location"/></figure>
                 <!-- /wp:image -->
             </div>
             <!-- /wp:column -->

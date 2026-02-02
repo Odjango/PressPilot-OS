@@ -120,6 +120,30 @@ export interface PressPilotSaaSInput {
     image_tier?: 'stock' | 'dalle' | 'mixed';
     external_ref_id?: string;
   };
+
+  // ========================================================================
+  // Contact Information (Phase 13 - Best Practices)
+  // ========================================================================
+  contact?: {
+    /** Business email address */
+    email?: string;
+    /** Business phone number */
+    phone?: string;
+    /** Street address */
+    address?: string;
+    /** City */
+    city?: string;
+    /** State/Province/Region */
+    state?: string;
+    /** ZIP/Postal code */
+    zip?: string;
+    /** Country */
+    country?: string;
+    /** Opening hours (day name → hours string) */
+    openingHours?: Record<string, string>;
+    /** Social media links (platform → URL) */
+    socialLinks?: Record<string, string>;
+  };
 }
 
 export type PressPilotSaaSInputV2 = PressPilotSaaSInput;

@@ -47,6 +47,18 @@ export interface PageContent {
     features?: Array<{ title: string; desc: string }>;
     team?: Array<{ name: string; role: string }>;
     menus?: RestaurantMenu[];
+    // Contact fields (Phase 13)
+    business_name?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    full_address?: string;
+    social_facebook?: string;
+    social_instagram?: string;
+    social_twitter?: string;
 }
 
 
@@ -196,6 +208,41 @@ export interface GeneratorData {
      * Default: 'playful'
      */
     brandStyle?: BrandStyle;
+
+    // ========================================================================
+    // Contact Information (Phase 13 - Best Practices)
+    // Explicit fields for slot-based pattern replacement
+    // ========================================================================
+
+    /** Business email address */
+    email?: string;
+
+    /** Business phone number */
+    phone?: string;
+
+    /** Street address */
+    address?: string;
+
+    /** City name */
+    city?: string;
+
+    /** State/Province/Region */
+    state?: string;
+
+    /** ZIP/Postal code */
+    zip?: string;
+
+    /** Country */
+    country?: string;
+
+    /** Neighborhood/District (for local businesses) */
+    neighborhood?: string;
+
+    /** Opening hours (day name → hours string) */
+    openingHours?: Record<string, string>;
+
+    /** Social media links (platform → URL) */
+    socialLinks?: Record<string, string>;
 
     [key: string]: unknown; // Allow additional properties
 }

@@ -67,9 +67,9 @@ export const getUniversalFooterContent = (businessName: string, baseTheme: strin
             <!-- /wp:paragraph -->
             <!-- wp:social-links {"iconColor":"${colors.darkBg}","iconColorValue":"currentColor","size":"has-normal-icon-size","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}},"className":"is-style-logos-only"} -->
             <ul class="wp-block-social-links has-normal-icon-size has-icon-color is-style-logos-only">
-                <!-- wp:social-link {"url":"#","service":"facebook"} /-->
-                <!-- wp:social-link {"url":"#","service":"x"} /-->
-                <!-- wp:social-link {"url":"#","service":"instagram"} /-->
+                <!-- wp:social-link {"url":"{{SOCIAL_FACEBOOK}}","service":"facebook"} /-->
+                <!-- wp:social-link {"url":"{{SOCIAL_TWITTER}}","service":"x"} /-->
+                <!-- wp:social-link {"url":"{{SOCIAL_INSTAGRAM}}","service":"instagram"} /-->
             </ul>
             <!-- /wp:social-links -->
         </div>

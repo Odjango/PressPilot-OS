@@ -8,6 +8,45 @@ import { getModernImageUrl } from '../utils/ImageProvider';
 import { ContentJSON } from '../modules/ContentBuilder';
 
 /**
+ * Forbidden demo strings from base themes that should never appear in output
+ * Used by applyLegacyReplacements() for compatibility with Tove and TT4 base themes
+ */
+const LEGACY_DEMO_CONTENT = {
+    // TwentyTwentyFour (TT4) demo content
+    tt4: {
+        brandName: 'Études',
+        replacements: [
+            { pattern: /Études/g, key: 'name', fallback: 'PressPilot' }
+        ]
+    },
+    // Tove cafe theme demo content
+    tove: {
+        brandName: 'Niofika',
+        replacements: [
+            // Brand name
+            { pattern: /Niofika Café/g, key: 'name', fallback: 'Our Business' },
+            { pattern: /Niofika/g, key: 'name', fallback: 'Our Business' },
+            // Address
+            { pattern: /Hammarby Kaj 10/g, key: 'address', fallback: '123 Main Street' },
+            { pattern: /120 32 Stockholm/g, key: 'city', fallback: 'City, State 12345' },
+            { pattern: /Hammarby Sjöstad/g, key: 'neighborhood', fallback: 'Downtown' },
+            { pattern: /Stockholm/g, key: 'city', fallback: 'Your City' },
+            // Contact info
+            { pattern: /hammarby@niofika\.se/g, key: 'email', fallback: 'info@yourbusiness.com' },
+            { pattern: /08-123 45 67/g, key: 'phone', fallback: '(555) 123-4567' },
+            // Testimonial attribution
+            { pattern: /Coffee Snob/g, key: null, fallback: 'Happy Customer' }
+        ],
+        // Café-specific content (only replaced for non-café businesses)
+        cafeSpecific: [
+            { pattern: /the best coffee/g, replacement: 'the best service' },
+            { pattern: /your morning cup of coffee/g, replacement: 'what you need' },
+            { pattern: /preorder your coffee/g, replacement: 'place your order' }
+        ]
+    }
+};
+
+/**
  * Detects if a string is a base64 data URI
  */
 function isBase64DataUri(str: string): boolean {
@@ -58,6 +97,80 @@ async function saveBase64AsFile(themeDir: string, dataUri: string): Promise<stri
 export class PatternInjector {
     constructor(private rootDir: string) { }
 
+    /**
+     * Apply slot-based replacements from ContentBuilder
+     * This is the primary content injection method using {{PLACEHOLDER}} format
+     */
+    private applySlotReplacements(content: string, slots: Record<string, string>): string {
+        for (const [search, replace] of Object.entries(slots)) {
+            // Escape search string for regex and replace all occurrences globally
+            const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(escapedSearch, 'g');
+            content = content.replace(regex, replace);
+        }
+        return content;
+    }
+
+    /**
+     * Apply legacy replacements for base theme demo content (Tove, TT4/Études)
+     * This is a compatibility layer for patterns that still have hardcoded demo strings
+     *
+     * Only runs if:
+     * 1. The content contains demo strings from the base theme
+     * 2. User data is available to replace them with
+     */
+    private applyLegacyReplacements(content: string, userData: GeneratorData, slots: Record<string, string>): string {
+        // TT4 "Études" replacement (only if not already in slots)
+        if (!slots['Études']) {
+            for (const replacement of LEGACY_DEMO_CONTENT.tt4.replacements) {
+                const value = replacement.key ? (userData as any)[replacement.key] : null;
+                content = content.replace(replacement.pattern, value || replacement.fallback);
+            }
+        }
+
+        // Tove "Niofika" replacements
+        for (const replacement of LEGACY_DEMO_CONTENT.tove.replacements) {
+            const value = replacement.key ? (userData as any)[replacement.key] : null;
+            content = content.replace(replacement.pattern, value || replacement.fallback);
+        }
+
+        // Café-specific content (only replaced for non-café businesses)
+        if (userData.industry !== 'cafe') {
+            for (const replacement of LEGACY_DEMO_CONTENT.tove.cafeSpecific) {
+                content = content.replace(replacement.pattern, replacement.replacement);
+            }
+        }
+
+        return content;
+    }
+
+    /**
+     * Apply image replacements from ContentBuilder's hero images
+     * Replaces pattern/asset image paths with Unsplash URLs
+     */
+    private applyImageReplacements(content: string, heroImages: string[]): string {
+        const imgRegex = /src="([^"]*?(?:patterns\/images\/|assets\/images\/)(?!logo)[^"]*?)"/g;
+        let imgMatch;
+        let imgCount = 0;
+
+        // Create a new string to avoid regex state issues
+        let result = content;
+        const matches: { original: string; replacement: string }[] = [];
+
+        while ((imgMatch = imgRegex.exec(content)) !== null) {
+            const unsplashUrl = heroImages[imgCount % heroImages.length];
+            matches.push({ original: imgMatch[1], replacement: unsplashUrl });
+            imgCount++;
+        }
+
+        // Apply replacements
+        for (const match of matches) {
+            result = result.replace(match.original, match.replacement);
+        }
+
+        return result;
+    }
+
     async injectRecipe(themeDir: string, recipe: import('../types').LayoutRecipe, contentJson: any, personality: ThemePersonality, safeName: string, userData: GeneratorData): Promise<void> {
         console.log(`[Pattern] Strategy (Vertical Focus) for ${safeName}...`);
 
@@ -89,53 +202,15 @@ export class PatternInjector {
                     continue;
                 }
 
-                // 2. Inject Content (Using Builder Slots)
-                for (const [search, replace] of Object.entries(contentJson.slots)) {
-                    // Escape search string for regex and replace all occurrences globally
-                    const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                    const regex = new RegExp(escapedSearch, 'g');
-                    content = content.replace(regex, replace);
-                }
+                // 2. Inject Content (Using Builder Slots) - Primary replacement method
+                content = this.applySlotReplacements(content, contentJson.slots);
 
-                // Global "Etudes" / "architects" cleanup if not already in slots
-                if (!contentJson.slots['Études']) {
-                    content = content.replace(/Études/g, userData.name || 'PressPilot');
-                }
+                // 3. Legacy replacements for base theme demo content (Tove, TT4)
+                // This is a compatibility layer for patterns with hardcoded demo strings
+                content = this.applyLegacyReplacements(content, userData, contentJson.slots);
 
-                // Tove base theme content replacement
-                // Replace Niofika Café brand name throughout (similar to Études handling above)
-                content = content.replace(/Niofika Café/g, userData.name || 'Our Business');
-                content = content.replace(/Niofika/g, userData.name || 'Our Business');
-
-                // Replace Stockholm addresses with generic placeholders
-                content = content.replace(/Hammarby Kaj 10/g, userData.address || '123 Main Street');
-                content = content.replace(/120 32 Stockholm/g, userData.city || 'City, State 12345');
-                content = content.replace(/Hammarby Sjöstad/g, userData.neighborhood || 'Downtown');
-                content = content.replace(/Stockholm/g, userData.city || 'Your City');
-
-                // Replace Swedish contact info with generic placeholders
-                content = content.replace(/hammarby@niofika\.se/g, userData.email || 'info@yourbusiness.com');
-                content = content.replace(/08-123 45 67/g, userData.phone || '(555) 123-4567');
-
-                // Replace testimonial attributions
-                content = content.replace(/Coffee Snob/g, 'Happy Customer');
-
-                // Replace café-specific content for non-café businesses
-                if (userData.industry !== 'cafe') {
-                    content = content.replace(/the best coffee/g, 'the best service');
-                    content = content.replace(/your morning cup of coffee/g, 'what you need');
-                    content = content.replace(/preorder your coffee/g, 'place your order');
-                }
-
-                // IMAGE REPLACEMENT
-                const imgRegex = /src="([^"]*?(?:patterns\/images\/|assets\/images\/)(?!logo)[^"]*?)"/g;
-                let imgMatch;
-                let imgCount = 0;
-                while ((imgMatch = imgRegex.exec(content)) !== null) {
-                    const unsplashUrl = contentJson.hero.images[imgCount % contentJson.hero.images.length];
-                    content = content.replace(imgMatch[1], unsplashUrl);
-                    imgCount++;
-                }
+                // 4. Image replacement - swap pattern images with Unsplash URLs
+                content = this.applyImageReplacements(content, contentJson.hero.images);
 
                 await fs.writeFile(fullPath, content);
                 templateContent += `<!-- wp:pattern {"slug":"${slug}"} /-->\n`;

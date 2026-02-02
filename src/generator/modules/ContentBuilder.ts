@@ -108,6 +108,64 @@ export class ContentBuilder {
             }
         }
 
+        // ========================================================================
+        // Contact Information Slots (Phase 13 - Best Practices)
+        // These slots are used by universal-contact.ts and universal-footer.ts
+        // Values come from user input; fallback to empty string (not hardcoded demos)
+        // ========================================================================
+        slots['{{CONTACT_EMAIL}}'] = userData.email || '';
+        slots['{{CONTACT_PHONE}}'] = userData.phone || '';
+        slots['{{CONTACT_ADDRESS}}'] = userData.address || '';
+        slots['{{CONTACT_CITY}}'] = userData.city || '';
+        slots['{{CONTACT_STATE}}'] = userData.state || '';
+        slots['{{CONTACT_ZIP}}'] = userData.zip || '';
+        slots['{{CONTACT_COUNTRY}}'] = userData.country || '';
+        slots['{{CONTACT_NEIGHBORHOOD}}'] = userData.neighborhood || '';
+
+        // Build full address from parts (if any are provided)
+        const addressParts = [
+            userData.address,
+            userData.city,
+            userData.state,
+            userData.zip
+        ].filter(Boolean);
+        slots['{{CONTACT_FULL_ADDRESS}}'] = addressParts.length > 0 ? addressParts.join(', ') : '';
+
+        // Social link slots
+        slots['{{SOCIAL_FACEBOOK}}'] = userData.socialLinks?.facebook || '#';
+        slots['{{SOCIAL_INSTAGRAM}}'] = userData.socialLinks?.instagram || '#';
+        slots['{{SOCIAL_TWITTER}}'] = userData.socialLinks?.twitter || '#';
+        slots['{{SOCIAL_LINKEDIN}}'] = userData.socialLinks?.linkedin || '#';
+        slots['{{SOCIAL_YOUTUBE}}'] = userData.socialLinks?.youtube || '#';
+        slots['{{SOCIAL_TIKTOK}}'] = userData.socialLinks?.tiktok || '#';
+
+        // ========================================================================
+        // Populate page.content with contact info for each page
+        // This ensures patterns like universal-contact.ts have access to data
+        // ========================================================================
+        const contactInfo = {
+            business_name: userData.name || 'Our Business',
+            email: userData.email || '',
+            phone: userData.phone || '',
+            address: userData.address || '',
+            city: userData.city || '',
+            state: userData.state || '',
+            zip: userData.zip || '',
+            full_address: addressParts.length > 0 ? addressParts.join(', ') : '',
+            social_facebook: userData.socialLinks?.facebook || '#',
+            social_instagram: userData.socialLinks?.instagram || '#',
+            social_twitter: userData.socialLinks?.twitter || '#'
+        };
+
+        // Add contact info to each page's content
+        for (const page of pages) {
+            if (!page.content) {
+                page.content = {};
+            }
+            // Merge contact info into page content
+            page.content = { ...page.content, ...contactInfo };
+        }
+
         return {
             hero: {
                 headline: hero_headline,

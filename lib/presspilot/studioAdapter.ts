@@ -84,6 +84,65 @@ export interface StudioFormInput {
    * Determines base theme: 'playful' (Tove) vs 'modern' (Frost)
    */
   brandStyle?: TT4BrandStyle;
+
+  // ========================================================================
+  // Contact Information (Phase 13 - Best Practices)
+  // ========================================================================
+
+  /**
+   * Business contact email address
+   * Used in contact page, footer, and patterns
+   */
+  contactEmail?: string;
+
+  /**
+   * Business phone number
+   * Used in contact page, footer, and header (if applicable)
+   */
+  contactPhone?: string;
+
+  /**
+   * Street address line
+   */
+  contactAddress?: string;
+
+  /**
+   * City name
+   */
+  contactCity?: string;
+
+  /**
+   * State/Province/Region
+   */
+  contactState?: string;
+
+  /**
+   * ZIP/Postal code
+   */
+  contactZip?: string;
+
+  /**
+   * Country (optional)
+   */
+  contactCountry?: string;
+
+  /**
+   * Opening hours (key: day name, value: hours string)
+   * Example: { "Monday": "9am - 5pm", "Saturday": "Closed" }
+   */
+  openingHours?: Record<string, string>;
+
+  /**
+   * Social media links
+   */
+  socialLinks?: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    linkedin?: string;
+    youtube?: string;
+    tiktok?: string;
+  };
 }
 
 export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPilotSaaSInput {
@@ -140,6 +199,18 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
       logo_file_url: input?.logoBase64 || input?.logoPath, // Map path for extraction
       image_source_preference: 'mixed',
       image_keywords: [category, 'business']
+    },
+    // Contact information (Phase 13 - Best Practices)
+    contact: {
+      email: input?.contactEmail,
+      phone: input?.contactPhone,
+      address: input?.contactAddress,
+      city: input?.contactCity,
+      state: input?.contactState,
+      zip: input?.contactZip,
+      country: input?.contactCountry,
+      openingHours: input?.openingHours,
+      socialLinks: input?.socialLinks
     }
   };
 

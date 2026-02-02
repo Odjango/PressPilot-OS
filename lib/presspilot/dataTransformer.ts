@@ -154,5 +154,22 @@ export function transformSaaSInputToGeneratorData(input: PressPilotSaaSInput): G
         generatorData.brandStyle = input.visualControls.brandStyle as any;
     }
 
+    // ========================================================================
+    // Contact Information (Phase 13 - Best Practices)
+    // Wire contact data to GeneratorData for slot-based pattern replacement
+    // ========================================================================
+
+    if (input.contact) {
+        generatorData.email = input.contact.email;
+        generatorData.phone = input.contact.phone;
+        generatorData.address = input.contact.address;
+        generatorData.city = input.contact.city;
+        generatorData.state = input.contact.state;
+        generatorData.zip = input.contact.zip;
+        generatorData.country = input.contact.country;
+        generatorData.openingHours = input.contact.openingHours;
+        generatorData.socialLinks = input.contact.socialLinks;
+    }
+
     return generatorData;
 }
