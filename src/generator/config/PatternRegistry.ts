@@ -123,6 +123,19 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
                         'patterns/footer-default.php'
                     ]
                 }
+            ],
+            'restaurant': [
+                {
+                    name: "Modern Restaurant",
+                    description: "Clean, photo-driven restaurant layout",
+                    patterns: [
+                        'patterns/header-default.php',
+                        'patterns/hero-two-columns.php',
+                        'patterns/boxes-two.php',
+                        'patterns/cta-button.php',
+                        'patterns/footer-default.php'
+                    ]
+                }
             ]
         }
     },

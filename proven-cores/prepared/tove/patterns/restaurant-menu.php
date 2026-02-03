@@ -5,10 +5,10 @@
  * Categories: tove-restaurant
  */
 ?>
-<!-- wp:group {"align":"wide","backgroundColor":"senary","className":"is-style-tove-shaded","layout":{"inherit":false}} -->
-<div class="wp-block-group alignwide is-style-tove-shaded has-senary-background-color has-background">
-	<!-- wp:heading {"textAlign":"center"} -->
-	<h2 class="has-text-align-center">Our Menu</h2>
+<!-- wp:group {"align":"wide","backgroundColor":"senary","textColor":"foreground","className":"is-style-tove-shaded","layout":{"inherit":false}} -->
+<div class="wp-block-group alignwide is-style-tove-shaded has-senary-background-color has-foreground-color has-text-color has-background">
+	<!-- wp:heading {"textAlign":"center","textColor":"foreground"} -->
+	<h2 class="has-text-align-center has-foreground-color has-text-color">Our Menu</h2>
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph {"align":"center"} -->

@@ -27,7 +27,24 @@
 *   [ ] **Preview Accuracy:** Ensure `staticSite.ts` preview matches the final WordPress theme output 1:1.
 *   [ ] **Mobile Responsiveness:** Verify Studio UI on mobile devices.
 
-## Phase 4: Documentation & Marketing Prep
+## Phase 13: Generator Best Practices Upgrade (Complete)
+**Goal:** Improve data flow, hero differentiation, and content validation.
+*   [x] **Contact Data Flow:** Wire Studio UI contact fields through full pipeline.
+*   [x] **Hero Layout Differentiation:** Implement fullBleed, fullWidth, split, minimal hero variants.
+*   [x] **Restaurant brandStyle Routing:** Map playful → Tove, modern → Frost.
+*   [x] **Content Validation:** Add ContentValidator to catch forbidden demo strings.
+
+## Phase 14: Restaurant Theme Fixes (Complete)
+**Goal:** Fix critical issues in Frost and Tove restaurant theme generation.
+*   [x] **Frost "Build with Frost" Removal:** Add restaurant recipe + legacy content replacements.
+*   [x] **Frost Testimonial Names:** Replace demo names (Allison Taylor, etc.) with neutral guest names.
+*   [x] **Split Hero Fix:** Force Heavy Mode for restaurants to ensure hero layout differentiation.
+*   [x] **Tove Spacing Normalization:** Reduce page padding from spacing-70 to spacing-50.
+*   [x] **Tove Menu Contrast:** Add explicit textColor="foreground" for readability.
+*   [x] **Tove Opening Hours:** Replace narrow 3-column layout with horizontal table.
+*   [x] **Pattern Cleaning:** Add cleanAllPatterns() to sanitize ALL base theme patterns post-chassis.
+
+## Phase 15: Documentation & Marketing Prep
 **Goal:** Prepare for public launch and user onboarding.
 *   [ ] **User Guides:** Create "Getting Started" docs for end-users (installing the ZIP, using Site Editor).
 *   [ ] **Developer Docs:** Finalize API documentation for `POST /api/generate`.

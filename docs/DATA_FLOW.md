@@ -1,7 +1,7 @@
 # PressPilot Generator Data Flow Architecture
 
 **Last Updated:** 2026-02-02
-**Phase:** 13 - Generator Best Practices Upgrade
+**Phase:** 14 - Restaurant Theme Fixes
 
 ---
 
@@ -185,12 +185,23 @@ private applySlotReplacements(content: string, slots: Record<string, string>): s
 
 ### Legacy Replacement (Compatibility Layer)
 
-For base themes with hardcoded demo content (Tove, TT4):
+For base themes with hardcoded demo content (Frost, Tove, TT4):
 
 ```typescript
 // src/generator/engine/PatternInjector.ts
 
 const LEGACY_DEMO_CONTENT = {
+    frost: {
+        replacements: [
+            { pattern: /Build with Frost/g, key: 'name', fallback: 'Our Services' },
+            { pattern: /Allison Taylor, Designer/g, fallback: 'Sarah M., Regular Guest' },
+            { pattern: /Anthony Breck, Developer/g, fallback: 'Michael T., Satisfied Customer' },
+            { pattern: /Rebecca Jones, Coach/g, fallback: 'Jennifer L., Happy Diner' },
+            // Also handles names without titles for testimonials-image patterns
+            { pattern: /Allison Taylor/g, fallback: 'Sarah M.' },
+            // ...
+        ]
+    },
     tove: {
         replacements: [
             { pattern: /Niofika Café/g, key: 'name', fallback: 'Our Business' },
@@ -205,6 +216,24 @@ const LEGACY_DEMO_CONTENT = {
     }
 };
 ```
+
+### Pattern Cleaning (Phase 14 Addition)
+
+After chassis loading, ALL base theme patterns are sanitized:
+
+```typescript
+// Called in src/generator/index.ts after chassis.load()
+
+await patternInjector.cleanAllPatterns(themeDir, userData);
+
+// This method:
+// 1. Reads all .php and .html files in patterns/
+// 2. Applies ALL legacy replacements (Frost, Tove, TT4)
+// 3. Writes back cleaned content
+// 4. Logs count of cleaned files
+```
+
+This ensures patterns in the WordPress pattern library don't contain marketing content.
 
 ---
 

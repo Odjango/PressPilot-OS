@@ -5,74 +5,39 @@
  * Categories: tove-restaurant
  */
 ?>
-<!-- wp:group {"align":"wide","layout":{"inherit":true}} -->
-<div class="wp-block-group alignwide">
-	<!-- wp:heading {"textAlign":"center"} -->
-	<h2 class="has-text-align-center">Our Opening Hours</h2>
+<!-- wp:group {"align":"wide","backgroundColor":"senary","textColor":"foreground","className":"is-style-tove-shaded","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignwide is-style-tove-shaded has-senary-background-color has-foreground-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+	<!-- wp:heading {"textAlign":"center","textColor":"foreground"} -->
+	<h2 class="has-text-align-center has-foreground-color has-text-color">Our Opening Hours</h2>
 	<!-- /wp:heading -->
 
-	<!-- wp:columns {"align":"wide"} -->
-	<div class="wp-block-columns alignwide">
-		<!-- wp:column {"backgroundColor":"senary"} -->
-		<div class="wp-block-column has-senary-background-color has-background">
-			<!-- wp:group {"backgroundColor":"senary"} -->
-			<div class="wp-block-group has-senary-background-color has-background">
-				<!-- wp:heading {"textAlign":"center","level":3,"style":{"spacing":{"margin":{"bottom":"0em","top":"0em"}}}} -->
-				<h3 class="has-text-align-center" style="margin-bottom:0em;margin-top:0em;">Weekdays</h3>
-				<!-- /wp:heading -->
+	<!-- wp:paragraph {"align":"center"} -->
+	<p class="has-text-align-center">We look forward to serving you!</p>
+	<!-- /wp:paragraph -->
 
-				<!-- wp:separator {"color":"primary","align":"center"} -->
-				<hr class="wp-block-separator aligncenter has-text-color has-background has-primary-background-color has-primary-color" />
-				<!-- /wp:separator -->
+	<!-- wp:separator {"className":"is-style-default"} -->
+	<hr class="wp-block-separator is-style-default" />
+	<!-- /wp:separator -->
 
-				<!-- wp:heading {"textAlign":"center","level":3} -->
-				<h3 class="has-text-align-center">07 – 18</h3>
-				<!-- /wp:heading -->
-			</div>
-			<!-- /wp:group -->
-		</div>
-		<!-- /wp:column -->
-
-		<!-- wp:column {"backgroundColor":"senary"} -->
-		<div class="wp-block-column has-senary-background-color has-background">
-			<!-- wp:group {"backgroundColor":"senary"} -->
-			<div class="wp-block-group has-senary-background-color has-background">
-				<!-- wp:heading {"textAlign":"center","level":3,"style":{"spacing":{"margin":{"bottom":"0em","top":"0em"}}}} -->
-				<h3 class="has-text-align-center" style="margin-bottom:0em;margin-top:0em;">Saturday</h3>
-				<!-- /wp:heading -->
-
-				<!-- wp:separator {"color":"primary","align":"center"} -->
-				<hr class="wp-block-separator aligncenter has-text-color has-background has-primary-background-color has-primary-color" />
-				<!-- /wp:separator -->
-
-				<!-- wp:heading {"textAlign":"center","level":3} -->
-				<h3 class="has-text-align-center">07 – 19</h3>
-				<!-- /wp:heading -->
-			</div>
-			<!-- /wp:group -->
-		</div>
-		<!-- /wp:column -->
-
-		<!-- wp:column {"backgroundColor":"senary"} -->
-		<div class="wp-block-column has-senary-background-color has-background">
-			<!-- wp:group {"backgroundColor":"senary"} -->
-			<div class="wp-block-group has-senary-background-color has-background">
-				<!-- wp:heading {"textAlign":"center","level":3,"style":{"spacing":{"margin":{"bottom":"0em","top":"0em"}}}} -->
-				<h3 class="has-text-align-center" style="margin-bottom:0em;margin-top:0em;">Sunday</h3>
-				<!-- /wp:heading -->
-
-				<!-- wp:separator {"color":"primary","align":"center"} -->
-				<hr class="wp-block-separator aligncenter has-text-color has-background has-primary-background-color has-primary-color" />
-				<!-- /wp:separator -->
-
-				<!-- wp:heading {"textAlign":"center","level":3} -->
-				<h3 class="has-text-align-center">07 – 19</h3>
-				<!-- /wp:heading -->
-			</div>
-			<!-- /wp:group -->
-		</div>
-		<!-- /wp:column -->
-	</div>
-	<!-- /wp:columns -->
+	<!-- wp:table {"hasFixedLayout":true,"className":"is-style-tove-vertical-borders"} -->
+	<figure class="wp-block-table is-style-tove-vertical-borders">
+		<table class="has-fixed-layout">
+			<tbody>
+				<tr>
+					<td><strong>Monday – Friday</strong></td>
+					<td class="has-text-align-right" data-align="right">7:00 AM – 6:00 PM</td>
+				</tr>
+				<tr>
+					<td><strong>Saturday</strong></td>
+					<td class="has-text-align-right" data-align="right">8:00 AM – 7:00 PM</td>
+				</tr>
+				<tr>
+					<td><strong>Sunday</strong></td>
+					<td class="has-text-align-right" data-align="right">9:00 AM – 5:00 PM</td>
+				</tr>
+			</tbody>
+		</table>
+	</figure>
+	<!-- /wp:table -->
 </div>
 <!-- /wp:group -->

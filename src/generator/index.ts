@@ -63,7 +63,14 @@ export async function generateTheme(options: GeneratorOptions = {}) {
     const styleJson = styleBuilder.invoke(baseName, userData);
 
     // C. SETUP DIRECTORIES
-    const mode: GeneratorMode = options.mode || 'standard';
+    // Force heavy mode for restaurants to ensure hero layout differentiation
+    const industry = userData.industry || 'general';
+    const isRestaurant = ['restaurant', 'cafe', 'restaurant_cafe'].includes(industry);
+    let mode: GeneratorMode = options.mode || 'standard';
+    if (isRestaurant) {
+        mode = 'heavy';
+        console.log('[Orchestrator] Restaurant vertical -> forcing Heavy Mode for hero differentiation');
+    }
     const themeName = styleJson.metadata.themeName;
     const safeName = options.slug || themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
@@ -80,6 +87,9 @@ export async function generateTheme(options: GeneratorOptions = {}) {
 
         // Load Chassis (Using baseName for binary files)
         await chassis.load(baseName, themeDir);
+
+        // Clean base theme patterns from demo/marketing content
+        await patternInjector.cleanAllPatterns(themeDir, userData);
 
         // Clean default assets
         await assetCleaner.clean(themeDir);
@@ -109,6 +119,11 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             await patternInjector.injectHeavyMode(themeDir, personality, userData, safeName, contentJson);
             await contentEngine.generatePages(themeDir, contentJson);
             await contentEngine.injectContentLoader(themeDir, contentJson);
+
+            // Menu injection for restaurants in heavy mode
+            if (userData.menus && userData.menus.length > 0) {
+                await patternInjector.injectMenus(themeDir, userData, safeName);
+            }
         } else {
             // STANDARD MODE (Using Recipe Assembly)
             let recipe = null;

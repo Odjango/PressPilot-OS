@@ -19,6 +19,25 @@ const LEGACY_DEMO_CONTENT = {
             { pattern: /Études/g, key: 'name', fallback: 'PressPilot' }
         ]
     },
+    // Frost agency theme demo content
+    frost: {
+        brandName: 'Frost',
+        replacements: [
+            { pattern: /Build with Frost/g, key: 'name', fallback: 'Our Services' },
+            { pattern: /Frost is a powerful WordPress theme created for agencies and professional website builders\./g, key: 'description', fallback: 'We provide exceptional service tailored to your needs.' },
+            // Testimonial text (Frost marketing copy - multiple variants)
+            { pattern: /With its clean, minimal design and powerful features, Frost enables agencies to build cool websites\./g, key: null, fallback: 'The experience was exceptional from start to finish. Highly recommended!' },
+            { pattern: /With its clean, minimal design and powerful features, This theme enables you to build cool websites\./g, key: null, fallback: 'Outstanding service and attention to detail. Truly impressed!' },
+            // Testimonial demo names (with titles - must come before without titles)
+            { pattern: /Allison Taylor, Designer/g, key: null, fallback: 'Sarah M., Regular Guest' },
+            { pattern: /Anthony Breck, Developer/g, key: null, fallback: 'Michael T., Satisfied Customer' },
+            { pattern: /Rebecca Jones, Coach/g, key: null, fallback: 'Jennifer L., Happy Diner' },
+            // Testimonial demo names (without titles - for testimonials-image patterns)
+            { pattern: /Allison Taylor/g, key: null, fallback: 'Sarah M.' },
+            { pattern: /Anthony Breck/g, key: null, fallback: 'Michael T.' },
+            { pattern: /Rebecca Jones/g, key: null, fallback: 'Jennifer L.' }
+        ]
+    },
     // Tove cafe theme demo content
     tove: {
         brandName: 'Niofika',
@@ -98,6 +117,61 @@ export class PatternInjector {
     constructor(private rootDir: string) { }
 
     /**
+     * Clean all patterns in the theme directory from demo/marketing content
+     * Should be called after chassis loading to sanitize base theme patterns
+     */
+    async cleanAllPatterns(themeDir: string, userData: GeneratorData): Promise<void> {
+        const patternsDir = path.join(themeDir, 'patterns');
+        if (!await fs.pathExists(patternsDir)) {
+            return;
+        }
+
+        const files = await fs.readdir(patternsDir);
+        let cleanedCount = 0;
+
+        for (const file of files) {
+            if (!file.endsWith('.php') && !file.endsWith('.html')) continue;
+
+            const filePath = path.join(patternsDir, file);
+            let content = await fs.readFile(filePath, 'utf8');
+            const originalContent = content;
+
+            // Apply all legacy demo content replacements
+            for (const replacement of LEGACY_DEMO_CONTENT.frost.replacements) {
+                const value = replacement.key ? (userData as any)[replacement.key] : null;
+                content = content.replace(replacement.pattern, value || replacement.fallback);
+            }
+
+            for (const replacement of LEGACY_DEMO_CONTENT.tove.replacements) {
+                const value = replacement.key ? (userData as any)[replacement.key] : null;
+                content = content.replace(replacement.pattern, value || replacement.fallback);
+            }
+
+            for (const replacement of LEGACY_DEMO_CONTENT.tt4.replacements) {
+                const value = replacement.key ? (userData as any)[replacement.key] : null;
+                content = content.replace(replacement.pattern, value || replacement.fallback);
+            }
+
+            // Café-specific content (only replaced for non-café businesses)
+            if (userData.industry !== 'cafe') {
+                for (const replacement of LEGACY_DEMO_CONTENT.tove.cafeSpecific) {
+                    content = content.replace(replacement.pattern, replacement.replacement);
+                }
+            }
+
+            // Only write if content changed
+            if (content !== originalContent) {
+                await fs.writeFile(filePath, content);
+                cleanedCount++;
+            }
+        }
+
+        if (cleanedCount > 0) {
+            console.log(`[Pattern] Cleaned ${cleanedCount} pattern files from demo content`);
+        }
+    }
+
+    /**
      * Apply slot-based replacements from ContentBuilder
      * This is the primary content injection method using {{PLACEHOLDER}} format
      */
@@ -112,7 +186,7 @@ export class PatternInjector {
     }
 
     /**
-     * Apply legacy replacements for base theme demo content (Tove, TT4/Études)
+     * Apply legacy replacements for base theme demo content (Frost, Tove, TT4/Études)
      * This is a compatibility layer for patterns that still have hardcoded demo strings
      *
      * Only runs if:
@@ -126,6 +200,12 @@ export class PatternInjector {
                 const value = replacement.key ? (userData as any)[replacement.key] : null;
                 content = content.replace(replacement.pattern, value || replacement.fallback);
             }
+        }
+
+        // Frost "Build with Frost" replacements
+        for (const replacement of LEGACY_DEMO_CONTENT.frost.replacements) {
+            const value = replacement.key ? (userData as any)[replacement.key] : null;
+            content = content.replace(replacement.pattern, value || replacement.fallback);
         }
 
         // Tove "Niofika" replacements
