@@ -157,6 +157,12 @@ Incremental fixes and improvements leading to Phase 13.
 
 **Key Commit:** `cf4ccf9` feat: Phase 14 - Restaurant theme fixes (Frost & Tove)
 
+**Acceptance Hardening (Phase 14.1):**
+- Added `cleanAllPatterns()` unit tests (`tests/unit/pattern-injector.test.ts`)
+- Created `FORCE_HEAVY_FOR_RESTAURANTS` config flag in `src/generator/index.ts`
+- Verified Tove responsive behavior (375px, 768px)
+- Fixed report naming inconsistencies (issue count, Phase 13 refs)
+
 ---
 
 ## Phase 15: Documentation & Marketing Prep
@@ -167,6 +173,67 @@ Incremental fixes and improvements leading to Phase 13.
 - [ ] Developer Docs: API documentation
 - [ ] Marketing Assets: Screenshots of flagship themes
 - [ ] Landing Page: "Generated in 90s" value prop
+- [x] UI Shell Unification: Studio UI now uses dark theme with unified AppShell (see Phase 15.1 below)
+
+**Next Concrete Tasks:**
+- [ ] Draft 3-step "Getting Started" guide for first-time users
+- [ ] Document the `/wp-json/presspilot/v1/generate` API endpoint (request/response schema)
+- [ ] Capture hero screenshots from 3 flagship themes (restaurant, agency, ecommerce)
+- [ ] Write landing page copy focusing on "90-second generation" value proposition
+
+**Phase 15 Workplan (kickoff 2026-02-02):**
+
+### User Docs
+| Task | File | Done |
+|------|------|------|
+| Create Getting Started guide stub | `docs/user-guide-getting-started.md` | Headings exist, user can follow flow |
+| Add installation walkthrough | (same file) | Screenshots optional, text complete |
+| Add Site Editor intro | (same file or separate) | User knows where to customize |
+
+### Developer Docs
+| Task | File | Done |
+|------|------|------|
+| Update API reference | `docs/api-reference.md` | Modern endpoint documented with cURL examples |
+| Link existing architecture docs | `docs/developer-index.md` | Index page points to DATA_FLOW, generator-architecture, pp-hard-gates |
+| Add extension guide skeleton | `docs/extending-presspilot.md` | How to add verticals, patterns (headings only) |
+
+### Marketing Assets
+| Task | File | Done |
+|------|------|------|
+| Define flagship themes | `BRAIN/MEMORY/marketing-seeds.md` | 3-5 themes with generation settings |
+| Capture screenshots | `assets/marketing/` | Hero + full-page for each flagship |
+| Write theme descriptions | (marketing-seeds.md) | One-liner per theme |
+
+### Landing Copy
+| Task | File | Done |
+|------|------|------|
+| Draft value proposition | `docs/landing-copy-draft.md` | Clear "For X who Y" statement |
+| Write benefit bullets | (same file) | 3-5 bullets, customer-focused |
+| Placeholder for testimonials | (same file) | Template for future quotes |
+
+### Phase 15.1: UI Unification (Dark Theme)
+**Date:** February 2, 2026 | **Status:** Complete
+
+**Goal:** Unify app shell with dark-themed landing page aesthetic.
+
+**Changes:**
+| File | Change |
+|------|--------|
+| `components/AppShell.tsx` | NEW - Unified dark header/footer component |
+| `app/layout.tsx` | Use AppShell, enable dark theme as default |
+| `app/studio/page.tsx` | Rethemed with dark bg-slate-950/900 palette |
+
+**Acceptance Checklist:**
+- [x] AppShell component created with dark header (bg-slate-950/80, backdrop-blur)
+- [x] AppShell footer with slate-900 background, white/slate text
+- [x] Root layout uses dark theme (`className="dark"`, `colorScheme: 'dark'`)
+- [x] ThemeProvider defaultTheme set to "dark" (removed forcedTheme="light")
+- [x] Studio page uses dark palette (slate-950 bg, white text, slate-800 borders)
+- [x] Inverted CTA buttons (white bg on dark, slate-950 text)
+- [x] Toaster configured with dark theme
+
+**Positioning Lock (2026-02-02):**
+"FSE reliability / zero editor errors" is now the primary external positioning. All marketing tasks should emphasize client-safe themes built on proven foundations, not generic AI generation.
 
 ---
 

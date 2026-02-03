@@ -22,7 +22,7 @@
 
 ## Phase 3: SaaS Studio UI Polish
 **Goal:** Make the "Hands" (SaaS App) feel as premium as the "Brain" (Generator).
-*   [ ] **Global Layout:** Refine `app/layout.tsx` with unified header/footer.
+*   [x] **Global Layout:** Unified dark AppShell with consistent header/footer across all pages (Phase 15.1).
 *   [ ] **Step Navigation:** Implement smooth transitions between onboarding steps.
 *   [ ] **Preview Accuracy:** Ensure `staticSite.ts` preview matches the final WordPress theme output 1:1.
 *   [ ] **Mobile Responsiveness:** Verify Studio UI on mobile devices.
@@ -46,10 +46,16 @@
 
 ## Phase 15: Documentation & Marketing Prep
 **Goal:** Prepare for public launch and user onboarding.
+*   [x] **UI Shell Unification:** Dark theme AppShell with unified header/footer (Phase 15.1 complete).
 *   [ ] **User Guides:** Create "Getting Started" docs for end-users (installing the ZIP, using Site Editor).
 *   [ ] **Developer Docs:** Finalize API documentation for `POST /api/generate`.
 *   [ ] **Marketing Assets:** Generate screenshots of "Flagship" themes (Restaurant, Agency, SaaS).
 *   [ ] **Landing Page:** Update the main landing page with "Generated in 90s" value prop and live demo link.
+
+**Next up for Phase 15:**
+- Capture hero screenshots from 5 flagship themes (Bella Trattoria, Slate Wine Bar, Nexus Digital, The Cozy Cup, Ember & Oak)
+- Refine landing copy with reliability-first positioning ("FSE themes without editor errors")
+- Complete user guide with install walkthrough and Site Editor intro
 
 ## Ongoing: "Hard Gates" Maintenance
 *   **Validator:** Continuously update `WP Theme Output Checker` skill.

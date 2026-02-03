@@ -1,6 +1,8 @@
 # PressPilot Project Memory
 **State Saved: 2026-02-02** | **Current Phase: 14 Complete**
 
+> Phase 15 (Documentation & Marketing Prep) is in planning. See [phase-history.md](phase-history.md) for details.
+
 ---
 
 ## 1. Core Directives (User Mandates)
@@ -198,3 +200,9 @@ Documentation rationalization completed with the following decisions:
 - **Authority hierarchy:** VISION > CONSTITUTION > MEMORY > ARCHIVE
 - **agent-protocol.md:** Source of truth for agent behavior within CONSTITUTION/
 - **CLAUDE.md:** High-level context; points to agent-protocol.md for rules
+
+## 12. Current Phase Status (Phase 15)
+
+**Date:** 2026-02-02
+
+- Studio UI now defaults to dark theme with unified AppShell (header/footer consistent with reliability-first landing positioning)
