@@ -1,3 +1,9 @@
+> **ARCHIVED** - This document is superseded. See [docs/PROJECT_ROADMAP.md](../../docs/PROJECT_ROADMAP.md) for the current, canonical roadmap with all phases through Phase 15.
+>
+> _Archived: 2026-02-02 | Reason: Duplicate roadmap, superseded by docs/PROJECT_ROADMAP.md_
+
+---
+
 # PROJECT SCOPE & VISION: PressPilot
 
 ## 1. The Core Concept

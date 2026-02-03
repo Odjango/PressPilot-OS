@@ -1,3 +1,12 @@
+> **ARCHIVED** - This document describes an outdated plugin architecture. The current generator uses a different approach:
+> - See [docs/generator-architecture.md](../../docs/generator-architecture.md) for current architecture
+> - See [docs/DATA_FLOW.md](../../docs/DATA_FLOW.md) for current data flow
+> - The `{{placeholder}}` syntax documented here has been replaced by WordPress block markup
+>
+> _Archived: 2026-02-02 | Reason: Plugin architecture superseded by internal Node.js generator_
+
+---
+
 # PressPilot Factory Plugin - Build Report
 
 **Version:** 1.0.0

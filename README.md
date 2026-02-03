@@ -65,6 +65,30 @@ WP_PREVIEW_PASS=password123
 
 When WordPress is unavailable, the hero preview feature gracefully falls back—users can still proceed with the simulated preview in Step 3 and generate themes without real screenshots.
 
+## 📚 Documentation
+
+### For AI Agents
+- **[BRAIN/README.md](BRAIN/README.md)** - Start here. Navigation map for the AI knowledge base.
+- **[CLAUDE.md](CLAUDE.md)** - Agent operational contract and rules.
+- **[docs/AGENT_CONTEXT_MASTER.md](docs/AGENT_CONTEXT_MASTER.md)** - Session context and must-read files.
+
+### For Developers
+- **[docs/PROJECT_ROADMAP.md](docs/PROJECT_ROADMAP.md)** - Current phase and development timeline.
+- **[docs/DATA_FLOW.md](docs/DATA_FLOW.md)** - Data pipeline architecture.
+- **[docs/generator-architecture.md](docs/generator-architecture.md)** - Generator design overview.
+- **[docs/pp-hard-gates.md](docs/pp-hard-gates.md)** - Validation gates and quality enforcement.
+
+### Knowledge Structure
+```
+BRAIN/
+├── VISION/       # Business mandate & product principles (locked)
+├── CONSTITUTION/ # Technical rules & FSE laws (stable)
+├── MEMORY/       # Learned patterns & phase history (evolves)
+└── ARCHIVE/      # Deprecated docs (reference only)
+```
+
+---
+
 ## 📦 Deployment
 
 The project is configured for **Docker** deployment (Coolify/Portainer).
