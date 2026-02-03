@@ -183,3 +183,18 @@ The system leverages specialized "Architect" skills found in `CONSTITUTION/verti
 - Hardcoded hex colors (use theme.json presets)
 - Recipe mode for restaurants (doesn't apply hero layouts)
 - Template placeholders like `{{variable}}` (old system, replaced by blocks)
+
+---
+
+## 11. Documentation Decisions (Phase 14.1)
+
+**Date:** 2026-02-02
+
+Documentation rationalization completed with the following decisions:
+
+- **PRD.md:** Kept deprecated in BRAIN/ARCHIVE/; project-vision.md is canonical
+- **PROJECT_LOG.md:** Archived; phase-history.md is canonical summary
+- **master-prompt.md:** Restored to archive for historical reference
+- **Authority hierarchy:** VISION > CONSTITUTION > MEMORY > ARCHIVE
+- **agent-protocol.md:** Source of truth for agent behavior within CONSTITUTION/
+- **CLAUDE.md:** High-level context; points to agent-protocol.md for rules

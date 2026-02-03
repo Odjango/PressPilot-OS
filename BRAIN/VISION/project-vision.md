@@ -1,5 +1,6 @@
-“This file is the latest source of truth. All other docs can be considered legacy unless they explicitly say otherwise.”
+"This file is the latest source of truth. All other docs can be considered legacy unless they explicitly say otherwise."
 
+> **Note:** The original `PRD.md` is archived at `BRAIN/ARCHIVE/PRD.md`. This file (`project-vision.md`) plus [docs/generator-architecture.md](../../docs/generator-architecture.md) are the current sources of truth for requirements and architecture.
 
 # PressPilot – Project Vision
 

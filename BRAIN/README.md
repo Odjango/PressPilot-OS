@@ -52,7 +52,9 @@ BRAIN/
 └── ARCHIVE/                   # Deprecated docs (reference only)
     ├── PRD.md                 # Original spec (superseded by VISION/)
     ├── FACTORY_BUILD_REPORT.md # Old plugin architecture
-    └── ROADMAP.md             # Old roadmap (use docs/PROJECT_ROADMAP.md)
+    ├── ROADMAP.md             # Old roadmap (use docs/PROJECT_ROADMAP.md)
+    ├── master-prompt.md       # Historical orchestrator prompt
+    └── PROJECT_LOG.md         # Raw dev log (use MEMORY/phase-history.md)
 ```
 
 ---
@@ -65,6 +67,8 @@ When instructions conflict, follow this priority:
 2. **CONSTITUTION/** - Technical laws (stable, enforced by hard gates)
 3. **MEMORY/** - Learned patterns (evolves, captures lessons)
 4. **ARCHIVE/** - Deprecated (reference only, never authoritative)
+
+**If any document conflicts with this hierarchy, follow the higher-priority document.**
 
 ---
 
@@ -106,8 +110,9 @@ Edit the appropriate file in `CONSTITUTION/`
 
 ### To Understand Current State
 1. Read `MEMORY/project_state.md` for learned patterns
-2. Read `MEMORY/phase-history.md` for development history
-3. Check recent commits in git log
+2. Read `MEMORY/phase-history.md` for development history (canonical summary)
+3. For raw detail, see `ARCHIVE/PROJECT_LOG.md` (supplementary only)
+4. Check recent commits in git log
 
 ---
 
@@ -119,7 +124,7 @@ Edit the appropriate file in `CONSTITUTION/`
 | [docs/generator-architecture.md](../docs/generator-architecture.md) | Generator design |
 | [docs/pp-hard-gates.md](../docs/pp-hard-gates.md) | Validation enforcement |
 | [docs/hero-system.md](../docs/hero-system.md) | Hero layout specifications |
-| [CLAUDE.md](../CLAUDE.md) | Agent operational contract |
+| [CLAUDE.md](../CLAUDE.md) | High-level agent context (see agent-protocol.md for rules) |
 
 ---
 

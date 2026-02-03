@@ -1,7 +1,11 @@
 # PressPilot Phase History
 
-> Consolidated development history from PROJECT_LOG.md and git commits.
-> For detailed technical implementation, see the original [PROJECT_LOG.md](../../PROJECT_LOG.md).
+> **This is the canonical, summarized phase history for PressPilot.**
+>
+> This file consolidates development history from the original PROJECT_LOG.md and git commits.
+> For raw, detailed technical context, see the archived [PROJECT_LOG.md](../ARCHIVE/PROJECT_LOG.md).
+>
+> Readers should start here for phase summaries; consult the archive only for deep implementation details.
 
 ---
 

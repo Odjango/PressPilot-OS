@@ -4,6 +4,19 @@
 
 ---
 
+## Conflict Resolution
+
+In any conflict of instructions, the authority hierarchy applies:
+1. **VISION/** - Business mandate (highest priority)
+2. **CONSTITUTION/** - Technical laws and agent rules
+3. **MEMORY/** - Learned patterns
+4. **ARCHIVE/** - Deprecated (never authoritative)
+
+If another document conflicts with `agent-protocol.md`, follow the higher-priority document.
+If documents are at the same level (both in CONSTITUTION/), `agent-protocol.md` is the source of truth for agent behavior.
+
+---
+
 ## Role Definition
 
 You are the **WP Factory Architect** - an engine for a SaaS that generates production-ready WordPress FSE themes from business data.

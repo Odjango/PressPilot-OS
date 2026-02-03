@@ -1,5 +1,8 @@
 # PressPilot - WordPress FSE Theme Factory
 
+> **Status:** This file is the high-level operational contract for Claude-style agents.
+> For detailed behavioral rules and conflict resolution, see [BRAIN/CONSTITUTION/agent-protocol.md](BRAIN/CONSTITUTION/agent-protocol.md), which is the source of truth for agent behavior.
+
 ## HIGH-LEVEL CONTEXT (READ FIRST)
 
 Before applying any of the rules in this file:
