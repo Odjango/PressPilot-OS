@@ -1,4 +1,36 @@
+/**
+ * Recipe System - Generator 2.0 Phase 2 + Phase 3
+ *
+ * Two types of recipes:
+ * 1. SiteRecipe (RecipeRegistry) - Page-level structure (which pages exist)
+ * 2. LayoutRecipe (Phase 2) - Section-level structure (how a page is composed)
+ *
+ * Phase 3 additions:
+ * - SectionContext for token-driven styling
+ * - ContextBuilder for creating SectionContext
+ * - renderSectionsWithRecipe() for recipe-aware rendering
+ *
+ * Usage for Layout Recipes (Phase 3):
+ *   import {
+ *     RecipeSelector,
+ *     SectionRenderer,
+ *     type RecipeContext,
+ *     type RenderContext
+ *   } from '../recipes';
+ *
+ *   const recipe = RecipeSelector.selectRecipe({
+ *     vertical: 'restaurant',
+ *     brandMode: 'playful'
+ *   });
+ *
+ *   const html = SectionRenderer.renderSectionsWithRecipe(recipe, renderContext);
+ */
+
 import { SiteRecipe } from '../types';
+
+// =============================================================================
+// Site Recipe Registry (Page Structure)
+// =============================================================================
 
 export const RecipeRegistry: Record<string, SiteRecipe> = {
     restaurant: {
@@ -37,7 +69,7 @@ export const RecipeRegistry: Record<string, SiteRecipe> = {
             }
         ]
     },
-    // Placeholders for other verticals (Phase 2)
+    // Placeholders for other verticals
     agency: {
         industry: 'agency',
         description: 'Creative agency portfolio',
@@ -49,3 +81,41 @@ export const RecipeRegistry: Record<string, SiteRecipe> = {
         pages: []
     }
 };
+
+// =============================================================================
+// Layout Recipe System (Section Structure) - Phase 2 + Phase 3
+// =============================================================================
+
+// Type exports
+export type {
+    LayoutRecipe,
+    SectionDefinition,
+    SectionType,
+    BackgroundSlot,
+    RecipeConditions,
+    RecipeContext,
+    // Phase 3 additions
+    RenderContext,
+    SectionContext
+} from './types';
+
+// Class exports
+export { RecipeSelector } from './selector';
+export { SectionRenderer } from './renderer';
+export { ContextBuilder } from './context-builder';
+
+// Restaurant recipe exports
+export {
+    RESTAURANT_RECIPES,
+    DEFAULT_RESTAURANT_RECIPE,
+    CLASSIC_BISTRO_RECIPE,
+    MODERN_DINING_RECIPE
+} from './restaurant';
+
+// Ecommerce recipe exports (Phase 4)
+export {
+    ECOMMERCE_RECIPES,
+    DEFAULT_ECOMMERCE_RECIPE,
+    PRODUCT_SHOWCASE_RECIPE,
+    MINIMAL_STORE_RECIPE
+} from './ecommerce';

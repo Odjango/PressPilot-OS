@@ -32,6 +32,26 @@ services:
       - db_data:/var/lib/mysql
     restart: unless-stopped
 
+  # WP-CLI Service for plugin/theme installation and management
+  cli:
+    image: wordpress:cli
+    container_name: presspilot-os-cli
+    depends_on:
+      - db
+      - wordpress
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./output:/var/www/html/wp-content/themes-import:ro
+    # Keep container running for commands
+    entrypoint: ["sh", "-c", "while true; do sleep 3600; done"]
+    restart: unless-stopped
+
 volumes:
   wordpress_data:
   db_data:

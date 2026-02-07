@@ -54,7 +54,7 @@ export default function HeaderAuthStatus() {
   };
 
   if (!mounted || loading) {
-    return <span className="text-sm text-neutral-500">Loading…</span>;
+    return <span className="text-sm text-slate-500">Loading…</span>;
   }
 
   if (!user) {
@@ -65,7 +65,7 @@ export default function HeaderAuthStatus() {
     return (
       <Link
         href="/auth"
-        className="inline-flex items-center rounded-full border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-900 transition hover:border-neutral-900 hover:text-black"
+        className="inline-flex items-center rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-white transition hover:border-white hover:bg-white/5"
         suppressHydrationWarning
       >
         Sign in
@@ -74,14 +74,14 @@ export default function HeaderAuthStatus() {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3 text-sm text-neutral-700">
+    <div className="flex flex-wrap items-center gap-3 text-sm text-slate-400">
       <span className="hidden sm:inline">
-        Signed in as <span className="font-semibold">{user.email}</span>
+        Signed in as <span className="font-semibold text-white">{user.email}</span>
       </span>
       <button
         type="button"
         onClick={handleSignOut}
-        className="inline-flex items-center rounded-full border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-900 transition hover:border-neutral-900 hover:text-black"
+        className="inline-flex items-center rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-white transition hover:border-white hover:bg-white/5"
       >
         Sign out
       </button>

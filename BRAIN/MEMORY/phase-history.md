@@ -235,6 +235,160 @@ Incremental fixes and improvements leading to Phase 13.
 **Positioning Lock (2026-02-02):**
 "FSE reliability / zero editor errors" is now the primary external positioning. All marketing tasks should emphasize client-safe themes built on proven foundations, not generic AI generation.
 
+### Phase 15.2: Theme Mood Removal
+**Date:** February 3, 2026 | **Status:** Complete
+
+**Background:** E2E testing confirmed that the 4 Theme Moods (Warm, Fresh, Minimal, Dark) only affected the Studio live preview - WordPress output was identical regardless of mood selection. For branded themes, this was misleading and conflicted with reliability positioning.
+
+**Changes:**
+| Component | Change |
+|-----------|--------|
+| Studio UI | Removed Theme Mood pills from Step 3 |
+| palettes.ts | Removed MOOD_OPTIONS export, simplified getPreviewColors() |
+| studioAdapter.ts | Removed mood from StudioFormInput interface |
+| dataTransformer.ts | Removed mood transformation block |
+| StyleBuilder.ts | Removed mood color application logic |
+| VariationBuilder.ts | Removed default mood parameter (all 4 variations still generated) |
+
+**What Remains:**
+- VariationBuilder still generates all 4 style variations (warm, fresh, minimal, dark)
+- Users can switch between variations in WordPress Site Editor
+- Visual control in Studio is now via brand palette + hero layout only
+
+**Future Consideration:**
+If a "Minimal/Duotone" effect is implemented, it must map to concrete theme.json changes across the whole site before being exposed in Studio UI.
+
+### Phase 15.3: Homepage Section & Color Fix
+**Date:** February 3-4, 2026 | **Status:** Complete
+
+**Background:** Gallery screenshots revealed sparse homepages with "hero + footer only" layouts and large empty dark voids from `backgroundColor="contrast"` sections. Brand colors were underutilized.
+
+**Root Cause:**
+- Heavy Mode's `universal-home.ts` had only 4 generic sections
+- Footer used dynamic colors that sometimes resulted in dark backgrounds
+- No industry-specific content in Heavy Mode sections
+
+**Solution:**
+
+1. **Expanded universal-home.ts** from 4 to 6+ sections:
+   - Hero (existing)
+   - Value Proposition (new) - industry-specific benefits
+   - Services Grid (new) - 4 industry-specific services
+   - Social Proof (new) - 3 testimonials
+   - FAQ Section (new) - 4 industry-specific FAQs
+   - Final CTA (new) - industry-specific call-to-action
+
+2. **Created section pattern files:**
+   - `src/generator/patterns/sections/value-proposition.ts`
+   - `src/generator/patterns/sections/services-grid.ts`
+   - `src/generator/patterns/sections/social-proof.ts`
+   - `src/generator/patterns/sections/faq-section.ts`
+   - `src/generator/patterns/sections/final-cta.ts`
+
+3. **Fixed footer color logic:**
+   - Changed from dynamic colors to fixed `base-2` (light gray) background
+   - Ensures light footer appearance instead of dark voids
+
+4. **Color distribution across homepage:**
+   | Section | Background | Text |
+   |---------|------------|------|
+   | Value Prop | `base` | `contrast` |
+   | Services | `base-2` | `contrast` |
+   | Social Proof | `accent-2` | `contrast` |
+   | FAQ | `base` | `contrast` |
+   | Final CTA | `accent` | `base` |
+   | Footer | `base-2` | `contrast` |
+
+**Result:** All verticals now generate 7+ section homepages with industry-specific content, proper color distribution, and no dark voids.
+
+---
+
+### Phase 15.4: Restaurant Homepage Recipe v1
+**Date:** February 4, 2026 | **Status:** Complete
+
+**Goal:** Create industry-specific restaurant homepage using real reference gallery.
+
+**Reference:** BBQ Restaurant Astra theme screenshots in `tests/artifacts/Gallery/Restaurant Demo/`
+
+**New Section Patterns Created:**
+- `src/generator/patterns/sections/restaurant-story.ts` - Image + text block with trust badges
+- `src/generator/patterns/sections/restaurant-menu-preview.ts` - Circular food image grid
+- `src/generator/patterns/sections/restaurant-promo-band.ts` - "Happy Hours" style promotional messaging
+
+**Recipe:**
+Hero → Story/About → Menu Preview → Promo Band → Testimonials → Final CTA → Footer
+
+---
+
+### Phase 15.5: Restaurant Visual Modes & Tokens
+**Date:** February 4, 2026 | **Status:** Complete
+
+**Goal:** Make playful (Tove) and modern (Frost) restaurant themes visually distinct.
+
+**New File:** `src/generator/patterns/sections/restaurantThemeTokens.ts`
+
+| Mode | Button Style | Card Radius | Image Style |
+|------|-------------|-------------|-------------|
+| **Playful** | Pill (100px) | 16px | Circular |
+| **Modern** | Square (4px) | 8px | Rectangular |
+
+**Also Added:** CSS normalization in `StyleEngine.ts` for header/footer spacing (no gaps between hero and header).
+
+---
+
+## Generator 2.0: Design System & Recipe Engine
+**Date:** February 5-6, 2026 | **Status:** Phase 4 Complete
+
+### Gen 2.0 Phase 1: Design System Foundation (Feb 5)
+
+Created centralized design token system supporting all verticals:
+
+| File | Purpose |
+|------|---------|
+| `src/generator/design-system/index.ts` | Main exports |
+| `src/generator/design-system/globalThemeTokens.ts` | Core `getDesignTokens()` resolver |
+| `src/generator/design-system/brandModes.ts` | 4 brand modes (playful, modern, minimal, bold) |
+| `src/generator/design-system/verticals/restaurant.ts` | Restaurant token overrides |
+
+**Tests:** 23/23 passing
+
+### Gen 2.0 Phase 2: Recipe System (Feb 5)
+
+Replaced hardcoded restaurant homepage assembly with data-driven recipes:
+
+| File | Purpose |
+|------|---------|
+| `src/generator/recipes/types.ts` | LayoutRecipe, SectionDefinition interfaces |
+| `src/generator/recipes/selector.ts` | RecipeSelector - picks best recipe for context |
+| `src/generator/recipes/renderer.ts` | SectionRenderer - maps types to pattern functions |
+| `src/generator/recipes/restaurant/classic-bistro.ts` | Classic Bistro recipe (6 sections) |
+| `src/generator/recipes/restaurant/modern-dining.ts` | Modern Dining recipe |
+
+**Selection:** playful → Classic Bistro, modern → Modern Dining
+**Tests:** Recipe Selector 16/16, Section Order 21/21
+
+### Gen 2.0 Phase 4: Ecommerce Vertical (Feb 6)
+
+Extended Generator 2.0 to ecommerce with full token → recipe → section rendering flow.
+
+**Key Fix:** Extended Heavy Mode to ecommerce (was only restaurants). Added `FORCE_HEAVY_FOR_ECOMMERCE` flag.
+
+**Ecommerce Recipes:**
+| Recipe | brandModes | Sections |
+|--------|------------|----------|
+| Product Showcase (default) | modern, bold | hero → category-grid → featured-products → trust-badges → newsletter |
+| Minimal Store | playful, minimal | hero → featured-products → testimonials → newsletter |
+
+**New Section Patterns:**
+- `ecommerce-hero.ts`, `ecommerce-category-grid.ts`, `ecommerce-featured-products.ts`
+- `ecommerce-trust-badges.ts`, `ecommerce-newsletter.ts`
+
+**WCAG AA Fix:** Newsletter section uses `contrast` bg (guaranteed dark) instead of risky `accent`.
+
+**Brand Style Expansion:** Added `bold` and `minimal` to `TT4BrandStyle` type.
+
+**Tests:** Ecommerce Design Tokens 15/15, Section Order 26/26
+
 ---
 
 ## Ongoing: Hard Gates Maintenance
@@ -260,4 +414,4 @@ curl -X POST https://factory.presspilotapp.com/wp-json/presspilot/v1/generate \
 
 ---
 
-*Last Updated: February 2, 2026*
+*Last Updated: February 6, 2026*

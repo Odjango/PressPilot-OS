@@ -1,16 +1,143 @@
-import { PageContent, HeroLayout } from '../types';
+import { PageContent, HeroLayout, BrandStyle } from '../types';
 import { getHeroByLayout } from './hero-variants';
+import {
+    getValuePropositionSection,
+    getServicesGridSection,
+    getSocialProofSection,
+    getFAQSection,
+    getFinalCTASection
+} from './sections';
+
+// Recipe System imports (Generator 2.0 Phase 2)
+import {
+    RecipeSelector,
+    SectionRenderer,
+    type RecipeContext,
+    type RenderContext
+} from '../recipes';
+import type { BrandMode } from '../design-system';
 
 /**
- * Universal Home Pattern - TT4-Aligned
+ * Universal Home Pattern - TT4-Aligned (Phase 15.5 + Phase 2/3 Recipes)
  *
- * Uses TT4 semantic color tokens for visual differentiation between palettes:
- * - Hero: Dynamic layout based on heroLayout selection (fullBleed, fullWidth, split, minimal)
- * - Feature Section: Uses base-2 for subtle surface distinction
- * - CTA Band: Uses accent background with base text for strong visual impact
- * - Values Section: Uses accent-2 (light accent) for secondary branded section
+ * Industry-specific homepage assembly.
+ * Uses TT4 semantic color tokens for visual differentiation between palettes.
+ *
+ * GENERATOR 2.0 PHASE 2+3: Recipe-Driven Assembly with Token-Aware Rendering
+ * Restaurants now use the Recipe System for section composition.
+ * Recipes define section order and backgrounds declaratively.
+ * Phase 3: SectionRenderer.renderSectionsWithRecipe() uses SectionContext
+ * for token-driven styling without hardcoded values.
+ *
+ * RESTAURANT RECIPE V1 (Classic Bistro):
+ * 1. Hero - Dynamic layout based on heroLayout selection
+ * 2. Story/About - Image + text (base bg)
+ * 3. Menu Preview - 6 circular/rectangular food images (base-2 bg)
+ * 4. Promo Band - Dark promotional section (contrast bg)
+ * 5. Testimonials - Customer quotes (accent-2 bg)
+ * 6. Final CTA - Reservation call-to-action (accent bg)
+ *
+ * RESTAURANT VISUAL MODES (brandStyle -> brandMode):
+ * - 'playful' (Tove): Circular images, pill buttons (100px), generous spacing
+ * - 'modern' (Frost): Rectangular images (8px radius), square buttons (4px), tighter spacing
+ *
+ * GENERIC RECIPE (all other industries):
+ * 1. Hero - Dynamic layout
+ * 2. Value Proposition - 3 benefit cards (base bg)
+ * 3. Services Grid - 4 service cards (base-2 bg)
+ * 4. Social Proof - 3 testimonials (accent-2 bg)
+ * 5. FAQ - 4 questions (base bg)
+ * 6. Final CTA - Strong call-to-action (accent bg)
  */
-export const getUniversalHomeContent = (content?: PageContent, heroLayout?: HeroLayout) => {
+export const getUniversalHomeContent = (
+    content?: PageContent,
+    heroLayout?: HeroLayout,
+    industry?: string,
+    brandStyle?: BrandStyle
+) => {
+    // Restaurant Recipe - uses Phase 2+3 Recipe System
+    const isRestaurant = industry === 'restaurant' ||
+                         industry === 'cafe' ||
+                         industry === 'restaurant_cafe';
+
+    // Ecommerce Recipe - uses Phase 4 Recipe System
+    const isEcommerce = industry === 'ecommerce' ||
+                        industry === 'retail' ||
+                        industry === 'shop' ||
+                        industry === 'online_store';
+
+    if (isEcommerce) {
+        // === RECIPE-DRIVEN FLOW (Generator 2.0 Phase 4) ===
+
+        // Build recipe selection context
+        const recipeContext: RecipeContext = {
+            vertical: 'ecommerce',
+            brandMode: (brandStyle || 'modern') as BrandMode,  // Default to modern for ecommerce
+            businessType: undefined  // Future: extract from content/userData
+        };
+
+        // Select best matching recipe
+        const recipe = RecipeSelector.selectRecipe(recipeContext);
+
+        // Build render context for section rendering
+        const renderContext: RenderContext = {
+            content,
+            heroLayout,
+            industry,
+            brandStyle
+        };
+
+        // Phase 4: Use recipe-aware rendering with SectionContext for token-driven styling
+        return SectionRenderer.renderSectionsWithRecipe(recipe, renderContext);
+    }
+
+    if (isRestaurant) {
+        // === RECIPE-DRIVEN FLOW (Generator 2.0 Phase 2+3) ===
+
+        // Build recipe selection context
+        const recipeContext: RecipeContext = {
+            vertical: 'restaurant',
+            brandMode: brandStyle as BrandMode,  // 'playful' | 'modern'
+            businessType: undefined  // Future: extract from content/userData
+        };
+
+        // Select best matching recipe
+        const recipe = RecipeSelector.selectRecipe(recipeContext);
+
+        // Build render context for section rendering
+        const renderContext: RenderContext = {
+            content,
+            heroLayout,
+            industry,
+            brandStyle
+        };
+
+        // Phase 3: Use recipe-aware rendering with SectionContext for token-driven styling
+        return SectionRenderer.renderSectionsWithRecipe(recipe, renderContext);
+    }
+
+    // Generic homepage for all other industries (not yet using recipes)
+    const heroSection = getHeroByLayout(heroLayout, content);
+
+    return `${heroSection}
+
+${getValuePropositionSection(content, industry)}
+
+${getServicesGridSection(content, industry)}
+
+${getSocialProofSection(content, industry)}
+
+${getFAQSection(content, industry)}
+
+${getFinalCTASection(content, industry)}`;
+};
+
+/**
+ * Legacy export for backward compatibility.
+ * This was the original 4-section homepage.
+ * @deprecated Use getUniversalHomeContent with industry parameter instead.
+ */
+export const getUniversalHomeContentLegacy = (content?: PageContent, heroLayout?: HeroLayout) => {
     // Get hero section based on layout selection (defaults to fullBleed)
     const heroSection = getHeroByLayout(heroLayout, content);
 

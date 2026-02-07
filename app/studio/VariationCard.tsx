@@ -38,19 +38,19 @@ export default function VariationCard({
       type="button"
       onClick={onSelect}
       className={`relative w-full rounded-3xl border-2 p-6 text-left transition-all duration-500 ease-out ${selected
-        ? "border-black bg-white shadow-2xl scale-[1.02] z-10"
-        : "border-neutral-100 bg-white hover:border-neutral-300 hover:shadow-xl"
+        ? "border-white bg-slate-900 shadow-2xl scale-[1.02] z-10"
+        : "border-slate-800 bg-slate-900 hover:border-slate-600 hover:shadow-xl"
         }`}
     >
       {selected && (
-        <div className="absolute -top-3 -right-3 h-10 w-10 rounded-full bg-black text-white flex items-center justify-center shadow-xl animate-in zoom-in spin-in-90 duration-500">
+        <div className="absolute -top-3 -right-3 h-10 w-10 rounded-full bg-white text-slate-950 flex items-center justify-center shadow-xl animate-in zoom-in spin-in-90 duration-500">
           <Check className="h-6 w-6" strokeWidth={3} />
         </div>
       )}
 
       <div className="space-y-6">
         {/* Visual Preview */}
-        <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-neutral-100 border border-neutral-100 shadow-inner">
+        <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-slate-800 border border-slate-700 shadow-inner">
           {variation.preview.imageUrl && (
             <img
               src={variation.preview.imageUrl}
@@ -63,30 +63,30 @@ export default function VariationCard({
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
               {variation.preview.label}
             </span>
           </div>
-          <h3 className="text-xl font-black text-neutral-900 leading-tight tracking-tight">
+          <h3 className="text-xl font-black text-white leading-tight tracking-tight">
             {heroHeadline}
           </h3>
         </div>
 
-        <p className="line-clamp-2 text-sm text-neutral-500 font-medium leading-relaxed h-10">
+        <p className="line-clamp-2 text-sm text-slate-400 font-medium leading-relaxed h-10">
           {heroSubheadline}
         </p>
 
-        <div className="flex items-center justify-between pt-4 border-t border-neutral-50">
+        <div className="flex items-center justify-between pt-4 border-t border-slate-800">
           <div className="flex items-center -space-x-3">
             {palette.map((color, i) => (
               <div
                 key={`${color}-${i}`}
-                className="h-10 w-10 rounded-full border-4 border-white shadow-sm ring-1 ring-black/5 transition-transform hover:scale-110 hover:z-10"
+                className="h-10 w-10 rounded-full border-4 border-slate-900 shadow-sm ring-1 ring-white/5 transition-transform hover:scale-110 hover:z-10"
                 style={{ backgroundColor: color }}
               />
             ))}
           </div>
-          <span className="text-[10px] font-mono font-bold text-neutral-300">
+          <span className="text-[10px] font-mono font-bold text-slate-600">
             {variation.id.slice(0, 8).toUpperCase()}
           </span>
         </div>

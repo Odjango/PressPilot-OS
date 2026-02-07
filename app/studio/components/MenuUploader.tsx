@@ -122,28 +122,28 @@ export default function MenuUploader({ menus, onChange }: MenuUploaderProps) {
     };
 
     return (
-        <div className="rounded-2xl border border-neutral-200 bg-white overflow-hidden shadow-sm">
+        <div className="rounded-2xl border border-slate-700 bg-slate-800 overflow-hidden">
             <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full flex items-center justify-between p-6 hover:bg-neutral-50 transition-colors"
+                className="w-full flex items-center justify-between p-6 hover:bg-slate-700/50 transition-colors"
             >
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-                        <Utensils className="w-5 h-5 text-emerald-600" />
+                    <div className="w-10 h-10 bg-emerald-950 rounded-full flex items-center justify-center">
+                        <Utensils className="w-5 h-5 text-emerald-400" />
                     </div>
                     <div className="text-left">
-                        <h3 className="text-lg font-semibold text-neutral-900">Restaurant Menu</h3>
-                        <p className="text-sm text-neutral-500">Add food and drink items for your site</p>
+                        <h3 className="text-lg font-semibold text-white">Restaurant Menu</h3>
+                        <p className="text-sm text-slate-400">Add food and drink items for your site</p>
                     </div>
                 </div>
-                {isExpanded ? <ChevronUp className="w-5 h-5 text-neutral-400" /> : <ChevronDown className="w-5 h-5 text-neutral-400" />}
+                {isExpanded ? <ChevronUp className="w-5 h-5 text-slate-500" /> : <ChevronDown className="w-5 h-5 text-slate-500" />}
             </button>
 
             {isExpanded && (
-                <div className="p-6 border-t border-neutral-100 space-y-8">
+                <div className="p-6 border-t border-slate-700 space-y-8">
                     {/* Raw Text Input */}
                     <div className="space-y-3">
-                        <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                        <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                             Paste Menu (Beta Parser)
                         </label>
                         <textarea
@@ -151,12 +151,12 @@ export default function MenuUploader({ menus, onChange }: MenuUploaderProps) {
                             onChange={(e) => setRawText(e.target.value)}
                             placeholder={"Starters\nGarlic Bread - $5.00 - With cheese\nBruschetta - $8.00\n\nMains\nClassic Pizza - $15.00"}
                             rows={6}
-                            className="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm focus:border-emerald-500 focus:outline-none transition-all"
+                            className="w-full rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none transition-all"
                         />
                         <button
                             onClick={handleParse}
                             disabled={!rawText.trim() || isParsing}
-                            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:bg-neutral-300 transition-colors"
+                            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:bg-slate-700 disabled:text-slate-500 transition-colors"
                         >
                             <Plus className="w-4 h-4" />
                             Parse & Add Sections
@@ -166,16 +166,16 @@ export default function MenuUploader({ menus, onChange }: MenuUploaderProps) {
                     {/* Structured Menus */}
                     <div className="space-y-6">
                         {menus.map((menu, mIndex) => (
-                            <div key={`menu-${mIndex}`} className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4 space-y-4">
+                            <div key={`menu-${mIndex}`} className="rounded-xl border border-slate-700 bg-slate-900/50 p-4 space-y-4">
                                 <div className="flex items-center justify-between">
                                     <input
                                         value={menu.title}
                                         onChange={(e) => updateMenuTitle(mIndex, e.target.value)}
-                                        className="bg-transparent text-lg font-bold text-neutral-900 border-b border-transparent hover:border-neutral-300 focus:border-emerald-500 focus:outline-none px-1"
+                                        className="bg-transparent text-lg font-bold text-white border-b border-transparent hover:border-slate-600 focus:border-emerald-500 focus:outline-none px-1"
                                     />
                                     <button
                                         onClick={() => removeMenu(mIndex)}
-                                        className="p-2 text-neutral-400 hover:text-red-500 transition-colors"
+                                        className="p-2 text-slate-500 hover:text-red-400 transition-colors"
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </button>
@@ -183,14 +183,14 @@ export default function MenuUploader({ menus, onChange }: MenuUploaderProps) {
 
                                 <div className="space-y-3">
                                     {menu.items.map((item, iIndex) => (
-                                        <div key={`item-${mIndex}-${iIndex}`} className="flex items-start gap-3 bg-white p-3 rounded-lg border border-neutral-100 shadow-sm">
+                                        <div key={`item-${mIndex}-${iIndex}`} className="flex items-start gap-3 bg-slate-800 p-3 rounded-lg border border-slate-700">
                                             <div className="flex-1 grid grid-cols-1 sm:grid-cols-4 gap-3">
                                                 <div className="sm:col-span-2">
                                                     <input
                                                         value={item.name}
                                                         onChange={(e) => updateItem(mIndex, iIndex, 'name', e.target.value)}
                                                         placeholder="Item name"
-                                                        className="w-full text-sm font-medium focus:outline-none"
+                                                        className="w-full text-sm font-medium text-white bg-transparent focus:outline-none"
                                                     />
                                                 </div>
                                                 <div>
@@ -198,7 +198,7 @@ export default function MenuUploader({ menus, onChange }: MenuUploaderProps) {
                                                         value={item.price}
                                                         onChange={(e) => updateItem(mIndex, iIndex, 'price', e.target.value)}
                                                         placeholder="Price"
-                                                        className="w-full text-sm text-emerald-600 font-semibold focus:outline-none"
+                                                        className="w-full text-sm text-emerald-400 font-semibold bg-transparent focus:outline-none"
                                                     />
                                                 </div>
                                                 <div className="sm:col-span-4">
@@ -206,13 +206,13 @@ export default function MenuUploader({ menus, onChange }: MenuUploaderProps) {
                                                         value={item.description || ''}
                                                         onChange={(e) => updateItem(mIndex, iIndex, 'description', e.target.value)}
                                                         placeholder="Description (optional)"
-                                                        className="w-full text-xs text-neutral-500 focus:outline-none"
+                                                        className="w-full text-xs text-slate-400 bg-transparent focus:outline-none"
                                                     />
                                                 </div>
                                             </div>
                                             <button
                                                 onClick={() => removeItem(mIndex, iIndex)}
-                                                className="p-1 text-neutral-300 hover:text-red-400 transition-colors"
+                                                className="p-1 text-slate-600 hover:text-red-400 transition-colors"
                                             >
                                                 <X className="w-4 h-4" />
                                             </button>
@@ -220,7 +220,7 @@ export default function MenuUploader({ menus, onChange }: MenuUploaderProps) {
                                     ))}
                                     <button
                                         onClick={() => addItem(mIndex)}
-                                        className="w-full flex items-center justify-center gap-2 py-2 border border-dashed border-neutral-200 rounded-lg text-xs text-neutral-400 hover:border-neutral-400 hover:text-neutral-600 transition-all"
+                                        className="w-full flex items-center justify-center gap-2 py-2 border border-dashed border-slate-700 rounded-lg text-xs text-slate-500 hover:border-slate-500 hover:text-slate-400 transition-all"
                                     >
                                         <Plus className="w-3 h-3" />
                                         Add Item
@@ -230,9 +230,9 @@ export default function MenuUploader({ menus, onChange }: MenuUploaderProps) {
                         ))}
 
                         {menus.length === 0 && (
-                            <div className="text-center py-8 border border-dashed border-neutral-200 rounded-xl bg-neutral-50/30">
-                                <Utensils className="w-8 h-8 text-neutral-200 mx-auto mb-2" />
-                                <p className="text-sm text-neutral-400">No menu sections added yet.</p>
+                            <div className="text-center py-8 border border-dashed border-slate-700 rounded-xl bg-slate-900/30">
+                                <Utensils className="w-8 h-8 text-slate-700 mx-auto mb-2" />
+                                <p className="text-sm text-slate-500">No menu sections added yet.</p>
                             </div>
                         )}
                     </div>

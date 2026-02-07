@@ -57,6 +57,39 @@
 - Refine landing copy with reliability-first positioning ("FSE themes without editor errors")
 - Complete user guide with install walkthrough and Site Editor intro
 
+## Generator 2.0: Design System & Recipe Engine (Current)
+**Goal:** Replace hardcoded homepage assembly with data-driven token → recipe → section rendering.
+
+### Gen 2.0 Phase 1: Design System Foundation (Complete)
+*   [x] **Centralized Token API:** `getDesignTokens(brandMode, vertical)` resolver
+*   [x] **4 Brand Modes:** playful, modern, minimal, bold — each with distinct radii, spacing, typography
+*   [x] **Restaurant Vertical Tokens:** Backward-compatible bridge from legacy `restaurantThemeTokens.ts`
+*   [x] **23 Unit Tests:** Full coverage for token resolution and brand mode differentiation
+
+### Gen 2.0 Phase 2: Recipe System (Complete)
+*   [x] **LayoutRecipe Interface:** Data-driven section definitions with background slots and config
+*   [x] **RecipeSelector:** Picks best recipe based on vertical + brandMode + priority
+*   [x] **SectionRenderer:** Maps section types to pattern functions
+*   [x] **Restaurant Recipes:** Classic Bistro (playful) + Modern Dining (modern)
+*   [x] **37 Unit Tests:** Recipe selection + section order validation
+
+### Gen 2.0 Phase 4: Ecommerce Vertical (Complete)
+*   [x] **Ecommerce Design Tokens:** `src/generator/design-system/verticals/ecommerce.ts`
+*   [x] **Ecommerce Recipes:** Product Showcase (modern/bold) + Minimal Store (playful/minimal)
+*   [x] **5 Section Patterns:** Hero, Category Grid, Featured Products, Trust Badges, Newsletter
+*   [x] **Heavy Mode for Ecommerce:** `FORCE_HEAVY_FOR_ECOMMERCE` flag in orchestrator
+*   [x] **WCAG AA Contrast Fix:** Safe token pairs for hero overlays and newsletter sections
+*   [x] **Brand Style Expansion:** Added `bold` and `minimal` to `TT4BrandStyle` type
+*   [x] **41 Unit Tests:** Ecommerce design tokens + section order validation
+
+### Gen 2.0 Phase 5: SaaS/Service Vertical (Next)
+*   [ ] **SaaS Design Tokens:** `src/generator/design-system/verticals/saas.ts`
+*   [ ] **SaaS Recipes:** Feature-driven layouts with pricing tables, testimonials
+*   [ ] **SaaS Section Patterns:** Pricing grid, feature comparison, integration logos
+*   [ ] **Heavy Mode for SaaS:** Route SaaS verticals through recipe engine
+
+---
+
 ## Ongoing: "Hard Gates" Maintenance
 *   **Validator:** Continuously update `WP Theme Output Checker` skill.
 *   **Forensics:** Log any new FSE errors to `attempt-recovery-forensics.md`.

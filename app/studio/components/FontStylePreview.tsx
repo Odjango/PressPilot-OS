@@ -57,22 +57,22 @@ export default function FontStylePreview({ fontPairId, className = '' }: FontSty
     const styles = getFontStyles(fontPairId);
 
     return (
-        <div className={`rounded-lg border border-neutral-100 bg-white p-4 shadow-sm ${className}`}>
+        <div className={`rounded-lg border border-slate-700 bg-slate-800 p-4 ${className}`}>
             <div className="space-y-2">
                 <h4
-                    className="text-xl font-bold text-neutral-900"
+                    className="text-xl font-bold text-white"
                     style={{ fontFamily: styles.heading }}
                 >
                     The quick brown fox
                 </h4>
                 <p
-                    className="text-sm text-neutral-600 leading-relaxed"
+                    className="text-sm text-slate-400 leading-relaxed"
                     style={{ fontFamily: styles.body }}
                 >
                     Jumps over the lazy dog. This is a preview of the body text style for the selected font pairing.
                 </p>
             </div>
-            <div className="mt-3 text-xs text-neutral-400 font-mono">
+            <div className="mt-3 text-xs text-slate-600 font-mono">
                 {fontPairId}
             </div>
         </div>

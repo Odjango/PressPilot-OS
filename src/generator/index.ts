@@ -16,6 +16,21 @@ import { VariationBuilder } from './modules/VariationBuilder';
 import { prefetchImages } from './utils/ImageProvider';
 
 /**
+ * Feature Flags
+ *
+ * FORCE_HEAVY_FOR_RESTAURANTS: When true, restaurant verticals always use
+ * Heavy Mode regardless of options.mode. This ensures hero layout
+ * differentiation and proper menu injection for the restaurant vertical.
+ *
+ * FORCE_HEAVY_FOR_ECOMMERCE: When true, ecommerce verticals always use
+ * Heavy Mode to enable recipe-driven content generation from Phase 4.
+ *
+ * Set to false only for debugging or testing standard mode.
+ */
+const FORCE_HEAVY_FOR_RESTAURANTS = true;
+const FORCE_HEAVY_FOR_ECOMMERCE = true;
+
+/**
  * PressPilot Generator Orchestrator
  * Refactored: 2026-01-25 (Functional Repair & Asset Cleanup)
  */
@@ -67,9 +82,11 @@ export async function generateTheme(options: GeneratorOptions = {}) {
     const industry = userData.industry || 'general';
     const isRestaurant = ['restaurant', 'cafe', 'restaurant_cafe'].includes(industry);
     let mode: GeneratorMode = options.mode || 'standard';
-    if (isRestaurant) {
+    if (FORCE_HEAVY_FOR_RESTAURANTS && isRestaurant) {
         mode = 'heavy';
-        console.log('[Orchestrator] Restaurant vertical -> forcing Heavy Mode for hero differentiation');
+        // Restaurants always use Heavy Mode to guarantee hero layout differentiation
+        // and proper menu injection, even if options.mode requested standard mode.
+        console.log('[Phase14] Restaurant vertical -> forcing Heavy Mode for hero differentiation');
     }
     const themeName = styleJson.metadata.themeName;
     const safeName = options.slug || themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -98,9 +115,9 @@ export async function generateTheme(options: GeneratorOptions = {}) {
         await styleEngine.applyStyles(themeDir, styleJson);
         await styleEngine.updateMetadata(themeDir, themeName, baseName, mode);
 
-        // Generate Style Variations
-        const variations = VariationBuilder.generateVariations(userData.mood);
-        await VariationBuilder.writeVariations(themeDir, variations, userData.mood);
+        // Generate Style Variations (all 4 moods ship with theme for Site Editor switching)
+        const variations = VariationBuilder.generateVariations();
+        await VariationBuilder.writeVariations(themeDir, variations);
 
         // Handle Logo
         if (userData.logo && userData.logo.startsWith('data:image')) {
@@ -110,6 +127,13 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             await fs.ensureDir(path.dirname(logoPath));
             await fs.writeFile(logoPath, Buffer.from(logoBase64!, 'base64'));
             // Logo file saved, base64 preserved in userData.logo for HTML templates
+        }
+
+        // Force heavy mode for ecommerce to use recipe-driven content (Phase 4)
+        const isEcommerce = ['ecommerce', 'retail', 'shop', 'online_store'].includes(industry);
+        if (FORCE_HEAVY_FOR_ECOMMERCE && isEcommerce) {
+            mode = 'heavy';
+            console.log('[Phase4] Ecommerce vertical -> forcing Heavy Mode for recipe-driven content');
         }
 
         // Apply Content
@@ -123,6 +147,11 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             // Menu injection for restaurants in heavy mode
             if (userData.menus && userData.menus.length > 0) {
                 await patternInjector.injectMenus(themeDir, userData, safeName);
+            }
+
+            // WooCommerce templates for ecommerce in heavy mode
+            if (isEcommerce) {
+                await patternInjector.injectWooCommerce(themeDir, safeName);
             }
         } else {
             // STANDARD MODE (Using Recipe Assembly)

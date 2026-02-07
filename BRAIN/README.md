@@ -1,6 +1,6 @@
 # PressPilot BRAIN - AI Knowledge Base
 
-**Last Updated:** 2026-02-02 | **Phase:** 14 Complete
+**Last Updated:** 2026-02-06 | **Phase:** Generator 2.0 Phase 4 Complete (Ecommerce Vertical)
 
 The BRAIN is a "Designer-First" operating system where logic is controlled via text files. This document serves as the navigation map for both AI agents and human developers.
 
@@ -124,7 +124,7 @@ Edit the appropriate file in `CONSTITUTION/`
 | [docs/generator-architecture.md](../docs/generator-architecture.md) | Generator design |
 | [docs/pp-hard-gates.md](../docs/pp-hard-gates.md) | Validation enforcement |
 | [docs/hero-system.md](../docs/hero-system.md) | Hero layout specifications |
-| [CLAUDE.md](../CLAUDE.md) | High-level agent context (see agent-protocol.md for rules) |
+| [CLAUDE.md](../CLAUDE.md) | High-level context only; see [agent-protocol.md](CONSTITUTION/agent-protocol.md) for rules |
 
 ---
 
@@ -132,6 +132,7 @@ Edit the appropriate file in `CONSTITUTION/`
 
 | Date | Change |
 |------|--------|
+| 2026-02-06 | Updated to Generator 2.0 Phase 4 - ecommerce vertical, design system, recipe engine |
 | 2026-02-02 | Created as part of documentation rationalization (Phase 15 prep) |
 | 2026-02-02 | Absorbed content from master-prompt.md |
 | 2026-02-02 | Added ARCHIVE/ for deprecated documents |

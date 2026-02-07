@@ -8,8 +8,16 @@ import { getModernImageUrl } from '../utils/ImageProvider';
 import { ContentJSON } from '../modules/ContentBuilder';
 
 /**
- * Forbidden demo strings from base themes that should never appear in output
- * Used by applyLegacyReplacements() for compatibility with Tove and TT4 base themes
+ * Demo content replacement patterns by base theme.
+ * Applied defensively to ALL themes—order matters for overlapping patterns.
+ *
+ * Used by cleanAllPatterns() and applyLegacyReplacements() to remove
+ * Frost, Tove, and TT4 demo/marketing content from generated themes.
+ *
+ * When adding a new base theme:
+ * 1. Add entry here with brandName and replacements array
+ * 2. Update cleanAllPatterns() loop if needed
+ * 3. Add corresponding entries to ContentValidator.FORBIDDEN_STRINGS
  */
 const LEGACY_DEMO_CONTENT = {
     // TwentyTwentyFour (TT4) demo content
@@ -117,8 +125,22 @@ export class PatternInjector {
     constructor(private rootDir: string) { }
 
     /**
-     * Clean all patterns in the theme directory from demo/marketing content
-     * Should be called after chassis loading to sanitize base theme patterns
+     * Sanitize ALL base theme patterns from demo/marketing content.
+     *
+     * This method is called after chassis.load() to clean patterns inherited
+     * from base themes (Frost, Tove, TT4). It applies ALL replacement patterns
+     * regardless of which base theme was loaded—this is defensive by design.
+     *
+     * Targets known legacy demo/marketing strings only:
+     * - Frost: "Build with Frost", testimonial names (Allison Taylor, etc.)
+     * - Tove: "Niofika Café", Stockholm addresses, demo contact info
+     * - TT4: "Études" brand name
+     *
+     * Safe to call for all themes. Update LEGACY_DEMO_CONTENT if new base
+     * themes are added to the chassis system.
+     *
+     * @param themeDir - Path to the theme being generated
+     * @param userData - User data for dynamic replacements
      */
     async cleanAllPatterns(themeDir: string, userData: GeneratorData): Promise<void> {
         const patternsDir = path.join(themeDir, 'patterns');
@@ -331,8 +353,9 @@ ${templateContent}
                 hero_sub: userData.hero_subheadline
             };
 
-            // Pass heroLayout (defaults to fullBleed if not specified)
-            let homeMarkup = getUniversalHomeContent(homeContent, userData.heroLayout).trim();
+            // Pass heroLayout, industry, and brandStyle for content customization
+            // brandStyle enables playful vs modern visual differentiation for restaurants
+            let homeMarkup = getUniversalHomeContent(homeContent, userData.heroLayout, userData.industry, userData.brandStyle).trim();
 
             // Normalize cover block element order (img before span) for Gutenberg compatibility
             homeMarkup = homeMarkup.replace(
@@ -349,6 +372,13 @@ ${homeMarkup}
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
 
             await fs.writeFile(homeTemplatePath, fullContent);
+
+            // Also write to front-page.html, index.html, home.html for WordPress FSE compatibility
+            // WordPress looks for front-page.html when "Your homepage displays" is set to "A static page"
+            const homeTemplates = ['front-page.html', 'index.html', 'home.html'];
+            for (const tpl of homeTemplates) {
+                await fs.writeFile(path.join(themeDir, 'templates', tpl), fullContent);
+            }
         }
 
         // Global Overrides
@@ -391,7 +421,8 @@ ${homeMarkup}
         const headerPath = path.join(themeDir, 'parts', 'header.html');
         await fs.ensureDir(path.dirname(headerPath));
         const finalPages = pages || userData.pages || [];
-        let headerContent = getUniversalHeaderContent(businessName, finalPages, hasLogo).trim();
+        const isEcommerce = ['ecommerce', 'retail', 'shop', 'online_store'].includes(userData.industry?.toLowerCase() || '');
+        let headerContent = getUniversalHeaderContent(businessName, finalPages, hasLogo, isEcommerce).trim();
         headerContent = headerContent.replace(/\{THEME_SLUG\}/g, safeName);
         await fs.writeFile(headerPath, headerContent);
     }
@@ -725,7 +756,109 @@ add_action('after_setup_theme', function() {
         await fs.writeFile(checkoutTemplatePath, checkoutPageTemplate);
         console.log(`[PatternMatcher] Created 'page-checkout.html' template.`);
 
-        // 8. Inject Navigation Links
+        // 8. CREATE archive-product.html TEMPLATE (WooCommerce product listing)
+        const archiveProductTemplate = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    <!-- wp:heading {"textAlign":"center","level":1} -->
+    <h1 class="wp-block-heading has-text-align-center">Shop</h1>
+    <!-- /wp:heading -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|70"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--70)">
+    <!-- wp:woocommerce/product-collection {"query":{"perPage":12,"pages":0,"offset":0,"postType":"product","order":"asc","orderBy":"title","search":"","exclude":[],"inherit":true,"taxQuery":{},"isProductCollectionBlock":true,"woocommerceHandPickedProducts":[]},"tagName":"div","displayLayout":{"type":"flex","columns":4},"queryContextIncludes":["collection"]} -->
+    <div class="wp-block-woocommerce-product-collection">
+        <!-- wp:woocommerce/product-template -->
+        <!-- wp:woocommerce/product-image {"isDescendentOfQueryLoop":true,"aspectRatio":"1","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|20"}}}} /-->
+        <!-- wp:post-title {"textAlign":"center","level":3,"isLink":true,"style":{"typography":{"fontSize":"1rem","fontWeight":"600"},"spacing":{"margin":{"top":"0","bottom":"var:preset|spacing|10"}}}} /-->
+        <!-- wp:woocommerce/product-price {"isDescendentOfQueryLoop":true,"textAlign":"center","style":{"typography":{"fontSize":"0.9rem"}}} /-->
+        <!-- wp:woocommerce/product-button {"textAlign":"center","isDescendentOfQueryLoop":true} /-->
+        <!-- /wp:woocommerce/product-template -->
+        <!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"center"}} -->
+        <!-- wp:query-pagination-previous /-->
+        <!-- wp:query-pagination-numbers /-->
+        <!-- wp:query-pagination-next /-->
+        <!-- /wp:query-pagination -->
+        <!-- wp:query-no-results -->
+        <!-- wp:paragraph {"align":"center"} -->
+        <p class="has-text-align-center">No products found.</p>
+        <!-- /wp:paragraph -->
+        <!-- /wp:query-no-results -->
+    </div>
+    <!-- /wp:woocommerce/product-collection -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
+
+        const archiveProductPath = path.join(themeDir, 'templates', 'archive-product.html');
+        await fs.writeFile(archiveProductPath, archiveProductTemplate);
+        console.log(`[WooCommerce] Created 'archive-product.html' template.`);
+
+        // 9. CREATE single-product.html TEMPLATE (WooCommerce product detail)
+        const singleProductTemplate = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|70"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--70)">
+    <!-- wp:woocommerce/breadcrumbs /-->
+
+    <!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|60"},"margin":{"top":"var:preset|spacing|40"}}}} -->
+    <div class="wp-block-columns" style="margin-top:var(--wp--preset--spacing--40)">
+        <!-- wp:column {"width":"50%"} -->
+        <div class="wp-block-column" style="flex-basis:50%">
+            <!-- wp:woocommerce/product-image-gallery /-->
+        </div>
+        <!-- /wp:column -->
+
+        <!-- wp:column {"width":"50%"} -->
+        <div class="wp-block-column" style="flex-basis:50%">
+            <!-- wp:post-title {"level":1,"style":{"typography":{"fontSize":"2.5rem","fontWeight":"700"},"spacing":{"margin":{"bottom":"var:preset|spacing|20"}}}} /-->
+            <!-- wp:woocommerce/product-price {"style":{"typography":{"fontSize":"1.5rem","fontWeight":"600"},"spacing":{"margin":{"bottom":"var:preset|spacing|30"}}}} /-->
+            <!-- wp:post-excerpt {"moreText":"","showMoreOnNewLine":false,"style":{"spacing":{"margin":{"bottom":"var:preset|spacing|40"}}}} /-->
+            <!-- wp:woocommerce/add-to-cart-form /-->
+            <!-- wp:woocommerce/product-meta {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
+            <div class="wp-block-woocommerce-product-meta">
+                <!-- wp:woocommerce/product-sku {"isDescendentOfSingleProductTemplate":true} /-->
+                <!-- wp:post-terms {"term":"product_cat","prefix":"Category: "} /-->
+                <!-- wp:post-terms {"term":"product_tag","prefix":"Tags: "} /-->
+            </div>
+            <!-- /wp:woocommerce/product-meta -->
+        </div>
+        <!-- /wp:column -->
+    </div>
+    <!-- /wp:columns -->
+
+    <!-- wp:woocommerce/product-details {"align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|70"}}}} /-->
+
+    <!-- wp:group {"align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|70"}}}} -->
+    <div class="wp-block-group alignwide" style="margin-top:var(--wp--preset--spacing--70)">
+        <!-- wp:heading {"style":{"spacing":{"margin":{"bottom":"var:preset|spacing|40"}}}} -->
+        <h2 class="wp-block-heading" style="margin-bottom:var(--wp--preset--spacing--40)">Related Products</h2>
+        <!-- /wp:heading -->
+        <!-- wp:woocommerce/related-products {"columns":4} -->
+        <div class="wp-block-woocommerce-related-products">
+            <!-- wp:woocommerce/product-template -->
+            <!-- wp:woocommerce/product-image {"aspectRatio":"1"} /-->
+            <!-- wp:post-title {"textAlign":"center","level":3,"isLink":true,"style":{"typography":{"fontSize":"1rem"}}} /-->
+            <!-- wp:woocommerce/product-price {"textAlign":"center"} /-->
+            <!-- /wp:woocommerce/product-template -->
+        </div>
+        <!-- /wp:woocommerce/related-products -->
+    </div>
+    <!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
+
+        const singleProductPath = path.join(themeDir, 'templates', 'single-product.html');
+        await fs.writeFile(singleProductPath, singleProductTemplate);
+        console.log(`[WooCommerce] Created 'single-product.html' template.`);
+
+        // 10. Inject Navigation Links
         await this.injectNavLink(themeDir, 'Shop', '/shop');
         await this.injectNavLink(themeDir, 'Cart', '/cart');
     }

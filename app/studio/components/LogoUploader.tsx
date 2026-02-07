@@ -127,8 +127,8 @@ export default function LogoUploader({ value, onChange }: LogoUploaderProps) {
 
     return (
         <div className="space-y-4">
-            <label className="text-sm font-bold text-neutral-900 flex items-center gap-2">
-                <span className="flex h-5 w-5 items-center justify-center rounded bg-black text-[10px] text-white">3</span>
+            <label className="text-sm font-bold text-white flex items-center gap-2">
+                <span className="flex h-5 w-5 items-center justify-center rounded bg-white text-[10px] text-slate-950">3</span>
                 Brand Logo & DNA
             </label>
 
@@ -141,7 +141,7 @@ export default function LogoUploader({ value, onChange }: LogoUploaderProps) {
                     className={`
                         relative group cursor-pointer border-2 border-dashed rounded-2xl p-8 transition-all duration-300
                         flex flex-col items-center justify-center gap-3 text-center
-                        ${isDragging ? 'border-black bg-neutral-50' : 'border-neutral-200 hover:border-neutral-400 hover:bg-neutral-50/50'}
+                        ${isDragging ? 'border-white bg-slate-800' : 'border-slate-700 hover:border-slate-500 bg-slate-800/50'}
                     `}
                 >
                     <input
@@ -152,24 +152,24 @@ export default function LogoUploader({ value, onChange }: LogoUploaderProps) {
                         accept="image/*"
                     />
 
-                    <div className="w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Upload className="w-6 h-6 text-neutral-400 group-hover:text-black transition-colors" />
+                    <div className="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Upload className="w-6 h-6 text-slate-500 group-hover:text-white transition-colors" />
                     </div>
 
                     <div>
-                        <p className="text-sm font-bold text-neutral-900">Click to upload or drag logo</p>
-                        <p className="text-xs text-neutral-400 mt-1">SVG, PNG, JPG (max 2MB)</p>
+                        <p className="text-sm font-bold text-white">Click to upload or drag logo</p>
+                        <p className="text-xs text-slate-500 mt-1">SVG, PNG, JPG (max 2MB)</p>
                     </div>
                 </div>
             ) : (
                 <div className="space-y-3">
-                    <div className="relative group rounded-2xl border border-neutral-200 p-4 bg-white shadow-sm flex items-center gap-4">
-                        <div className="w-16 h-16 bg-neutral-50 rounded-lg flex items-center justify-center overflow-hidden border border-neutral-100 p-2">
+                    <div className="relative group rounded-2xl border border-slate-700 p-4 bg-slate-800 flex items-center gap-4">
+                        <div className="w-16 h-16 bg-slate-900 rounded-lg flex items-center justify-center overflow-hidden border border-slate-700 p-2">
                             <img src={value} alt="Logo preview" className="max-w-full max-h-full object-contain" />
                         </div>
 
                         <div className="flex-1">
-                            <div className="flex items-center gap-2 text-emerald-600">
+                            <div className="flex items-center gap-2 text-emerald-400">
                                 <CheckCircle2 className="w-4 h-4" />
                                 <span className="text-xs font-bold uppercase tracking-wider">Logo Attached</span>
                             </div>
@@ -177,7 +177,7 @@ export default function LogoUploader({ value, onChange }: LogoUploaderProps) {
                                 {extractedColors.map((color, i) => (
                                     <div key={i} className="relative group/swatch">
                                         <button
-                                            className="h-6 w-6 rounded-full border-2 border-white shadow-sm transition-transform hover:scale-125 cursor-pointer"
+                                            className="h-6 w-6 rounded-full border-2 border-slate-600 shadow-sm transition-transform hover:scale-125 cursor-pointer"
                                             style={{ backgroundColor: color }}
                                             title="Click to edit color"
                                             onClick={() => colorPickerRefs.current[i]?.click()}
@@ -192,7 +192,7 @@ export default function LogoUploader({ value, onChange }: LogoUploaderProps) {
                                     </div>
                                 ))}
                                 {extractedColors.length > 0 && (
-                                    <span className="text-[10px] font-bold text-neutral-400 uppercase ml-1">
+                                    <span className="text-[10px] font-bold text-slate-500 uppercase ml-1">
                                         Edit Brand DNA
                                     </span>
                                 )}
@@ -204,14 +204,14 @@ export default function LogoUploader({ value, onChange }: LogoUploaderProps) {
                                 setExtractedColors([]);
                                 onChange('', []);
                             }}
-                            className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                            className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-950/50 rounded-lg transition-all"
                             title="Remove logo"
                         >
                             <X className="w-5 h-5" />
                         </button>
                     </div>
 
-                    <p className="text-[10px] text-neutral-400 italic px-2">
+                    <p className="text-[10px] text-slate-500 italic px-2">
                         Colors from your logo will be used to intelligently generate your site's color palettes in the next step.
                     </p>
                 </div>

@@ -186,13 +186,6 @@ export interface GeneratorData {
     fontProfile?: FontProfile;
 
     /**
-     * Mood selection
-     * Sets which style variation is active by default
-     * All 4 variations are always shipped; this sets initial
-     */
-    mood?: Mood;
-
-    /**
      * Hero layout selection
      * Controls the homepage hero section structure
      * Options: 'fullBleed' | 'fullWidth' | 'split' | 'minimal'

@@ -60,14 +60,22 @@ add_filter('render_block', function(\$block_content, \$block) {
         strpos(\$block['attrs']['slug'], 'hero') !== false;
 
     // Match cover blocks with alignfull AND min-height (hero-specific)
-    // Avoid matching random cover blocks by requiring min-height style
+    // Covers fullBleed layout which uses core/cover with min-height:80vh
     \$is_cover = \$block['blockName'] === 'core/cover' &&
         strpos(\$block_content, 'alignfull') !== false &&
-        (strpos(\$block_content, 'min-height') !== false || strpos(\$block_content, 'padding-top:var(--wp--preset--spacing--60)') !== false);
+        strpos(\$block_content, 'min-height') !== false;
 
-    // Replace ONLY cover blocks that look like hero sections
-    // Do NOT replace generic group blocks (they could be headers, footers, etc.)
-    if (\$is_hero_pattern || \$is_cover) {
+    // Match group blocks that are hero sections (fullWidth, split, minimal layouts)
+    // These use core/group with alignfull and specific spacing values
+    \$is_hero_group = \$block['blockName'] === 'core/group' &&
+        strpos(\$block_content, 'alignfull') !== false &&
+        (strpos(\$block_content, 'spacing--40') !== false ||  // fullWidth
+         strpos(\$block_content, 'spacing--60') !== false ||  // split
+         strpos(\$block_content, 'spacing--70') !== false ||  // fullBleed (variant)
+         strpos(\$block_content, 'spacing--80') !== false);   // minimal
+
+    // Replace hero pattern, cover, or group blocks that look like heroes
+    if (\$is_hero_pattern || \$is_cover || \$is_hero_group) {
         \$hero_replaced = true;
         return pp_get_hero_variant(PP_HERO_PREVIEW_LAYOUT);
     }

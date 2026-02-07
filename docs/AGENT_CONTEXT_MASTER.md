@@ -1,6 +1,6 @@
 # PressPilot Agent Context Master
 
-**Last Updated:** 2026-02-02 | **Current Phase:** 14 Complete
+**Last Updated:** 2026-02-06 | **Current Phase:** Generator 2.0 Phase 4 Complete (Ecommerce Vertical)
 
 ## 1. WHO YOU ARE
 
@@ -51,14 +51,17 @@ Before writing a single line of code, you must:
 
 ---
 
-## 4. CURRENT MISSION: Documentation & Launch Prep
+## 4. CURRENT MISSION: Generator 2.0 Expansion + Launch Prep
 
-We are in **Phase 15: Documentation & Marketing Prep**.
--   **Do** create user-facing documentation
--   **Do** refine styling, accessibility, and user flows
--   **Do** ensure every generated theme is 100% valid FSE
+**Generator 2.0** is the current engineering focus — data-driven theme generation with a centralized design system:
 
-Phase 14 (Restaurant Theme Fixes) is **COMPLETE**. Key learnings captured in BRAIN/MEMORY/.
+-   **Phase 1-2 (Complete):** Design system tokens + recipe engine for restaurants
+-   **Phase 4 (Complete):** Ecommerce vertical with full token → recipe → section flow
+-   **Phase 5 (Next):** SaaS/Service verticals
+
+**Phase 15** (Documentation & Marketing) is ongoing in parallel.
+
+Key learnings from all phases are captured in `BRAIN/MEMORY/project_state.md`.
 
 ---
 
@@ -66,10 +69,11 @@ Phase 14 (Restaurant Theme Fixes) is **COMPLETE**. Key learnings captured in BRA
 
 Refer to [`docs/PROJECT_ROADMAP.md`](PROJECT_ROADMAP.md) for the step-by-step plan.
 
-1.  **User Guides**: Create "Getting Started" docs for end-users
-2.  **Developer Docs**: Finalize API documentation for `POST /api/generate`
-3.  **Marketing Assets**: Generate screenshots of flagship themes
-4.  **Landing Page**: Update with "Generated in 90s" value prop
+1.  **Gen 2.0 Phase 5**: Add SaaS/Service vertical (design tokens, recipes, section patterns)
+2.  **User Guides**: Complete "Getting Started" docs for end-users
+3.  **Developer Docs**: Finalize API documentation for `POST /api/generate`
+4.  **Marketing Assets**: Generate screenshots of flagship themes (restaurant + ecommerce)
+5.  **Landing Page**: Update with "Generated in 90s" value prop
 
 ---
 

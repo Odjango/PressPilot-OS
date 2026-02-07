@@ -4,7 +4,7 @@ import {
   PressPilotSaaSInputV2,
   SupportedLanguageCode
 } from '@/types/presspilot';
-import type { TT4PaletteId, TT4FontProfile, TT4Mood, TT4HeroLayout, TT4BrandStyle } from '@/lib/theme/palettes';
+import type { TT4PaletteId, TT4FontProfile, TT4HeroLayout, TT4BrandStyle } from '@/lib/theme/palettes';
 
 /**
  * Brand Kit slot names for user color overrides
@@ -66,12 +66,6 @@ export interface StudioFormInput {
    * Options: 'elegant' | 'modern' | 'bold' | 'friendly'
    */
   fontProfile?: TT4FontProfile;
-
-  /**
-   * Mood/style variation selection
-   * Options: 'warm' | 'fresh' | 'minimal' | 'dark'
-   */
-  mood?: TT4Mood;
 
   /**
    * Hero layout selection
@@ -190,7 +184,6 @@ export function buildSaaSInputFromStudioInput(input?: StudioFormInput): PressPil
       selectedPaletteId: input?.selectedPaletteId,
       userEditedBrandKit: input?.userEditedBrandKit,
       fontProfile: input?.fontProfile,
-      mood: input?.mood,
       heroLayout: input?.heroLayout,
       brandStyle: input?.brandStyle
     },

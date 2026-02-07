@@ -113,7 +113,7 @@ function getFallbackImages(industry: string, count: number, reason?: string): st
  * Used where async isn't possible
  */
 export function getModernImageUrl(category: string, index: number = 0): string {
-    const cacheKey = `${category}-5`;
+    const cacheKey = `${category}-10`;
     if (imageCache.has(cacheKey)) {
         const cached = imageCache.get(cacheKey)!;
         const url = cached[index % cached.length];

@@ -86,7 +86,7 @@ export interface PressPilotSaaSInput {
     fontProfile?: 'elegant' | 'modern' | 'bold' | 'friendly';
     mood?: 'warm' | 'fresh' | 'minimal' | 'dark';
     heroLayout?: 'fullBleed' | 'fullWidth' | 'split' | 'minimal';
-    brandStyle?: 'playful' | 'modern';
+    brandStyle?: 'playful' | 'modern' | 'bold' | 'minimal';
   };
   modes: {
     business_category: BusinessCategory;

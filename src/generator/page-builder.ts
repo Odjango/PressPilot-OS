@@ -64,11 +64,11 @@ ${innerContent.trim()}
 
 import { getUniversalHeaderContent } from './patterns/universal-header';
 
-export const buildHeaderTemplate = async (themeDir: string, businessName: string, pages: { title: string, slug: string }[], logo?: string, themeSlug: string = 'presspilot-theme', baseName: string = 'twentytwentyfour') => {
+export const buildHeaderTemplate = async (themeDir: string, businessName: string, pages: { title: string, slug: string }[], logo?: string, themeSlug: string = 'presspilot-theme', baseName: string = 'twentytwentyfour', isEcommerce: boolean = false) => {
     const filename = 'header.html';
     const filePath = path.join(themeDir, 'parts', filename);
 
-    let content = getUniversalHeaderContent(businessName, pages as any, !!logo);
+    let content = getUniversalHeaderContent(businessName, pages as any, !!logo, isEcommerce);
 
     // Replace theme slug placeholder for branding assets
     content = content.replace(/{THEME_SLUG}/g, themeSlug);

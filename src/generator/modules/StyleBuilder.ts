@@ -1,8 +1,7 @@
-import { GeneratorData, ThemePersonality, BaseTheme, BrandKitEdit, Mood } from '../types';
+import { GeneratorData, ThemePersonality, BaseTheme, BrandKitEdit } from '../types';
 import { ColorHarmonizer, HarmonizedPalette } from '../utils/ColorHarmonizer';
 import { PATTERN_REGISTRY } from '../config/PatternRegistry';
 import { FontProvider, FONT_SIZE_SCALE, FontSizePreset } from '../utils/FontProvider';
-import { VariationBuilder } from './VariationBuilder';
 import {
     TT4ColorPalette,
     PALETTE_PRESETS,
@@ -75,7 +74,6 @@ export interface StyleJSON {
         industry?: string;
         paletteId?: string;
         fontProfile?: string;
-        mood?: string;
     };
 }
 
@@ -261,9 +259,8 @@ export class StyleBuilder {
         const selectedPaletteId = userData.selectedPaletteId || themePersonality.defaultPalette || 'brand-kit';
         const userEditedBrandKit = userData.userEditedBrandKit;
         const fontProfile = userData.fontProfile || FontProvider.getFontPairForIndustry(industry).personality.toLowerCase().split(',')[0] as any;
-        const mood = userData.mood;
 
-        console.log(`[StyleBuilder] Palette: ${selectedPaletteId}, Font Profile: ${fontProfile}, Mood: ${mood || 'default'}`);
+        console.log(`[StyleBuilder] Palette: ${selectedPaletteId}, Font Profile: ${fontProfile}`);
 
         // Get font pair based on fontProfile or industry
         const fontPair = userData.fontProfile
@@ -291,24 +288,7 @@ export class StyleBuilder {
             );
 
             // Map to TT4 tokens - only use harmonized colors for brand-kit or when user provided colors
-            let tt4Palette = TT4TokenMapper.mapToTT4(harmonized, selectedPaletteId, userEditedBrandKit, hasUserColors);
-
-            // Apply mood colors to main theme if mood is specified (not 'minimal')
-            // This makes the default theme reflect the user's mood choice immediately
-            if (mood && mood !== 'minimal') {
-                const moodPalette = VariationBuilder.getVariationPalette(mood as Mood);
-                if (moodPalette) {
-                    console.log(`[StyleBuilder] Applying ${mood} mood colors to main theme`);
-                    // Override TT4 palette with mood colors
-                    tt4Palette = tt4Palette.map(colorPreset => {
-                        const moodColor = moodPalette[colorPreset.slug];
-                        if (moodColor) {
-                            return { ...colorPreset, color: moodColor };
-                        }
-                        return colorPreset;
-                    });
-                }
-            }
+            const tt4Palette = TT4TokenMapper.mapToTT4(harmonized, selectedPaletteId, userEditedBrandKit, hasUserColors);
 
             // Generate legacy aliases for backward compatibility
             const legacyAliases = TT4TokenMapper.generateLegacyAliases(tt4Palette);
@@ -347,8 +327,7 @@ export class StyleBuilder {
                 baseTheme,
                 industry,
                 paletteId: selectedPaletteId,
-                fontProfile,
-                mood
+                fontProfile
             }
         };
     }
@@ -359,8 +338,10 @@ export class StyleBuilder {
     private generateStyles(personality: any): any {
         return {
             elements: {
+                // NOTE: Heading colors intentionally NOT set here to allow
+                // block-level textColor attributes to take effect (e.g., hero sections).
+                // Headings inherit color from styles.color.text (contrast) by default.
                 h1: {
-                    color: { text: 'var:preset|color|contrast' },
                     typography: {
                         fontSize: 'var:preset|font-size|xx-large',
                         lineHeight: '1.15',
@@ -368,7 +349,6 @@ export class StyleBuilder {
                     }
                 },
                 h2: {
-                    color: { text: 'var:preset|color|contrast' },
                     typography: {
                         fontSize: 'var:preset|font-size|x-large',
                         lineHeight: '1.2',
@@ -376,27 +356,23 @@ export class StyleBuilder {
                     }
                 },
                 h3: {
-                    color: { text: 'var:preset|color|contrast' },
                     typography: {
                         fontSize: 'var:preset|font-size|large',
                         lineHeight: '1.25'
                     }
                 },
                 h4: {
-                    color: { text: 'var:preset|color|contrast' },
                     typography: {
                         lineHeight: '1.3'
                     }
                 },
                 h5: {
-                    color: { text: 'var:preset|color|contrast' },
                     typography: {
                         fontSize: 'var:preset|font-size|medium',
                         lineHeight: '1.4'
                     }
                 },
                 h6: {
-                    color: { text: 'var:preset|color|contrast' },
                     typography: {
                         fontSize: 'var:preset|font-size|small',
                         lineHeight: '1.4'

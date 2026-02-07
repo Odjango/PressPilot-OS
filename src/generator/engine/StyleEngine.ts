@@ -165,6 +165,40 @@ body.is-dark-theme .presspilot-header.has-base-background-color,
 .wp-block-cover {
     z-index: 1;
 }
+
+/* =============================================
+   Alignfull Block Spacing Normalization
+   ============================================= */
+
+/* Normalize first block spacing (hero directly under header) */
+.wp-site-blocks > .entry-content > :first-child,
+.wp-site-blocks main > :first-child,
+main.wp-block-group > :first-child {
+    margin-top: 0 !important;
+}
+
+/* Normalize back-to-back alignfull blocks (no double spacing) */
+.alignfull + .alignfull {
+    margin-top: 0;
+}
+
+/* Footer spacing control */
+.wp-site-blocks > .entry-content > :last-child,
+.wp-site-blocks main > :last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Header at viewport top (no gap above) */
+header.wp-block-template-part,
+.wp-block-template-part[data-slug="header"] {
+    margin-top: 0;
+}
+
+/* Footer at bottom (no gap below) */
+footer.wp-block-template-part,
+.wp-block-template-part[data-slug="footer"] {
+    margin-bottom: 0;
+}
 `;
             styleContent += minimalLayoutStyles;
             await fs.writeFile(styleCssPath, styleContent);

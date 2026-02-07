@@ -210,7 +210,9 @@ export const LEGACY_TO_TT4_ALIASES: Record<string, string> = {
     'foreground': 'contrast',
     'background': 'base',
     'surface': 'base-2',
-    'text': 'contrast',
+    // NOTE: 'text' renamed to 'body-text' to avoid conflict with WordPress's
+    // built-in .has-text-color marker class which would override block-level colors
+    'body-text': 'contrast',
     'heading': 'contrast',
     'muted': 'contrast-2',
     'border': 'contrast-3',

@@ -139,11 +139,6 @@ export function transformSaaSInputToGeneratorData(input: PressPilotSaaSInput): G
         generatorData.fontProfile = input.visualControls.fontProfile as any;
     }
 
-    // Pass mood (warm, fresh, minimal, dark)
-    if (input.visualControls?.mood) {
-        generatorData.mood = input.visualControls.mood as any;
-    }
-
     // Pass heroLayout (fullBleed, fullWidth, split, minimal)
     if (input.visualControls?.heroLayout) {
         generatorData.heroLayout = input.visualControls.heroLayout as any;

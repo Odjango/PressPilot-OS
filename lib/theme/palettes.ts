@@ -79,24 +79,11 @@ export const PALETTES: Palette[] = [
 ];
 
 /**
- * Mood options for style variations
- * Maps to backend Mood type
+ * Mood type for style variations
+ * Maps to backend Mood type (used internally by generator)
+ * Note: Mood UI was removed from Studio; themes still ship with all 4 style variations
  */
 export type TT4Mood = 'warm' | 'fresh' | 'minimal' | 'dark';
-
-export interface MoodOption {
-    id: TT4Mood;
-    label: string;
-    description: string;
-    icon: string;
-}
-
-export const MOOD_OPTIONS: MoodOption[] = [
-    { id: 'warm', label: 'Warm', description: 'Amber and terracotta tones', icon: '🌅' },
-    { id: 'fresh', label: 'Fresh', description: 'Teal and green tones', icon: '🌿' },
-    { id: 'minimal', label: 'Minimal', description: 'Clean grayscale', icon: '◻️' },
-    { id: 'dark', label: 'Dark', description: 'Dark mode theme', icon: '🌙' }
-];
 
 /**
  * Hero layout options for homepage hero section
@@ -123,10 +110,13 @@ export function getHeroLayoutById(id: string): HeroLayoutOption | undefined {
 }
 
 /**
- * Brand style options for restaurant vertical
- * Controls base theme selection: Tove (playful) vs Frost (modern)
+ * Brand style options controlling visual personality
+ * - playful: Warm, inviting (cafes, bakeries) - Tove chassis
+ * - modern: Clean, minimal (upscale venues) - Frost chassis
+ * - bold: High contrast, sharp edges (ecommerce outlets)
+ * - minimal: Maximum whitespace, elegant (luxury stores)
  */
-export type TT4BrandStyle = 'playful' | 'modern';
+export type TT4BrandStyle = 'playful' | 'modern' | 'bold' | 'minimal';
 
 export interface BrandStyleOption {
     id: TT4BrandStyle;
@@ -150,6 +140,20 @@ export const BRAND_STYLE_OPTIONS: BrandStyleOption[] = [
         description: 'Clean, photo-driven look for upscale dining, contemporary venues',
         icon: '✨',
         coreTheme: 'frost'
+    },
+    {
+        id: 'bold',
+        label: 'Bold & High-Impact',
+        description: 'Sharp edges, high contrast CTAs for outlets and deal-focused stores',
+        icon: '🔥',
+        coreTheme: 'ollie'
+    },
+    {
+        id: 'minimal',
+        label: 'Elegant & Refined',
+        description: 'Maximum whitespace, sophisticated look for luxury and boutique stores',
+        icon: '💎',
+        coreTheme: 'ollie'
     }
 ];
 
@@ -180,10 +184,6 @@ export const FONT_PROFILE_OPTIONS: FontProfileOption[] = [
 
 export function getPaletteById(id: string): Palette | undefined {
     return PALETTES.find(p => p.id === id);
-}
-
-export function getMoodById(id: string): MoodOption | undefined {
-    return MOOD_OPTIONS.find(m => m.id === id);
 }
 
 export function getFontProfileById(id: string): FontProfileOption | undefined {
@@ -270,31 +270,14 @@ export interface PreviewColors {
  * Get preview colors for the Studio live preview panel.
  *
  * Priority:
- * 1. If mood is not 'minimal' (default), use MOOD_PALETTES[mood]
- * 2. If palette is selected (not brand), use PALETTES colors
- * 3. If brand-kit, use logoColors
- * 4. Fallback to minimal mood
+ * 1. If palette is selected (not brand), use PALETTES colors
+ * 2. If brand-kit, use logoColors
+ * 3. Fallback to minimal/neutral colors
  */
 export function getPreviewColors(
     paletteId: string | null,
-    mood: TT4Mood,
     logoColors?: string[]
 ): PreviewColors {
-    // If mood is not minimal (default), mood takes priority for preview
-    if (mood !== 'minimal') {
-        const moodPalette = MOOD_PALETTES[mood];
-        return {
-            base: moodPalette.base,
-            base2: moodPalette['base-2'],
-            contrast: moodPalette.contrast,
-            contrast2: moodPalette['contrast-2'],
-            contrast3: moodPalette['contrast-3'],
-            accent: moodPalette.accent,
-            accent2: moodPalette['accent-2'],
-            accent3: moodPalette['accent-3']
-        };
-    }
-
     // If palette selected (not brand-kit), use palette colors
     if (paletteId && paletteId !== 'brand' && paletteId !== 'brand-kit') {
         const palette = PALETTES.find(p => p.id === paletteId);
@@ -327,7 +310,7 @@ export function getPreviewColors(
         };
     }
 
-    // Fallback to minimal mood palette
+    // Fallback to neutral/minimal colors
     return {
         base: MOOD_PALETTES.minimal.base,
         base2: MOOD_PALETTES.minimal['base-2'],

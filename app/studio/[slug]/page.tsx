@@ -29,7 +29,7 @@ export default async function StudioPage({ params }: PageProps) {
       <div className="mb-4">
         <Link
           href="/projects"
-          className="inline-flex items-center text-sm font-semibold text-neutral-500 transition hover:text-neutral-900"
+          className="inline-flex items-center text-sm font-semibold text-slate-400 transition hover:text-white"
         >
           ← Back to Projects
         </Link>

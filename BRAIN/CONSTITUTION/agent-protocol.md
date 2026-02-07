@@ -2,6 +2,8 @@
 
 > Behavioral rules for AI agents working on PressPilot. Extracted from CLAUDE.md and master-prompt.md.
 
+**If you are an AI agent, this file is your primary behavioral contract; treat CLAUDE.md as background only.**
+
 ---
 
 ## Conflict Resolution

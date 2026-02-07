@@ -1,8 +1,8 @@
 # PressPilot OS
 
-**The "Zero-Dependency" WordPress FSE Theme Factory.**
+**WordPress FSE Themes — Without Editor Errors.**
 
-PressPilot OS is a Next.js 16 + Node.js application that autonomously generates professional WordPress Block Themes (Full Site Editing compatible) based on simple user inputs. Unlike traditional "wizard" plugins, it produces **standalone .zip theme files** that users own forever, with no reliance on external plugins or page builders.
+PressPilot OS generates production-ready WordPress Full Site Editing themes that pass strict validation gates. Built on proven base themes (Frost, Tove, TT4) and hardened by AI-assisted pattern cleaning, every theme is client-safe and free of "Attempt Recovery" warnings. Zero external plugin dependencies—themes you own forever.
 
 ## 🚀 Key Features
 
@@ -17,11 +17,13 @@ Moved away from external N8N workflows to a robust, internal Node.js pipeline.
 - **Frontend Editor:** Users can fine-tune the extraction before generation.
 - **WCAG Compliance:** Auto-calculation of contrast ratios for accessible text layers.
 
-### 3. Triple-Layout Generation
-Simultaneously generates 3 distinct architectural variations for every request:
-- **Original:** Classic Split Hero (Image Left, Text Right).
-- **High Contrast:** Modern Full-Bleed (Immersive Cover).
-- **Inverted:** Minimal Centered (Clean SaaS/Startup aesthetic).
+### 3. Generator 2.0 — Recipe-Driven Themes
+Data-driven theme generation with centralized design system:
+- **Design Tokens:** Centralized `getDesignTokens(brandMode, vertical)` API for consistent styling.
+- **Recipe Engine:** LayoutRecipes define section order, backgrounds, and config per vertical.
+- **4 Brand Modes:** Playful (pill buttons, generous spacing), Modern (sharp edges, compact), Minimal (maximum whitespace), Bold (high contrast).
+- **Vertical Support:** Restaurant and Ecommerce verticals with industry-specific section patterns.
+- **WCAG AA Compliance:** Safe token pairs for hero overlays, promo bands, and CTAs.
 
 ## 🛠 Tech Stack
 

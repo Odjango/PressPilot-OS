@@ -11,7 +11,7 @@
  * 3. Sticky positioning for scroll behavior
  * 4. Backdrop blur for modern glass effect
  */
-export const getUniversalHeaderContent = (businessName: string, pages: { title: string, slug: string }[], hasLogo?: boolean) => {
+export const getUniversalHeaderContent = (businessName: string, pages: { title: string, slug: string }[], hasLogo?: boolean, isEcommerce?: boolean) => {
     // Generate Navigation Links provided by the Recipe
     const landingPages = [...pages];
     if (!landingPages.find(p => p.slug === 'home' || p.slug === '')) {
@@ -33,6 +33,12 @@ export const getUniversalHeaderContent = (businessName: string, pages: { title: 
         ? `<!-- wp:site-logo {"width":80,"className":"site-logo"} /-->`
         : '';
 
+    // WooCommerce mini-cart for ecommerce themes
+    const miniCartBlock = isEcommerce
+        ? `
+    <!-- wp:woocommerce/mini-cart {"style":{"layout":{"selfStretch":"fit"}}} /-->`
+        : '';
+
     return `
 <!-- wp:group {"tagName":"header","className":"presspilot-header","align":"full","backgroundColor":"base","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}},"border":{"bottom":{"color":"var:preset|color|contrast-3","width":"1px"}}},"layout":{"type":"flex","justifyContent":"space-between","flexWrap":"nowrap"}} -->
 <header class="wp-block-group alignfull presspilot-header has-base-background-color has-background" style="border-bottom-color:var(--wp--preset--color--contrast-3);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--50)">
@@ -44,9 +50,13 @@ export const getUniversalHeaderContent = (businessName: string, pages: { title: 
     </div>
     <!-- /wp:group -->
 
-    <!-- wp:navigation {"textColor":"contrast","layout":{"type":"flex","justifyContent":"right","orientation":"horizontal"},"style":{"typography":{"fontWeight":"600","fontSize":"1rem"}}} -->
-    ${navLinks}
-    <!-- /wp:navigation -->
+    <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"},"style":{"spacing":{"blockGap":"var:preset|spacing|30"}}} -->
+    <div class="wp-block-group">
+        <!-- wp:navigation {"textColor":"contrast","layout":{"type":"flex","justifyContent":"right","orientation":"horizontal"},"style":{"typography":{"fontWeight":"600","fontSize":"1rem"},"spacing":{"blockGap":"var:preset|spacing|30"}}} -->
+        ${navLinks}
+        <!-- /wp:navigation -->${miniCartBlock}
+    </div>
+    <!-- /wp:group -->
 
 </header>
 <!-- /wp:group -->

@@ -157,9 +157,10 @@ const VARIATION_PALETTES: Record<Mood, VariationConfig> = {
 export class VariationBuilder {
     /**
      * Generate all style variations for a theme
-     * @param defaultMood - The mood to set as default active variation
+     * All 4 variations (warm, fresh, minimal, dark) are generated and shipped with every theme.
+     * Users can switch between them in the WordPress Site Editor.
      */
-    static generateVariations(defaultMood?: Mood): StyleVariation[] {
+    static generateVariations(): StyleVariation[] {
         const variations: StyleVariation[] = [];
         const moods: Mood[] = ['warm', 'fresh', 'minimal', 'dark'];
 
@@ -169,7 +170,7 @@ export class VariationBuilder {
             variations.push(variation);
         }
 
-        console.log(`[VariationBuilder] Generated ${variations.length} TT4-aligned variations. Default mood: ${defaultMood || 'none specified'}`);
+        console.log(`[VariationBuilder] Generated ${variations.length} TT4-aligned style variations`);
         return variations;
     }
 
@@ -271,12 +272,10 @@ export class VariationBuilder {
      * Write style variations to the theme's styles directory
      * @param themeDir - Theme directory path
      * @param variations - Array of variations to write
-     * @param defaultMood - If specified, this variation is marked as default
      */
     static async writeVariations(
         themeDir: string,
-        variations: StyleVariation[],
-        defaultMood?: Mood
+        variations: StyleVariation[]
     ): Promise<void> {
         const stylesDir = path.join(themeDir, 'styles');
 
@@ -299,12 +298,7 @@ export class VariationBuilder {
             console.log(`[VariationBuilder] Created style variation: ${variation.slug}.json`);
         }
 
-        // Log which is the default mood
-        if (defaultMood) {
-            console.log(`[VariationBuilder] Default mood set to: ${defaultMood}`);
-        }
-
-        console.log(`[VariationBuilder] Generated ${variations.length} TT4-aligned style variations.`);
+        console.log(`[VariationBuilder] Wrote ${variations.length} style variations to theme.`);
     }
 
     /**
