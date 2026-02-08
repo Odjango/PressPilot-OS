@@ -57,6 +57,51 @@
 - Refine landing copy with reliability-first positioning ("FSE themes without editor errors")
 - Complete user guide with install walkthrough and Site Editor intro
 
+---
+
+## M0-M3: Laravel Migration Roadmap (Strangler Fig)
+
+> Strategy: Incrementally move backend responsibilities from Next.js API routes + Node worker to Laravel, with zero production interruption at each phase boundary.
+
+### M0: Foundation (COMPLETE — 2026-02-08)
+*Laravel stands up alongside Next.js. No production traffic.*
+*   [x] **Laravel 12 scaffold** in `backend/` with Sanctum, Horizon, Redis
+*   [x] **Docker Compose stack** — `laravel-app` (PHP-FPM + nginx), `laravel-horizon` (PHP-CLI + Node 20), `redis`
+*   [x] **Eloquent models** — `Project`, `GenerationJob`, `GeneratedTheme`, `User` mapping to existing Supabase tables
+*   [x] **`bin/generate.ts`** — CLI wrapper accepting JSON stdin, producing JSON stdout (validates + builds static site)
+*   [x] **`GenerateThemeJob`** — Laravel queue job invoking Node generator via subprocess
+*   [x] **Supabase S3 filesystem driver** — uploads theme/preview ZIPs to `generated-themes` bucket
+*   [x] **Internal endpoints** — `GET /health`, `POST /jobs/test-dispatch`, `GET /jobs/{id}`
+*   [x] **Coolify deployment** — Docker stack deployed on VPS
+*   [ ] **Observability baseline** — 8 structured-log metrics emitting for 3+ days (in progress)
+*   [ ] **Full integration test** — end-to-end pipeline: dispatch → subprocess → upload → complete (in progress)
+
+### M1: Jobs Migration (Next)
+*Laravel takes over job creation and processing. Node polling worker retired.*
+*   [ ] **PHP data transformer** — port `transformSaaSInputToGeneratorData()` from TypeScript to PHP
+*   [ ] **Public API endpoints** — `POST /generate`, `POST /regenerate`, `GET /status`, `GET /download`
+*   [ ] **`BACKEND_URL` feature flag** — Next.js routes requests to Laravel when set
+*   [ ] **Node worker shutdown** — drain queue, stop worker, Horizon becomes sole processor
+*   [ ] **`pp_projects` → `projects` unification** — migration DDL, backfill, single canonical table
+*   [ ] **BrandStyle 4→2 mapping** — decide handling for `bold`/`minimal` before they reach generator
+*   [ ] **Logo download pipeline** — download logos from Supabase Storage to temp file for ColorThief
+
+### M2: Auth + Billing (Deferred)
+*Real authentication and payment integration.*
+*   [ ] **Sanctum auth** — register/login endpoints, token-based API auth
+*   [ ] **LemonSqueezy webhooks** — payment status, subscription management
+*   [ ] **`hero_previews` migration** — table schema typed, payment flow moved to Laravel
+*   [ ] **RLS simplification** — application-layer auth replaces bypassed RLS
+
+### M3: Cutover (Deferred)
+*Next.js API routes retired. Laravel is sole backend.*
+*   [ ] **Next.js API route removal** — all `app/api/*/route.ts` deleted or proxied
+*   [ ] **`pp_projects` table retirement** — legacy table dropped after data migration verified
+*   [ ] **`SUPABASE_SERVICE_ROLE_KEY` removal** — no longer needed by any runtime
+*   [ ] **Full Laravel API** — all endpoints behind Sanctum auth, rate limiting, Sentry integration
+
+---
+
 ## Generator 2.0: Design System & Recipe Engine (Current)
 **Goal:** Replace hardcoded homepage assembly with data-driven token → recipe → section rendering.
 

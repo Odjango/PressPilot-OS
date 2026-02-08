@@ -15,6 +15,7 @@
     "validate-theme": "node validator/presspilot-validator.js",
     "test:themes": "node scripts/generate-and-validate-test-themes.js",
     "generate": "tsx src/generator/index.ts",
+    "pp:generate:stdin": "tsx bin/generate.ts",
     "prepare": "husky"
   },
   "bin": {

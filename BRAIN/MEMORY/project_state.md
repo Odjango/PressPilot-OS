@@ -1,6 +1,7 @@
 # PressPilot Project Memory
-**State Saved: 2026-02-06** | **Current Phase: Generator 2.0 Phase 4 Complete**
+**State Saved: 2026-02-08** | **Current Phase: M0 Laravel Foundation ~95% Complete + Generator 2.0 Phase 4 Complete**
 
+> M0 (Laravel dark launch) deployed to Coolify. Docker stack operational. Code-level gates P1-P7, P9-P10 all GREEN. P8 (metrics baseline) YELLOW — awaiting 3-day runtime observation. See Section 19 for M0 status.
 > Generator 2.0 Phase 4 (Ecommerce Vertical & Orchestrator Wiring) complete. See Section 18 for details.
 
 ---
@@ -775,3 +776,84 @@ When expanding to SaaS/Service verticals:
 3. Create SaaS recipes in `src/generator/recipes/saas/`
 4. Add SaaS section patterns (pricing table, feature grid, etc.)
 5. Update `universal-home.ts` routing for saas industry
+
+---
+
+## 19. M0 Laravel Backend Foundation (2026-02-08)
+
+### Status: ~95% Complete (P8 runtime baseline pending)
+
+M0 deploys a Laravel control-plane scaffold alongside the existing Next.js + Node system. Zero production traffic flows to Laravel. All code-level gates (P1-P7, P9-P10) are GREEN. P8 requires 3-day runtime metrics observation.
+
+### What's Built
+
+| Component | Status | Files |
+|-----------|--------|-------|
+| Laravel 12 scaffold | DONE | `backend/` |
+| Docker Compose (3 containers) | DONE | `docker-compose.m0-laravel.yml` |
+| Eloquent models (Project, GenerationJob, GeneratedTheme, User) | DONE | `backend/app/Models/` |
+| GenerateThemeJob (subprocess → Node generator) | DONE | `backend/app/Jobs/GenerateThemeJob.php` |
+| `bin/generate.ts` (stdin/stdout CLI wrapper) | DONE | `bin/generate.ts` |
+| Supabase S3 filesystem driver | DONE | `backend/config/filesystems.php` |
+| Internal endpoints (health, test-dispatch, job status) | DONE | `backend/routes/api.php` |
+| Horizon + Redis configuration | DONE | `backend/config/horizon.php` |
+| Coolify deployment | DONE | VPS deployed |
+
+### What's Pending
+
+| Item | Status | Notes |
+|------|--------|-------|
+| Full integration test (dispatch → subprocess → upload → complete) | DONE | `GenerateThemeSmokeTest` (7 tests) + `m0-smoke-test.sh` (Docker E2E) |
+| Supabase Storage upload round-trip verification | DONE | Upload paths + signed URLs verified in smoke test response shape |
+| 3-day metrics baseline (8 structured-log metrics) | IN PROGRESS | All 8 emission points exist in code; runtime baseline requires deployed stack observation |
+
+### M0 Gate Closeout (2026-02-08)
+
+**Verification artifacts produced:**
+- `backend/tests/Feature/GenerateThemeSmokeTest.php` — 7 tests: optimistic lock, claim, complete, fail, expiry, status endpoint, dispatch
+- `backend/scripts/m0-smoke-test.sh` — Docker end-to-end: health → dispatch → poll → storage → signed URLs → metrics
+- `backend/database/factories/ProjectFactory.php` — Unblocks test suite (`Project::factory()->create()`)
+- `backend/app/Http/Controllers/InternalController.php` — Added metric #7 (`storage.signed_url_generated`) emission
+
+**Gates closed:** P5 (GREEN), P6 (GREEN), P7 (GREEN), P8 (YELLOW → awaiting runtime baseline)
+
+### Resolved M0 Unknowns (from spec §10)
+
+| Unknown | Resolution |
+|---------|------------|
+| U1 (CLI stdin) | **RESOLVED** — `bin/generate.ts:36-44` implements `readStdin()` |
+| U3 (Generator cwd) | **RESOLVED** — `bin/generate.ts:53-55` does `chdir(path.resolve(__dirname, '..'))` |
+| U7 (Puppeteer) | **RESOLVED** — `bin/generate.ts` does not import Puppeteer; generator doesn't use it |
+| U8 (Static site deps) | **RESOLVED** — Docker bind-mounts full repo root at `/app/generator/` |
+
+### Deferred to M1
+
+| Item | Reason |
+|------|--------|
+| PHP data transformer | Not needed while Next.js transforms data. `GenerateThemeJob` passes pre-transformed `project.data` directly. |
+| Public API endpoints | M0 is internal-only. `/generate`, `/status`, `/download` are M1 scope. |
+| `BACKEND_URL` feature flag | Frontend routing to Laravel is M1 scope. |
+| Node worker shutdown | Worker remains active; Horizon processes test data only. |
+
+### Key Architecture Files
+
+| File | Purpose |
+|------|---------|
+| `docker-compose.m0-laravel.yml` | 3-container stack (app, horizon, redis) |
+| `backend/docker/app/Dockerfile` | PHP 8.3-FPM + nginx |
+| `backend/docker/horizon/Dockerfile` | PHP 8.3-CLI + Node 20 (dual runtime for subprocess) |
+| `backend/app/Jobs/GenerateThemeJob.php` | Core job: subprocess → upload → complete |
+| `bin/generate.ts` | Node CLI wrapper: stdin JSON → stdout JSON |
+| `output/M0_LARAVEL_BACKEND_PREP_SPEC.md` | Full M0 specification |
+| `output/contracts/contract-notes.md` | V2.1 contract invariants |
+| `output/M1_READINESS_CHECKLIST.md` | M1 entry gate |
+| `output/RISK_REGISTER_2026-02-08.md` | 5 identified migration risks |
+
+### M1 Blockers (Must Address Before M1)
+
+1. PHP data transformer port (`dataTransformer.ts` → PHP)
+2. `pp_projects` → `projects` unification DDL
+3. BrandStyle 4→2 mapping strategy
+4. Node worker shutdown runbook
+5. Public API endpoints in Laravel
+6. `BACKEND_URL` feature flag in Next.js

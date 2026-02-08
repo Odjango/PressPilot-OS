@@ -113,7 +113,7 @@ class InternalController extends Controller
      * Returns the full state of a generation job, including result JSON
      * and signed download URLs for completed jobs (TTL 3600s).
      */
-    public function show(string $jobId): JsonResponse
+    public function show(string $jobId, MetricsLogger $metrics): JsonResponse
     {
         $job = GenerationJob::with(['project', 'generatedTheme'])->find($jobId);
 
@@ -139,6 +139,10 @@ class InternalController extends Controller
                 try {
                     $urls['theme_zip'] = Storage::disk('supabase')
                         ->temporaryUrl($job->result['download_path'], now()->addSeconds(3600));
+                    $metrics->emit('storage.signed_url_generated', [
+                        'path' => $job->result['download_path'],
+                        'ttl_seconds' => 3600,
+                    ]);
                 } catch (\Throwable $e) {
                     $urls['theme_zip_error'] = $e->getMessage();
                 }
@@ -148,6 +152,10 @@ class InternalController extends Controller
                 try {
                     $urls['static_zip'] = Storage::disk('supabase')
                         ->temporaryUrl($job->result['static_path'], now()->addSeconds(3600));
+                    $metrics->emit('storage.signed_url_generated', [
+                        'path' => $job->result['static_path'],
+                        'ttl_seconds' => 3600,
+                    ]);
                 } catch (\Throwable $e) {
                     $urls['static_zip_error'] = $e->getMessage();
                 }
