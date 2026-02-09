@@ -11,7 +11,8 @@ RUN composer install \
     --no-interaction \
     --no-scripts \
     --prefer-dist \
-    --optimize-autoloader
+    --optimize-autoloader \
+    --ignore-platform-reqs
 
 # Stage 2: Runtime
 FROM php:8.3-fpm-bookworm AS runner
