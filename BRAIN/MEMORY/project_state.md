@@ -1,7 +1,7 @@
 # PressPilot Project Memory
-**State Saved: 2026-02-08** | **Current Phase: M0 Laravel Foundation ~95% Complete + Generator 2.0 Phase 4 Complete**
+**State Saved: 2026-02-08** | **Current Phase: M0 Laravel Foundation ~85% Complete + Generator 2.0 Phase 4 Complete**
 
-> M0 (Laravel dark launch) deployed to Coolify. Docker stack operational. Code-level gates P1-P7, P9-P10 all GREEN. P8 (metrics baseline) YELLOW — awaiting 3-day runtime observation. See Section 19 for M0 status.
+> M0 (Laravel dark launch) code complete but NOT deployed to Coolify. "Factory-Stable" in Coolify is WordPress, not Laravel. P10 (deployment) RED. P8 (metrics baseline) blocked by P10. See Section 19.
 > Generator 2.0 Phase 4 (Ecommerce Vertical & Orchestrator Wiring) complete. See Section 18 for details.
 
 ---
@@ -781,9 +781,9 @@ When expanding to SaaS/Service verticals:
 
 ## 19. M0 Laravel Backend Foundation (2026-02-08)
 
-### Status: ~95% Complete (P8 runtime baseline pending)
+### Status: ~85% Complete (P10 deployment + P8 observation pending)
 
-M0 deploys a Laravel control-plane scaffold alongside the existing Next.js + Node system. Zero production traffic flows to Laravel. All code-level gates (P1-P7, P9-P10) are GREEN. P8 requires 3-day runtime metrics observation.
+M0 deploys a Laravel control-plane scaffold alongside the existing Next.js + Node system. Zero production traffic flows to Laravel. Code-level gates (P1-P9) are GREEN/YELLOW. **P10 is RED — the Laravel stack has NOT been deployed to Coolify.** "Factory-Stable" in Coolify is a WordPress/MySQL service, not the Laravel backend.
 
 ### What's Built
 
@@ -797,7 +797,7 @@ M0 deploys a Laravel control-plane scaffold alongside the existing Next.js + Nod
 | Supabase S3 filesystem driver | DONE | `backend/config/filesystems.php` |
 | Internal endpoints (health, test-dispatch, job status) | DONE | `backend/routes/api.php` |
 | Horizon + Redis configuration | DONE | `backend/config/horizon.php` |
-| Coolify deployment | DONE | VPS deployed |
+| Coolify deployment | **NOT DONE** | "Factory-Stable" is WordPress, not Laravel. Deploy using `output/COOLIFY_M0_DEPLOY_RUNBOOK.md` |
 
 ### What's Pending
 
@@ -819,21 +819,31 @@ M0 deploys a Laravel control-plane scaffold alongside the existing Next.js + Nod
 
 **Infrastructure fix (2026-02-08):** Laravel scheduler was not running in Docker — `schedule:work` added to `backend/docker/app/supervisord.conf`. Without this, metric #8 (`horizon.queue_depth`) could never fire because no process invoked `php artisan schedule:run`.
 
-### Coolify Deployment Map
+### Coolify Deployment Map (CORRECTED 2026-02-08)
 
-| Coolify Resource | Role | Container | Docker Image |
-|------------------|------|-----------|-------------|
-| Next.js App | Production frontend + API | `presspilot-app` (or similar) | `Dockerfile.coolify` (Node/Next) |
-| Factory-Stable (Service) | Laravel M0 stack | 3 containers below | `docker-compose.m0-laravel.yml` |
-| ↳ `presspilot-laravel-app` | PHP-FPM + nginx + scheduler | Internal :8080 | `backend/docker/app/Dockerfile` |
-| ↳ `presspilot-laravel-horizon` | Horizon queue worker + Node subprocess | No HTTP port | `backend/docker/horizon/Dockerfile` |
-| ↳ `presspilot-redis` | Redis 7.4 (queues, cache, sessions) | Internal :6379 | `redis:7.4-alpine` |
+**VERIFIED:** "Factory-Stable" in Coolify is WordPress/MySQL — NOT the Laravel backend.
 
-**Access:** All Laravel services use `expose` (NOT `ports`). Access via SSH tunnel: `ssh -L 8080:localhost:8080 user@vps`
+| Coolify Resource | Actual Role | Status |
+|------------------|-------------|--------|
+| Next.js App | Production frontend + API | Running |
+| Factory-Stable | WordPress/MySQL (unrelated to M0) | Running |
+| Laravel M0 stack | **NOT DEPLOYED** | Must be created as new Docker Compose resource |
 
-### Where to Find Logs
+**To deploy:** Follow `output/COOLIFY_M0_DEPLOY_RUNBOOK.md`. Create new resource → Docker Compose → point to `docker-compose.m0-laravel.yml` on `main`.
 
-- **Coolify UI:** Project → Factory-Stable → Logs tab. Select container (`laravel-app`, `laravel-horizon`, or `redis`).
+**After deployment, expected containers:**
+
+| Container | Role | Docker Image |
+|-----------|------|-------------|
+| `presspilot-laravel-app` | PHP-FPM + nginx + scheduler | `backend/docker/app/Dockerfile` |
+| `presspilot-laravel-horizon` | Horizon queue worker + Node subprocess | `backend/docker/horizon/Dockerfile` |
+| `presspilot-redis` | Redis 7.4 (queues, cache, sessions) | `redis:7.4-alpine` |
+
+**Access:** All Laravel services use `expose` (NOT `ports`). Access via `docker exec` or SSH tunnel with port binding.
+
+### Where to Find Logs (after deployment)
+
+- **Coolify UI:** Project → [Laravel resource name] → Logs tab. Select container (`laravel-app`, `laravel-horizon`, or `redis`).
 - **SSH (docker logs):** `docker logs presspilot-laravel-horizon 2>&1 | grep '"metric"'`
 - **Full compose logs:** `docker compose -f docker-compose.m0-laravel.yml logs laravel-horizon 2>&1 | grep '"metric"'`
 - **Metric format:** All metrics are JSON lines on stderr with key `"metric"`. Example:
