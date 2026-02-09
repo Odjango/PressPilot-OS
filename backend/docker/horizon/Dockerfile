@@ -8,7 +8,7 @@
 # ─── Stage 1: Install generator Node.js dependencies ────────────────────────
 FROM node:20-bookworm-slim AS generator-deps
 WORKDIR /deps
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
 # --ignore-scripts: skip postinstall hooks (Puppeteer Chromium download, etc.)
 # Full install (not --omit=dev) because tsx is a devDependency.
 RUN npm ci --ignore-scripts
