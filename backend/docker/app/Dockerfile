@@ -48,6 +48,12 @@ WORKDIR /app
 COPY --from=composer /app/vendor ./vendor
 COPY . .
 
+# Ensure all required Laravel storage subdirectories exist
+RUN mkdir -p /app/storage/framework/cache/data \
+             /app/storage/framework/sessions \
+             /app/storage/framework/views \
+             /app/storage/logs
+
 # Laravel directory permissions
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
     chmod -R 775 /app/storage /app/bootstrap/cache
