@@ -3,15 +3,34 @@
 # M0 End-to-End Smoke Test
 #
 # Verifies the full Laravel pipeline against the deployed Docker stack.
-# Run via SSH tunnel: ssh -L 8080:localhost:8080 user@vps
-# Then: bash backend/scripts/m0-smoke-test.sh
 #
-# Requires: curl, jq
+# USAGE (pick one):
+#
+#   Option A — Run INSIDE the laravel-app container (recommended):
+#     docker exec presspilot-laravel-app bash /app/scripts/m0-smoke-test.sh
+#
+#   Option B — Run from VPS host via docker exec wrapper:
+#     M0_DOCKER_EXEC=1 bash backend/scripts/m0-smoke-test.sh
+#
+#   Option C — Run locally with port binding (add ports: ["127.0.0.1:8080:8080"]
+#     to laravel-app in Coolify compose editor, then SSH tunnel):
+#     ssh -L 8080:localhost:8080 user@vps
+#     bash backend/scripts/m0-smoke-test.sh
+#
+# Requires: curl, jq (available inside the laravel-app container)
 #
 # Gates verified: P5 (pipeline), P6 (storage), P7 (signed URLs), P8 (metrics)
 #
 
 set -euo pipefail
+
+# Docker exec wrapper: if M0_DOCKER_EXEC=1, prefix curl calls with docker exec
+CONTAINER="${M0_CONTAINER:-presspilot-laravel-app}"
+if [ "${M0_DOCKER_EXEC:-0}" = "1" ]; then
+    CURL_CMD="docker exec $CONTAINER curl"
+else
+    CURL_CMD="curl"
+fi
 
 BASE_URL="${M0_BASE_URL:-http://localhost:8080}"
 PASS=0
@@ -28,7 +47,7 @@ echo ""
 
 echo "--- P7: Health Check ---"
 
-HEALTH=$(curl -sf "$BASE_URL/api/internal/health" 2>/dev/null || echo '{"status":"unreachable"}')
+HEALTH=$($CURL_CMD -sf "$BASE_URL/api/internal/health" 2>/dev/null || echo '{"status":"unreachable"}')
 HEALTH_STATUS=$(echo "$HEALTH" | jq -r '.status' 2>/dev/null || echo "parse_error")
 
 if [ "$HEALTH_STATUS" = "ok" ]; then
@@ -64,7 +83,7 @@ if [ -z "$PROJECT_ID" ]; then
     fail "Pipeline test skipped — set M0_PROJECT_ID"
 else
     # Dispatch a job
-    DISPATCH=$(curl -sf -X POST "$BASE_URL/api/internal/jobs/test-dispatch" \
+    DISPATCH=$($CURL_CMD -sf -X POST "$BASE_URL/api/internal/jobs/test-dispatch" \
         -H "Content-Type: application/json" \
         -d "{\"project_id\": \"$PROJECT_ID\"}" 2>/dev/null || echo '{"error":"dispatch_failed"}')
 
@@ -82,7 +101,7 @@ else
         FINAL_STATUS="pending"
 
         while [ $ELAPSED -lt $TIMEOUT ]; do
-            JOB_STATE=$(curl -sf "$BASE_URL/api/internal/jobs/$JOB_ID" 2>/dev/null || echo '{}')
+            JOB_STATE=$($CURL_CMD -sf "$BASE_URL/api/internal/jobs/$JOB_ID" 2>/dev/null || echo '{}')
             FINAL_STATUS=$(echo "$JOB_STATE" | jq -r '.status' 2>/dev/null || echo "unknown")
 
             if [ "$FINAL_STATUS" = "completed" ] || [ "$FINAL_STATUS" = "failed" ]; then
@@ -120,7 +139,7 @@ else
                 pass "Signed URL generated for theme ZIP"
 
                 # Verify the URL returns a ZIP
-                CONTENT_TYPE=$(curl -sI "$THEME_URL" 2>/dev/null | grep -i "content-type" | head -1 || echo "")
+                CONTENT_TYPE=$($CURL_CMD -sI "$THEME_URL" 2>/dev/null | grep -i "content-type" | head -1 || echo "")
                 if echo "$CONTENT_TYPE" | grep -qi "zip\|octet"; then
                     pass "Theme ZIP downloadable (correct Content-Type)"
                 else
@@ -148,18 +167,25 @@ echo ""
 # ── Gate P8: Metrics Baseline ───────────────────────────────────────
 
 echo "--- P8: Metrics Baseline ---"
-echo "  To verify metrics, run against Docker logs:"
-echo "  docker compose -f docker-compose.m0-laravel.yml logs laravel-horizon 2>&1 | grep '\"metric\"' | jq -r '.metric' | sort | uniq -c"
+echo "  Metrics are split across TWO containers. Check both:"
 echo ""
-echo "  Expected 8 metric names:"
-echo "    job.dispatched"
-echo "    job.started"
-echo "    job.completed"
-echo "    job.failed"
-echo "    generator.subprocess_duration_ms"
-echo "    storage.upload_duration_ms"
-echo "    storage.signed_url_generated"
-echo "    horizon.queue_depth"
+echo "  # Metrics from horizon container (job.started, job.completed, job.failed,"
+echo "  # generator.subprocess_duration_ms, storage.upload_duration_ms):"
+echo "  docker logs presspilot-laravel-horizon 2>&1 | grep '\"metric\"' | jq -r '.context.metric' | sort | uniq -c"
+echo ""
+echo "  # Metrics from app container (job.dispatched, storage.signed_url_generated,"
+echo "  # horizon.queue_depth):"
+echo "  docker logs presspilot-laravel-app 2>&1 | grep '\"metric\"' | jq -r '.context.metric' | sort | uniq -c"
+echo ""
+echo "  Expected 8 metric names total (5 from horizon, 3 from app):"
+echo "    job.dispatched                    (app)"
+echo "    job.started                       (horizon)"
+echo "    job.completed                     (horizon)"
+echo "    job.failed                        (horizon)"
+echo "    generator.subprocess_duration_ms  (horizon)"
+echo "    storage.upload_duration_ms        (horizon)"
+echo "    storage.signed_url_generated      (app)"
+echo "    horizon.queue_depth               (app, every 60s via scheduler)"
 echo ""
 
 # ── Summary ─────────────────────────────────────────────────────────

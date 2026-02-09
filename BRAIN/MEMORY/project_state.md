@@ -817,6 +817,57 @@ M0 deploys a Laravel control-plane scaffold alongside the existing Next.js + Nod
 
 **Gates closed:** P5 (GREEN), P6 (GREEN), P7 (GREEN), P8 (YELLOW → awaiting runtime baseline)
 
+**Infrastructure fix (2026-02-08):** Laravel scheduler was not running in Docker — `schedule:work` added to `backend/docker/app/supervisord.conf`. Without this, metric #8 (`horizon.queue_depth`) could never fire because no process invoked `php artisan schedule:run`.
+
+### Coolify Deployment Map
+
+| Coolify Resource | Role | Container | Docker Image |
+|------------------|------|-----------|-------------|
+| Next.js App | Production frontend + API | `presspilot-app` (or similar) | `Dockerfile.coolify` (Node/Next) |
+| Factory-Stable (Service) | Laravel M0 stack | 3 containers below | `docker-compose.m0-laravel.yml` |
+| ↳ `presspilot-laravel-app` | PHP-FPM + nginx + scheduler | Internal :8080 | `backend/docker/app/Dockerfile` |
+| ↳ `presspilot-laravel-horizon` | Horizon queue worker + Node subprocess | No HTTP port | `backend/docker/horizon/Dockerfile` |
+| ↳ `presspilot-redis` | Redis 7.4 (queues, cache, sessions) | Internal :6379 | `redis:7.4-alpine` |
+
+**Access:** All Laravel services use `expose` (NOT `ports`). Access via SSH tunnel: `ssh -L 8080:localhost:8080 user@vps`
+
+### Where to Find Logs
+
+- **Coolify UI:** Project → Factory-Stable → Logs tab. Select container (`laravel-app`, `laravel-horizon`, or `redis`).
+- **SSH (docker logs):** `docker logs presspilot-laravel-horizon 2>&1 | grep '"metric"'`
+- **Full compose logs:** `docker compose -f docker-compose.m0-laravel.yml logs laravel-horizon 2>&1 | grep '"metric"'`
+- **Metric format:** All metrics are JSON lines on stderr with key `"metric"`. Example:
+  ```json
+  {"message":"metric","context":{"metric":"job.started","timestamp":"2026-02-08T12:00:00Z","job_id":"abc-123","worker_id":"presspilot-laravel-horizon"}}
+  ```
+
+### P8 Baseline Tracking (3-Day Observation)
+
+| Day | Date | Metrics Present | Job Runs | Notes |
+|-----|------|-----------------|----------|-------|
+| 1 | ____-__-__ | _/8 | _ | |
+| 2 | ____-__-__ | _/8 | _ | |
+| 3 | ____-__-__ | _/8 | _ | |
+
+**How to check (run daily):**
+```bash
+# SSH into VPS, then:
+docker logs presspilot-laravel-horizon 2>&1 | grep '"metric"' | jq -r '.context.metric' | sort | uniq -c
+```
+
+**Expected 8 metric names:**
+1. `job.dispatched` — on POST /jobs/test-dispatch
+2. `job.started` — when GenerateThemeJob begins
+3. `job.completed` — on successful completion
+4. `job.failed` — on failure (after retries)
+5. `generator.subprocess_duration_ms` — after Node subprocess returns
+6. `storage.upload_duration_ms` — after each S3 upload
+7. `storage.signed_url_generated` — on GET /jobs/{id} for completed jobs
+8. `horizon.queue_depth` — every 60s from scheduler
+
+**To trigger metrics 1-7:** Run `M0_PROJECT_ID=<uuid> bash backend/scripts/m0-smoke-test.sh` via SSH tunnel.
+**Metric 8** fires automatically every minute (requires scheduler process — now added to supervisord.conf).
+
 ### Resolved M0 Unknowns (from spec §10)
 
 | Unknown | Resolution |
