@@ -37,12 +37,6 @@ RUN docker-php-ext-install \
 # Redis extension via PECL
 RUN pecl install redis && docker-php-ext-enable redis
 
-# PHP-FPM configuration
-RUN sed -i 's/listen = 127.0.0.1:9000/listen = \/run\/php-fpm.sock/' /usr/local/etc/php-fpm.d/www.conf && \
-    echo "listen.owner = www-data" >> /usr/local/etc/php-fpm.d/www.conf && \
-    echo "listen.group = www-data" >> /usr/local/etc/php-fpm.d/www.conf && \
-    echo "listen.mode = 0660" >> /usr/local/etc/php-fpm.d/www.conf
-
 # nginx config
 COPY docker/app/nginx.conf /etc/nginx/sites-available/default
 
@@ -57,9 +51,6 @@ COPY . .
 # Laravel directory permissions
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
     chmod -R 775 /app/storage /app/bootstrap/cache
-
-# Create PHP-FPM socket directory
-RUN mkdir -p /run && chown www-data:www-data /run
 
 EXPOSE 8080
 
