@@ -58,6 +58,11 @@ RUN mkdir -p /app/storage/framework/cache/data \
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
     chmod -R 775 /app/storage /app/bootstrap/cache
 
+# Runtime entrypoint: ensures storage dirs exist even when volume is empty
+COPY docker/app/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
 EXPOSE 8080
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/presspilot.conf"]
