@@ -13,7 +13,6 @@
  */
 
 import type { SectionContext } from '../../recipes/types';
-import { getModernImageUrl } from '../../utils/ImageProvider';
 import { tokenToCSS } from '../../utils/BlockHelpers';
 
 export function getEcommerceFeaturedProductsSectionWithContext(ctx: SectionContext): string {
@@ -27,26 +26,19 @@ export function getEcommerceFeaturedProductsSectionWithContext(ctx: SectionConte
     const buttonWeight = tokens.typography.buttonWeight;
     const priceWeight = tokens.typography.badgeWeight;
 
-    const products = [
-        { name: 'Classic Tee', price: '$49.99' },
-        { name: 'Premium Hoodie', price: '$89.99' },
-        { name: 'Slim Fit Jeans', price: '$79.99' },
-        { name: 'Canvas Sneakers', price: '$69.99' }
-    ];
-
-    const productCards = products.map((product, index) => `
+    const productCards = [1, 2, 3, 4].map((n) => `
         <!-- wp:column -->
         <div class="wp-block-column">
             <!-- wp:group {"style":{"border":{"radius":"${cardRadius}"},"spacing":{"padding":{"top":"${cardPadding}","right":"${cardPadding}","bottom":"${cardPadding}","left":"${cardPadding}"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
             <div class="wp-block-group has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:${tokenToCSS(cardPadding)};padding-right:${tokenToCSS(cardPadding)};padding-bottom:${tokenToCSS(cardPadding)};padding-left:${tokenToCSS(cardPadding)}">
                 <!-- wp:image {"aspectRatio":"4/5","scale":"cover"} -->
-                <figure class="wp-block-image"><img src="${getModernImageUrl('ecommerce', index)}" alt="${product.name}" style="aspect-ratio:4/5;object-fit:cover"/></figure>
+                <figure class="wp-block-image"><img src="{{product_${n}_image}}" alt="{{product_${n}_title}}" style="aspect-ratio:4/5;object-fit:cover"/></figure>
                 <!-- /wp:image -->
                 <!-- wp:heading {"level":4,"textColor":"contrast","style":{"spacing":{"margin":{"top":"var:preset|spacing|20","bottom":"var:preset|spacing|10"}}}} -->
-                <h4 class="wp-block-heading has-contrast-color has-text-color" style="margin-top:var(--wp--preset--spacing--20);margin-bottom:var(--wp--preset--spacing--10)">${product.name}</h4>
+                <h4 class="wp-block-heading has-contrast-color has-text-color" style="margin-top:var(--wp--preset--spacing--20);margin-bottom:var(--wp--preset--spacing--10)">{{product_${n}_title}}</h4>
                 <!-- /wp:heading -->
                 <!-- wp:paragraph {"style":{"typography":{"fontWeight":"${priceWeight}"}},"textColor":"accent"} -->
-                <p class="has-accent-color has-text-color" style="font-weight:${priceWeight}">${product.price}</p>
+                <p class="has-accent-color has-text-color" style="font-weight:${priceWeight}">{{product_${n}_price}}</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
                 <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--20)">

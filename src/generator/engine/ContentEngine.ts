@@ -6,6 +6,13 @@ import { ContentJSON } from '../modules/ContentBuilder';
 import { sanitizeForPHP } from '../utils/sanitize';
 
 export class ContentEngine {
+    private applySlotReplacements(content: string, slots: Record<string, string>): string {
+        for (const [search, replace] of Object.entries(slots || {})) {
+            const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            content = content.replace(new RegExp(escaped, 'g'), replace);
+        }
+        return content;
+    }
 
     async injectContentLoader(themeDir: string, contentJson: ContentJSON): Promise<void> {
         const siteTitle = sanitizeForPHP(contentJson.businessName);
@@ -17,7 +24,7 @@ export class ContentEngine {
         // Ensure pages array exists (make a copy to avoid mutating original)
         const pages = contentJson.pages ? [...contentJson.pages] : [];
 
-        // For ecommerce industry, add Shop, Cart, and Checkout pages
+        // For ecommerce industry, add starter Shop page only (no Woo checkout/cart flow)
         const industry = contentJson.industry || '';
         if (industry.toLowerCase() === 'ecommerce') {
             const hasShopPage = pages.some(p => p.slug === 'shop' || (p.title && p.title.toLowerCase() === 'shop'));
@@ -26,26 +33,6 @@ export class ContentEngine {
                 pages.push({
                     title: 'Shop',
                     slug: 'shop',
-                    template: 'universal-shop'
-                });
-            }
-
-            const hasCartPage = pages.some(p => p.slug === 'cart' || (p.title && p.title.toLowerCase() === 'cart'));
-            if (!hasCartPage) {
-                console.log(`[ContentEngine] Industry is ecommerce, adding Cart page to setup.`);
-                pages.push({
-                    title: 'Cart',
-                    slug: 'cart',
-                    template: 'universal-shop'
-                });
-            }
-
-            const hasCheckoutPage = pages.some(p => p.slug === 'checkout' || (p.title && p.title.toLowerCase() === 'checkout'));
-            if (!hasCheckoutPage) {
-                console.log(`[ContentEngine] Industry is ecommerce, adding Checkout page to setup.`);
-                pages.push({
-                    title: 'Checkout',
-                    slug: 'checkout',
                     template: 'universal-shop'
                 });
             }
@@ -112,6 +99,16 @@ export class ContentEngine {
                 }
 
                 await buildPageTemplate(themeDir, page, contentJson.baseName, contentJson.heroLayout);
+
+                // Replace token placeholders in generated page templates.
+                const pagePath = path.join(themeDir, 'templates', `page-${page.slug}.html`);
+                if (await fs.pathExists(pagePath)) {
+                    const original = await fs.readFile(pagePath, 'utf8');
+                    const resolved = this.applySlotReplacements(original, contentJson.slots || {});
+                    if (resolved !== original) {
+                        await fs.writeFile(pagePath, resolved);
+                    }
+                }
             }
         }
     }

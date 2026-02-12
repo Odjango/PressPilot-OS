@@ -64,6 +64,10 @@ export class ContentBuilder {
             if (!pages.find(p => p.slug === 'menu')) {
                 pages.push({ title: 'Menu', slug: 'menu', template: 'universal-menu' });
             }
+        } else if (vertical === 'ecommerce' || vertical === 'retail' || vertical === 'shop' || vertical === 'online_store') {
+            if (!pages.find(p => p.slug === 'shop')) {
+                pages.push({ title: 'Shop', slug: 'shop', template: 'universal-shop' });
+            }
         } else if (vertical === 'portfolio' || vertical === 'talent' || vertical === 'agency' || vertical === 'creative') {
             if (!pages.find(p => p.slug === 'gallery')) {
                 pages.push({ title: 'Gallery', slug: 'gallery', template: 'universal-portfolio' });
@@ -85,11 +89,44 @@ export class ContentBuilder {
         slots['{{NEWSLETTER_TITLE}}'] = 'Join our Newsletter';
         slots['{{NEWSLETTER_TEXT}}'] = 'Stay updated with our latest news and offers.';
         slots['{{NEWSLETTER_BUTTON}}'] = 'Subscribe';
+        slots['{{store_name}}'] = safeUserData.name || 'Our Store';
+        slots['{{business_name}}'] = safeUserData.name || 'Our Business';
+        slots['{{tagline}}'] = hero_subheadline;
+        slots['{{brand_story}}'] = safeUserData.description || 'We curate thoughtful products with quality craftsmanship and everyday usefulness.';
+        slots['{{sale_headline}}'] = 'Seasonal Picks Are Here';
+        slots['{{sale_discount}}'] = '20%';
+        slots['{{sale_end_date}}'] = 'Sunday';
+        slots['{{instagram_handle}}'] = 'ourstore';
+        slots['{{featured_collection_image}}'] = images[0];
+        slots['{{brand_story_image}}'] = images[1];
+        slots['{{brand_value_1}}'] = 'Small-batch quality';
+        slots['{{brand_value_2}}'] = 'Ethically sourced materials';
+        slots['{{brand_value_3}}'] = 'Designed for everyday use';
 
         // Add numbered services placeholders
         for (let i = 1; i <= 6; i++) {
             slots[`{{SERVICE_${i}_TITLE}}`] = `Service ${i}`;
             slots[`{{SERVICE_${i}_TEXT}}`] = `High-quality description for service ${i}.`;
+        }
+
+        // Ecommerce placeholders
+        for (let i = 1; i <= 6; i++) {
+            slots[`{{product_${i}_title}}`] = `Product ${i}`;
+            slots[`{{product_${i}_price}}`] = `$${(19 + i * 7).toFixed(2)}`;
+            slots[`{{product_${i}_image}}`] = images[(i - 1) % images.length];
+        }
+        for (let i = 1; i <= 4; i++) {
+            slots[`{{category_${i}_name}}`] = ['Women', 'Men', 'Accessories', 'New Arrivals'][i - 1] || `Category ${i}`;
+            slots[`{{category_${i}_image}}`] = images[(i + 1) % images.length];
+        }
+        for (let i = 1; i <= 3; i++) {
+            slots[`{{testimonial_${i}_quote}}`] = `Love the quality and fast delivery.`;
+            slots[`{{testimonial_${i}_name}}`] = `Customer ${i}`;
+            slots[`{{testimonial_${i}_product}}`] = `Product ${i}`;
+            slots[`{{testimonial_${i}_rating}}`] = '5';
+        }
+        for (let i = 1; i <= 6; i++) {
+            slots[`{{instagram_post_${i}_image}}`] = images[(i + 2) % images.length];
         }
 
         // Add numbered FAQ placeholders

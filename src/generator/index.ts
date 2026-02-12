@@ -34,6 +34,7 @@ const FORCE_HEAVY_FOR_ECOMMERCE = true;
 const FORCE_HEAVY_FOR_SAAS = true;
 const FORCE_HEAVY_FOR_PORTFOLIO = true;
 const FORCE_HEAVY_FOR_LOCAL_SERVICE = true;
+const ENABLE_WOOCOMMERCE_INJECTION = false;
 
 /**
  * PressPilot Generator Orchestrator
@@ -191,7 +192,7 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             }
 
             // WooCommerce templates for ecommerce in heavy mode
-            if (isEcommerce) {
+            if (isEcommerce && ENABLE_WOOCOMMERCE_INJECTION) {
                 await patternInjector.injectWooCommerce(themeDir, safeName);
             }
         } else {
@@ -236,7 +237,7 @@ export async function generateTheme(options: GeneratorOptions = {}) {
                 // await patternInjector.injectGallery(themeDir, safeName);
             } else if (industry === 'fitness' || industry === 'gym') {
                 await patternInjector.injectFitnessSchedule(themeDir, userData, safeName);
-            } else if (industry === 'ecommerce' || industry === 'shop') {
+            } else if ((industry === 'ecommerce' || industry === 'shop') && ENABLE_WOOCOMMERCE_INJECTION) {
                 await patternInjector.injectWooCommerce(themeDir, safeName);
             }
         }

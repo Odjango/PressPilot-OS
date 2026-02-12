@@ -21,8 +21,8 @@ export function getEcommerceTrustBadgesSectionWithContext(ctx: SectionContext): 
 
     const badges = [
         { icon: '🚚', title: 'Free Shipping', description: 'On orders over $50' },
-        { icon: '🔒', title: 'Secure Payment', description: '256-bit SSL encryption' },
-        { icon: '↩️', title: 'Easy Returns', description: '30-day return policy' },
+        { icon: '🔒', title: 'Secure Checkout', description: '256-bit SSL encryption' },
+        { icon: '↩️', title: '30-Day Returns', description: 'Hassle-free exchanges' },
         { icon: '💬', title: '24/7 Support', description: 'Always here to help' }
     ];
 

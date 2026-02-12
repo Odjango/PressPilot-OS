@@ -33,11 +33,8 @@ export const getUniversalHeaderContent = (businessName: string, pages: { title: 
         ? `<!-- wp:site-logo {"width":80,"className":"site-logo"} /-->`
         : '';
 
-    // WooCommerce mini-cart for ecommerce themes
-    const miniCartBlock = isEcommerce
-        ? `
-    <!-- wp:woocommerce/mini-cart {"style":{"layout":{"selfStretch":"fit"}}} /-->`
-        : '';
+    // Starter ecommerce mode intentionally avoids WooCommerce-specific blocks.
+    const miniCartBlock = '';
 
     return `
 <!-- wp:group {"tagName":"header","className":"presspilot-header","align":"full","backgroundColor":"base","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}},"border":{"bottom":{"color":"var:preset|color|contrast-3","width":"1px"}}},"layout":{"type":"flex","justifyContent":"space-between","flexWrap":"nowrap"}} -->

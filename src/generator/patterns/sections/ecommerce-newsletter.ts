@@ -16,15 +16,14 @@ import type { SectionContext } from '../../recipes/types';
 import { tokenToCSS } from '../../utils/BlockHelpers';
 
 export function getEcommerceNewsletterSectionWithContext(ctx: SectionContext): string {
-    const { tokens } = ctx;
+    const { tokens, section } = ctx;
 
     // Token-driven values
     const sectionPadding = tokens.spacing.sectionPadding;
     const buttonRadius = tokens.radius.button;
     const buttonWeight = tokens.typography.buttonWeight;
 
-    // Safe token pairs for WCAG AA contrast
-    const bgColor = tokens.colors.newsletterBg;
+    const bgColor = section.backgroundColor || tokens.colors.newsletterBg;
     const textColor = tokens.colors.newsletterText;
 
     return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"${sectionPadding}","bottom":"${sectionPadding}"}}},"backgroundColor":"${bgColor}","layout":{"type":"constrained"}} -->
@@ -32,10 +31,10 @@ export function getEcommerceNewsletterSectionWithContext(ctx: SectionContext): s
     <!-- wp:group {"layout":{"type":"constrained","contentSize":"600px"}} -->
     <div class="wp-block-group">
         <!-- wp:heading {"textAlign":"center","textColor":"${textColor}"} -->
-        <h2 class="wp-block-heading has-text-align-center has-${textColor}-color has-text-color">Stay in the Loop</h2>
+        <h2 class="wp-block-heading has-text-align-center has-${textColor}-color has-text-color">Get 10% Off Your First Order</h2>
         <!-- /wp:heading -->
         <!-- wp:paragraph {"align":"center","textColor":"${textColor}"} -->
-        <p class="has-text-align-center has-${textColor}-color has-text-color">Subscribe to our newsletter for exclusive deals, new arrivals, and style tips.</p>
+        <p class="has-text-align-center has-${textColor}-color has-text-color">Join {{store_name}} updates for new arrivals, limited drops, and members-only offers.</p>
         <!-- /wp:paragraph -->
         <!-- wp:group {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}},"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"center"}} -->
         <div class="wp-block-group is-layout-flex is-nowrap is-content-justification-center" style="margin-top:var(--wp--preset--spacing--40)">

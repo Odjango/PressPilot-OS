@@ -26,41 +26,15 @@ export const PRODUCT_SHOWCASE_RECIPE: LayoutRecipe = {
     name: 'Product Showcase',
     vertical: 'ecommerce',
     conditions: {
-        // Default recipe for modern and bold modes
-        brandModes: ['modern', 'bold'],
-        // businessTypes is optional - matches any ecommerce business
-        priority: 50  // Default priority
+        businessTypes: ['product-showcase', 'single-product', 'small-catalog'],
+        priority: 70
     },
     sections: [
-        {
-            type: 'ecommerce-hero',
-            id: 'hero-main',
-            backgroundColor: 'base'
-        },
-        {
-            type: 'category-grid',
-            id: 'categories',
-            backgroundColor: 'base-2'
-        },
-        {
-            type: 'featured-products',
-            id: 'featured',
-            backgroundColor: 'base'
-        },
-        {
-            type: 'trust-badges',
-            id: 'trust',
-            backgroundColor: 'base-2'
-        },
-        {
-            type: 'newsletter',
-            id: 'newsletter',
-            backgroundColor: 'accent'
-        },
-        {
-            type: 'footer',
-            id: 'footer',
-            backgroundColor: 'contrast'
-        }
+        { type: 'ecommerce-hero', id: 'hero', backgroundColor: 'base' },
+        { type: 'ecommerce-featured-products', id: 'featured-products', backgroundColor: 'base-2' },
+        { type: 'ecommerce-about-brand', id: 'about-brand', backgroundColor: 'base' },
+        { type: 'ecommerce-testimonials', id: 'testimonials', backgroundColor: 'base-2' },
+        { type: 'ecommerce-trust-badges', id: 'trust-badges', backgroundColor: 'base' },
+        { type: 'ecommerce-newsletter', id: 'newsletter', backgroundColor: 'accent' }
     ]
 };

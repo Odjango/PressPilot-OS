@@ -11,6 +11,7 @@ import { getUniversalReservationContent } from './patterns/universal-reservation
 import { getUniversalFooterContent } from './patterns/universal-footer';
 import { sanitizePath } from './utils/sanitize';
 import { getPortfolioGalleryPageContent } from './patterns/pages/portfolio-gallery-page';
+import { getEcommerceShopPageContent } from './patterns/pages/ecommerce-shop-page';
 
 export const buildPageTemplate = async (themeDir: string, page: PageData, baseName: string = 'twentytwentyfour', heroLayout?: HeroLayout) => {
     const safeSlug = sanitizePath(page.slug || 'page');
@@ -41,6 +42,9 @@ export const buildPageTemplate = async (themeDir: string, page: PageData, baseNa
             break;
         case 'universal-portfolio':
             innerContent = getPortfolioGalleryPageContent(page.content);
+            break;
+        case 'universal-shop':
+            innerContent = getEcommerceShopPageContent(page.content);
             break;
     }
 

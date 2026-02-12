@@ -77,6 +77,12 @@ export type { RestaurantStyle, RestaurantStyleTokens } from './restaurantThemeTo
 // Ecommerce sections (Phase 4)
 export { getEcommerceHeroSectionWithContext } from './ecommerce-hero';
 export { getEcommerceCategoryGridSectionWithContext } from './ecommerce-category-grid';
+export { getEcommerceCategoriesSectionWithContext } from './ecommerce-categories';
 export { getEcommerceFeaturedProductsSectionWithContext } from './ecommerce-featured-products';
+export { getEcommerceProductGridSectionWithContext } from './ecommerce-product-grid';
+export { getEcommerceAboutBrandSectionWithContext } from './ecommerce-about-brand';
+export { getEcommerceTestimonialsSectionWithContext } from './ecommerce-testimonials';
 export { getEcommerceTrustBadgesSectionWithContext } from './ecommerce-trust-badges';
 export { getEcommerceNewsletterSectionWithContext } from './ecommerce-newsletter';
+export { getEcommerceInstagramSectionWithContext } from './ecommerce-instagram';
+export { getEcommerceBannerSaleSectionWithContext } from './ecommerce-banner-sale';

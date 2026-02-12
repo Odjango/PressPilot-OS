@@ -71,9 +71,18 @@ export type SectionType =
     | 'local-trust-badges'
     // Ecommerce sections (Phase 4)
     | 'ecommerce-hero'
+    | 'ecommerce-categories'
     | 'category-grid'
+    | 'ecommerce-featured-products'
     | 'featured-products'
+    | 'ecommerce-product-grid'
+    | 'ecommerce-about-brand'
+    | 'ecommerce-testimonials'
+    | 'ecommerce-instagram'
+    | 'ecommerce-banner-sale'
+    | 'ecommerce-trust-badges'
     | 'trust-badges'
+    | 'ecommerce-newsletter'
     | 'newsletter';
 
 /**

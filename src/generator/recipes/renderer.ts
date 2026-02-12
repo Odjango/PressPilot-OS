@@ -72,10 +72,16 @@ import {
     getLocalTrustBadgesSectionWithContext,
     // Phase 4 Ecommerce sections
     getEcommerceHeroSectionWithContext,
+    getEcommerceCategoriesSectionWithContext,
     getEcommerceCategoryGridSectionWithContext,
     getEcommerceFeaturedProductsSectionWithContext,
+    getEcommerceProductGridSectionWithContext,
+    getEcommerceAboutBrandSectionWithContext,
+    getEcommerceTestimonialsSectionWithContext,
     getEcommerceTrustBadgesSectionWithContext,
-    getEcommerceNewsletterSectionWithContext
+    getEcommerceNewsletterSectionWithContext,
+    getEcommerceInstagramSectionWithContext,
+    getEcommerceBannerSaleSectionWithContext
 } from '../patterns/sections';
 
 // =============================================================================
@@ -169,9 +175,18 @@ const SECTION_RENDERERS: Record<SectionType, SectionRendererFn> = {
 
     // Ecommerce sections - Phase 2 legacy stubs (use V2 renderers via renderSectionsWithRecipe)
     'ecommerce-hero': () => '',
+    'ecommerce-categories': () => '',
     'category-grid': () => '',
+    'ecommerce-featured-products': () => '',
     'featured-products': () => '',
+    'ecommerce-product-grid': () => '',
+    'ecommerce-about-brand': () => '',
+    'ecommerce-testimonials': () => '',
+    'ecommerce-instagram': () => '',
+    'ecommerce-banner-sale': () => '',
+    'ecommerce-trust-badges': () => '',
     'trust-badges': () => '',
+    'ecommerce-newsletter': () => '',
     'newsletter': () => ''
 };
 
@@ -329,17 +344,44 @@ const SECTION_RENDERERS_V2: Record<SectionType, SectionRendererFnV2> = {
     'ecommerce-hero': (ctx) => {
         return getEcommerceHeroSectionWithContext(ctx);
     },
+    'ecommerce-categories': (ctx) => {
+        return getEcommerceCategoriesSectionWithContext(ctx);
+    },
 
     'category-grid': (ctx) => {
         return getEcommerceCategoryGridSectionWithContext(ctx);
+    },
+    'ecommerce-featured-products': (ctx) => {
+        return getEcommerceFeaturedProductsSectionWithContext(ctx);
     },
 
     'featured-products': (ctx) => {
         return getEcommerceFeaturedProductsSectionWithContext(ctx);
     },
+    'ecommerce-product-grid': (ctx) => {
+        return getEcommerceProductGridSectionWithContext(ctx);
+    },
+    'ecommerce-about-brand': (ctx) => {
+        return getEcommerceAboutBrandSectionWithContext(ctx);
+    },
+    'ecommerce-testimonials': (ctx) => {
+        return getEcommerceTestimonialsSectionWithContext(ctx);
+    },
+    'ecommerce-instagram': (ctx) => {
+        return getEcommerceInstagramSectionWithContext(ctx);
+    },
+    'ecommerce-banner-sale': (ctx) => {
+        return getEcommerceBannerSaleSectionWithContext(ctx);
+    },
+    'ecommerce-trust-badges': (ctx) => {
+        return getEcommerceTrustBadgesSectionWithContext(ctx);
+    },
 
     'trust-badges': (ctx) => {
         return getEcommerceTrustBadgesSectionWithContext(ctx);
+    },
+    'ecommerce-newsletter': (ctx) => {
+        return getEcommerceNewsletterSectionWithContext(ctx);
     },
 
     'newsletter': (ctx) => {

@@ -80,6 +80,30 @@ export const RecipeRegistry: Record<string, SiteRecipe> = {
         description: 'Tech startup landing',
         pages: []
     },
+    ecommerce: {
+        industry: 'ecommerce',
+        description: 'Starter ecommerce site with dedicated shop page',
+        pages: [
+            {
+                title: 'Home',
+                slug: 'home',
+                template: 'universal-home',
+                content: {}
+            },
+            {
+                title: 'Shop',
+                slug: 'shop',
+                template: 'universal-shop',
+                content: {}
+            },
+            {
+                title: 'Contact',
+                slug: 'contact',
+                template: 'universal-contact',
+                content: {}
+            }
+        ]
+    },
     portfolio: {
         industry: 'portfolio',
         description: 'Portfolio/talent site with gallery page',
@@ -164,7 +188,9 @@ export {
 export {
     ECOMMERCE_RECIPES,
     DEFAULT_ECOMMERCE_RECIPE,
+    BOUTIQUE_STORE_RECIPE,
     PRODUCT_SHOWCASE_RECIPE,
+    ARTISAN_SHOP_RECIPE,
     MINIMAL_STORE_RECIPE
 } from './ecommerce';
 
