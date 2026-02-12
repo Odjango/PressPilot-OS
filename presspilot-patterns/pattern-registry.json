@@ -1,0 +1,502 @@
+{
+  "$schema": "https://presspilot.io/pattern-registry.schema.json",
+  "version": "1.0.0",
+  "description": "PressPilot Pattern Registry - AI uses this to select patterns and generate content",
+  
+  "templates": {
+    "restaurant": {
+      "name": "Restaurant",
+      "description": "Complete restaurant website with menu, hours, and reservations",
+      "suggested_patterns": [
+        "headers/centered-logo",
+        "heroes/cover-cta",
+        "restaurant/menu-categories",
+        "restaurant/chef-highlight",
+        "testimonials/grid-3",
+        "restaurant/hours-location",
+        "footers/restaurant"
+      ],
+      "user_guidance": {
+        "reservations": {
+          "approach": "static-first",
+          "generated_page": "Contact page with phone number and CTA button",
+          "enhancement_options": [
+            {
+              "option": "booking_widget",
+              "label": "Booking Widget",
+              "description": "Embed a reservation widget from OpenTable, Resy, or SimplyBook.me",
+              "effort": "low",
+              "services": ["OpenTable", "Resy", "Yelp Reservations", "TableAgent", "SimplyBook.me"]
+            },
+            {
+              "option": "form_plugin",
+              "label": "Contact Form Plugin",
+              "description": "Add a reservation form using WPForms, Contact Form 7, or Gravity Forms",
+              "effort": "medium",
+              "plugins": ["WPForms Lite", "Contact Form 7", "Formidable Forms", "Gravity Forms"]
+            },
+            {
+              "option": "phone_only",
+              "label": "Phone/Email Only",
+              "description": "Keep the generated Contact page as-is with phone number displayed",
+              "effort": "none"
+            }
+          ],
+          "edit_location": "Pages > Contact in WordPress admin"
+        },
+        "ui_tip": "Your theme includes a Contact page where customers can find your phone number and reach out to make a reservation. To accept online bookings, add a reservation widget (OpenTable, Resy) or a WordPress form plugin (WPForms) after installing your theme.",
+        "docs": "/docs/business-types/restaurant.md"
+      }
+    },
+    "ecommerce": {
+      "name": "E-Commerce Store",
+      "description": "Online store with product showcases and categories",
+      "suggested_patterns": [
+        "headers/ecommerce-cart",
+        "heroes/split-image",
+        "ecommerce/featured-product",
+        "ecommerce/product-grid-4",
+        "ecommerce/category-showcase",
+        "testimonials/slider",
+        "cta/newsletter",
+        "footers/ecommerce"
+      ]
+    },
+    "business": {
+      "name": "Business / Agency",
+      "description": "Professional services and agency website",
+      "suggested_patterns": [
+        "headers/split-nav",
+        "heroes/video-background",
+        "features/icon-grid-6",
+        "testimonials/carousel",
+        "cta/contact-split",
+        "footers/business"
+      ]
+    }
+  },
+
+  "patterns": {
+    "headers": [
+      {
+        "slug": "headers/centered-logo",
+        "name": "Centered Logo Header",
+        "description": "Logo centered with navigation below",
+        "category": "headers",
+        "strings": [
+          {"slug": "header/nav-item-1", "description": "First navigation item", "default": "Home"},
+          {"slug": "header/nav-item-2", "description": "Second navigation item", "default": "Menu"},
+          {"slug": "header/nav-item-3", "description": "Third navigation item", "default": "About"},
+          {"slug": "header/nav-item-4", "description": "Fourth navigation item", "default": "Contact"},
+          {"slug": "header/cta-button", "description": "Call to action button text", "default": "Reserve Table"}
+        ],
+        "images": [
+          {"slug": "header/logo", "description": "Business logo", "recommended_size": "200x60"}
+        ]
+      },
+      {
+        "slug": "headers/split-nav",
+        "name": "Split Navigation Header",
+        "description": "Logo left, navigation right, with CTA button",
+        "category": "headers",
+        "strings": [
+          {"slug": "header/nav-item-1", "description": "First navigation item", "default": "Services"},
+          {"slug": "header/nav-item-2", "description": "Second navigation item", "default": "Portfolio"},
+          {"slug": "header/nav-item-3", "description": "Third navigation item", "default": "About"},
+          {"slug": "header/nav-item-4", "description": "Fourth navigation item", "default": "Blog"},
+          {"slug": "header/cta-button", "description": "Call to action button", "default": "Get Started"}
+        ],
+        "images": [
+          {"slug": "header/logo", "description": "Business logo", "recommended_size": "180x50"}
+        ]
+      },
+      {
+        "slug": "headers/ecommerce-cart",
+        "name": "E-Commerce Header with Cart",
+        "description": "Logo, search, navigation, and mini-cart",
+        "category": "headers",
+        "strings": [
+          {"slug": "header/nav-item-1", "description": "First nav item", "default": "Shop"},
+          {"slug": "header/nav-item-2", "description": "Second nav item", "default": "Collections"},
+          {"slug": "header/nav-item-3", "description": "Third nav item", "default": "About"},
+          {"slug": "header/search-placeholder", "description": "Search placeholder", "default": "Search products..."}
+        ],
+        "images": [
+          {"slug": "header/logo", "description": "Store logo", "recommended_size": "180x50"}
+        ]
+      }
+    ],
+
+    "heroes": [
+      {
+        "slug": "heroes/cover-cta",
+        "name": "Cover Image with CTA",
+        "description": "Full-width hero with background image, headline, subtitle, and call-to-action buttons",
+        "category": "heroes",
+        "strings": [
+          {"slug": "hero/title", "description": "Main headline - compelling, 4-8 words", "default": "Welcome to Our Restaurant"},
+          {"slug": "hero/subtitle", "description": "Supporting text - 10-20 words", "default": "Experience authentic flavors crafted with passion and the finest ingredients"},
+          {"slug": "hero/button-primary", "description": "Primary button text", "default": "View Our Menu"},
+          {"slug": "hero/button-secondary", "description": "Secondary button text", "default": "Make Reservation"}
+        ],
+        "images": [
+          {"slug": "hero/background", "description": "Hero background image - food, restaurant interior, or ambiance shot", "recommended_size": "1920x1080"}
+        ]
+      },
+      {
+        "slug": "heroes/split-image",
+        "name": "Split Hero with Image",
+        "description": "Two-column hero: content left, image right",
+        "category": "heroes",
+        "strings": [
+          {"slug": "hero/title", "description": "Main headline", "default": "Elevate Your Style"},
+          {"slug": "hero/subtitle", "description": "Supporting paragraph", "default": "Discover our curated collection of premium products designed for the modern lifestyle."},
+          {"slug": "hero/button-primary", "description": "Primary button", "default": "Shop Now"},
+          {"slug": "hero/button-secondary", "description": "Secondary button", "default": "Learn More"}
+        ],
+        "images": [
+          {"slug": "hero/featured-image", "description": "Featured product or lifestyle image", "recommended_size": "800x1000"}
+        ]
+      },
+      {
+        "slug": "heroes/minimal-text",
+        "name": "Minimal Text Hero",
+        "description": "Clean hero with just headline and subtitle on solid color",
+        "category": "heroes",
+        "strings": [
+          {"slug": "hero/title", "description": "Bold headline", "default": "We Create Digital Experiences"},
+          {"slug": "hero/subtitle", "description": "Brief description", "default": "Strategy. Design. Development."},
+          {"slug": "hero/button-primary", "description": "CTA button", "default": "Start Your Project"}
+        ],
+        "images": []
+      }
+    ],
+
+    "features": [
+      {
+        "slug": "features/icon-grid-3",
+        "name": "3-Column Feature Grid",
+        "description": "Three features with icons, titles, and descriptions",
+        "category": "features",
+        "strings": [
+          {"slug": "features/section-title", "description": "Section heading", "default": "Why Choose Us"},
+          {"slug": "features/section-subtitle", "description": "Section intro", "default": "What makes us different"},
+          {"slug": "features/feature-1-title", "description": "First feature title", "default": "Fresh Ingredients"},
+          {"slug": "features/feature-1-desc", "description": "First feature description", "default": "We source only the freshest, locally-grown ingredients for every dish."},
+          {"slug": "features/feature-2-title", "description": "Second feature title", "default": "Expert Chefs"},
+          {"slug": "features/feature-2-desc", "description": "Second feature description", "default": "Our culinary team brings decades of experience from around the world."},
+          {"slug": "features/feature-3-title", "description": "Third feature title", "default": "Cozy Atmosphere"},
+          {"slug": "features/feature-3-desc", "description": "Third feature description", "default": "Enjoy your meal in our warm, welcoming dining space designed for comfort."}
+        ],
+        "images": []
+      },
+      {
+        "slug": "features/icon-grid-6",
+        "name": "6-Column Feature Grid",
+        "description": "Six features in a responsive grid",
+        "category": "features",
+        "strings": [
+          {"slug": "features/section-title", "description": "Section heading", "default": "Our Services"},
+          {"slug": "features/feature-1-title", "description": "Feature 1 title", "default": "Web Design"},
+          {"slug": "features/feature-1-desc", "description": "Feature 1 description", "default": "Beautiful, responsive websites"},
+          {"slug": "features/feature-2-title", "description": "Feature 2 title", "default": "Development"},
+          {"slug": "features/feature-2-desc", "description": "Feature 2 description", "default": "Custom solutions built to scale"},
+          {"slug": "features/feature-3-title", "description": "Feature 3 title", "default": "SEO"},
+          {"slug": "features/feature-3-desc", "description": "Feature 3 description", "default": "Get found by your customers"},
+          {"slug": "features/feature-4-title", "description": "Feature 4 title", "default": "Branding"},
+          {"slug": "features/feature-4-desc", "description": "Feature 4 description", "default": "Stand out from the competition"},
+          {"slug": "features/feature-5-title", "description": "Feature 5 title", "default": "Marketing"},
+          {"slug": "features/feature-5-desc", "description": "Feature 5 description", "default": "Reach your target audience"},
+          {"slug": "features/feature-6-title", "description": "Feature 6 title", "default": "Support"},
+          {"slug": "features/feature-6-desc", "description": "Feature 6 description", "default": "We're here when you need us"}
+        ],
+        "images": []
+      }
+    ],
+
+    "testimonials": [
+      {
+        "slug": "testimonials/grid-3",
+        "name": "3-Column Testimonial Grid",
+        "description": "Three testimonials in a grid layout",
+        "category": "testimonials",
+        "strings": [
+          {"slug": "testimonials/section-title", "description": "Section heading", "default": "What Our Guests Say"},
+          {"slug": "testimonials/quote-1", "description": "First testimonial quote", "default": "The best dining experience we've had in years. Every dish was perfection!"},
+          {"slug": "testimonials/name-1", "description": "First reviewer name", "default": "Sarah Johnson"},
+          {"slug": "testimonials/role-1", "description": "First reviewer role/location", "default": "Food Blogger"},
+          {"slug": "testimonials/quote-2", "description": "Second testimonial quote", "default": "Incredible atmosphere and even better food. We'll definitely be back!"},
+          {"slug": "testimonials/name-2", "description": "Second reviewer name", "default": "Michael Chen"},
+          {"slug": "testimonials/role-2", "description": "Second reviewer role", "default": "Regular Customer"},
+          {"slug": "testimonials/quote-3", "description": "Third testimonial quote", "default": "From appetizers to dessert, everything was absolutely delicious."},
+          {"slug": "testimonials/name-3", "description": "Third reviewer name", "default": "Emily Rodriguez"},
+          {"slug": "testimonials/role-3", "description": "Third reviewer role", "default": "Local Resident"}
+        ],
+        "images": [
+          {"slug": "testimonials/avatar-1", "description": "First reviewer photo", "recommended_size": "100x100"},
+          {"slug": "testimonials/avatar-2", "description": "Second reviewer photo", "recommended_size": "100x100"},
+          {"slug": "testimonials/avatar-3", "description": "Third reviewer photo", "recommended_size": "100x100"}
+        ]
+      }
+    ],
+
+    "cta": [
+      {
+        "slug": "cta/banner-centered",
+        "name": "Centered CTA Banner",
+        "description": "Full-width call-to-action with centered content",
+        "category": "cta",
+        "strings": [
+          {"slug": "cta/title", "description": "CTA headline", "default": "Ready to Experience Something Special?"},
+          {"slug": "cta/subtitle", "description": "CTA supporting text", "default": "Book your table today and discover why we're the city's favorite dining destination."},
+          {"slug": "cta/button", "description": "CTA button text", "default": "Reserve Your Table"}
+        ],
+        "images": []
+      },
+      {
+        "slug": "cta/newsletter",
+        "name": "Newsletter Signup",
+        "description": "Email signup section with headline and form",
+        "category": "cta",
+        "strings": [
+          {"slug": "cta/title", "description": "Newsletter headline", "default": "Stay in the Loop"},
+          {"slug": "cta/subtitle", "description": "Newsletter description", "default": "Subscribe to get exclusive offers, new arrivals, and insider-only discounts."},
+          {"slug": "cta/placeholder", "description": "Email placeholder", "default": "Enter your email"},
+          {"slug": "cta/button", "description": "Submit button", "default": "Subscribe"}
+        ],
+        "images": []
+      }
+    ],
+
+    "restaurant": [
+      {
+        "slug": "restaurant/menu-categories",
+        "name": "Restaurant Menu with Categories",
+        "description": "Full menu display organized by categories with items and prices",
+        "category": "restaurant",
+        "strings": [
+          {"slug": "menu/section-title", "description": "Menu section title", "default": "Our Menu"},
+          {"slug": "menu/section-subtitle", "description": "Menu intro text", "default": "Crafted with love, served with passion"},
+          {"slug": "menu/category-1-name", "description": "First category name", "default": "Appetizers"},
+          {"slug": "menu/category-2-name", "description": "Second category name", "default": "Main Courses"},
+          {"slug": "menu/category-3-name", "description": "Third category name", "default": "Desserts"}
+        ],
+        "menu_items": {
+          "description": "Array of menu items per category",
+          "structure": {
+            "category": "Category slug (appetizers, mains, desserts)",
+            "name": "Item name",
+            "description": "Brief description of the dish",
+            "price": "Price with currency symbol"
+          },
+          "example": [
+            {"category": "appetizers", "name": "Bruschetta", "description": "Grilled bread with tomatoes, garlic, and basil", "price": "$12"},
+            {"category": "mains", "name": "Margherita Pizza", "description": "San Marzano tomatoes, fresh mozzarella, basil", "price": "$18"},
+            {"category": "desserts", "name": "Tiramisu", "description": "Classic Italian coffee-flavored dessert", "price": "$10"}
+          ]
+        },
+        "images": [
+          {"slug": "menu/category-1-image", "description": "Appetizers category image", "recommended_size": "600x400"},
+          {"slug": "menu/category-2-image", "description": "Main courses category image", "recommended_size": "600x400"},
+          {"slug": "menu/category-3-image", "description": "Desserts category image", "recommended_size": "600x400"}
+        ]
+      },
+      {
+        "slug": "restaurant/chef-highlight",
+        "name": "Chef Highlight Section",
+        "description": "Feature the head chef with bio and philosophy",
+        "category": "restaurant",
+        "strings": [
+          {"slug": "chef/name", "description": "Chef's name", "default": "Chef Marco Rossi"},
+          {"slug": "chef/title", "description": "Chef's title", "default": "Executive Chef"},
+          {"slug": "chef/bio", "description": "Chef's biography - 2-3 sentences", "default": "With over 20 years of culinary experience, Chef Marco brings authentic Italian flavors to every dish. Trained in Rome and Milan, he combines traditional techniques with modern creativity."},
+          {"slug": "chef/quote", "description": "Chef's philosophy quote", "default": "Cooking is love made visible. Every dish tells a story."}
+        ],
+        "images": [
+          {"slug": "chef/photo", "description": "Chef portrait photo", "recommended_size": "600x800"}
+        ]
+      },
+      {
+        "slug": "restaurant/hours-location",
+        "name": "Hours & Location",
+        "description": "Business hours, address, and contact information",
+        "category": "restaurant",
+        "strings": [
+          {"slug": "info/section-title", "description": "Section title", "default": "Visit Us"},
+          {"slug": "info/hours-weekday", "description": "Weekday hours", "default": "Mon-Fri: 11:00 AM - 10:00 PM"},
+          {"slug": "info/hours-weekend", "description": "Weekend hours", "default": "Sat-Sun: 10:00 AM - 11:00 PM"},
+          {"slug": "info/address", "description": "Full address", "default": "123 Culinary Street, Flavor Town, FT 12345"},
+          {"slug": "info/phone", "description": "Phone number", "default": "(555) 123-4567"},
+          {"slug": "info/email", "description": "Email address", "default": "hello@restaurant.com"}
+        ],
+        "images": [
+          {"slug": "info/map-image", "description": "Map or exterior photo", "recommended_size": "800x400"}
+        ]
+      }
+    ],
+
+    "ecommerce": [
+      {
+        "slug": "ecommerce/featured-product",
+        "name": "Featured Product Hero",
+        "description": "Large product showcase with details and CTA",
+        "category": "ecommerce",
+        "strings": [
+          {"slug": "product/label", "description": "Product label/badge", "default": "New Arrival"},
+          {"slug": "product/name", "description": "Product name", "default": "Premium Wireless Headphones"},
+          {"slug": "product/description", "description": "Product description", "default": "Experience crystal-clear audio with our flagship wireless headphones. 40-hour battery life, active noise cancellation, and premium comfort."},
+          {"slug": "product/price", "description": "Product price", "default": "$299"},
+          {"slug": "product/button", "description": "Add to cart button", "default": "Add to Cart"}
+        ],
+        "images": [
+          {"slug": "product/featured-image", "description": "Main product image", "recommended_size": "800x800"}
+        ]
+      },
+      {
+        "slug": "ecommerce/product-grid-4",
+        "name": "4-Column Product Grid",
+        "description": "Grid of 4 products with images, names, and prices",
+        "category": "ecommerce",
+        "strings": [
+          {"slug": "products/section-title", "description": "Section title", "default": "Best Sellers"},
+          {"slug": "products/product-1-name", "description": "Product 1 name", "default": "Classic Watch"},
+          {"slug": "products/product-1-price", "description": "Product 1 price", "default": "$199"},
+          {"slug": "products/product-2-name", "description": "Product 2 name", "default": "Leather Bag"},
+          {"slug": "products/product-2-price", "description": "Product 2 price", "default": "$149"},
+          {"slug": "products/product-3-name", "description": "Product 3 name", "default": "Sunglasses"},
+          {"slug": "products/product-3-price", "description": "Product 3 price", "default": "$89"},
+          {"slug": "products/product-4-name", "description": "Product 4 name", "default": "Sneakers"},
+          {"slug": "products/product-4-price", "description": "Product 4 price", "default": "$129"}
+        ],
+        "images": [
+          {"slug": "products/product-1-image", "description": "Product 1 image", "recommended_size": "400x400"},
+          {"slug": "products/product-2-image", "description": "Product 2 image", "recommended_size": "400x400"},
+          {"slug": "products/product-3-image", "description": "Product 3 image", "recommended_size": "400x400"},
+          {"slug": "products/product-4-image", "description": "Product 4 image", "recommended_size": "400x400"}
+        ]
+      },
+      {
+        "slug": "ecommerce/category-showcase",
+        "name": "Category Showcase",
+        "description": "3 category cards with images and links",
+        "category": "ecommerce",
+        "strings": [
+          {"slug": "categories/section-title", "description": "Section title", "default": "Shop by Category"},
+          {"slug": "categories/cat-1-name", "description": "Category 1 name", "default": "Women's"},
+          {"slug": "categories/cat-1-count", "description": "Category 1 item count", "default": "124 products"},
+          {"slug": "categories/cat-2-name", "description": "Category 2 name", "default": "Men's"},
+          {"slug": "categories/cat-2-count", "description": "Category 2 item count", "default": "98 products"},
+          {"slug": "categories/cat-3-name", "description": "Category 3 name", "default": "Accessories"},
+          {"slug": "categories/cat-3-count", "description": "Category 3 item count", "default": "67 products"}
+        ],
+        "images": [
+          {"slug": "categories/cat-1-image", "description": "Category 1 image", "recommended_size": "600x800"},
+          {"slug": "categories/cat-2-image", "description": "Category 2 image", "recommended_size": "600x800"},
+          {"slug": "categories/cat-3-image", "description": "Category 3 image", "recommended_size": "600x800"}
+        ]
+      }
+    ],
+
+    "footers": [
+      {
+        "slug": "footers/restaurant",
+        "name": "Restaurant Footer",
+        "description": "Footer with hours, contact, social links, and PressPilot credit",
+        "category": "footers",
+        "strings": [
+          {"slug": "footer/tagline", "description": "Brief tagline", "default": "Authentic flavors, unforgettable moments"},
+          {"slug": "footer/address", "description": "Address", "default": "123 Culinary Street, Flavor Town"},
+          {"slug": "footer/phone", "description": "Phone", "default": "(555) 123-4567"},
+          {"slug": "footer/email", "description": "Email", "default": "hello@restaurant.com"},
+          {"slug": "footer/hours", "description": "Hours summary", "default": "Open Daily: 11AM - 10PM"}
+        ],
+        "images": [
+          {"slug": "footer/logo", "description": "Footer logo (light version)", "recommended_size": "160x50"}
+        ],
+        "includes_presspilot_credit": true
+      },
+      {
+        "slug": "footers/ecommerce",
+        "name": "E-Commerce Footer",
+        "description": "Multi-column footer with links, newsletter, and payment icons",
+        "category": "footers",
+        "strings": [
+          {"slug": "footer/about-text", "description": "Brief about text", "default": "Quality products, exceptional service, and fast shipping since 2020."},
+          {"slug": "footer/col-1-title", "description": "Column 1 title", "default": "Shop"},
+          {"slug": "footer/col-2-title", "description": "Column 2 title", "default": "Support"},
+          {"slug": "footer/col-3-title", "description": "Column 3 title", "default": "Company"},
+          {"slug": "footer/newsletter-title", "description": "Newsletter title", "default": "Join Our Newsletter"},
+          {"slug": "footer/newsletter-desc", "description": "Newsletter description", "default": "Get 10% off your first order"}
+        ],
+        "images": [
+          {"slug": "footer/logo", "description": "Footer logo", "recommended_size": "160x50"}
+        ],
+        "includes_presspilot_credit": true
+      },
+      {
+        "slug": "footers/minimal",
+        "name": "Minimal Footer",
+        "description": "Simple footer with copyright and social links",
+        "category": "footers",
+        "strings": [
+          {"slug": "footer/tagline", "description": "Brief tagline or motto", "default": "Crafted with care"}
+        ],
+        "images": [],
+        "includes_presspilot_credit": true
+      }
+    ]
+  },
+
+  "ai_instructions": {
+    "content_generation": {
+      "guidelines": [
+        "Generate content that matches the business type and tone",
+        "Keep titles concise (4-8 words for headlines)",
+        "Make descriptions specific to the business, not generic",
+        "Use action-oriented language for buttons",
+        "Ensure menu prices are realistic for the business type",
+        "Generate 3-5 menu items per category for restaurants"
+      ],
+      "tone_options": ["professional", "casual", "luxurious", "friendly", "playful"],
+      "language_support": ["en", "es", "fr", "it", "ar"]
+    },
+    "pattern_selection": {
+      "guidelines": [
+        "Choose patterns that match the business type",
+        "Ensure visual balance - alternate between content-heavy and visual sections",
+        "Always include a header, hero, and footer at minimum",
+        "Restaurant sites MUST include menu and hours sections",
+        "E-commerce sites MUST include product showcase sections"
+      ]
+    },
+    "output_format": {
+      "description": "AI should output JSON matching this structure",
+      "example": {
+        "selected_patterns": ["headers/centered-logo", "heroes/cover-cta", "restaurant/menu-categories", "footers/restaurant"],
+        "strings": {
+          "hero/title": "Welcome to Bella Italia",
+          "hero/subtitle": "Authentic Italian cuisine in the heart of downtown",
+          "menu/category-1-name": "Antipasti"
+        },
+        "images": {
+          "hero/background": "https://images.pexels.com/photos/123456/pexels-photo-123456.jpeg",
+          "chef/photo": "https://images.pexels.com/photos/789012/pexels-photo-789012.jpeg"
+        },
+        "menu_items": [
+          {"category": "antipasti", "name": "Bruschetta Classica", "description": "Grilled bread with fresh tomatoes", "price": "$12"}
+        ],
+        "brand_colors": {
+          "primary": "#1e40af",
+          "secondary": "#64748b", 
+          "accent": "#f59e0b"
+        },
+        "business": {
+          "name": "Bella Italia",
+          "tagline": "Authentic Italian Since 1985",
+          "phone": "(555) 123-4567",
+          "address": "123 Main St, New York, NY 10001"
+        }
+      }
+    }
+  }
+}

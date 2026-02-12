@@ -1,0 +1,37 @@
+/*
+Theme Name: PressPilot Starter
+Theme URI: https://presspilot.io
+Author: PressPilot
+Author URI: https://presspilot.io
+Description: Pattern-based FSE starter theme for PressPilot AI theme generation. Uses QuickWP architecture - AI generates content JSON, pre-validated patterns are assembled. NEVER generates raw block markup.
+Requires at least: 6.4
+Tested up to: 6.7
+Requires PHP: 7.4
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: presspilot
+Tags: full-site-editing, block-themes, block-patterns, one-column, wide-blocks, editor-style
+
+PressPilot Starter Theme
+========================
+This is the base theme for PressPilot's AI theme generation system.
+
+Architecture:
+- Patterns use placeholder functions: presspilot_string(), presspilot_image()
+- AI generates JSON with content, never raw block markup
+- Patterns are pre-validated WordPress FSE blocks
+- Zero "Attempt Recovery" errors by design
+
+Pattern Categories:
+- Headers: centered-logo, split-nav, ecommerce-cart
+- Heroes: cover-cta, split-image, minimal-text
+- Features: icon-grid-3, icon-grid-6
+- Testimonials: grid-3, slider
+- CTA: banner-centered, newsletter
+- Restaurant: menu-categories, chef-highlight, hours-location
+- E-Commerce: featured-product, product-grid, category-showcase
+- Footers: restaurant, ecommerce, minimal
+
+Learn more: https://presspilot.io/docs
+*/

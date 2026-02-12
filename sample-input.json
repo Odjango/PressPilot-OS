@@ -1,0 +1,125 @@
+{
+  "theme_slug": "coastal-cafe-theme",
+  
+  "business": {
+    "name": "Coastal Cafe",
+    "type": "restaurant",
+    "description": "Beachfront dining with fresh seafood and stunning ocean views",
+    "tagline": "Where the sea meets your plate"
+  },
+  
+  "brand": {
+    "primary_color": "#2E5A6B",
+    "secondary_color": "#F4A261",
+    "background_color": "#FFFFFF",
+    "text_color": "#1E1E1E",
+    "accent_color": "#E9C46A",
+    "heading_font": "'Playfair Display', serif",
+    "body_font": "'Open Sans', sans-serif",
+    "logo_url": "https://example.com/uploads/coastal-cafe-logo.png"
+  },
+  
+  "content": {
+    "header": {
+      "style": "default",
+      "show_logo": true,
+      "navigation": [
+        {"label": "Home", "url": "/"},
+        {"label": "Menu", "url": "/menu"},
+        {"label": "About", "url": "/about"},
+        {"label": "Reservations", "url": "/reservations"},
+        {"label": "Contact", "url": "/contact"}
+      ]
+    },
+    
+    "hero": {
+      "headline": "Taste the Ocean Breeze",
+      "subheadline": "Fresh seafood, stunning views, and unforgettable moments at Coastal Cafe",
+      "cta_text": "View Our Menu",
+      "cta_link": "/menu",
+      "background_image": "https://example.com/uploads/hero-ocean.jpg"
+    },
+    
+    "sections": [
+      {
+        "type": "features",
+        "title": "Why Choose Coastal Cafe",
+        "items": [
+          {
+            "icon": "🦐",
+            "title": "Fresh Daily Catch",
+            "description": "Our seafood arrives fresh from local fishermen every morning"
+          },
+          {
+            "icon": "🌅",
+            "title": "Ocean Views",
+            "description": "Dine with panoramic views of the Pacific coastline"
+          },
+          {
+            "icon": "👨‍🍳",
+            "title": "Expert Chefs",
+            "description": "Award-winning culinary team crafting memorable dishes"
+          },
+          {
+            "icon": "🍷",
+            "title": "Fine Wines",
+            "description": "Curated selection of wines to complement your meal"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "title": "Our Story",
+        "content": "Founded in 2010 by Chef Maria Santos, Coastal Cafe began as a small beachside shack serving the freshest catches of the day. Over the years, we've grown into a beloved destination for seafood lovers from around the world.\n\nOur commitment to sustainability means we work exclusively with local fishermen who practice responsible fishing. Every dish tells a story of the sea, prepared with passion and served with love."
+      },
+      {
+        "type": "testimonials",
+        "title": "What Our Guests Say",
+        "items": [
+          {
+            "quote": "The best seafood I've ever had. The ocean view made it even more magical.",
+            "author": "Sarah M., Food Blogger"
+          },
+          {
+            "quote": "A hidden gem! The lobster bisque is absolutely divine.",
+            "author": "James T., Local Resident"
+          },
+          {
+            "quote": "Perfect spot for special occasions. The service was impeccable.",
+            "author": "Lisa K., Anniversary Dinner"
+          }
+        ]
+      },
+      {
+        "type": "cta",
+        "headline": "Ready for a Culinary Journey?",
+        "description": "Reserve your table today and experience the finest coastal dining",
+        "button_text": "Make a Reservation",
+        "button_url": "/reservations"
+      }
+    ],
+    
+    "footer": {
+      "style": "presspilot-branded",
+      "show_social": true,
+      "copyright": "© 2025 Coastal Cafe. All rights reserved.",
+      "columns": [
+        {
+          "title": "Contact",
+          "content": "123 Ocean Drive\nSeaside, CA 93955\n(555) 123-4567"
+        },
+        {
+          "title": "Hours",
+          "content": "Mon-Thu: 11am - 9pm\nFri-Sat: 11am - 11pm\nSunday: 10am - 8pm"
+        }
+      ]
+    }
+  },
+  
+  "settings": {
+    "generate_pages": true,
+    "include_woocommerce": false,
+    "multilingual": false,
+    "seo_optimized": true
+  }
+}

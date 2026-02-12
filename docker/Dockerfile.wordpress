@@ -1,0 +1,55 @@
+# PressPilot WordPress Generation Environment
+# Based on official WordPress image with WP-CLI and optimizations
+
+FROM wordpress:6.7-php8.2-apache
+
+LABEL maintainer="PressPilot"
+LABEL description="Ephemeral WordPress environment for theme generation"
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    less \
+    curl \
+    zip \
+    unzip \
+    mariadb-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install WP-CLI
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/local/bin/wp
+
+# Create WP-CLI config
+RUN mkdir -p /var/www/.wp-cli && \
+    echo "path: /var/www/html" > /var/www/.wp-cli/config.yml && \
+    chown -R www-data:www-data /var/www/.wp-cli
+
+# PHP optimizations for theme generation
+RUN { \
+    echo 'memory_limit = 256M'; \
+    echo 'max_execution_time = 120'; \
+    echo 'upload_max_filesize = 64M'; \
+    echo 'post_max_size = 64M'; \
+    } > /usr/local/etc/php/conf.d/presspilot-optimizations.ini
+
+# Apache optimizations
+RUN a2enmod headers expires
+
+# Create directories for generated content
+RUN mkdir -p /var/www/html/wp-content/themes/generated \
+    && mkdir -p /var/www/html/wp-content/uploads/presspilot \
+    && chown -R www-data:www-data /var/www/html/wp-content
+
+# Copy startup script
+COPY scripts/docker-entrypoint-presspilot.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint-presspilot.sh
+
+# Health check endpoint will be provided by Factory Plugin
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost/wp-json/presspilot/v1/status || exit 1
+
+EXPOSE 80
+
+ENTRYPOINT ["docker-entrypoint-presspilot.sh"]
+CMD ["apache2-foreground"]

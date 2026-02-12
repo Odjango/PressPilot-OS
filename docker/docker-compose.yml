@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # MySQL Database
+  # ============================================
+  mysql:
+    image: mysql:8.0
+    container_name: presspilot-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-presspilot_root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-wordpress}
+      MYSQL_USER: ${MYSQL_USER:-wordpress}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wordpress}
+    volumes:
+      # Ephemeral by default - no persistent volume
+      # Uncomment for development persistence:
+      # - mysql_data:/var/lib/mysql
+      - ./scripts/mysql-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-presspilot_root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - presspilot-network
+
+  # ============================================
+  # WordPress with Factory Plugin
+  # ============================================
+  wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile.wordpress
+    container_name: presspilot-wordpress
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:-wordpress}
+      WORDPRESS_DB_USER: ${MYSQL_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:-wordpress}
+      WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-false}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_AUTO_UPDATE_CORE', false);
+        define('DISALLOW_FILE_EDIT', true);
+        define('WP_MEMORY_LIMIT', '256M');
+    ports:
+      - "${WP_PORT:-8080}:80"
+    volumes:
+      # Factory Plugin - mounted for development
+      - ../factory-plugin-v2:/var/www/html/wp-content/plugins/presspilot-factory
+      # Generated themes output
+      - ./generated-themes:/var/www/html/wp-content/themes/generated
+      # Uploads (logos, images)
+      - ./uploads:/var/www/html/wp-content/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/wp-json/presspilot/v1/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - presspilot-network
+
+  # ============================================
+  # WP-CLI for management tasks
+  # ============================================
+  wpcli:
+    image: wordpress:cli
+    container_name: presspilot-wpcli
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:-wordpress}
+      WORDPRESS_DB_USER: ${MYSQL_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:-wordpress}
+    volumes:
+      - wordpress_data:/var/www/html
+      - ../factory-plugin-v2:/var/www/html/wp-content/plugins/presspilot-factory
+    entrypoint: ["wp", "--allow-root"]
+    networks:
+      - presspilot-network
+    profiles:
+      - tools
+
+networks:
+  presspilot-network:
+    driver: bridge
+
+# Uncomment for development persistence
+# volumes:
+#   mysql_data:
+#   wordpress_data:
+
+volumes:
+  wordpress_data:

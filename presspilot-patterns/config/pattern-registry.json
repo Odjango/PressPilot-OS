@@ -1,0 +1,489 @@
+{
+  "$schema": "https://presspilot.io/pattern-registry-schema.json",
+  "version": "2.0.0",
+  "description": "PressPilot Pattern Library - Pre-validated WordPress FSE patterns for AI assembly",
+  
+  "categories": {
+    "headers": {
+      "name": "Headers",
+      "description": "Site header patterns with navigation",
+      "required": true,
+      "max": 1
+    },
+    "heroes": {
+      "name": "Hero Sections", 
+      "description": "Primary landing sections that introduce the business",
+      "required": true,
+      "max": 1
+    },
+    "features": {
+      "name": "Features & Services",
+      "description": "Showcase services, features, or key selling points",
+      "required": false,
+      "max": 2
+    },
+    "testimonials": {
+      "name": "Testimonials & Reviews",
+      "description": "Customer testimonials and social proof",
+      "required": false,
+      "max": 1
+    },
+    "cta": {
+      "name": "Call to Action",
+      "description": "Conversion-focused sections",
+      "required": false,
+      "max": 2
+    },
+    "footers": {
+      "name": "Footers",
+      "description": "Site footer with contact info and branding",
+      "required": true,
+      "max": 1
+    },
+    "restaurant": {
+      "name": "Restaurant Specific",
+      "description": "Patterns for restaurants, cafes, and food businesses",
+      "required": false,
+      "business_types": ["restaurant", "cafe", "bakery", "bar", "food_truck"]
+    },
+    "ecommerce": {
+      "name": "E-Commerce",
+      "description": "WooCommerce-compatible product and shop patterns",
+      "required": false,
+      "business_types": ["ecommerce", "retail", "shop"]
+    }
+  },
+
+  "patterns": [
+    {
+      "id": "header-centered",
+      "slug": "presspilot/header-centered",
+      "name": "Centered Header",
+      "category": "headers",
+      "description": "Logo centered above navigation menu. Clean and balanced.",
+      "file": "patterns/headers/header-centered.php",
+      "preview": "previews/header-centered.png",
+      "recommended_for": ["restaurant", "cafe", "boutique", "spa"],
+      "strings": [
+        {"slug": "site-title", "description": "Business name", "max_length": 30}
+      ],
+      "images": [],
+      "navigation": true
+    },
+    {
+      "id": "header-split",
+      "slug": "presspilot/header-split",
+      "name": "Split Header",
+      "category": "headers",
+      "description": "Logo left, navigation right. Professional and modern.",
+      "file": "patterns/headers/header-split.php",
+      "recommended_for": ["business", "agency", "ecommerce", "professional"],
+      "strings": [
+        {"slug": "site-title", "description": "Business name", "max_length": 30}
+      ],
+      "images": [
+        {"slug": "logo", "description": "Business logo", "size": "200x60"}
+      ],
+      "navigation": true
+    },
+    {
+      "id": "header-minimal",
+      "slug": "presspilot/header-minimal",
+      "name": "Minimal Header",
+      "category": "headers", 
+      "description": "Simple text logo with hamburger menu. Mobile-first design.",
+      "file": "patterns/headers/header-minimal.php",
+      "recommended_for": ["portfolio", "blog", "creative"],
+      "strings": [
+        {"slug": "site-title", "description": "Business name", "max_length": 20}
+      ],
+      "images": [],
+      "navigation": true
+    },
+
+    {
+      "id": "hero-cover",
+      "slug": "presspilot/hero-cover",
+      "name": "Cover Hero",
+      "category": "heroes",
+      "description": "Full-width background image with centered text overlay and CTA buttons.",
+      "file": "patterns/heroes/hero-cover.php",
+      "recommended_for": ["restaurant", "hotel", "event", "portfolio"],
+      "strings": [
+        {"slug": "headline", "description": "Main headline (5-8 words)", "max_length": 60},
+        {"slug": "subheadline", "description": "Supporting text (10-20 words)", "max_length": 150},
+        {"slug": "button-primary", "description": "Primary button text", "max_length": 20},
+        {"slug": "button-secondary", "description": "Secondary button text", "max_length": 20}
+      ],
+      "images": [
+        {"slug": "background", "description": "Hero background image", "size": "1920x1080", "category": "business"}
+      ]
+    },
+    {
+      "id": "hero-split",
+      "slug": "presspilot/hero-split",
+      "name": "Split Hero",
+      "category": "heroes",
+      "description": "Two-column layout with text on one side and image on the other.",
+      "file": "patterns/heroes/hero-split.php",
+      "recommended_for": ["saas", "agency", "professional", "consulting"],
+      "strings": [
+        {"slug": "headline", "description": "Main headline", "max_length": 60},
+        {"slug": "subheadline", "description": "Supporting paragraph", "max_length": 200},
+        {"slug": "button-primary", "description": "Primary CTA button", "max_length": 20}
+      ],
+      "images": [
+        {"slug": "hero-image", "description": "Featured image", "size": "800x600"}
+      ]
+    },
+    {
+      "id": "hero-minimal",
+      "slug": "presspilot/hero-minimal",
+      "name": "Minimal Hero",
+      "category": "heroes",
+      "description": "Clean text-focused hero with no background image. Elegant typography.",
+      "file": "patterns/heroes/hero-minimal.php",
+      "recommended_for": ["portfolio", "agency", "creative", "blog"],
+      "strings": [
+        {"slug": "headline", "description": "Bold headline", "max_length": 80},
+        {"slug": "subheadline", "description": "Brief description", "max_length": 120}
+      ],
+      "images": []
+    },
+
+    {
+      "id": "features-grid-icons",
+      "slug": "presspilot/features-grid-icons",
+      "name": "Features Grid with Icons",
+      "category": "features",
+      "description": "3 or 4 column grid with emoji icons, titles, and descriptions.",
+      "file": "patterns/features/features-grid-icons.php",
+      "recommended_for": ["all"],
+      "strings": [
+        {"slug": "section-title", "description": "Section heading", "max_length": 40},
+        {"slug": "feature-1-icon", "description": "Emoji icon for feature 1", "max_length": 2},
+        {"slug": "feature-1-title", "description": "Feature 1 title", "max_length": 30},
+        {"slug": "feature-1-desc", "description": "Feature 1 description", "max_length": 100},
+        {"slug": "feature-2-icon", "description": "Emoji icon for feature 2", "max_length": 2},
+        {"slug": "feature-2-title", "description": "Feature 2 title", "max_length": 30},
+        {"slug": "feature-2-desc", "description": "Feature 2 description", "max_length": 100},
+        {"slug": "feature-3-icon", "description": "Emoji icon for feature 3", "max_length": 2},
+        {"slug": "feature-3-title", "description": "Feature 3 title", "max_length": 30},
+        {"slug": "feature-3-desc", "description": "Feature 3 description", "max_length": 100},
+        {"slug": "feature-4-icon", "description": "Emoji icon for feature 4", "max_length": 2},
+        {"slug": "feature-4-title", "description": "Feature 4 title", "max_length": 30},
+        {"slug": "feature-4-desc", "description": "Feature 4 description", "max_length": 100}
+      ],
+      "images": []
+    },
+    {
+      "id": "features-cards-images",
+      "slug": "presspilot/features-cards-images",
+      "name": "Feature Cards with Images",
+      "category": "features",
+      "description": "3 column cards with images, titles, and descriptions.",
+      "file": "patterns/features/features-cards-images.php",
+      "recommended_for": ["restaurant", "hotel", "spa", "retail"],
+      "strings": [
+        {"slug": "section-title", "description": "Section heading", "max_length": 40},
+        {"slug": "card-1-title", "description": "Card 1 title", "max_length": 30},
+        {"slug": "card-1-desc", "description": "Card 1 description", "max_length": 100},
+        {"slug": "card-2-title", "description": "Card 2 title", "max_length": 30},
+        {"slug": "card-2-desc", "description": "Card 2 description", "max_length": 100},
+        {"slug": "card-3-title", "description": "Card 3 title", "max_length": 30},
+        {"slug": "card-3-desc", "description": "Card 3 description", "max_length": 100}
+      ],
+      "images": [
+        {"slug": "card-1-image", "description": "Card 1 image", "size": "400x300"},
+        {"slug": "card-2-image", "description": "Card 2 image", "size": "400x300"},
+        {"slug": "card-3-image", "description": "Card 3 image", "size": "400x300"}
+      ]
+    },
+
+    {
+      "id": "testimonials-grid",
+      "slug": "presspilot/testimonials-grid",
+      "name": "Testimonials Grid",
+      "category": "testimonials",
+      "description": "3 column grid of customer testimonials with quotes and names.",
+      "file": "patterns/testimonials/testimonials-grid.php",
+      "recommended_for": ["all"],
+      "strings": [
+        {"slug": "section-title", "description": "Section heading", "max_length": 40},
+        {"slug": "testimonial-1-quote", "description": "Customer 1 quote", "max_length": 200},
+        {"slug": "testimonial-1-name", "description": "Customer 1 name", "max_length": 30},
+        {"slug": "testimonial-1-role", "description": "Customer 1 role/title", "max_length": 40},
+        {"slug": "testimonial-2-quote", "description": "Customer 2 quote", "max_length": 200},
+        {"slug": "testimonial-2-name", "description": "Customer 2 name", "max_length": 30},
+        {"slug": "testimonial-2-role", "description": "Customer 2 role/title", "max_length": 40},
+        {"slug": "testimonial-3-quote", "description": "Customer 3 quote", "max_length": 200},
+        {"slug": "testimonial-3-name", "description": "Customer 3 name", "max_length": 30},
+        {"slug": "testimonial-3-role", "description": "Customer 3 role/title", "max_length": 40}
+      ],
+      "images": []
+    },
+
+    {
+      "id": "cta-banner",
+      "slug": "presspilot/cta-banner",
+      "name": "CTA Banner",
+      "category": "cta",
+      "description": "Full-width colored banner with headline and button.",
+      "file": "patterns/cta/cta-banner.php",
+      "recommended_for": ["all"],
+      "strings": [
+        {"slug": "headline", "description": "CTA headline", "max_length": 60},
+        {"slug": "subtext", "description": "Supporting text", "max_length": 100},
+        {"slug": "button-text", "description": "Button text", "max_length": 20}
+      ],
+      "images": []
+    },
+    {
+      "id": "cta-split-image",
+      "slug": "presspilot/cta-split-image",
+      "name": "CTA Split with Image",
+      "category": "cta",
+      "description": "Two-column CTA with image and text/button.",
+      "file": "patterns/cta/cta-split-image.php",
+      "recommended_for": ["restaurant", "hotel", "event"],
+      "strings": [
+        {"slug": "headline", "description": "CTA headline", "max_length": 50},
+        {"slug": "description", "description": "CTA description", "max_length": 150},
+        {"slug": "button-text", "description": "Button text", "max_length": 20}
+      ],
+      "images": [
+        {"slug": "cta-image", "description": "CTA image", "size": "600x400"}
+      ]
+    },
+
+    {
+      "id": "footer-standard",
+      "slug": "presspilot/footer-standard",
+      "name": "Standard Footer",
+      "category": "footers",
+      "description": "Multi-column footer with contact info, hours, and PressPilot credit.",
+      "file": "patterns/footers/footer-standard.php",
+      "recommended_for": ["all"],
+      "strings": [
+        {"slug": "business-name", "description": "Business name", "max_length": 30},
+        {"slug": "tagline", "description": "Short tagline", "max_length": 60},
+        {"slug": "address", "description": "Street address", "max_length": 80},
+        {"slug": "city-state-zip", "description": "City, State ZIP", "max_length": 40},
+        {"slug": "phone", "description": "Phone number", "max_length": 20},
+        {"slug": "email", "description": "Email address", "max_length": 40},
+        {"slug": "hours-weekday", "description": "Weekday hours", "max_length": 30},
+        {"slug": "hours-weekend", "description": "Weekend hours", "max_length": 30}
+      ],
+      "images": []
+    },
+    {
+      "id": "footer-minimal",
+      "slug": "presspilot/footer-minimal",
+      "name": "Minimal Footer",
+      "category": "footers",
+      "description": "Simple centered footer with copyright and PressPilot credit.",
+      "file": "patterns/footers/footer-minimal.php",
+      "recommended_for": ["portfolio", "blog", "creative"],
+      "strings": [
+        {"slug": "business-name", "description": "Business name", "max_length": 30}
+      ],
+      "images": []
+    },
+
+    {
+      "id": "restaurant-menu",
+      "slug": "presspilot/restaurant-menu",
+      "name": "Restaurant Menu",
+      "category": "restaurant",
+      "description": "Food menu with categories, items, descriptions, and prices.",
+      "file": "patterns/restaurant/restaurant-menu.php",
+      "recommended_for": ["restaurant", "cafe", "bar"],
+      "strings": [
+        {"slug": "section-title", "description": "Menu section title (e.g., 'Our Menu')", "max_length": 30},
+        {"slug": "category-1-name", "description": "First category name (e.g., 'Appetizers')", "max_length": 20},
+        {"slug": "item-1-1-name", "description": "Item 1 name", "max_length": 30},
+        {"slug": "item-1-1-desc", "description": "Item 1 description", "max_length": 80},
+        {"slug": "item-1-1-price", "description": "Item 1 price (e.g., '$12')", "max_length": 10},
+        {"slug": "item-1-2-name", "description": "Item 2 name", "max_length": 30},
+        {"slug": "item-1-2-desc", "description": "Item 2 description", "max_length": 80},
+        {"slug": "item-1-2-price", "description": "Item 2 price", "max_length": 10},
+        {"slug": "item-1-3-name", "description": "Item 3 name", "max_length": 30},
+        {"slug": "item-1-3-desc", "description": "Item 3 description", "max_length": 80},
+        {"slug": "item-1-3-price", "description": "Item 3 price", "max_length": 10},
+        {"slug": "category-2-name", "description": "Second category name (e.g., 'Main Courses')", "max_length": 20},
+        {"slug": "item-2-1-name", "description": "Item 1 name", "max_length": 30},
+        {"slug": "item-2-1-desc", "description": "Item 1 description", "max_length": 80},
+        {"slug": "item-2-1-price", "description": "Item 1 price", "max_length": 10},
+        {"slug": "item-2-2-name", "description": "Item 2 name", "max_length": 30},
+        {"slug": "item-2-2-desc", "description": "Item 2 description", "max_length": 80},
+        {"slug": "item-2-2-price", "description": "Item 2 price", "max_length": 10},
+        {"slug": "item-2-3-name", "description": "Item 3 name", "max_length": 30},
+        {"slug": "item-2-3-desc", "description": "Item 3 description", "max_length": 80},
+        {"slug": "item-2-3-price", "description": "Item 3 price", "max_length": 10}
+      ],
+      "images": []
+    },
+    {
+      "id": "restaurant-about",
+      "slug": "presspilot/restaurant-about",
+      "name": "Restaurant About/Story",
+      "category": "restaurant",
+      "description": "About section with story, chef info, or restaurant history.",
+      "file": "patterns/restaurant/restaurant-about.php",
+      "recommended_for": ["restaurant", "cafe", "bakery"],
+      "strings": [
+        {"slug": "section-title", "description": "Section title (e.g., 'Our Story')", "max_length": 30},
+        {"slug": "paragraph-1", "description": "First paragraph of story", "max_length": 300},
+        {"slug": "paragraph-2", "description": "Second paragraph of story", "max_length": 300}
+      ],
+      "images": [
+        {"slug": "about-image", "description": "Restaurant or chef image", "size": "600x400"}
+      ]
+    },
+    {
+      "id": "restaurant-reservation",
+      "slug": "presspilot/restaurant-reservation",
+      "name": "Reservation CTA",
+      "category": "restaurant",
+      "description": "Call-to-action section for table reservations.",
+      "file": "patterns/restaurant/restaurant-reservation.php",
+      "recommended_for": ["restaurant", "bar"],
+      "strings": [
+        {"slug": "headline", "description": "Reservation headline", "max_length": 40},
+        {"slug": "subtext", "description": "Supporting text", "max_length": 100},
+        {"slug": "button-text", "description": "Button text (e.g., 'Reserve a Table')", "max_length": 25},
+        {"slug": "phone", "description": "Reservation phone number", "max_length": 20}
+      ],
+      "images": []
+    },
+
+    {
+      "id": "ecommerce-product-grid",
+      "slug": "presspilot/ecommerce-product-grid",
+      "name": "Product Grid",
+      "category": "ecommerce",
+      "description": "WooCommerce-compatible product grid showcasing featured products.",
+      "file": "patterns/ecommerce/product-grid.php",
+      "recommended_for": ["ecommerce", "retail", "shop"],
+      "strings": [
+        {"slug": "section-title", "description": "Section title (e.g., 'Featured Products')", "max_length": 30}
+      ],
+      "images": [],
+      "woocommerce": true,
+      "blocks": ["woocommerce/product-collection"]
+    },
+    {
+      "id": "ecommerce-featured-product",
+      "slug": "presspilot/ecommerce-featured-product",
+      "name": "Featured Product Hero",
+      "category": "ecommerce",
+      "description": "Hero section highlighting a single featured product.",
+      "file": "patterns/ecommerce/featured-product.php",
+      "recommended_for": ["ecommerce", "retail"],
+      "strings": [
+        {"slug": "headline", "description": "Product headline", "max_length": 40},
+        {"slug": "description", "description": "Product description", "max_length": 150},
+        {"slug": "button-text", "description": "CTA button text", "max_length": 20}
+      ],
+      "images": [
+        {"slug": "product-image", "description": "Featured product image", "size": "600x600"}
+      ],
+      "woocommerce": true
+    },
+    {
+      "id": "ecommerce-categories",
+      "slug": "presspilot/ecommerce-categories",
+      "name": "Product Categories",
+      "category": "ecommerce",
+      "description": "Grid of product category cards with images.",
+      "file": "patterns/ecommerce/categories.php",
+      "recommended_for": ["ecommerce", "retail"],
+      "strings": [
+        {"slug": "section-title", "description": "Section title", "max_length": 30},
+        {"slug": "category-1-name", "description": "Category 1 name", "max_length": 20},
+        {"slug": "category-2-name", "description": "Category 2 name", "max_length": 20},
+        {"slug": "category-3-name", "description": "Category 3 name", "max_length": 20},
+        {"slug": "category-4-name", "description": "Category 4 name", "max_length": 20}
+      ],
+      "images": [
+        {"slug": "category-1-image", "description": "Category 1 image", "size": "400x400"},
+        {"slug": "category-2-image", "description": "Category 2 image", "size": "400x400"},
+        {"slug": "category-3-image", "description": "Category 3 image", "size": "400x400"},
+        {"slug": "category-4-image", "description": "Category 4 image", "size": "400x400"}
+      ],
+      "woocommerce": true
+    },
+    {
+      "id": "ecommerce-sale-banner",
+      "slug": "presspilot/ecommerce-sale-banner",
+      "name": "Sale Banner",
+      "category": "ecommerce",
+      "description": "Promotional banner for sales and special offers.",
+      "file": "patterns/ecommerce/sale-banner.php",
+      "recommended_for": ["ecommerce", "retail"],
+      "strings": [
+        {"slug": "headline", "description": "Sale headline (e.g., 'Summer Sale')", "max_length": 30},
+        {"slug": "discount", "description": "Discount amount (e.g., 'Up to 50% Off')", "max_length": 20},
+        {"slug": "description", "description": "Sale description", "max_length": 100},
+        {"slug": "button-text", "description": "CTA button text", "max_length": 20}
+      ],
+      "images": [
+        {"slug": "banner-image", "description": "Banner background image", "size": "1920x600"}
+      ]
+    }
+  ],
+
+  "templates": {
+    "restaurant": {
+      "name": "Restaurant Template",
+      "description": "Complete restaurant website with menu, about, and reservations",
+      "patterns": [
+        "header-centered",
+        "hero-cover",
+        "features-grid-icons",
+        "restaurant-menu",
+        "restaurant-about",
+        "testimonials-grid",
+        "restaurant-reservation",
+        "footer-standard"
+      ]
+    },
+    "business": {
+      "name": "Business Template",
+      "description": "Professional business website with services and contact",
+      "patterns": [
+        "header-split",
+        "hero-split",
+        "features-grid-icons",
+        "testimonials-grid",
+        "cta-banner",
+        "footer-standard"
+      ]
+    },
+    "ecommerce": {
+      "name": "E-Commerce Template",
+      "description": "WooCommerce-ready online store",
+      "patterns": [
+        "header-split",
+        "hero-cover",
+        "ecommerce-categories",
+        "ecommerce-product-grid",
+        "ecommerce-sale-banner",
+        "testimonials-grid",
+        "footer-standard"
+      ]
+    },
+    "portfolio": {
+      "name": "Portfolio Template",
+      "description": "Minimal portfolio for creatives",
+      "patterns": [
+        "header-minimal",
+        "hero-minimal",
+        "features-cards-images",
+        "testimonials-grid",
+        "cta-banner",
+        "footer-minimal"
+      ]
+    }
+  }
+}
