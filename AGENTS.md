@@ -71,3 +71,46 @@ Be pragmatic. Be reliable. Self-anneal.
 
 **4. Specialist Logic (The Skills Folder)**
 Always check the `skills/` folder for specific architecture instructions before generating code.
+
+
+---
+
+# PressPilot-Specific Instructions
+
+## Project Type
+WordPress FSE Theme Generator (Node.js + TypeScript)
+
+## Key Directories
+- `src/generator/` — Core generation engine
+- `src/generator/patterns/sections/` — WordPress block patterns
+- `src/generator/recipes/` — Page composition recipes (by vertical)
+- `specs/` — Project specifications and plans
+- `tests/security/` — Security test suite
+
+## Supported Verticals
+- Restaurant (complete)
+- SaaS (complete)
+- Portfolio (in progress)
+- Local Service (planned)
+- Ecommerce (planned)
+
+## Brand Modes
+All patterns must work with: `modern`, `playful`, `bold`, `minimal`
+
+## Validation Commands
+```bash
+npx tsc --noEmit          # Type check
+npx tsx bin/generate.ts   # Run generator (JSON stdin)
+npm run security:test     # Security tests
+```
+
+## WordPress FSE Rules
+- See `/specs/wp-fse-rules.md` for block markup requirements
+- All patterns must output valid `<!-- wp:block-name -->` markup
+- theme.json must be version 2+
+
+## Current Branch
+`001-generator-2-baseline`
+
+## Skills Folder
+Check `skills/` for architecture patterns before generating code.

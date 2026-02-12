@@ -47,6 +47,17 @@ export { getSaasCTABannerSectionWithContext } from './saas-cta-banner';
 export { getSaasFAQSectionWithContext } from './saas-faq';
 export { getSaasLogosSectionWithContext } from './saas-logos';
 
+// Portfolio/Talent sections
+export { getPortfolioHeroSectionWithContext } from './portfolio-hero';
+export { getPortfolioAboutSectionWithContext } from './portfolio-about';
+export { getPortfolioGallerySectionWithContext } from './portfolio-gallery';
+export { getPortfolioProjectCardSectionWithContext } from './portfolio-project-card';
+export { getPortfolioSkillsSectionWithContext } from './portfolio-skills';
+export { getPortfolioExperienceSectionWithContext } from './portfolio-experience';
+export { getPortfolioTestimonialsSectionWithContext } from './portfolio-testimonials';
+export { getPortfolioContactSectionWithContext } from './portfolio-contact';
+export { getPortfolioCTASectionWithContext } from './portfolio-cta';
+
 // Restaurant style tokens (for playful vs modern differentiation)
 export { getRestaurantStyleTokens, RESTAURANT_STYLE_TOKENS } from './restaurantThemeTokens';
 export type { RestaurantStyle, RestaurantStyleTokens } from './restaurantThemeTokens';

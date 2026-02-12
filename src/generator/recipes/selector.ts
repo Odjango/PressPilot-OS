@@ -27,6 +27,10 @@ import {
     SAAS_RECIPES,
     DEFAULT_SAAS_RECIPE
 } from './saas';
+import {
+    PORTFOLIO_RECIPES,
+    DEFAULT_PORTFOLIO_RECIPE
+} from './portfolio';
 
 // =============================================================================
 // Recipe Registry
@@ -42,6 +46,8 @@ const RECIPE_REGISTRY: Record<Vertical, LayoutRecipe[]> = {
     restaurant: RESTAURANT_RECIPES,
     ecommerce: ECOMMERCE_RECIPES,  // Phase 4
     saas: SAAS_RECIPES,
+    portfolio: PORTFOLIO_RECIPES,
+    talent: PORTFOLIO_RECIPES,
     service: []     // Phase 5+
 };
 
@@ -149,6 +155,10 @@ export class RecipeSelector {
 
             case 'saas':
                 return DEFAULT_SAAS_RECIPE;
+
+            case 'portfolio':
+            case 'talent':
+                return DEFAULT_PORTFOLIO_RECIPE;
 
             default:
                 // For unimplemented verticals, return a minimal stub

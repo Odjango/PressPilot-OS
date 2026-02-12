@@ -32,6 +32,7 @@ import { sanitizePath, sanitizeUserInput } from './utils/sanitize';
 const FORCE_HEAVY_FOR_RESTAURANTS = true;
 const FORCE_HEAVY_FOR_ECOMMERCE = true;
 const FORCE_HEAVY_FOR_SAAS = true;
+const FORCE_HEAVY_FOR_PORTFOLIO = true;
 
 /**
  * PressPilot Generator Orchestrator
@@ -92,6 +93,7 @@ export async function generateTheme(options: GeneratorOptions = {}) {
     const industry = userData.industry || 'general';
     const isRestaurant = ['restaurant', 'cafe', 'restaurant_cafe'].includes(industry);
     const isSaas = ['saas', 'software', 'startup'].includes(industry);
+    const isPortfolio = ['portfolio', 'talent', 'creative', 'agency'].includes(industry);
     let mode: GeneratorMode = options.mode || 'standard';
     if (FORCE_HEAVY_FOR_RESTAURANTS && isRestaurant) {
         mode = 'heavy';
@@ -102,6 +104,10 @@ export async function generateTheme(options: GeneratorOptions = {}) {
     if (FORCE_HEAVY_FOR_SAAS && isSaas) {
         mode = 'heavy';
         console.log('[Phase5] SaaS vertical -> forcing Heavy Mode for recipe-driven sections');
+    }
+    if (FORCE_HEAVY_FOR_PORTFOLIO && isPortfolio) {
+        mode = 'heavy';
+        console.log('[Phase6] Portfolio/Talent vertical -> forcing Heavy Mode for recipe-driven sections');
     }
     const themeName = styleJson.metadata.themeName;
     const rawName = options.slug || themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');

@@ -51,6 +51,15 @@ import {
     getSaasCTABannerSectionWithContext,
     getSaasFAQSectionWithContext,
     getSaasLogosSectionWithContext,
+    getPortfolioHeroSectionWithContext,
+    getPortfolioAboutSectionWithContext,
+    getPortfolioGallerySectionWithContext,
+    getPortfolioProjectCardSectionWithContext,
+    getPortfolioSkillsSectionWithContext,
+    getPortfolioExperienceSectionWithContext,
+    getPortfolioTestimonialsSectionWithContext,
+    getPortfolioContactSectionWithContext,
+    getPortfolioCTASectionWithContext,
     // Phase 4 Ecommerce sections
     getEcommerceHeroSectionWithContext,
     getEcommerceCategoryGridSectionWithContext,
@@ -126,6 +135,16 @@ const SECTION_RENDERERS: Record<SectionType, SectionRendererFn> = {
     'saas-cta-banner': () => '',
     'saas-faq': () => '',
     'saas-logos': () => '',
+    // Portfolio sections
+    'portfolio-hero': () => '',
+    'portfolio-about': () => '',
+    'portfolio-gallery': () => '',
+    'portfolio-project-card': () => '',
+    'portfolio-skills': () => '',
+    'portfolio-experience': () => '',
+    'portfolio-testimonials': () => '',
+    'portfolio-contact': () => '',
+    'portfolio-cta': () => '',
 
     // Ecommerce sections - Phase 2 legacy stubs (use V2 renderers via renderSectionsWithRecipe)
     'ecommerce-hero': () => '',
@@ -224,6 +243,34 @@ const SECTION_RENDERERS_V2: Record<SectionType, SectionRendererFnV2> = {
     },
     'saas-logos': (ctx) => {
         return getSaasLogosSectionWithContext(ctx);
+    },
+    // Portfolio sections
+    'portfolio-hero': (ctx) => {
+        return getPortfolioHeroSectionWithContext(ctx);
+    },
+    'portfolio-about': (ctx) => {
+        return getPortfolioAboutSectionWithContext(ctx);
+    },
+    'portfolio-gallery': (ctx) => {
+        return getPortfolioGallerySectionWithContext(ctx);
+    },
+    'portfolio-project-card': (ctx) => {
+        return getPortfolioProjectCardSectionWithContext(ctx);
+    },
+    'portfolio-skills': (ctx) => {
+        return getPortfolioSkillsSectionWithContext(ctx);
+    },
+    'portfolio-experience': (ctx) => {
+        return getPortfolioExperienceSectionWithContext(ctx);
+    },
+    'portfolio-testimonials': (ctx) => {
+        return getPortfolioTestimonialsSectionWithContext(ctx);
+    },
+    'portfolio-contact': (ctx) => {
+        return getPortfolioContactSectionWithContext(ctx);
+    },
+    'portfolio-cta': (ctx) => {
+        return getPortfolioCTASectionWithContext(ctx);
     },
 
     // Ecommerce sections (Phase 4)

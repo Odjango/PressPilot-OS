@@ -64,9 +64,9 @@ export class ContentBuilder {
             if (!pages.find(p => p.slug === 'menu')) {
                 pages.push({ title: 'Menu', slug: 'menu', template: 'universal-menu' });
             }
-        } else if (vertical === 'portfolio' || vertical === 'agency' || vertical === 'creative') {
+        } else if (vertical === 'portfolio' || vertical === 'talent' || vertical === 'agency' || vertical === 'creative') {
             if (!pages.find(p => p.slug === 'gallery')) {
-                pages.push({ title: 'Gallery', slug: 'gallery', template: 'universal-about' });
+                pages.push({ title: 'Gallery', slug: 'gallery', template: 'universal-portfolio' });
             }
         }
 

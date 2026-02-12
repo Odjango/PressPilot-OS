@@ -48,6 +48,16 @@ export type SectionType =
     | 'saas-cta-banner'
     | 'saas-faq'
     | 'saas-logos'
+    // Portfolio sections
+    | 'portfolio-hero'
+    | 'portfolio-about'
+    | 'portfolio-gallery'
+    | 'portfolio-project-card'
+    | 'portfolio-skills'
+    | 'portfolio-experience'
+    | 'portfolio-testimonials'
+    | 'portfolio-contact'
+    | 'portfolio-cta'
     // Ecommerce sections (Phase 4)
     | 'ecommerce-hero'
     | 'category-grid'

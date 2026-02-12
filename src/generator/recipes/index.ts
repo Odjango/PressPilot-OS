@@ -79,6 +79,30 @@ export const RecipeRegistry: Record<string, SiteRecipe> = {
         industry: 'saas',
         description: 'Tech startup landing',
         pages: []
+    },
+    portfolio: {
+        industry: 'portfolio',
+        description: 'Portfolio/talent site with gallery page',
+        pages: [
+            {
+                title: 'Home',
+                slug: 'home',
+                template: 'universal-home',
+                content: {}
+            },
+            {
+                title: 'Gallery',
+                slug: 'gallery',
+                template: 'universal-portfolio',
+                content: {}
+            },
+            {
+                title: 'Contact',
+                slug: 'contact',
+                template: 'universal-contact',
+                content: {}
+            }
+        ]
     }
 };
 
@@ -127,3 +151,12 @@ export {
     STARTUP_LANDING_RECIPE,
     ENTERPRISE_PRODUCT_RECIPE
 } from './saas';
+
+// Portfolio recipe exports
+export {
+    PORTFOLIO_RECIPES,
+    DEFAULT_PORTFOLIO_RECIPE,
+    CREATIVE_PROFESSIONAL_RECIPE,
+    FREELANCER_RECIPE,
+    TALENT_AGENCY_RECIPE
+} from './portfolio';

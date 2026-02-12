@@ -71,6 +71,10 @@ export const getUniversalHomeContent = (
     const isSaas = industry === 'saas' ||
                    industry === 'software' ||
                    industry === 'startup';
+    const isPortfolio = industry === 'portfolio' ||
+                        industry === 'talent' ||
+                        industry === 'creative' ||
+                        industry === 'agency';
 
     if (isEcommerce) {
         // === RECIPE-DRIVEN FLOW (Generator 2.0 Phase 4) ===
@@ -129,6 +133,26 @@ export const getUniversalHomeContent = (
     if (isSaas) {
         const recipeContext: RecipeContext = {
             vertical: 'saas',
+            brandMode: (brandMode || brandStyle || 'modern') as BrandMode,
+            businessType: normalizedBusinessType
+        };
+
+        const recipe = RecipeSelector.selectRecipe(recipeContext);
+        const renderContext: RenderContext = {
+            content,
+            heroLayout,
+            industry,
+            brandStyle,
+            brandMode,
+            businessType: normalizedBusinessType
+        };
+
+        return SectionRenderer.renderSectionsWithRecipe(recipe, renderContext);
+    }
+
+    if (isPortfolio) {
+        const recipeContext: RecipeContext = {
+            vertical: 'portfolio',
             brandMode: (brandMode || brandStyle || 'modern') as BrandMode,
             businessType: normalizedBusinessType
         };
