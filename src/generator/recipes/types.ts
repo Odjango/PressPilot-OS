@@ -39,6 +39,15 @@ export type SectionType =
     | 'testimonials'
     | 'final-cta'
     | 'footer'
+    // SaaS sections (Phase 5)
+    | 'saas-hero'
+    | 'saas-features-grid'
+    | 'saas-pricing-table'
+    | 'saas-testimonials'
+    | 'saas-how-it-works'
+    | 'saas-cta-banner'
+    | 'saas-faq'
+    | 'saas-logos'
     // Ecommerce sections (Phase 4)
     | 'ecommerce-hero'
     | 'category-grid'

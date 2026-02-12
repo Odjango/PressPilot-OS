@@ -43,6 +43,14 @@ import {
     getRestaurantPromoBandSectionWithContext,
     getSocialProofSectionWithContext,
     getFinalCTASectionWithContext,
+    getSaasHeroSectionWithContext,
+    getSaasFeaturesGridSectionWithContext,
+    getSaasPricingTableSectionWithContext,
+    getSaasTestimonialsSectionWithContext,
+    getSaasHowItWorksSectionWithContext,
+    getSaasCTABannerSectionWithContext,
+    getSaasFAQSectionWithContext,
+    getSaasLogosSectionWithContext,
     // Phase 4 Ecommerce sections
     getEcommerceHeroSectionWithContext,
     getEcommerceCategoryGridSectionWithContext,
@@ -109,6 +117,15 @@ const SECTION_RENDERERS: Record<SectionType, SectionRendererFn> = {
         // See PatternInjector.injectGlobalParts()
         return '';
     },
+    // SaaS sections
+    'saas-hero': () => '',
+    'saas-features-grid': () => '',
+    'saas-pricing-table': () => '',
+    'saas-testimonials': () => '',
+    'saas-how-it-works': () => '',
+    'saas-cta-banner': () => '',
+    'saas-faq': () => '',
+    'saas-logos': () => '',
 
     // Ecommerce sections - Phase 2 legacy stubs (use V2 renderers via renderSectionsWithRecipe)
     'ecommerce-hero': () => '',
@@ -182,6 +199,31 @@ const SECTION_RENDERERS_V2: Record<SectionType, SectionRendererFnV2> = {
     'footer': (_ctx) => {
         // Footer is handled separately by template-part injection
         return '';
+    },
+    // SaaS sections (Phase 5)
+    'saas-hero': (ctx) => {
+        return getSaasHeroSectionWithContext(ctx);
+    },
+    'saas-features-grid': (ctx) => {
+        return getSaasFeaturesGridSectionWithContext(ctx);
+    },
+    'saas-pricing-table': (ctx) => {
+        return getSaasPricingTableSectionWithContext(ctx);
+    },
+    'saas-testimonials': (ctx) => {
+        return getSaasTestimonialsSectionWithContext(ctx);
+    },
+    'saas-how-it-works': (ctx) => {
+        return getSaasHowItWorksSectionWithContext(ctx);
+    },
+    'saas-cta-banner': (ctx) => {
+        return getSaasCTABannerSectionWithContext(ctx);
+    },
+    'saas-faq': (ctx) => {
+        return getSaasFAQSectionWithContext(ctx);
+    },
+    'saas-logos': (ctx) => {
+        return getSaasLogosSectionWithContext(ctx);
     },
 
     // Ecommerce sections (Phase 4)

@@ -31,6 +31,7 @@ import { sanitizePath, sanitizeUserInput } from './utils/sanitize';
  */
 const FORCE_HEAVY_FOR_RESTAURANTS = true;
 const FORCE_HEAVY_FOR_ECOMMERCE = true;
+const FORCE_HEAVY_FOR_SAAS = true;
 
 /**
  * PressPilot Generator Orchestrator
@@ -90,12 +91,17 @@ export async function generateTheme(options: GeneratorOptions = {}) {
     // Force heavy mode for restaurants to ensure hero layout differentiation
     const industry = userData.industry || 'general';
     const isRestaurant = ['restaurant', 'cafe', 'restaurant_cafe'].includes(industry);
+    const isSaas = ['saas', 'software', 'startup'].includes(industry);
     let mode: GeneratorMode = options.mode || 'standard';
     if (FORCE_HEAVY_FOR_RESTAURANTS && isRestaurant) {
         mode = 'heavy';
         // Restaurants always use Heavy Mode to guarantee hero layout differentiation
         // and proper menu injection, even if options.mode requested standard mode.
         console.log('[Phase14] Restaurant vertical -> forcing Heavy Mode for hero differentiation');
+    }
+    if (FORCE_HEAVY_FOR_SAAS && isSaas) {
+        mode = 'heavy';
+        console.log('[Phase5] SaaS vertical -> forcing Heavy Mode for recipe-driven sections');
     }
     const themeName = styleJson.metadata.themeName;
     const rawName = options.slug || themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');

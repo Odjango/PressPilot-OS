@@ -119,3 +119,11 @@ export {
     PRODUCT_SHOWCASE_RECIPE,
     MINIMAL_STORE_RECIPE
 } from './ecommerce';
+
+// SaaS recipe exports (Phase 5)
+export {
+    SAAS_RECIPES,
+    DEFAULT_SAAS_RECIPE,
+    STARTUP_LANDING_RECIPE,
+    ENTERPRISE_PRODUCT_RECIPE
+} from './saas';

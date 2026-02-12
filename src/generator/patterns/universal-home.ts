@@ -68,6 +68,9 @@ export const getUniversalHomeContent = (
                         industry === 'retail' ||
                         industry === 'shop' ||
                         industry === 'online_store';
+    const isSaas = industry === 'saas' ||
+                   industry === 'software' ||
+                   industry === 'startup';
 
     if (isEcommerce) {
         // === RECIPE-DRIVEN FLOW (Generator 2.0 Phase 4) ===
@@ -120,6 +123,26 @@ export const getUniversalHomeContent = (
         };
 
         // Phase 3: Use recipe-aware rendering with SectionContext for token-driven styling
+        return SectionRenderer.renderSectionsWithRecipe(recipe, renderContext);
+    }
+
+    if (isSaas) {
+        const recipeContext: RecipeContext = {
+            vertical: 'saas',
+            brandMode: (brandMode || brandStyle || 'modern') as BrandMode,
+            businessType: normalizedBusinessType
+        };
+
+        const recipe = RecipeSelector.selectRecipe(recipeContext);
+        const renderContext: RenderContext = {
+            content,
+            heroLayout,
+            industry,
+            brandStyle,
+            brandMode,
+            businessType: normalizedBusinessType
+        };
+
         return SectionRenderer.renderSectionsWithRecipe(recipe, renderContext);
     }
 

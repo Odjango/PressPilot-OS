@@ -37,6 +37,16 @@ export { getRestaurantAwardsPressSectionWithContext } from './restaurant-awards-
 export { getRestaurantMenuCategoriesSectionWithContext } from './restaurant-menu-categories';
 export { getRestaurantReservationFormSectionWithContext } from './restaurant-reservation-form';
 
+// SaaS sections (Phase 5)
+export { getSaasHeroSectionWithContext } from './saas-hero';
+export { getSaasFeaturesGridSectionWithContext } from './saas-features-grid';
+export { getSaasPricingTableSectionWithContext } from './saas-pricing-table';
+export { getSaasTestimonialsSectionWithContext } from './saas-testimonials';
+export { getSaasHowItWorksSectionWithContext } from './saas-how-it-works';
+export { getSaasCTABannerSectionWithContext } from './saas-cta-banner';
+export { getSaasFAQSectionWithContext } from './saas-faq';
+export { getSaasLogosSectionWithContext } from './saas-logos';
+
 // Restaurant style tokens (for playful vs modern differentiation)
 export { getRestaurantStyleTokens, RESTAURANT_STYLE_TOKENS } from './restaurantThemeTokens';
 export type { RestaurantStyle, RestaurantStyleTokens } from './restaurantThemeTokens';
