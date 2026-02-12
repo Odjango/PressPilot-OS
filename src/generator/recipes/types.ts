@@ -28,7 +28,13 @@ export type SectionType =
     // Restaurant sections
     | 'hero'
     | 'story'
+    | 'chef-highlight'
+    | 'gallery-grid'
     | 'menu-preview'
+    | 'hours-location'
+    | 'location-map'
+    | 'awards-press'
+    | 'reservation-form'
     | 'promo-band'
     | 'testimonials'
     | 'final-cta'
@@ -146,6 +152,8 @@ export interface RenderContext {
     heroLayout?: HeroLayout;
     industry?: string;
     brandStyle?: BrandStyle;
+    brandMode?: BrandMode;
+    businessType?: string;
 }
 
 /**

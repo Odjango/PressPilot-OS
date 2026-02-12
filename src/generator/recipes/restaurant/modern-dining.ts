@@ -23,8 +23,7 @@ export const MODERN_DINING_RECIPE: LayoutRecipe = {
     vertical: 'restaurant',
     conditions: {
         brandModes: ['modern', 'minimal'],
-        // NOTE: businessTypes removed for Phase 2 stub.
-        // Will be re-added when recipe sections are differentiated.
+        businessTypes: ['fine-dining', 'upscale', 'wine-bar', 'chef-table'],
         priority: 60  // Higher priority for modern/minimal modes
     },
     sections: [
@@ -38,9 +37,34 @@ export const MODERN_DINING_RECIPE: LayoutRecipe = {
             backgroundColor: 'base'
         },
         {
+            type: 'chef-highlight',
+            id: 'chef-profile',
+            backgroundColor: 'base'
+        },
+        {
+            type: 'gallery-grid',
+            id: 'gallery-grid',
+            backgroundColor: 'base-2'
+        },
+        {
             type: 'menu-preview',
             id: 'menu-featured',
             backgroundColor: 'base-2'
+        },
+        {
+            type: 'hours-location',
+            id: 'hours-location',
+            backgroundColor: 'base'
+        },
+        {
+            type: 'location-map',
+            id: 'location-map',
+            backgroundColor: 'base-2'
+        },
+        {
+            type: 'awards-press',
+            id: 'awards-press',
+            backgroundColor: 'base'
         },
         {
             type: 'promo-band',
@@ -51,6 +75,11 @@ export const MODERN_DINING_RECIPE: LayoutRecipe = {
             type: 'testimonials',
             id: 'testimonials-customers',
             backgroundColor: 'accent-2'
+        },
+        {
+            type: 'reservation-form',
+            id: 'reservation-form',
+            backgroundColor: 'accent'
         },
         {
             type: 'final-cta',

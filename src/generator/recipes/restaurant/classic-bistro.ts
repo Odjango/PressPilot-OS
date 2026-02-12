@@ -40,9 +40,29 @@ export const CLASSIC_BISTRO_RECIPE: LayoutRecipe = {
             backgroundColor: 'base'
         },
         {
+            type: 'chef-highlight',
+            id: 'chef-team',
+            backgroundColor: 'base'
+        },
+        {
             type: 'menu-preview',
             id: 'menu-featured',
             backgroundColor: 'base-2'
+        },
+        {
+            type: 'hours-location',
+            id: 'hours-location',
+            backgroundColor: 'base'
+        },
+        {
+            type: 'gallery-grid',
+            id: 'gallery-instagram',
+            backgroundColor: 'base-2'
+        },
+        {
+            type: 'awards-press',
+            id: 'awards-press',
+            backgroundColor: 'base'
         },
         {
             type: 'promo-band',
@@ -53,6 +73,11 @@ export const CLASSIC_BISTRO_RECIPE: LayoutRecipe = {
             type: 'testimonials',
             id: 'testimonials-customers',
             backgroundColor: 'accent-2'
+        },
+        {
+            type: 'reservation-form',
+            id: 'reservation-form',
+            backgroundColor: 'accent'
         },
         {
             type: 'final-cta',
