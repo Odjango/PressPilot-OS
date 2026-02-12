@@ -75,6 +75,18 @@ export const getUniversalHomeContent = (
                         industry === 'talent' ||
                         industry === 'creative' ||
                         industry === 'agency';
+    const isLocalService = industry === 'local-service' ||
+                           industry === 'service' ||
+                           industry === 'home-service' ||
+                           industry === 'professional-service' ||
+                           industry === 'wellness-service' ||
+                           industry === 'salon' ||
+                           industry === 'spa' ||
+                           industry === 'gym' ||
+                           industry === 'dentist' ||
+                           industry === 'lawyer' ||
+                           industry === 'plumber' ||
+                           industry === 'cleaner';
 
     if (isEcommerce) {
         // === RECIPE-DRIVEN FLOW (Generator 2.0 Phase 4) ===
@@ -153,6 +165,26 @@ export const getUniversalHomeContent = (
     if (isPortfolio) {
         const recipeContext: RecipeContext = {
             vertical: 'portfolio',
+            brandMode: (brandMode || brandStyle || 'modern') as BrandMode,
+            businessType: normalizedBusinessType
+        };
+
+        const recipe = RecipeSelector.selectRecipe(recipeContext);
+        const renderContext: RenderContext = {
+            content,
+            heroLayout,
+            industry,
+            brandStyle,
+            brandMode,
+            businessType: normalizedBusinessType
+        };
+
+        return SectionRenderer.renderSectionsWithRecipe(recipe, renderContext);
+    }
+
+    if (isLocalService) {
+        const recipeContext: RecipeContext = {
+            vertical: 'local-service',
             brandMode: (brandMode || brandStyle || 'modern') as BrandMode,
             businessType: normalizedBusinessType
         };

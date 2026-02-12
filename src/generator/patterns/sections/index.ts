@@ -58,6 +58,18 @@ export { getPortfolioTestimonialsSectionWithContext } from './portfolio-testimon
 export { getPortfolioContactSectionWithContext } from './portfolio-contact';
 export { getPortfolioCTASectionWithContext } from './portfolio-cta';
 
+// Local Service sections
+export { getLocalHeroSectionWithContext } from './local-hero';
+export { getLocalServicesGridSectionWithContext } from './local-services-grid';
+export { getLocalAboutSectionWithContext } from './local-about';
+export { getLocalTeamSectionWithContext } from './local-team';
+export { getLocalTestimonialsSectionWithContext } from './local-testimonials';
+export { getLocalLocationSectionWithContext } from './local-location';
+export { getLocalHoursSectionWithContext } from './local-hours';
+export { getLocalBookingCTASectionWithContext } from './local-booking-cta';
+export { getLocalFAQSectionWithContext } from './local-faq';
+export { getLocalTrustBadgesSectionWithContext } from './local-trust-badges';
+
 // Restaurant style tokens (for playful vs modern differentiation)
 export { getRestaurantStyleTokens, RESTAURANT_STYLE_TOKENS } from './restaurantThemeTokens';
 export type { RestaurantStyle, RestaurantStyleTokens } from './restaurantThemeTokens';

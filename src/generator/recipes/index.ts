@@ -103,6 +103,30 @@ export const RecipeRegistry: Record<string, SiteRecipe> = {
                 content: {}
             }
         ]
+    },
+    'local-service': {
+        industry: 'local-service',
+        description: 'Local service business with booking and trust patterns',
+        pages: [
+            {
+                title: 'Home',
+                slug: 'home',
+                template: 'universal-home',
+                content: {}
+            },
+            {
+                title: 'Services',
+                slug: 'services',
+                template: 'universal-services',
+                content: {}
+            },
+            {
+                title: 'Contact',
+                slug: 'contact',
+                template: 'universal-contact',
+                content: {}
+            }
+        ]
     }
 };
 
@@ -160,3 +184,12 @@ export {
     FREELANCER_RECIPE,
     TALENT_AGENCY_RECIPE
 } from './portfolio';
+
+// Local Service recipe exports
+export {
+    LOCAL_SERVICE_RECIPES,
+    DEFAULT_LOCAL_SERVICE_RECIPE,
+    HOME_SERVICES_RECIPE,
+    PROFESSIONAL_SERVICES_RECIPE,
+    WELLNESS_SERVICES_RECIPE
+} from './local-service';

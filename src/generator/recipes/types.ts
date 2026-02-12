@@ -58,6 +58,17 @@ export type SectionType =
     | 'portfolio-testimonials'
     | 'portfolio-contact'
     | 'portfolio-cta'
+    // Local service sections
+    | 'local-hero'
+    | 'local-services-grid'
+    | 'local-about'
+    | 'local-team'
+    | 'local-testimonials'
+    | 'local-location'
+    | 'local-hours'
+    | 'local-booking-cta'
+    | 'local-faq'
+    | 'local-trust-badges'
     // Ecommerce sections (Phase 4)
     | 'ecommerce-hero'
     | 'category-grid'

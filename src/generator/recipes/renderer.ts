@@ -60,6 +60,16 @@ import {
     getPortfolioTestimonialsSectionWithContext,
     getPortfolioContactSectionWithContext,
     getPortfolioCTASectionWithContext,
+    getLocalHeroSectionWithContext,
+    getLocalServicesGridSectionWithContext,
+    getLocalAboutSectionWithContext,
+    getLocalTeamSectionWithContext,
+    getLocalTestimonialsSectionWithContext,
+    getLocalLocationSectionWithContext,
+    getLocalHoursSectionWithContext,
+    getLocalBookingCTASectionWithContext,
+    getLocalFAQSectionWithContext,
+    getLocalTrustBadgesSectionWithContext,
     // Phase 4 Ecommerce sections
     getEcommerceHeroSectionWithContext,
     getEcommerceCategoryGridSectionWithContext,
@@ -145,6 +155,17 @@ const SECTION_RENDERERS: Record<SectionType, SectionRendererFn> = {
     'portfolio-testimonials': () => '',
     'portfolio-contact': () => '',
     'portfolio-cta': () => '',
+    // Local service sections
+    'local-hero': () => '',
+    'local-services-grid': () => '',
+    'local-about': () => '',
+    'local-team': () => '',
+    'local-testimonials': () => '',
+    'local-location': () => '',
+    'local-hours': () => '',
+    'local-booking-cta': () => '',
+    'local-faq': () => '',
+    'local-trust-badges': () => '',
 
     // Ecommerce sections - Phase 2 legacy stubs (use V2 renderers via renderSectionsWithRecipe)
     'ecommerce-hero': () => '',
@@ -271,6 +292,37 @@ const SECTION_RENDERERS_V2: Record<SectionType, SectionRendererFnV2> = {
     },
     'portfolio-cta': (ctx) => {
         return getPortfolioCTASectionWithContext(ctx);
+    },
+    // Local service sections
+    'local-hero': (ctx) => {
+        return getLocalHeroSectionWithContext(ctx);
+    },
+    'local-services-grid': (ctx) => {
+        return getLocalServicesGridSectionWithContext(ctx);
+    },
+    'local-about': (ctx) => {
+        return getLocalAboutSectionWithContext(ctx);
+    },
+    'local-team': (ctx) => {
+        return getLocalTeamSectionWithContext(ctx);
+    },
+    'local-testimonials': (ctx) => {
+        return getLocalTestimonialsSectionWithContext(ctx);
+    },
+    'local-location': (ctx) => {
+        return getLocalLocationSectionWithContext(ctx);
+    },
+    'local-hours': (ctx) => {
+        return getLocalHoursSectionWithContext(ctx);
+    },
+    'local-booking-cta': (ctx) => {
+        return getLocalBookingCTASectionWithContext(ctx);
+    },
+    'local-faq': (ctx) => {
+        return getLocalFAQSectionWithContext(ctx);
+    },
+    'local-trust-badges': (ctx) => {
+        return getLocalTrustBadgesSectionWithContext(ctx);
     },
 
     // Ecommerce sections (Phase 4)

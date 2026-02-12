@@ -29,7 +29,7 @@ export type BrandMode = 'playful' | 'modern' | 'minimal' | 'bold';
  * Supported verticals in the generator.
  * Each vertical can have custom token overrides.
  */
-export type Vertical = 'restaurant' | 'ecommerce' | 'saas' | 'portfolio' | 'talent' | 'service';
+export type Vertical = 'restaurant' | 'ecommerce' | 'saas' | 'portfolio' | 'talent' | 'service' | 'local-service';
 
 /**
  * Spacing token values using WordPress preset format.
@@ -139,6 +139,7 @@ export function getDesignTokens(brandMode: BrandMode, vertical: Vertical): Desig
         case 'portfolio':
         case 'talent':
         case 'service':
+        case 'local-service':
         default:
             console.warn(`[DesignSystem] Vertical "${vertical}" not yet implemented, using base tokens`);
             return getDefaultTokens(resolvedMode, vertical);
@@ -156,5 +157,5 @@ export function isValidBrandMode(mode: string): mode is BrandMode {
  * Check if a vertical is valid.
  */
 export function isValidVertical(vertical: string): vertical is Vertical {
-    return ['restaurant', 'ecommerce', 'saas', 'portfolio', 'talent', 'service'].includes(vertical);
+    return ['restaurant', 'ecommerce', 'saas', 'portfolio', 'talent', 'service', 'local-service'].includes(vertical);
 }

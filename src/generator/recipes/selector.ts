@@ -31,6 +31,10 @@ import {
     PORTFOLIO_RECIPES,
     DEFAULT_PORTFOLIO_RECIPE
 } from './portfolio';
+import {
+    LOCAL_SERVICE_RECIPES,
+    DEFAULT_LOCAL_SERVICE_RECIPE
+} from './local-service';
 
 // =============================================================================
 // Recipe Registry
@@ -48,7 +52,8 @@ const RECIPE_REGISTRY: Record<Vertical, LayoutRecipe[]> = {
     saas: SAAS_RECIPES,
     portfolio: PORTFOLIO_RECIPES,
     talent: PORTFOLIO_RECIPES,
-    service: []     // Phase 5+
+    service: LOCAL_SERVICE_RECIPES,
+    'local-service': LOCAL_SERVICE_RECIPES
 };
 
 // =============================================================================
@@ -159,6 +164,9 @@ export class RecipeSelector {
             case 'portfolio':
             case 'talent':
                 return DEFAULT_PORTFOLIO_RECIPE;
+            case 'service':
+            case 'local-service':
+                return DEFAULT_LOCAL_SERVICE_RECIPE;
 
             default:
                 // For unimplemented verticals, return a minimal stub
