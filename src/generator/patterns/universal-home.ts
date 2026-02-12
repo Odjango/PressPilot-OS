@@ -53,8 +53,11 @@ export const getUniversalHomeContent = (
     content?: PageContent,
     heroLayout?: HeroLayout,
     industry?: string,
-    brandStyle?: BrandStyle
+    brandStyle?: BrandStyle,
+    brandMode?: BrandMode,
+    businessType?: string
 ) => {
+    const normalizedBusinessType = businessType?.toLowerCase().trim();
     // Restaurant Recipe - uses Phase 2+3 Recipe System
     const isRestaurant = industry === 'restaurant' ||
                          industry === 'cafe' ||
@@ -72,8 +75,8 @@ export const getUniversalHomeContent = (
         // Build recipe selection context
         const recipeContext: RecipeContext = {
             vertical: 'ecommerce',
-            brandMode: (brandStyle || 'modern') as BrandMode,  // Default to modern for ecommerce
-            businessType: undefined  // Future: extract from content/userData
+            brandMode: (brandMode || brandStyle || 'modern') as BrandMode,  // Default to modern for ecommerce
+            businessType: normalizedBusinessType
         };
 
         // Select best matching recipe
@@ -84,7 +87,9 @@ export const getUniversalHomeContent = (
             content,
             heroLayout,
             industry,
-            brandStyle
+            brandStyle,
+            brandMode,
+            businessType: normalizedBusinessType
         };
 
         // Phase 4: Use recipe-aware rendering with SectionContext for token-driven styling
@@ -97,8 +102,8 @@ export const getUniversalHomeContent = (
         // Build recipe selection context
         const recipeContext: RecipeContext = {
             vertical: 'restaurant',
-            brandMode: brandStyle as BrandMode,  // 'playful' | 'modern'
-            businessType: undefined  // Future: extract from content/userData
+            brandMode: (brandMode || brandStyle || 'modern') as BrandMode,
+            businessType: normalizedBusinessType
         };
 
         // Select best matching recipe
@@ -109,7 +114,9 @@ export const getUniversalHomeContent = (
             content,
             heroLayout,
             industry,
-            brandStyle
+            brandStyle,
+            brandMode,
+            businessType: normalizedBusinessType
         };
 
         // Phase 3: Use recipe-aware rendering with SectionContext for token-driven styling

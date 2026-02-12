@@ -26,6 +26,16 @@ export {
     getRestaurantPromoBandSection,
     getRestaurantPromoBandSectionWithContext
 } from './restaurant-promo-band';
+export { getRestaurantChefHighlightSectionWithContext } from './restaurant-chef-highlight';
+export { getRestaurantChefTeamSectionWithContext } from './restaurant-chef-team';
+export { getRestaurantGalleryGridSectionWithContext } from './restaurant-gallery-grid';
+export { getRestaurantGallerySectionWithContext } from './restaurant-gallery';
+export { getRestaurantHoursLocationSectionWithContext } from './restaurant-hours-location';
+export { getRestaurantLocationMapSectionWithContext } from './restaurant-location-map';
+export { getRestaurantLocationSectionWithContext } from './restaurant-location';
+export { getRestaurantAwardsPressSectionWithContext } from './restaurant-awards-press';
+export { getRestaurantMenuCategoriesSectionWithContext } from './restaurant-menu-categories';
+export { getRestaurantReservationFormSectionWithContext } from './restaurant-reservation-form';
 
 // Restaurant style tokens (for playful vs modern differentiation)
 export { getRestaurantStyleTokens, RESTAURANT_STYLE_TOKENS } from './restaurantThemeTokens';

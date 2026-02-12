@@ -59,6 +59,8 @@ export interface PageContent {
     social_facebook?: string;
     social_instagram?: string;
     social_twitter?: string;
+    opening_hours?: Record<string, string>;
+    business_type?: string;
 }
 
 
