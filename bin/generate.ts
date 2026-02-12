@@ -29,7 +29,7 @@ import JSZip from 'jszip';
 import fs from 'fs-extra';
 import path from 'path';
 
-import type { GeneratorMode, BaseTheme } from '../src/generator/types';
+import type { GeneratorMode, BaseTheme, BrandMode } from '../src/generator/types';
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -73,6 +73,7 @@ async function main(): Promise<void> {
     const {
         base,
         mode,
+        brandMode,
         slug,
         outDir,
         heroPattern,
@@ -81,6 +82,7 @@ async function main(): Promise<void> {
     } = input as {
         base?: BaseTheme;
         mode?: GeneratorMode;
+        brandMode?: BrandMode;
         slug?: string;
         outDir?: string;
         heroPattern?: string;
@@ -89,6 +91,9 @@ async function main(): Promise<void> {
     };
 
     const generatorData: Record<string, unknown> = data ?? {};
+    if (brandMode && !generatorData.brandMode) {
+        generatorData.brandMode = brandMode;
+    }
 
     // ── STEP 1: Generate Theme ──────────────────────────────────────────
     console.error('[cli] Starting theme generation...');
@@ -96,6 +101,7 @@ async function main(): Promise<void> {
     const result = await generateTheme({
         base,
         mode: mode || 'standard',
+        brandMode: (generatorData.brandMode as BrandMode | undefined) || brandMode,
         slug,
         outDir,
         heroPattern,

@@ -3,6 +3,49 @@ import path from 'path';
 import { StyleJSON } from '../modules/StyleBuilder';
 
 export class StyleEngine {
+    private static readonly CONTRAST_TARGET_SLOTS = ['accent', 'accent-2', 'accent-3', 'accent-4', 'accent-5', 'primary'];
+
+    private getAccessibleTextTokenForHex(hexColor: string): string {
+        const normalized = hexColor.replace('#', '').trim();
+        if (!/^[0-9a-fA-F]{6}$/.test(normalized)) {
+            return 'var(--wp--preset--color--base)';
+        }
+
+        const r = parseInt(normalized.slice(0, 2), 16);
+        const g = parseInt(normalized.slice(2, 4), 16);
+        const b = parseInt(normalized.slice(4, 6), 16);
+
+        // Perceived luminance threshold for choosing dark/light text.
+        const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        return luminance > 0.6
+            ? 'var(--wp--preset--color--contrast)'
+            : 'var(--wp--preset--color--base)';
+    }
+
+    private buildBackgroundContrastCss(themeJson: any): string {
+        const palette: Array<{ slug?: string; color?: string }> =
+            themeJson?.settings?.color?.palette || [];
+        const bySlug = new Map<string, string>();
+        for (const entry of palette) {
+            if (entry?.slug && entry?.color) {
+                bySlug.set(entry.slug, entry.color);
+            }
+        }
+
+        const rules: string[] = [];
+        for (const slot of StyleEngine.CONTRAST_TARGET_SLOTS) {
+            const bgHex = bySlug.get(slot);
+            if (!bgHex) continue;
+            const textToken = this.getAccessibleTextTokenForHex(bgHex);
+            rules.push(
+                `.wp-block-button .wp-block-button__link.has-${slot}-background-color {`,
+                `    color: ${textToken} !important;`,
+                `}`
+            );
+        }
+
+        return rules.length > 0 ? '\n' + rules.join('\n') + '\n' : '';
+    }
 
     async applyStyles(themeDir: string, styleJson: StyleJSON): Promise<void> {
         const themeJsonPath = path.join(themeDir, 'theme.json');
@@ -66,7 +109,17 @@ export class StyleEngine {
             }
 
             // ================================================================
-            // 6. Apply Custom Styles (elements, blocks, typography)
+            // 6. Apply Font Families
+            // ================================================================
+            if (styleJson.fontFamilies && styleJson.fontFamilies.length > 0) {
+                themeJson.settings.typography.fontFamilies = styleJson.fontFamilies;
+                console.log(
+                    `[StyleEngine] Applied ${styleJson.fontFamilies.length} font family presets.`
+                );
+            }
+
+            // ================================================================
+            // 7. Apply Custom Styles (elements, blocks, typography)
             // ================================================================
             if (styleJson.styles) {
                 // Deep merge styles to preserve existing base theme styles
@@ -75,7 +128,22 @@ export class StyleEngine {
             }
 
             // ================================================================
-            // 7. Ensure Layout Settings
+            // 8. Zero Root Padding Top/Bottom (header/footer flush)
+            // ================================================================
+            // The chassis theme.json sets styles.spacing.padding on all 4 sides
+            // (e.g. spacing|60 = min(10.5rem, 13vw)). This creates huge gaps
+            // above the header and below the footer. We zero top/bottom so
+            // header sits at viewport top and footer at viewport bottom.
+            // Left/right are kept for content padding with useRootPaddingAwareAlignments.
+            if (!themeJson.styles) themeJson.styles = {};
+            if (!themeJson.styles.spacing) themeJson.styles.spacing = {};
+            if (!themeJson.styles.spacing.padding) themeJson.styles.spacing.padding = {};
+            themeJson.styles.spacing.padding.top = "0px";
+            themeJson.styles.spacing.padding.bottom = "0px";
+            console.log(`[StyleEngine] Zeroed root padding top/bottom for flush header/footer.`);
+
+            // ================================================================
+            // 9. Ensure Layout Settings
             // ================================================================
             if (!themeJson.settings.layout) {
                 themeJson.settings.layout = {};
@@ -89,7 +157,7 @@ export class StyleEngine {
             }
 
             // ================================================================
-            // 8. Enable Appearance Tools
+            // 10. Enable Appearance Tools
             // ================================================================
             themeJson.settings.appearanceTools = true;
 
@@ -123,19 +191,42 @@ export class StyleEngine {
         return output;
     }
 
-    async updateMetadata(themeDir: string, themeName: string, baseName: string, mode: string): Promise<void> {
-        const siteInfo = { name: themeName, base: baseName, mode: mode };
+    async updateMetadata(
+        themeDir: string,
+        themeName: string,
+        baseName: string,
+        mode: string,
+        brandMode?: string
+    ): Promise<void> {
+        const siteInfo = { name: themeName, base: baseName, mode: mode, brandMode: brandMode || 'modern' };
         await fs.writeJson(path.join(themeDir, 'site-info.json'), siteInfo, { spaces: 4 });
 
         const styleCssPath = path.join(themeDir, 'style.css');
+        const themeJsonPath = path.join(themeDir, 'theme.json');
         if (await fs.pathExists(styleCssPath)) {
             let styleContent = await fs.readFile(styleCssPath, 'utf8');
             styleContent = styleContent.replace(/Theme Name:.*$/m, `Theme Name: ${themeName}`);
+
+            let contrastRules = '';
+            if (await fs.pathExists(themeJsonPath)) {
+                const themeJson = await fs.readJson(themeJsonPath);
+                contrastRules = this.buildBackgroundContrastCss(themeJson);
+            }
+
             // Minimalist Safety Only: Ensuring basic layout reset
             const minimalLayoutStyles = `
 /* PressPilot Standard Layout Helper */
 body { margin: 0; overflow-x: hidden; width: 100%; }
 .wp-site-blocks { display: flex; flex-direction: column; min-height: 100vh; width: 100%; overflow-x: hidden; }
+
+/* Remove root-level blockGap between header, main, and footer */
+.wp-site-blocks > * { margin-block-start: 0 !important; margin-block-end: 0 !important; }
+
+/* Push footer to bottom of viewport */
+.wp-site-blocks > main,
+.wp-site-blocks > .wp-block-group:not(.wp-block-template-part) {
+    flex-grow: 1;
+}
 
 /* =============================================
    Sticky Header for Hero Overlay Support
@@ -170,9 +261,7 @@ body.is-dark-theme .presspilot-header.has-base-background-color,
    Alignfull Block Spacing Normalization
    ============================================= */
 
-/* Normalize first block spacing (hero directly under header) */
-.wp-site-blocks > .entry-content > :first-child,
-.wp-site-blocks main > :first-child,
+/* Normalize first block inside main (hero directly under header) */
 main.wp-block-group > :first-child {
     margin-top: 0 !important;
 }
@@ -182,23 +271,29 @@ main.wp-block-group > :first-child {
     margin-top: 0;
 }
 
-/* Footer spacing control */
-.wp-site-blocks > .entry-content > :last-child,
-.wp-site-blocks main > :last-child {
-    margin-bottom: 0 !important;
+/* =============================================
+   Brand-Mode Outline Button Color Normalization
+   ============================================= */
+
+/* Ensure secondary/outline buttons always use brand accent token colors */
+.wp-block-button.is-style-outline .wp-block-button__link,
+.wp-block-button .wp-block-button__link.is-style-outline {
+    color: var(--wp--preset--color--accent) !important;
+    border-color: var(--wp--preset--color--accent) !important;
+    background-color: transparent !important;
 }
 
-/* Header at viewport top (no gap above) */
-header.wp-block-template-part,
-.wp-block-template-part[data-slug="header"] {
-    margin-top: 0;
+.wp-block-button.is-style-outline .wp-block-button__link:hover,
+.wp-block-button .wp-block-button__link.is-style-outline:hover {
+    color: var(--wp--preset--color--accent-3) !important;
+    border-color: var(--wp--preset--color--accent-3) !important;
+    background-color: transparent !important;
 }
 
-/* Footer at bottom (no gap below) */
-footer.wp-block-template-part,
-.wp-block-template-part[data-slug="footer"] {
-    margin-bottom: 0;
-}
+/* =============================================
+   Filled Button Contrast (Palette-Aware)
+   ============================================= */
+${contrastRules}
 `;
             styleContent += minimalLayoutStyles;
             await fs.writeFile(styleCssPath, styleContent);

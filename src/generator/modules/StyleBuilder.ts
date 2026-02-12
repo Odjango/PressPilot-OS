@@ -1,7 +1,14 @@
-import { GeneratorData, ThemePersonality, BaseTheme, BrandKitEdit } from '../types';
+import {
+    GeneratorData,
+    ThemePersonality,
+    BaseTheme,
+    BrandKitEdit,
+    BrandMode
+} from '../types';
 import { ColorHarmonizer, HarmonizedPalette } from '../utils/ColorHarmonizer';
 import { PATTERN_REGISTRY } from '../config/PatternRegistry';
 import { FontProvider, FONT_SIZE_SCALE, FontSizePreset } from '../utils/FontProvider';
+import { BRAND_MODE_CONFIG, resolveBrandMode } from '../config/BrandModeConfig';
 import {
     TT4ColorPalette,
     PALETTE_PRESETS,
@@ -53,12 +60,19 @@ export interface FontSizeToken {
     } | false;
 }
 
+export interface FontFamilyPreset {
+    fontFamily: string;
+    name: string;
+    slug: string;
+}
+
 export interface StyleJSON {
     palette: ColorPreset[];
     gradients: GradientPreset[];
     spacingSizes: SpacingPreset[];
     shadows: ShadowPreset[];
     fontSizes: FontSizeToken[];
+    fontFamilies?: FontFamilyPreset[];
     styles: {
         elements?: any;
         color?: {
@@ -74,6 +88,7 @@ export interface StyleJSON {
         industry?: string;
         paletteId?: string;
         fontProfile?: string;
+        brandMode?: BrandMode;
     };
 }
 
@@ -97,6 +112,7 @@ const TT4_SPACING_SCALE: SpacingPreset[] = [
  * Shadow presets for depth and elevation
  */
 const SHADOW_PRESETS: ShadowPreset[] = [
+    { slug: 'none', name: 'None', shadow: 'none' },
     { slug: 'sm', name: 'Small', shadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' },
     { slug: 'md', name: 'Medium', shadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)' },
     { slug: 'lg', name: 'Large', shadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)' },
@@ -254,19 +270,34 @@ export class StyleBuilder {
         const themePersonality = getPersonality(baseTheme);
         const themeName = userData.name || `PressPilot ${baseTheme}`;
         const industry = userData.industry || 'general';
+        const resolvedBrandMode = resolveBrandMode(
+            userData.brandMode || userData.brandStyle,
+            'modern'
+        );
+        const brandModeConfig = BRAND_MODE_CONFIG[resolvedBrandMode];
 
         // Get Studio UI inputs with defaults
-        const selectedPaletteId = userData.selectedPaletteId || themePersonality.defaultPalette || 'brand-kit';
+        const selectedPaletteId =
+            userData.selectedPaletteId ||
+            brandModeConfig.defaultPaletteId ||
+            themePersonality.defaultPalette ||
+            'brand-kit';
         const userEditedBrandKit = userData.userEditedBrandKit;
-        const fontProfile = userData.fontProfile || FontProvider.getFontPairForIndustry(industry).personality.toLowerCase().split(',')[0] as any;
+        const fontProfile =
+            userData.fontProfile ||
+            brandModeConfig.defaultFontProfile ||
+            (FontProvider.getFontPairForIndustry(industry).personality
+                .toLowerCase()
+                .split(',')[0] as any);
 
-        console.log(`[StyleBuilder] Palette: ${selectedPaletteId}, Font Profile: ${fontProfile}`);
+        console.log(
+            `[StyleBuilder] Brand Mode: ${resolvedBrandMode}, Palette: ${selectedPaletteId}, Font Profile: ${fontProfile}`
+        );
 
         // Get font pair based on fontProfile or industry
-        const fontPair = userData.fontProfile
-            ? FontProvider.getFontPairByPersonality(userData.fontProfile)
-            : FontProvider.getFontPairForIndustry(industry);
+        const fontPair = FontProvider.getFontPairByPersonality(fontProfile);
         console.log(`[StyleBuilder] Using font pair: ${fontPair.personality}`);
+        const fontFamilies: FontFamilyPreset[] = [fontPair.heading, fontPair.body];
 
         let palette: ColorPreset[] = [];
         let gradients: GradientPreset[] = [];
@@ -312,30 +343,58 @@ export class StyleBuilder {
             gradients = generateGradients();
 
             // Generate styles using TT4 color references
-            styles = this.generateStyles(themePersonality);
+            styles = this.generateStyles(themePersonality, resolvedBrandMode);
         }
+
+        const shadowPresets = this.getShadowPresetsForMode(resolvedBrandMode);
 
         return {
             palette,
             gradients,
             spacingSizes: TT4_SPACING_SCALE,
-            shadows: SHADOW_PRESETS,
+            shadows: shadowPresets,
             fontSizes,
+            fontFamilies,
             styles,
             metadata: {
                 themeName,
                 baseTheme,
                 industry,
                 paletteId: selectedPaletteId,
-                fontProfile
+                fontProfile,
+                brandMode: resolvedBrandMode
             }
         };
+    }
+
+    private getShadowPresetsForMode(brandMode: BrandMode): ShadowPreset[] {
+        const allowed = new Set(BRAND_MODE_CONFIG[brandMode].shadowIntensity.presets);
+        const filtered = SHADOW_PRESETS.filter((preset) => allowed.has(preset.slug as any));
+        return filtered.length > 0 ? filtered : [SHADOW_PRESETS[1]];
     }
 
     /**
      * Generate element and block styles using TT4 token references
      */
-    private generateStyles(personality: any): any {
+    private generateStyles(personality: any, brandMode: BrandMode): any {
+        const modeConfig = BRAND_MODE_CONFIG[brandMode];
+        const buttonRadius = modeConfig.radiusScale.md;
+        const cardRadius = modeConfig.radiusScale.lg;
+        const buttonWeightByMode: Record<BrandMode, string> = {
+            modern: '500',
+            playful: '600',
+            bold: '700',
+            minimal: '400'
+        };
+        const navigationWeightByMode: Record<BrandMode, string> = {
+            modern: '500',
+            playful: '600',
+            bold: '700',
+            minimal: '400'
+        };
+        const buttonWeight = buttonWeightByMode[brandMode];
+        const navigationWeight = navigationWeightByMode[brandMode];
+
         return {
             elements: {
                 // NOTE: Heading colors intentionally NOT set here to allow
@@ -343,6 +402,7 @@ export class StyleBuilder {
                 // Headings inherit color from styles.color.text (contrast) by default.
                 h1: {
                     typography: {
+                        fontFamily: 'var:preset|font-family|heading',
                         fontSize: 'var:preset|font-size|xx-large',
                         lineHeight: '1.15',
                         letterSpacing: personality?.headingStyle?.letterSpacing || '-0.02em'
@@ -350,6 +410,7 @@ export class StyleBuilder {
                 },
                 h2: {
                     typography: {
+                        fontFamily: 'var:preset|font-family|heading',
                         fontSize: 'var:preset|font-size|x-large',
                         lineHeight: '1.2',
                         letterSpacing: '-0.01em'
@@ -357,23 +418,27 @@ export class StyleBuilder {
                 },
                 h3: {
                     typography: {
+                        fontFamily: 'var:preset|font-family|heading',
                         fontSize: 'var:preset|font-size|large',
                         lineHeight: '1.25'
                     }
                 },
                 h4: {
                     typography: {
+                        fontFamily: 'var:preset|font-family|heading',
                         lineHeight: '1.3'
                     }
                 },
                 h5: {
                     typography: {
+                        fontFamily: 'var:preset|font-family|heading',
                         fontSize: 'var:preset|font-size|medium',
                         lineHeight: '1.4'
                     }
                 },
                 h6: {
                     typography: {
+                        fontFamily: 'var:preset|font-family|heading',
                         fontSize: 'var:preset|font-size|small',
                         lineHeight: '1.4'
                     }
@@ -396,6 +461,12 @@ export class StyleBuilder {
                         background: 'var:preset|color|accent',
                         text: 'var:preset|color|base'
                     },
+                    border: {
+                        radius: buttonRadius
+                    },
+                    typography: {
+                        fontWeight: buttonWeight
+                    },
                     ':hover': {
                         color: {
                             background: 'var:preset|color|accent-3'
@@ -413,6 +484,7 @@ export class StyleBuilder {
                 background: 'var:preset|color|base'
             },
             typography: {
+                fontFamily: 'var:preset|font-family|body',
                 fontSize: 'var:preset|font-size|medium',
                 lineHeight: '1.55'
             },
@@ -423,10 +495,10 @@ export class StyleBuilder {
                 },
                 'core/button': {
                     border: {
-                        radius: personality?.buttonStyle?.borderRadius || '0.33rem'
+                        radius: buttonRadius
                     },
                     typography: {
-                        fontWeight: personality?.buttonStyle?.fontWeight || '500',
+                        fontWeight: buttonWeight,
                         letterSpacing: '0.02em'
                     },
                     color: {
@@ -436,7 +508,7 @@ export class StyleBuilder {
                 },
                 'core/navigation': {
                     typography: {
-                        fontWeight: '500'
+                        fontWeight: navigationWeight
                     },
                     elements: {
                         link: {
@@ -453,7 +525,7 @@ export class StyleBuilder {
                 },
                 'core/quote': {
                     border: {
-                        radius: 'var:preset|spacing|20'
+                        radius: cardRadius
                     },
                     color: {
                         background: 'var:preset|color|base-2'

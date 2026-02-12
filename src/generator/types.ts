@@ -101,6 +101,11 @@ export type PaletteId =
 export type FontProfile = 'elegant' | 'modern' | 'bold' | 'friendly';
 
 /**
+ * Brand mode options for visual personality
+ */
+export type BrandMode = 'modern' | 'playful' | 'bold' | 'minimal';
+
+/**
  * Mood options for style variation default
  */
 export type Mood = 'warm' | 'fresh' | 'minimal' | 'dark';
@@ -201,6 +206,14 @@ export interface GeneratorData {
      * Default: 'playful'
      */
     brandStyle?: BrandStyle;
+
+    /**
+     * Brand mode selection for theme-wide visual personality.
+     * Controls style system tokens (palette approach, typography weight,
+     * border radii, and shadow intensity).
+     * Default: 'modern'
+     */
+    brandMode?: BrandMode;
 
     // ========================================================================
     // Contact Information (Phase 13 - Best Practices)

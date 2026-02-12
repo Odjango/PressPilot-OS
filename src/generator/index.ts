@@ -1,13 +1,14 @@
 import fs from 'fs-extra';
 import path from 'path';
 import archiver from 'archiver';
-import { BaseTheme, GeneratorData, GeneratorMode } from './types';
+import { BaseTheme, GeneratorData, GeneratorMode, BrandMode } from './types';
 import { PATTERN_REGISTRY } from './config/PatternRegistry';
 import { ChassisLoader } from './engine/ChassisLoader';
 import { StyleEngine } from './engine/StyleEngine';
 import { PatternInjector } from './engine/PatternInjector';
 import { ContentEngine } from './engine/ContentEngine';
 import { AssetCleaner } from './cleanup/AssetCleaner';
+import { normalizeBlockGrammar } from './engine/BlockGrammarNormalizer';
 import { PhpEscaper } from './utils/PhpEscaper';
 import { ThemeSelector } from './modules/ThemeSelector';
 import { ContentBuilder } from './modules/ContentBuilder';
@@ -37,6 +38,7 @@ const FORCE_HEAVY_FOR_ECOMMERCE = true;
 export interface GeneratorOptions {
     base?: BaseTheme;
     mode?: GeneratorMode;
+    brandMode?: BrandMode;
     data?: GeneratorData;
     outDir?: string;
     heroPattern?: string; // New: Override to force specific pattern
@@ -59,6 +61,12 @@ export async function generateTheme(options: GeneratorOptions = {}) {
 
     // 2. RUN PIPELINE MODULES (Contracts)
     const userData: GeneratorData = options.data || {};
+    if (options.brandMode && !userData.brandMode) {
+        userData.brandMode = options.brandMode;
+    }
+    if (!userData.brandStyle && (userData.brandMode === 'playful' || userData.brandMode === 'modern')) {
+        userData.brandStyle = userData.brandMode;
+    }
 
     // A. SELECT THEME
     const selection = await selector.selectTheme(userData);
@@ -105,6 +113,9 @@ export async function generateTheme(options: GeneratorOptions = {}) {
         // Load Chassis (Using baseName for binary files)
         await chassis.load(baseName, themeDir);
 
+        // Normalize block grammar (fixes legacy chassis patterns)
+        await normalizeBlockGrammar(themeDir);
+
         // Clean base theme patterns from demo/marketing content
         await patternInjector.cleanAllPatterns(themeDir, userData);
 
@@ -113,7 +124,13 @@ export async function generateTheme(options: GeneratorOptions = {}) {
 
         // Apply Styles
         await styleEngine.applyStyles(themeDir, styleJson);
-        await styleEngine.updateMetadata(themeDir, themeName, baseName, mode);
+        await styleEngine.updateMetadata(
+            themeDir,
+            themeName,
+            baseName,
+            mode,
+            styleJson.metadata.brandMode
+        );
 
         // Generate Style Variations (all 4 moods ship with theme for Site Editor switching)
         const variations = VariationBuilder.generateVariations();
@@ -243,6 +260,7 @@ if (require.main === module) {
         const dataArg = args.find(arg => arg.startsWith('--data='));
         const baseArg = args.find(arg => arg.startsWith('--base='));
         const modeArg = args.find(arg => arg.startsWith('--mode='));
+        const brandModeArg = args.find(arg => arg.startsWith('--brandMode='));
         const slugArg = args.find(arg => arg.startsWith('--slug='));
 
         let base: BaseTheme | undefined = undefined;
@@ -250,6 +268,8 @@ if (require.main === module) {
 
         let mode: GeneratorMode = 'standard';
         if (modeArg) mode = modeArg.split('=')[1].toLowerCase() as GeneratorMode;
+        let brandMode: BrandMode | undefined = undefined;
+        if (brandModeArg) brandMode = brandModeArg.split('=')[1].toLowerCase() as BrandMode;
 
         let data: GeneratorData = {};
         if (dataArg) {
@@ -264,7 +284,7 @@ if (require.main === module) {
         const slug = slugArg ? slugArg.split('=')[1] : undefined;
 
         try {
-            const result = await generateTheme({ base, mode, data, slug });
+            const result = await generateTheme({ base, mode, brandMode, data, slug });
             console.log(JSON.stringify(result));
         } catch (e) {
             process.exit(1);
