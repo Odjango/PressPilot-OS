@@ -1,0 +1,942 @@
+{
+  "version": "1.0",
+  "generated": "2026-02-12",
+  "themes": [
+    {
+      "id": "001",
+      "slug": "bella-vista",
+      "name": "Bella Vista",
+      "vertical": "restaurant",
+      "brandMode": "modern",
+      "recipe": "classic-bistro",
+      "tagline": "Culinary experiences crafted with character.",
+      "tags": [
+        "restaurant",
+        "classic-bistro",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "002",
+      "slug": "ember-and-oak",
+      "name": "Ember & Oak",
+      "vertical": "restaurant",
+      "brandMode": "bold",
+      "recipe": "classic-bistro",
+      "tagline": "Culinary experiences crafted with character.",
+      "tags": [
+        "restaurant",
+        "classic-bistro",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "003",
+      "slug": "the-cozy-cup",
+      "name": "The Cozy Cup",
+      "vertical": "restaurant",
+      "brandMode": "playful",
+      "recipe": "classic-bistro",
+      "tagline": "Culinary experiences crafted with character.",
+      "tags": [
+        "restaurant",
+        "classic-bistro",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "004",
+      "slug": "white-linen",
+      "name": "White Linen",
+      "vertical": "restaurant",
+      "brandMode": "minimal",
+      "recipe": "classic-bistro",
+      "tagline": "Culinary experiences crafted with character.",
+      "tags": [
+        "restaurant",
+        "classic-bistro",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "005",
+      "slug": "slate-and-stone",
+      "name": "Slate & Stone",
+      "vertical": "restaurant",
+      "brandMode": "modern",
+      "recipe": "modern-dining",
+      "tagline": "Culinary experiences crafted with character.",
+      "tags": [
+        "restaurant",
+        "modern-dining",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "006",
+      "slug": "fire-and-spice",
+      "name": "Fire & Spice",
+      "vertical": "restaurant",
+      "brandMode": "bold",
+      "recipe": "modern-dining",
+      "tagline": "Culinary experiences crafted with character.",
+      "tags": [
+        "restaurant",
+        "modern-dining",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "007",
+      "slug": "sunday-brunch",
+      "name": "Sunday Brunch",
+      "vertical": "restaurant",
+      "brandMode": "playful",
+      "recipe": "modern-dining",
+      "tagline": "Culinary experiences crafted with character.",
+      "tags": [
+        "restaurant",
+        "modern-dining",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "008",
+      "slug": "pure-plate",
+      "name": "Pure Plate",
+      "vertical": "restaurant",
+      "brandMode": "minimal",
+      "recipe": "modern-dining",
+      "tagline": "Culinary experiences crafted with character.",
+      "tags": [
+        "restaurant",
+        "modern-dining",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "009",
+      "slug": "cloudflow",
+      "name": "CloudFlow",
+      "vertical": "saas",
+      "brandMode": "modern",
+      "recipe": "startup-landing",
+      "tagline": "Modern software built for growth and clarity.",
+      "tags": [
+        "saas",
+        "startup-landing",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "010",
+      "slug": "launchpad",
+      "name": "LaunchPad",
+      "vertical": "saas",
+      "brandMode": "bold",
+      "recipe": "startup-landing",
+      "tagline": "Modern software built for growth and clarity.",
+      "tags": [
+        "saas",
+        "startup-landing",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "011",
+      "slug": "taskly",
+      "name": "Taskly",
+      "vertical": "saas",
+      "brandMode": "playful",
+      "recipe": "startup-landing",
+      "tagline": "Modern software built for growth and clarity.",
+      "tags": [
+        "saas",
+        "startup-landing",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "012",
+      "slug": "clearpath",
+      "name": "Clearpath",
+      "vertical": "saas",
+      "brandMode": "minimal",
+      "recipe": "startup-landing",
+      "tagline": "Modern software built for growth and clarity.",
+      "tags": [
+        "saas",
+        "startup-landing",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "013",
+      "slug": "nexus-pro",
+      "name": "Nexus Pro",
+      "vertical": "saas",
+      "brandMode": "modern",
+      "recipe": "enterprise-product",
+      "tagline": "Modern software built for growth and clarity.",
+      "tags": [
+        "saas",
+        "enterprise-product",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "014",
+      "slug": "fortress",
+      "name": "Fortress",
+      "vertical": "saas",
+      "brandMode": "bold",
+      "recipe": "enterprise-product",
+      "tagline": "Modern software built for growth and clarity.",
+      "tags": [
+        "saas",
+        "enterprise-product",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "015",
+      "slug": "teamup",
+      "name": "TeamUp",
+      "vertical": "saas",
+      "brandMode": "playful",
+      "recipe": "enterprise-product",
+      "tagline": "Modern software built for growth and clarity.",
+      "tags": [
+        "saas",
+        "enterprise-product",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "016",
+      "slug": "streamline",
+      "name": "Streamline",
+      "vertical": "saas",
+      "brandMode": "minimal",
+      "recipe": "enterprise-product",
+      "tagline": "Modern software built for growth and clarity.",
+      "tags": [
+        "saas",
+        "enterprise-product",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "017",
+      "slug": "studio-noir",
+      "name": "Studio Noir",
+      "vertical": "portfolio",
+      "brandMode": "modern",
+      "recipe": "creative-professional",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "creative-professional",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "018",
+      "slug": "bold-canvas",
+      "name": "Bold Canvas",
+      "vertical": "portfolio",
+      "brandMode": "bold",
+      "recipe": "creative-professional",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "creative-professional",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "019",
+      "slug": "color-pop",
+      "name": "Color Pop",
+      "vertical": "portfolio",
+      "brandMode": "playful",
+      "recipe": "creative-professional",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "creative-professional",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "020",
+      "slug": "white-space",
+      "name": "White Space",
+      "vertical": "portfolio",
+      "brandMode": "minimal",
+      "recipe": "creative-professional",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "creative-professional",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "021",
+      "slug": "the-consultant",
+      "name": "The Consultant",
+      "vertical": "portfolio",
+      "brandMode": "modern",
+      "recipe": "freelancer",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "freelancer",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "022",
+      "slug": "power-profile",
+      "name": "Power Profile",
+      "vertical": "portfolio",
+      "brandMode": "bold",
+      "recipe": "freelancer",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "freelancer",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "023",
+      "slug": "hello-world",
+      "name": "Hello World",
+      "vertical": "portfolio",
+      "brandMode": "playful",
+      "recipe": "freelancer",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "freelancer",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "024",
+      "slug": "clean-slate",
+      "name": "Clean Slate",
+      "vertical": "portfolio",
+      "brandMode": "minimal",
+      "recipe": "freelancer",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "freelancer",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "025",
+      "slug": "spotlight",
+      "name": "Spotlight",
+      "vertical": "portfolio",
+      "brandMode": "modern",
+      "recipe": "talent-agency",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "talent-agency",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "026",
+      "slug": "star-power",
+      "name": "Star Power",
+      "vertical": "portfolio",
+      "brandMode": "bold",
+      "recipe": "talent-agency",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "talent-agency",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "027",
+      "slug": "rising-star",
+      "name": "Rising Star",
+      "vertical": "portfolio",
+      "brandMode": "playful",
+      "recipe": "talent-agency",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "talent-agency",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "028",
+      "slug": "pure-talent",
+      "name": "Pure Talent",
+      "vertical": "portfolio",
+      "brandMode": "minimal",
+      "recipe": "talent-agency",
+      "tagline": "Showcasing exceptional craft and client outcomes.",
+      "tags": [
+        "portfolio",
+        "talent-agency",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "029",
+      "slug": "precision-pro",
+      "name": "Precision Pro",
+      "vertical": "local-service",
+      "brandMode": "modern",
+      "recipe": "home-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "home-services",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "030",
+      "slug": "powerhouse",
+      "name": "Powerhouse",
+      "vertical": "local-service",
+      "brandMode": "bold",
+      "recipe": "home-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "home-services",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "031",
+      "slug": "sparkle-co",
+      "name": "Sparkle Co",
+      "vertical": "local-service",
+      "brandMode": "playful",
+      "recipe": "home-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "home-services",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "032",
+      "slug": "simply-fixed",
+      "name": "Simply Fixed",
+      "vertical": "local-service",
+      "brandMode": "minimal",
+      "recipe": "home-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "home-services",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "033",
+      "slug": "trusted-advisor",
+      "name": "Trusted Advisor",
+      "vertical": "local-service",
+      "brandMode": "modern",
+      "recipe": "professional-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "professional-services",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "034",
+      "slug": "authority",
+      "name": "Authority",
+      "vertical": "local-service",
+      "brandMode": "bold",
+      "recipe": "professional-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "professional-services",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "035",
+      "slug": "friendly-counsel",
+      "name": "Friendly Counsel",
+      "vertical": "local-service",
+      "brandMode": "playful",
+      "recipe": "professional-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "professional-services",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "036",
+      "slug": "clear-guidance",
+      "name": "Clear Guidance",
+      "vertical": "local-service",
+      "brandMode": "minimal",
+      "recipe": "professional-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "professional-services",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "037",
+      "slug": "renewal-spa",
+      "name": "Renewal Spa",
+      "vertical": "local-service",
+      "brandMode": "modern",
+      "recipe": "wellness-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "wellness-services",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "038",
+      "slug": "vitality",
+      "name": "Vitality",
+      "vertical": "local-service",
+      "brandMode": "bold",
+      "recipe": "wellness-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "wellness-services",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "039",
+      "slug": "happy-glow",
+      "name": "Happy Glow",
+      "vertical": "local-service",
+      "brandMode": "playful",
+      "recipe": "wellness-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "wellness-services",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "040",
+      "slug": "zen-studio",
+      "name": "Zen Studio",
+      "vertical": "local-service",
+      "brandMode": "minimal",
+      "recipe": "wellness-services",
+      "tagline": "Trusted local expertise with reliable results.",
+      "tags": [
+        "local-service",
+        "wellness-services",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "041",
+      "slug": "curated-and-co",
+      "name": "Curated & Co",
+      "vertical": "ecommerce",
+      "brandMode": "modern",
+      "recipe": "boutique-store",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "boutique-store",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "042",
+      "slug": "urban-edge",
+      "name": "Urban Edge",
+      "vertical": "ecommerce",
+      "brandMode": "bold",
+      "recipe": "boutique-store",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "boutique-store",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "043",
+      "slug": "happy-cart",
+      "name": "Happy Cart",
+      "vertical": "ecommerce",
+      "brandMode": "playful",
+      "recipe": "boutique-store",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "boutique-store",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "044",
+      "slug": "essentials",
+      "name": "Essentials",
+      "vertical": "ecommerce",
+      "brandMode": "minimal",
+      "recipe": "boutique-store",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "boutique-store",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "045",
+      "slug": "feature-focus",
+      "name": "Feature Focus",
+      "vertical": "ecommerce",
+      "brandMode": "modern",
+      "recipe": "product-showcase",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "product-showcase",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "046",
+      "slug": "hero-product",
+      "name": "Hero Product",
+      "vertical": "ecommerce",
+      "brandMode": "bold",
+      "recipe": "product-showcase",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "product-showcase",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "047",
+      "slug": "one-and-only",
+      "name": "One & Only",
+      "vertical": "ecommerce",
+      "brandMode": "playful",
+      "recipe": "product-showcase",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "product-showcase",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "048",
+      "slug": "single-origin",
+      "name": "Single Origin",
+      "vertical": "ecommerce",
+      "brandMode": "minimal",
+      "recipe": "product-showcase",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "product-showcase",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    },
+    {
+      "id": "049",
+      "slug": "makers-market",
+      "name": "Makers Market",
+      "vertical": "ecommerce",
+      "brandMode": "modern",
+      "recipe": "artisan-shop",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "artisan-shop",
+        "modern"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#2563eb"
+      }
+    },
+    {
+      "id": "050",
+      "slug": "craft-and-forge",
+      "name": "Craft & Forge",
+      "vertical": "ecommerce",
+      "brandMode": "bold",
+      "recipe": "artisan-shop",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "artisan-shop",
+        "bold"
+      ],
+      "colors": {
+        "primary": "#111827",
+        "accent": "#f97316"
+      }
+    },
+    {
+      "id": "051",
+      "slug": "handmade-happy",
+      "name": "Handmade Happy",
+      "vertical": "ecommerce",
+      "brandMode": "playful",
+      "recipe": "artisan-shop",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "artisan-shop",
+        "playful"
+      ],
+      "colors": {
+        "primary": "#0f766e",
+        "accent": "#f59e0b"
+      }
+    },
+    {
+      "id": "052",
+      "slug": "pure-craft",
+      "name": "Pure Craft",
+      "vertical": "ecommerce",
+      "brandMode": "minimal",
+      "recipe": "artisan-shop",
+      "tagline": "Beautiful products, curated for everyday life.",
+      "tags": [
+        "ecommerce",
+        "artisan-shop",
+        "minimal"
+      ],
+      "colors": {
+        "primary": "#1f2937",
+        "accent": "#9ca3af"
+      }
+    }
+  ]
+}

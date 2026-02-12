@@ -1,0 +1,179 @@
+{
+  "vertical": "local-service",
+  "recipe": "wellness-services",
+  "brandMode": "modern",
+  "slug": "downtown-dental",
+  "data": {
+    "name": "Downtown Dental Care",
+    "industry": "local-service",
+    "businessType": "wellness-services",
+    "brandMode": "modern",
+    "hero_headline": "Your Smile, Our Priority",
+    "hero_subheadline": "Comprehensive family dentistry with modern technology and compassionate care.",
+    "description": "Downtown Dental Care provides preventive, cosmetic, and restorative treatments in a calm, patient-first environment.\n\nOur clinicians focus on education and long-term oral health so every visit feels clear, supportive, and stress-free.",
+    "pages": [
+      {
+        "title": "Home",
+        "slug": "home",
+        "template": "universal-home"
+      },
+      {
+        "title": "Services",
+        "slug": "services",
+        "template": "universal-services"
+      },
+      {
+        "title": "About",
+        "slug": "about",
+        "template": "universal-about"
+      },
+      {
+        "title": "FAQ",
+        "slug": "faq",
+        "template": "universal-services"
+      },
+      {
+        "title": "Contact",
+        "slug": "contact",
+        "template": "universal-contact"
+      }
+    ],
+    "images": [
+      "https://source.unsplash.com/800x600/?dental%20clinic&sig=700",
+      "https://source.unsplash.com/800x600/?dentist%20office&sig=701",
+      "https://source.unsplash.com/800x600/?dental%20care&sig=702",
+      "https://source.unsplash.com/800x600/?smiling%20patient&sig=703",
+      "https://source.unsplash.com/800x600/?dental%20clinic&sig=704",
+      "https://source.unsplash.com/800x600/?dentist%20office&sig=705",
+      "https://source.unsplash.com/800x600/?dental%20care&sig=706",
+      "https://source.unsplash.com/800x600/?smiling%20patient&sig=707",
+      "https://source.unsplash.com/800x600/?dental%20clinic&sig=708",
+      "https://source.unsplash.com/800x600/?dentist%20office&sig=709",
+      "https://source.unsplash.com/800x600/?dental%20care&sig=710",
+      "https://source.unsplash.com/800x600/?smiling%20patient&sig=711",
+      "https://source.unsplash.com/800x600/?dental%20clinic&sig=712",
+      "https://source.unsplash.com/800x600/?dentist%20office&sig=713",
+      "https://source.unsplash.com/800x600/?dental%20care&sig=714",
+      "https://source.unsplash.com/800x600/?smiling%20patient&sig=715",
+      "https://source.unsplash.com/800x600/?dental%20clinic&sig=716",
+      "https://source.unsplash.com/800x600/?dentist%20office&sig=717"
+    ],
+    "email": "care@downtowndental.com",
+    "phone": "(312) 555-0163",
+    "address": "188 N Wabash Ave",
+    "city": "Chicago",
+    "state": "IL",
+    "zip": "60601",
+    "openingHours": {
+      "Monday": "8:00 AM - 5:00 PM",
+      "Tuesday": "8:00 AM - 5:00 PM",
+      "Wednesday": "8:00 AM - 6:00 PM",
+      "Thursday": "8:00 AM - 5:00 PM",
+      "Friday": "8:00 AM - 3:00 PM",
+      "Saturday": "By Appointment",
+      "Sunday": "Closed"
+    },
+    "socialLinks": {
+      "facebook": "https://facebook.com/downtowndentalcare",
+      "instagram": "https://instagram.com/downtowndentalcare"
+    },
+    "insurance_info": "Accepted: Delta Dental, Cigna, Aetna, Guardian, MetLife. Payment plans available.",
+    "service_1_title": "Routine Exams & Cleanings",
+    "service_1_description": "Preventive care with digital X-rays and oral screenings.",
+    "service_1_price": "",
+    "SERVICE_1_TITLE": "Routine Exams & Cleanings",
+    "SERVICE_1_TEXT": "Preventive care with digital X-rays and oral screenings.",
+    "service_2_title": "Teeth Whitening",
+    "service_2_description": "In-office and take-home whitening options.",
+    "service_2_price": "",
+    "SERVICE_2_TITLE": "Teeth Whitening",
+    "SERVICE_2_TEXT": "In-office and take-home whitening options.",
+    "service_3_title": "Invisalign",
+    "service_3_description": "Clear aligner treatment planning and follow-up.",
+    "service_3_price": "",
+    "SERVICE_3_TITLE": "Invisalign",
+    "SERVICE_3_TEXT": "Clear aligner treatment planning and follow-up.",
+    "service_4_title": "Dental Implants",
+    "service_4_description": "Single and multi-tooth implant restoration.",
+    "service_4_price": "",
+    "SERVICE_4_TITLE": "Dental Implants",
+    "SERVICE_4_TEXT": "Single and multi-tooth implant restoration.",
+    "service_5_title": "Porcelain Veneers",
+    "service_5_description": "Cosmetic smile enhancement with natural finish.",
+    "service_5_price": "",
+    "SERVICE_5_TITLE": "Porcelain Veneers",
+    "SERVICE_5_TEXT": "Cosmetic smile enhancement with natural finish.",
+    "service_6_title": "Emergency Dentistry",
+    "service_6_description": "Same-day urgent care for pain and trauma.",
+    "service_6_price": "",
+    "SERVICE_6_TITLE": "Emergency Dentistry",
+    "SERVICE_6_TEXT": "Same-day urgent care for pain and trauma.",
+    "service_7_title": "Pediatric Dentistry",
+    "service_7_description": "Gentle care for children and teens.",
+    "service_7_price": "",
+    "SERVICE_7_TITLE": "Pediatric Dentistry",
+    "SERVICE_7_TEXT": "Gentle care for children and teens.",
+    "service_8_title": "Root Canal Therapy",
+    "service_8_description": "Comfort-focused endodontic treatment.",
+    "service_8_price": "",
+    "SERVICE_8_TITLE": "Root Canal Therapy",
+    "SERVICE_8_TEXT": "Comfort-focused endodontic treatment.",
+    "team": [
+      {
+        "name": "Dr. Hannah Lee, DDS",
+        "role": "Lead Dentist",
+        "bio": "Specializes in restorative and cosmetic dentistry."
+      },
+      {
+        "name": "Dr. Miguel Santos, DMD",
+        "role": "Associate Dentist",
+        "bio": "Focus on preventive and family dental care."
+      },
+      {
+        "name": "Emily Rogers",
+        "role": "Hygienist",
+        "bio": "Patient education and preventive treatment."
+      },
+      {
+        "name": "Tara Bennett",
+        "role": "Dental Assistant",
+        "bio": "Supports chairside procedures and comfort."
+      },
+      {
+        "name": "Rina Patel",
+        "role": "Front Desk Coordinator",
+        "bio": "Scheduling and insurance support."
+      }
+    ],
+    "testimonial_1_quote": "The most comfortable dental experience I have had.",
+    "testimonial_1_name": "Alyson Price",
+    "testimonial_1_role": "Patient",
+    "testimonial_1_company": "Chicago",
+    "testimonial_1_product": "Chicago",
+    "testimonial_1_rating": "5",
+    "testimonial_2_quote": "Staff explained every step clearly and patiently.",
+    "testimonial_2_name": "Marcus Bell",
+    "testimonial_2_role": "Patient",
+    "testimonial_2_company": "Loop District",
+    "testimonial_2_product": "Loop District",
+    "testimonial_2_rating": "5",
+    "testimonial_3_quote": "Flexible scheduling and excellent clinical care.",
+    "testimonial_3_name": "Dina Shah",
+    "testimonial_3_role": "Patient",
+    "testimonial_3_company": "West Loop",
+    "testimonial_3_product": "West Loop",
+    "testimonial_3_rating": "5",
+    "testimonial_4_quote": "My Invisalign progress has been fantastic.",
+    "testimonial_4_name": "Jordan Wright",
+    "testimonial_4_role": "Patient",
+    "testimonial_4_company": "River North",
+    "testimonial_4_product": "River North",
+    "testimonial_4_rating": "5",
+    "testimonial_5_quote": "Highly professional and very friendly team.",
+    "testimonial_5_name": "Nora Fields",
+    "testimonial_5_role": "Patient",
+    "testimonial_5_company": "Streeterville",
+    "testimonial_5_product": "Streeterville",
+    "testimonial_5_rating": "5"
+  }
+}

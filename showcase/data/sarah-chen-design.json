@@ -1,0 +1,223 @@
+{
+  "vertical": "portfolio",
+  "recipe": "creative-professional",
+  "brandMode": "minimal",
+  "slug": "sarah-chen-design",
+  "data": {
+    "name": "Sarah Chen",
+    "industry": "portfolio",
+    "businessType": "creative-professional",
+    "brandMode": "minimal",
+    "hero_headline": "Sarah Chen",
+    "hero_subheadline": "UI/UX Designer & Brand Strategist",
+    "title": "UI/UX Designer & Brand Strategist",
+    "bio": "I design digital products and brand systems that turn complexity into clarity. My process combines deep user research, rigorous product thinking, and visual storytelling.\n\nOver the last decade, I have partnered with startups and enterprise teams to launch experiences that are elegant, accessible, and measurable.",
+    "description": "Independent product designer focused on SaaS, fintech, and ecommerce experiences.",
+    "pages": [
+      {
+        "title": "Home",
+        "slug": "home",
+        "template": "universal-home"
+      },
+      {
+        "title": "Gallery",
+        "slug": "gallery",
+        "template": "universal-portfolio"
+      },
+      {
+        "title": "About",
+        "slug": "about",
+        "template": "universal-about"
+      },
+      {
+        "title": "Contact",
+        "slug": "contact",
+        "template": "universal-contact"
+      }
+    ],
+    "images": [
+      "https://source.unsplash.com/800x600/?ui%20ux%20design&sig=400",
+      "https://source.unsplash.com/800x600/?creative%20portfolio&sig=401",
+      "https://source.unsplash.com/800x600/?app%20mockup&sig=402",
+      "https://source.unsplash.com/800x600/?brand%20identity&sig=403",
+      "https://source.unsplash.com/800x600/?ui%20ux%20design&sig=404",
+      "https://source.unsplash.com/800x600/?creative%20portfolio&sig=405",
+      "https://source.unsplash.com/800x600/?app%20mockup&sig=406",
+      "https://source.unsplash.com/800x600/?brand%20identity&sig=407",
+      "https://source.unsplash.com/800x600/?ui%20ux%20design&sig=408",
+      "https://source.unsplash.com/800x600/?creative%20portfolio&sig=409",
+      "https://source.unsplash.com/800x600/?app%20mockup&sig=410",
+      "https://source.unsplash.com/800x600/?brand%20identity&sig=411",
+      "https://source.unsplash.com/800x600/?ui%20ux%20design&sig=412",
+      "https://source.unsplash.com/800x600/?creative%20portfolio&sig=413",
+      "https://source.unsplash.com/800x600/?app%20mockup&sig=414",
+      "https://source.unsplash.com/800x600/?brand%20identity&sig=415",
+      "https://source.unsplash.com/800x600/?ui%20ux%20design&sig=416",
+      "https://source.unsplash.com/800x600/?creative%20portfolio&sig=417",
+      "https://source.unsplash.com/800x600/?app%20mockup&sig=418",
+      "https://source.unsplash.com/800x600/?brand%20identity&sig=419"
+    ],
+    "email": "hello@sarahchen.design",
+    "phone": "(415) 555-0168",
+    "address": "Mission District",
+    "city": "San Francisco",
+    "state": "CA",
+    "zip": "94110",
+    "socialLinks": {
+      "linkedin": "https://linkedin.com/in/sarahchen",
+      "instagram": "https://instagram.com/sarahchendesign",
+      "twitter": "https://x.com/sarahchendesign"
+    },
+    "skills": [
+      "Product Strategy",
+      "Design Systems",
+      "Prototyping",
+      "User Research",
+      "UX Writing",
+      "Brand Identity"
+    ],
+    "experience": [
+      {
+        "role": "Lead Product Designer",
+        "company": "Northscale",
+        "period": "2022-Present"
+      },
+      {
+        "role": "Senior UX Designer",
+        "company": "Helio Financial",
+        "period": "2018-2022"
+      },
+      {
+        "role": "Digital Designer",
+        "company": "Studio Loom",
+        "period": "2014-2018"
+      }
+    ],
+    "projects": [
+      {
+        "title": "Fintech Mobile Banking",
+        "category": "Product Design",
+        "description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+        "image": "https://source.unsplash.com/800x600/?ui%20ux%20design&sig=400"
+      },
+      {
+        "title": "D2C Beauty Rebrand",
+        "category": "Brand + UX",
+        "description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+        "image": "https://source.unsplash.com/800x600/?creative%20portfolio&sig=401"
+      },
+      {
+        "title": "Healthcare Patient Portal",
+        "category": "UX Research",
+        "description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+        "image": "https://source.unsplash.com/800x600/?app%20mockup&sig=402"
+      },
+      {
+        "title": "Travel Booking Platform",
+        "category": "Service Design",
+        "description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+        "image": "https://source.unsplash.com/800x600/?brand%20identity&sig=403"
+      },
+      {
+        "title": "SaaS Onboarding Flow",
+        "category": "Growth UX",
+        "description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+        "image": "https://source.unsplash.com/800x600/?ui%20ux%20design&sig=404"
+      },
+      {
+        "title": "Creator Commerce App",
+        "category": "Mobile App",
+        "description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+        "image": "https://source.unsplash.com/800x600/?creative%20portfolio&sig=405"
+      },
+      {
+        "title": "Real Estate Search UX",
+        "category": "Web Platform",
+        "description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+        "image": "https://source.unsplash.com/800x600/?app%20mockup&sig=406"
+      },
+      {
+        "title": "AI Support Dashboard",
+        "category": "Dashboard UX",
+        "description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+        "image": "https://source.unsplash.com/800x600/?brand%20identity&sig=407"
+      },
+      {
+        "title": "Luxury Retail Site",
+        "category": "Ecommerce UX",
+        "description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+        "image": "https://source.unsplash.com/800x600/?ui%20ux%20design&sig=408"
+      },
+      {
+        "title": "Nonprofit Donation UX",
+        "category": "Accessibility UX",
+        "description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+        "image": "https://source.unsplash.com/800x600/?creative%20portfolio&sig=409"
+      }
+    ],
+    "project_1_title": "Fintech Mobile Banking",
+    "project_1_category": "Product Design",
+    "project_1_description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+    "project_1_image": "https://source.unsplash.com/800x600/?ui%20ux%20design&sig=400",
+    "project_2_title": "D2C Beauty Rebrand",
+    "project_2_category": "Brand + UX",
+    "project_2_description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+    "project_2_image": "https://source.unsplash.com/800x600/?creative%20portfolio&sig=401",
+    "project_3_title": "Healthcare Patient Portal",
+    "project_3_category": "UX Research",
+    "project_3_description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+    "project_3_image": "https://source.unsplash.com/800x600/?app%20mockup&sig=402",
+    "project_4_title": "Travel Booking Platform",
+    "project_4_category": "Service Design",
+    "project_4_description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+    "project_4_image": "https://source.unsplash.com/800x600/?brand%20identity&sig=403",
+    "project_5_title": "SaaS Onboarding Flow",
+    "project_5_category": "Growth UX",
+    "project_5_description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+    "project_5_image": "https://source.unsplash.com/800x600/?ui%20ux%20design&sig=404",
+    "project_6_title": "Creator Commerce App",
+    "project_6_category": "Mobile App",
+    "project_6_description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+    "project_6_image": "https://source.unsplash.com/800x600/?creative%20portfolio&sig=405",
+    "project_7_title": "Real Estate Search UX",
+    "project_7_category": "Web Platform",
+    "project_7_description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+    "project_7_image": "https://source.unsplash.com/800x600/?app%20mockup&sig=406",
+    "project_8_title": "AI Support Dashboard",
+    "project_8_category": "Dashboard UX",
+    "project_8_description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+    "project_8_image": "https://source.unsplash.com/800x600/?brand%20identity&sig=407",
+    "project_9_title": "Luxury Retail Site",
+    "project_9_category": "Ecommerce UX",
+    "project_9_description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+    "project_9_image": "https://source.unsplash.com/800x600/?ui%20ux%20design&sig=408",
+    "project_10_title": "Nonprofit Donation UX",
+    "project_10_category": "Accessibility UX",
+    "project_10_description": "User-centered design solution balancing conversion, clarity, and brand voice.",
+    "project_10_image": "https://source.unsplash.com/800x600/?creative%20portfolio&sig=409",
+    "testimonial_1_quote": "Sarah elevated our product and our brand in one engagement.",
+    "testimonial_1_name": "Amelia Cho",
+    "testimonial_1_role": "Founder",
+    "testimonial_1_company": "Northscale",
+    "testimonial_1_product": "Northscale",
+    "testimonial_1_rating": "5",
+    "testimonial_2_quote": "Her design thinking accelerated our roadmap decisions.",
+    "testimonial_2_name": "Rafael Perez",
+    "testimonial_2_role": "VP Product",
+    "testimonial_2_company": "Helio Financial",
+    "testimonial_2_product": "Helio Financial",
+    "testimonial_2_rating": "5",
+    "testimonial_3_quote": "Exceptional craft and strong collaboration with engineering.",
+    "testimonial_3_name": "Tess Monroe",
+    "testimonial_3_role": "Engineering Manager",
+    "testimonial_3_company": "Orbit Labs",
+    "testimonial_3_product": "Orbit Labs",
+    "testimonial_3_rating": "5",
+    "testimonial_4_quote": "She turns ambiguous goals into clear, testable solutions.",
+    "testimonial_4_name": "Caleb Ward",
+    "testimonial_4_role": "CEO",
+    "testimonial_4_company": "Growthframe",
+    "testimonial_4_product": "Growthframe",
+    "testimonial_4_rating": "5"
+  }
+}

@@ -1,0 +1,6 @@
+{
+    "name": "CloudFlow",
+    "base": "ollie",
+    "mode": "heavy",
+    "brandMode": "modern"
+}

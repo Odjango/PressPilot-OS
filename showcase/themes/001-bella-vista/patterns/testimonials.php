@@ -1,0 +1,55 @@
+<?php
+/**
+ * Title: Testimonials with text.
+ * Slug: frost/testimonials
+ * Categories: testimonials
+ */
+?>
+<!-- wp:group {"align":"wide","layout":{"type":"default"}} -->
+<div class="wp-block-group alignwide">
+	<!-- wp:columns -->
+	<div class="wp-block-columns">
+		<!-- wp:column {"style":{"spacing":{"padding":{"top":"var:preset|spacing|small","right":"var:preset|spacing|small","bottom":"var:preset|spacing|small","left":"var:preset|spacing|small"}},"border":{"width":"1px"}},"borderColor":"contrast"} -->
+		<div class="wp-block-column has-border-color has-contrast-border-color" style="border-width:1px;padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)">
+			<!-- wp:paragraph {"align":"center","style":{"typography":{"lineHeight":"1"}},"fontSize":"max-72"} -->
+			<p class="has-text-align-center has-max-72-font-size" style="line-height:1">“</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph {"align":"center","style":{"spacing":{"margin":{"top":"0px"}}}} -->
+			<p class="has-text-align-center" style="margin-top:0px">Outstanding service and attention to detail. Truly impressed!</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph {"align":"center","fontSize":"small"} -->
+			<p class="has-text-align-center has-small-font-size"><strong>—Sarah M., Regular Guest</strong></p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:column -->
+		<!-- wp:column {"style":{"spacing":{"padding":{"top":"var:preset|spacing|small","right":"var:preset|spacing|small","bottom":"var:preset|spacing|small","left":"var:preset|spacing|small"}},"border":{"width":"1px"}},"borderColor":"contrast"} -->
+		<div class="wp-block-column has-border-color has-contrast-border-color" style="border-width:1px;padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)">
+			
+			<!-- wp:paragraph {"align":"center","style":{"typography":{"lineHeight":"1"}},"fontSize":"max-72"} -->
+			<p class="has-text-align-center has-max-72-font-size" style="line-height:1">“</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph {"align":"center","style":{"spacing":{"margin":{"top":"0px"}}}} -->
+			<p class="has-text-align-center" style="margin-top:0px">Outstanding service and attention to detail. Truly impressed!</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph {"align":"center","fontSize":"small"} -->
+			<p class="has-text-align-center has-small-font-size"><strong>—Michael T., Satisfied Customer</strong></p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:column -->
+		<!-- wp:column {"style":{"spacing":{"padding":{"top":"var:preset|spacing|small","right":"var:preset|spacing|small","bottom":"var:preset|spacing|small","left":"var:preset|spacing|small"}},"border":{"width":"1px"}},"borderColor":"contrast"} -->
+		<div class="wp-block-column has-border-color has-contrast-border-color" style="border-width:1px;padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--small);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--small)">
+			<!-- wp:paragraph {"align":"center","style":{"typography":{"lineHeight":"1"}},"fontSize":"max-72"} -->
+			<p class="has-text-align-center has-max-72-font-size" style="line-height:1">“</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph {"align":"center","style":{"spacing":{"margin":{"top":"0px"}}}} -->
+			<p class="has-text-align-center" style="margin-top:0px">Outstanding service and attention to detail. Truly impressed!</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:paragraph {"align":"center","fontSize":"small"} -->
+			<p class="has-text-align-center has-small-font-size"><strong>—Jennifer L., Happy Diner</strong></p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:column -->
+	</div>
+	<!-- /wp:columns -->
+</div>
+<!-- /wp:group -->
