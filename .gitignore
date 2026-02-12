@@ -148,3 +148,7 @@ output/
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# WordPress test credentials
+tests/wordpress/.env
+tests/wordpress/.env

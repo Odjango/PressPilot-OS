@@ -1,0 +1,47 @@
+services:
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "8888:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      MYSQL_SSL_MODE: DISABLED
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./themes:/var/www/html/wp-content/themes/test-theme
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password --skip-ssl
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wpcli:
+    image: wordpress:cli
+    user: "33:33"
+    depends_on:
+      - wordpress
+      - db
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      MYSQL_SSL_MODE: DISABLED
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./themes:/themes
+
+volumes:
+  wordpress_data:
+  db_data:
