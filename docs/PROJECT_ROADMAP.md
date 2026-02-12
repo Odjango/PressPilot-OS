@@ -128,10 +128,10 @@
 *   [x] **41 Unit Tests:** Ecommerce design tokens + section order validation
 
 ### Gen 2.0 Phase 5: SaaS/Service Vertical (Next)
-*   [ ] **SaaS Design Tokens:** `src/generator/design-system/verticals/saas.ts`
-*   [ ] **SaaS Recipes:** Feature-driven layouts with pricing tables, testimonials
-*   [ ] **SaaS Section Patterns:** Pricing grid, feature comparison, integration logos
-*   [ ] **Heavy Mode for SaaS:** Route SaaS verticals through recipe engine
+*   [x] **SaaS Design Tokens:** `src/generator/design-system/verticals/saas.ts`
+*   [x] **SaaS Recipes:** Feature-driven layouts with pricing tables, testimonials
+*   [x] **SaaS Section Patterns:** Pricing grid, feature comparison, integration logos
+*   [x] **Heavy Mode for SaaS:** Route SaaS verticals through recipe engine
 
 ---
 
@@ -157,15 +157,18 @@
 | Restaurant patterns (chef, gallery, menu, location) | `cf99574` + follow-ups | Feb 12 |
 | SaaS vertical (8 patterns, 2 recipes) | `cc6ec85` | Feb 12 |
 | Portfolio vertical (9 patterns, 3 recipes, Gallery nav) | `64214c4` | Feb 12 |
+| Local Service vertical | — | Feb 12 |
+| Ecommerce vertical | — | Feb 12 |
+| Visual testing pipeline (Playwright) | `103ed7e` | Feb 12 |
 | Agent docs (wp-fse-rules.md, AGENTS.md update) | `64214c4` | Feb 12 |
 
 ### In Progress
 
 | Task | Status | Notes |
 |------|--------|-------|
-| Local Service vertical | ⏳ Next | Builds on Restaurant patterns |
 | Visual testing pipeline | ⏳ Planned | Playwright screenshots of generated themes |
-| Ecommerce vertical | ⏳ Planned | Most complex — WooCommerce integration |
+| WordPress install verification | ⏳ Next | Test ZIPs in actual WordPress |
+| CI integration | ⏳ Planned | GitHub Actions for visual tests |
 
 ### Verticals Status
 
@@ -174,8 +177,8 @@
 | Restaurant | 12+ | classic-bistro, modern-dining | Menu | ✅ Complete |
 | SaaS | 8 | startup-landing, enterprise-product | — | ✅ Complete |
 | Portfolio/Talent | 9 | creative-professional, freelancer, talent-agency | Gallery | ✅ Complete |
-| Local Service | — | — | — | ⏳ Next |
-| Ecommerce | — | — | Shop | ⏳ Planned |
+| Local Service | 10 | home-services, professional-services, wellness-services | — | ✅ Complete |
+| Ecommerce | 10 | boutique-store, product-showcase, artisan-shop | Shop | ✅ Complete |
 
 ### Security
 
