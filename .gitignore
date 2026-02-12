@@ -152,3 +152,5 @@ output/
 # WordPress test credentials
 tests/wordpress/.env
 tests/wordpress/.env
+tests/wordpress/playwright-report/
+tests/wordpress/test-results/
