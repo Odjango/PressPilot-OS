@@ -1,5 +1,0 @@
-tmp/ui-ux-pro-max-skill/cli/src/commands/init.ts(4,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
-tmp/ui-ux-pro-max-skill/cli/src/commands/init.ts(5,21): error TS2307: Cannot find module 'prompts' or its corresponding type declarations.
-tmp/ui-ux-pro-max-skill/cli/src/commands/update.ts(2,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
-tmp/ui-ux-pro-max-skill/cli/src/commands/versions.ts(2,17): error TS2307: Cannot find module 'ora' or its corresponding type declarations.
-tmp/ui-ux-pro-max-skill/cli/src/index.ts(3,25): error TS2307: Cannot find module 'commander' or its corresponding type declarations.

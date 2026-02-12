@@ -1,4 +1,11 @@
 {
     "git.ignoreLimitWarning": true,
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "css.lint.validProperties": [],
+    "html.validate.styles": false,
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "vscode-edge-devtools.webhint": false,
+    "claudeCode.useTerminal": true
 }
