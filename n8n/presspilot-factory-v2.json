@@ -1,0 +1,187 @@
+{
+  "name": "PressPilot Factory Generator v2 (Pattern Assembly)",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "build-site",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "options": {
+          "rawBody": false
+        }
+      },
+      "id": "f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 340],
+      "webhookId": "presspilot-build-site"
+    },
+    {
+      "parameters": {
+        "jsCode": "// PressPilot Factory v2 - Transform Input\n// Maps frontend form data to AI content generator format\n\nconst input = items[0].json;\n\nconst categoryMap = {\n  'Restaurant / Food Service': 'restaurant',\n  'Real Estate / Architecture': 'realestate',\n  'Tech / SaaS': 'startup',\n  'Health / Wellness': 'fitness',\n  'Creative Agency': 'agency',\n  'E-commerce': 'ecommerce',\n  'Personal Portfolio': 'corporate'\n};\n\nconst businessName = input.business_name || input.businessName || 'My Business';\nconst tagline = input.tagline || '';\nconst description = input.description || '';\nconst businessType = input.industry || input.businessType || 'corporate';\nconst category = categoryMap[businessType] || 'corporate';\nconst logo = input.logo_base64 || input.logo || null;\n\n// Colors from input or defaults\nconst colors = input.colors || {};\n\nconst payload = {\n  businessName,\n  tagline,\n  description,\n  category,\n  colors: {\n    primary: colors.primary || '#1e40af',\n    secondary: colors.secondary || '#64748b',\n    accent: colors.accent || '#f59e0b'\n  }\n};\n\nif (logo) {\n  payload.logo = logo;\n}\n\nreturn [{ json: payload }];"
+      },
+      "id": "a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d",
+      "name": "Transform Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 340]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are the PressPilot Content Engine. You receive a business description and output structured JSON that a WordPress pattern assembler uses to build a complete FSE theme.\n\nYou do NOT generate HTML, block markup, or WordPress code. You ONLY output JSON.\n\nAvailable patterns:\n- Headers: headers/centered-logo, headers/header-minimal, headers/header-split, headers/header-centered\n- Heroes: heroes/cover-cta, heroes/split-image, heroes/hero-minimal, heroes/hero-cover, heroes/hero-split\n- Features: features/icon-grid-3, features/features-grid-icons, features/features-cards-images\n- Testimonials: testimonials/grid-3, testimonials/testimonials-grid\n- CTA: cta/banner-centered, cta/cta-banner\n- Restaurant: restaurant/menu-categories, restaurant/chef-highlight, restaurant/hours-location, restaurant/restaurant-about, restaurant/restaurant-menu, restaurant/restaurant-reservation\n- E-Commerce: ecommerce/featured-product, ecommerce/product-grid, ecommerce/categories, ecommerce/sale-banner\n- Footers: footers/footer-standard, footers/footer-minimal, footers/restaurant\n\nRules:\n- Select 5-8 patterns. Always include 1 header, 1 hero, 1 footer.\n- Restaurant sites MUST include restaurant/menu-categories and restaurant/hours-location.\n- E-commerce sites MUST include at least one product pattern and ecommerce/categories.\n- selected_patterns array defines page order: header first, footer last.\n- All content must be specific to the business described. No generic placeholder text.\n- Headlines: 4-8 words. Descriptions: 1-2 sentences. Buttons: 2-4 words.\n- Output ONLY valid JSON. No markdown, no code fences, no explanatory text.\n\nPlaceholder slugs you must fill per pattern:\n\nHeaders: header/nav-item-1 through header/nav-item-4, header/cta-button\nHeroes: hero/title, hero/subtitle, hero/button-primary, hero/button-secondary\nHero images: hero/background (1920x1080) or hero/featured-image (800x1000)\nFeatures: features/section-title, features/section-subtitle, features/feature-1-title, features/feature-1-desc through feature-3\nTestimonials: testimonials/section-title, testimonials/quote-1 through quote-3, testimonials/name-1 through name-3, testimonials/role-1 through role-3\nCTA: cta/title, cta/subtitle, cta/button\nMenu: menu/section-title, menu/section-subtitle, menu/category-1-name through category-3-name, menu/item-1-name through item-8-name with matching desc and price\nChef: chef/name, chef/title, chef/bio, chef/quote\nHours: info/section-title, info/hours-weekday, info/hours-weekend, info/address, info/phone, info/email\nProducts: product/label, product/name, product/description, product/price, product/button\nProduct grid: products/section-title, products/product-1-name through product-4-name with prices\nCategories: categories/section-title, categories/cat-1-name through cat-3-name with counts\nFooter: footer/tagline, footer/address, footer/phone, footer/email, footer/hours (restaurant)\n\nFor images, use Pexels URLs: https://images.pexels.com/photos/{ID}/pexels-photo-{ID}.jpeg?auto=compress&cs=tinysrgb&w={WIDTH}\nOr placeholders: https://placehold.co/{W}x{H}/EEEEEE/999999?text={LABEL}"
+            },
+            {
+              "role": "user",
+              "content": "=Generate content for this business:\n\nBusiness Name: {{ $json.businessName }}\nTagline: {{ $json.tagline || 'None provided' }}\nDescription: {{ $json.description || 'No description provided' }}\nCategory: {{ $json.category }}\nBrand Colors: Primary {{ $json.colors.primary }}, Secondary {{ $json.colors.secondary }}, Accent {{ $json.colors.accent }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 4096,
+          "responseFormat": "json_object"
+        }
+      },
+      "id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
+      "name": "AI Generate Content",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [680, 340],
+      "credentials": {
+        "openAiApi": {
+          "id": "REPLACE_WITH_YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Transform AI output into Factory API v2 format\n\nconst input = items[0].json;\nconst prevData = $('Transform Input').first().json;\n\n// Parse AI response - handle both string and object\nlet aiContent;\nif (typeof input.message === 'string') {\n  try {\n    aiContent = JSON.parse(input.message);\n  } catch (e) {\n    // Try to extract JSON from markdown code fences\n    const match = input.message.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\n    if (match) {\n      aiContent = JSON.parse(match[1].trim());\n    } else {\n      aiContent = JSON.parse(input.message.trim());\n    }\n  }\n} else if (input.message?.content) {\n  aiContent = typeof input.message.content === 'string'\n    ? JSON.parse(input.message.content)\n    : input.message.content;\n} else {\n  aiContent = input;\n}\n\n// Build Factory API v2 payload\nconst payload = {\n  // New v2 fields\n  selected_patterns: aiContent.selected_patterns || [],\n  strings: aiContent.strings || {},\n  images: aiContent.images || {},\n  brand_colors: aiContent.brand_colors || {\n    primary: prevData.colors?.primary || '#1e40af',\n    secondary: prevData.colors?.secondary || '#64748b',\n    accent: prevData.colors?.accent || '#f59e0b'\n  },\n  business: aiContent.business || {\n    name: prevData.businessName || 'My Business',\n    tagline: prevData.tagline || '',\n    phone: '(555) 123-4567',\n    email: 'hello@example.com',\n    address: '123 Main Street'\n  },\n  // Preserve logo if provided\n  logo: prevData.logo || null,\n  // Legacy compat fields so REST API validation passes\n  theme_slug: (aiContent.business?.name || prevData.businessName || 'my-theme')\n    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')\n};\n\nreturn [{ json: payload }];"
+      },
+      "id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+      "name": "Format for Factory API",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 340]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://factory.presspilotapp.com/wp-json/presspilot/v2/generate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer pp_factory_2026_109540718b67c8f1acb967948eecf2e1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 120000,
+          "response": {
+            "response": {
+              "fullResponse": false
+            }
+          }
+        }
+      },
+      "id": "b3c4d5e6-f7a8-4b9c-0d1e-2f3a4b5c6d7e",
+      "name": "Call Factory API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 340]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": {{ $json.success !== false }},\n  \"theme_zip\": \"{{ $json.zip_url || '' }}\",\n  \"theme_slug\": \"{{ $json.theme_slug || '' }}\",\n  \"generation_time\": \"{{ $json.generation_time || '0s' }}\",\n  \"patterns_used\": {{ $json.patterns_used || 0 }}\n}",
+        "options": {}
+      },
+      "id": "c4d5e6f7-a8b9-4c0d-1e2f-3a4b5c6d7e8f",
+      "name": "Return Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1340, 340]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Transform Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Input": {
+      "main": [
+        [
+          {
+            "node": "AI Generate Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Generate Content": {
+      "main": [
+        [
+          {
+            "node": "Format for Factory API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format for Factory API": {
+      "main": [
+        [
+          {
+            "node": "Call Factory API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Factory API": {
+      "main": [
+        [
+          {
+            "node": "Return Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0
+}

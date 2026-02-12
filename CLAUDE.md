@@ -122,6 +122,27 @@ Text Domain: [business-slug]
 - Self-closing blocks: `<!-- wp:block-name /-->`
 - Container blocks need matching HTML wrapper
 
+### Inline Styles Are REQUIRED (Do NOT Remove)
+WordPress FSE block markup **requires** inline `style=""` attributes. The block validator compares rendered HTML against the block's `save()` function output character-by-character. Removing inline styles causes "Attempt Recovery" crashes in the Site Editor.
+
+**Linter warnings about `no-inline-styles` are false positives** for WordPress FSE themes. These are suppressed via:
+- `.hintrc` — disables webhint's `no-inline-styles` rule
+- `.vscode/settings.json` — disables Edge Tools webhint integration
+
+Examples of REQUIRED inline styles:
+```html
+<!-- Preset spacing (CSS custom property) — REQUIRED -->
+<div style="padding-top:var(--wp--preset--spacing--70)">
+
+<!-- Custom typography — REQUIRED -->
+<h2 style="font-size:clamp(2rem, 4vw, 3rem);font-weight:700">
+
+<!-- Border styling — REQUIRED -->
+<div style="border-bottom-color:var(--wp--preset--color--tertiary);border-bottom-width:1px">
+```
+
+**DO NOT** attempt to move these styles to external CSS or theme.json. They are part of the block grammar contract.
+
 ---
 
 ## theme.json TEMPLATE
