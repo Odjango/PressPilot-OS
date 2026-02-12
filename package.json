@@ -24,6 +24,9 @@
     "generate": "tsx src/generator/index.ts",
     "pp:generate:stdin": "tsx bin/generate.ts",
     "validate:blocks": "npx tsx scripts/validate-blocks.ts",
+    "showcase:generate": "npx tsx showcase/scripts/generate-all.ts",
+    "showcase:screenshots": "npx tsx showcase/scripts/capture-screenshots.ts",
+    "showcase:all": "npm run showcase:generate && npm run showcase:screenshots",
     "prepare": "husky"
   },
   "bin": {
