@@ -34,8 +34,8 @@ export class ContextBuilder {
         renderContext: RenderContext,
         recipe: LayoutRecipe
     ): SectionContext {
-        // Resolve brand mode from render context, default to 'playful'
-        const brandMode = (renderContext.brandStyle || 'playful') as BrandMode;
+        // Resolve brand mode from render context, default to 'modern'
+        const brandMode = (renderContext.brandMode || renderContext.brandStyle || 'modern') as BrandMode;
 
         // Get design tokens for this vertical and brand mode
         const tokens = getDesignTokens(brandMode, recipe.vertical);

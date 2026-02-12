@@ -31,6 +31,12 @@ import {
     getRestaurantPromoBandSection,
     getSocialProofSection,
     getFinalCTASection,
+    getRestaurantChefHighlightSectionWithContext,
+    getRestaurantGalleryGridSectionWithContext,
+    getRestaurantHoursLocationSectionWithContext,
+    getRestaurantLocationMapSectionWithContext,
+    getRestaurantAwardsPressSectionWithContext,
+    getRestaurantReservationFormSectionWithContext,
     // Phase 3 WithContext variants
     getRestaurantStorySectionWithContext,
     getRestaurantMenuPreviewSectionWithContext,
@@ -75,10 +81,16 @@ const SECTION_RENDERERS: Record<SectionType, SectionRendererFn> = {
     'story': (_section, ctx) => {
         return getRestaurantStorySection(ctx.content, ctx.brandStyle);
     },
+    'chef-highlight': (_section, _ctx) => '',
+    'gallery-grid': (_section, _ctx) => '',
 
     'menu-preview': (_section, ctx) => {
         return getRestaurantMenuPreviewSection(ctx.content, ctx.brandStyle);
     },
+    'hours-location': (_section, _ctx) => '',
+    'location-map': (_section, _ctx) => '',
+    'awards-press': (_section, _ctx) => '',
+    'reservation-form': (_section, _ctx) => '',
 
     'promo-band': (_section, ctx) => {
         return getRestaurantPromoBandSection(ctx.content, ctx.brandStyle);
@@ -132,9 +144,27 @@ const SECTION_RENDERERS_V2: Record<SectionType, SectionRendererFnV2> = {
     'story': (ctx) => {
         return getRestaurantStorySectionWithContext(ctx);
     },
+    'chef-highlight': (ctx) => {
+        return getRestaurantChefHighlightSectionWithContext(ctx);
+    },
+    'gallery-grid': (ctx) => {
+        return getRestaurantGalleryGridSectionWithContext(ctx);
+    },
 
     'menu-preview': (ctx) => {
         return getRestaurantMenuPreviewSectionWithContext(ctx);
+    },
+    'hours-location': (ctx) => {
+        return getRestaurantHoursLocationSectionWithContext(ctx);
+    },
+    'location-map': (ctx) => {
+        return getRestaurantLocationMapSectionWithContext(ctx);
+    },
+    'awards-press': (ctx) => {
+        return getRestaurantAwardsPressSectionWithContext(ctx);
+    },
+    'reservation-form': (ctx) => {
+        return getRestaurantReservationFormSectionWithContext(ctx);
     },
 
     'promo-band': (ctx) => {
