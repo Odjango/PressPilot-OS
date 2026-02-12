@@ -6,6 +6,7 @@ import { getUniversalBlogContent, getUniversalFooterContent, getUniversalHeaderC
 import { generateMenuPattern } from '../patterns/restaurant-menu';
 import { getModernImageUrl } from '../utils/ImageProvider';
 import { ContentJSON } from '../modules/ContentBuilder';
+import { sanitizeForPHP, sanitizePath } from '../utils/sanitize';
 
 /**
  * Demo content replacement patterns by base theme.
@@ -161,17 +162,26 @@ export class PatternInjector {
             // Apply all legacy demo content replacements
             for (const replacement of LEGACY_DEMO_CONTENT.frost.replacements) {
                 const value = replacement.key ? (userData as any)[replacement.key] : null;
-                content = content.replace(replacement.pattern, value || replacement.fallback);
+                content = content.replace(
+                    replacement.pattern,
+                    sanitizeForPHP(value || replacement.fallback)
+                );
             }
 
             for (const replacement of LEGACY_DEMO_CONTENT.tove.replacements) {
                 const value = replacement.key ? (userData as any)[replacement.key] : null;
-                content = content.replace(replacement.pattern, value || replacement.fallback);
+                content = content.replace(
+                    replacement.pattern,
+                    sanitizeForPHP(value || replacement.fallback)
+                );
             }
 
             for (const replacement of LEGACY_DEMO_CONTENT.tt4.replacements) {
                 const value = replacement.key ? (userData as any)[replacement.key] : null;
-                content = content.replace(replacement.pattern, value || replacement.fallback);
+                content = content.replace(
+                    replacement.pattern,
+                    sanitizeForPHP(value || replacement.fallback)
+                );
             }
 
             // Café-specific content (only replaced for non-café businesses)
@@ -220,20 +230,29 @@ export class PatternInjector {
         if (!slots['Études']) {
             for (const replacement of LEGACY_DEMO_CONTENT.tt4.replacements) {
                 const value = replacement.key ? (userData as any)[replacement.key] : null;
-                content = content.replace(replacement.pattern, value || replacement.fallback);
+                content = content.replace(
+                    replacement.pattern,
+                    sanitizeForPHP(value || replacement.fallback)
+                );
             }
         }
 
         // Frost "Build with Frost" replacements
         for (const replacement of LEGACY_DEMO_CONTENT.frost.replacements) {
             const value = replacement.key ? (userData as any)[replacement.key] : null;
-            content = content.replace(replacement.pattern, value || replacement.fallback);
+            content = content.replace(
+                replacement.pattern,
+                sanitizeForPHP(value || replacement.fallback)
+            );
         }
 
         // Tove "Niofika" replacements
         for (const replacement of LEGACY_DEMO_CONTENT.tove.replacements) {
             const value = replacement.key ? (userData as any)[replacement.key] : null;
-            content = content.replace(replacement.pattern, value || replacement.fallback);
+            content = content.replace(
+                replacement.pattern,
+                sanitizeForPHP(value || replacement.fallback)
+            );
         }
 
         // Café-specific content (only replaced for non-café businesses)
@@ -358,9 +377,15 @@ ${templateContent}
                 hero_sub: userData.hero_subheadline
             };
 
-            // Pass heroLayout, industry, and brandStyle for content customization
-            // brandStyle enables playful vs modern visual differentiation for restaurants
-            let homeMarkup = getUniversalHomeContent(homeContent, userData.heroLayout, userData.industry, userData.brandStyle).trim();
+            // Pass heroLayout, industry, brand style/mode, and business type for recipe selection.
+            let homeMarkup = getUniversalHomeContent(
+                homeContent,
+                userData.heroLayout,
+                userData.industry,
+                userData.brandStyle,
+                userData.brandMode,
+                userData.businessType as string | undefined
+            ).trim();
 
             // Safety net: replace any remaining {{HERO_IMAGE*}} placeholders
             const fallbackHeroUrl = contentJson?.hero?.images?.[0]
@@ -397,8 +422,8 @@ ${homeMarkup}
     }
 
     private async injectGlobalParts(themeDir: string, userData: GeneratorData, safeName: string, pages?: any[]): Promise<void> {
-        const businessName = userData.name || 'PressPilot Site';
-        const baseTheme = userData.baseName || 'twentytwentyfour';
+        const businessName = sanitizeForPHP(userData.name || 'PressPilot Site');
+        const baseTheme = sanitizePath(userData.baseName || 'twentytwentyfour');
 
         // Handle logo: save base64 to file and set up auto-registration
         // wp:site-logo block reads from WordPress Site Identity (custom_logo theme_mod)

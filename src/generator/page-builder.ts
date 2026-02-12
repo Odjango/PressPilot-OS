@@ -9,9 +9,11 @@ import { getUniversalHomeContent } from './patterns/universal-home';
 import { getUniversalMenuContent } from './patterns/universal-menu';
 import { getUniversalReservationContent } from './patterns/universal-reservation';
 import { getUniversalFooterContent } from './patterns/universal-footer';
+import { sanitizePath } from './utils/sanitize';
 
 export const buildPageTemplate = async (themeDir: string, page: PageData, baseName: string = 'twentytwentyfour', heroLayout?: HeroLayout) => {
-    const filename = `page-${page.slug}.html`;
+    const safeSlug = sanitizePath(page.slug || 'page');
+    const filename = `page-${safeSlug}.html`;
     const filePath = path.join(themeDir, 'templates', filename);
 
     let innerContent = '';
@@ -53,7 +55,7 @@ ${innerContent.trim()}
         console.log(`[Content] Built FSE-Compliant page template: ${filename}`);
 
         // If it's the home page, also overwrite front-page.html (Blank Canvas Logic)
-        if (page.slug === 'home') {
+        if (safeSlug === 'home') {
             const frontPagePath = path.join(themeDir, 'templates', 'front-page.html');
             await fs.writeFile(frontPagePath, content.trim());
             console.log(`[Content] Overwrote front-page.html with clean home content.`);

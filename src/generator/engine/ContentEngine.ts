@@ -3,12 +3,13 @@ import path from 'path';
 import { generateContentLoader } from '../utils/content-loader-generator';
 import { buildPageTemplate, buildFooterTemplate, buildHeaderTemplate } from '../page-builder';
 import { ContentJSON } from '../modules/ContentBuilder';
+import { sanitizeForPHP } from '../utils/sanitize';
 
 export class ContentEngine {
 
     async injectContentLoader(themeDir: string, contentJson: ContentJSON): Promise<void> {
-        const siteTitle = contentJson.businessName;
-        const tagline = contentJson.hero.subheadline || '';
+        const siteTitle = sanitizeForPHP(contentJson.businessName);
+        const tagline = sanitizeForPHP(contentJson.hero.subheadline || '');
         const logoPath = contentJson.slots['{{LOGO_URL}}'] || '';
 
         console.log(`[ContentEngine] Generating setup script for '${siteTitle}'...`);

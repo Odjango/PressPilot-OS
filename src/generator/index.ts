@@ -15,6 +15,7 @@ import { ContentBuilder } from './modules/ContentBuilder';
 import { StyleBuilder } from './modules/StyleBuilder';
 import { VariationBuilder } from './modules/VariationBuilder';
 import { prefetchImages } from './utils/ImageProvider';
+import { sanitizePath, sanitizeUserInput } from './utils/sanitize';
 
 /**
  * Feature Flags
@@ -60,7 +61,7 @@ export async function generateTheme(options: GeneratorOptions = {}) {
     const assetCleaner = new AssetCleaner();
 
     // 2. RUN PIPELINE MODULES (Contracts)
-    const userData: GeneratorData = options.data || {};
+    const userData: GeneratorData = sanitizeUserInput<GeneratorData>(options.data || {});
     if (options.brandMode && !userData.brandMode) {
         userData.brandMode = options.brandMode;
     }
@@ -97,11 +98,16 @@ export async function generateTheme(options: GeneratorOptions = {}) {
         console.log('[Phase14] Restaurant vertical -> forcing Heavy Mode for hero differentiation');
     }
     const themeName = styleJson.metadata.themeName;
-    const safeName = options.slug || themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const rawName = options.slug || themeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    const safeName = sanitizePath(rawName);
 
-    const buildDir = options.outDir ? options.outDir : path.join(rootDir, 'output', safeName);
-    const zipPath = path.join(path.dirname(buildDir), `${safeName}.zip`);
-    const themeDir = path.join(buildDir, safeName);
+    const requestedBuildDir = options.outDir
+        ? path.resolve(options.outDir)
+        : path.join(rootDir, 'output', safeName);
+    const safeBuildDirName = sanitizePath(path.basename(requestedBuildDir));
+    const buildDir = path.join(path.dirname(requestedBuildDir), safeBuildDirName);
+    const zipPath = path.join(path.dirname(buildDir), sanitizePath(`${safeName}.zip`));
+    const themeDir = path.join(buildDir, sanitizePath(safeName));
 
     console.log(`[Orchestrator] Starting assembly for: ${themeName}`);
 

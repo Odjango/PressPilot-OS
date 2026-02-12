@@ -1,6 +1,7 @@
 import { GeneratorData, PageData, RestaurantMenu, ThemePersonality, HeroLayout } from '../types';
 import { PATTERN_REGISTRY } from '../config/PatternRegistry';
 import { getModernImageUrl } from '../utils/ImageProvider';
+import { sanitizeUserInput } from '../utils/sanitize';
 
 export interface ContentJSON {
     hero: {
@@ -21,14 +22,15 @@ export interface ContentJSON {
 export class ContentBuilder {
     invoke(baseTheme: string, userData: GeneratorData): ContentJSON {
         console.log(`[ContentBuilder] Building content for base: ${baseTheme}`);
+        const safeUserData = sanitizeUserInput<GeneratorData>(userData);
 
         const personality = PATTERN_REGISTRY[baseTheme];
         const slots: Record<string, string> = {};
 
         // 1. Map Hero Content
-        const hero_headline = userData.hero_headline || 'Build your site with clicks, not code.';
-        const hero_subheadline = userData.hero_subheadline || 'Easily create beautiful, fully-customizable websites.';
-        const industry = (userData.industry || 'saas').toLowerCase();
+        const hero_headline = safeUserData.hero_headline || 'Build your site with clicks, not code.';
+        const hero_subheadline = safeUserData.hero_subheadline || 'Easily create beautiful, fully-customizable websites.';
+        const industry = (safeUserData.industry || 'saas').toLowerCase();
 
         if (personality) {
             slots[personality.patterns.hero_search_headline] = hero_headline;
@@ -41,7 +43,7 @@ export class ContentBuilder {
         // 2. Prepare Images (uses cached Unsplash images or fallback)
         const images: string[] = [];
         for (let i = 0; i < 5; i++) {
-            images.push(getModernImageUrl(userData.industry || 'general', i));
+            images.push(getModernImageUrl(safeUserData.industry || 'general', i));
         }
 
         // Add hero images to slots for pattern injection
@@ -52,8 +54,8 @@ export class ContentBuilder {
         slots['{{HERO_IMAGE_5}}'] = images[4];
 
         // 3. Prepare Pages and Menus
-        const pages = [...(userData.pages || [])];
-        const menus = userData.menus || [];
+        const pages = [...(safeUserData.pages || [])];
+        const menus = safeUserData.menus || [];
 
         // Industry-specific Page Injection
         const vertical = industry;
@@ -69,16 +71,16 @@ export class ContentBuilder {
         }
 
         // 4. Universal Slots (For Prepared Cores)
-        slots['{{BUSINESS_NAME}}'] = userData.name || 'My PressPilot Site';
+        slots['{{BUSINESS_NAME}}'] = safeUserData.name || 'My PressPilot Site';
         slots['{{HERO_TITLE}}'] = hero_headline;
         slots['{{HERO_TEXT}}'] = hero_subheadline;
         slots['{{HERO_PRETITLE}}'] = industry.toUpperCase();
         slots['{{HERO_CTA}}'] = 'Get Started';
-        slots['{{LOGO_URL}}'] = userData.logo || '';
+        slots['{{LOGO_URL}}'] = safeUserData.logo || '';
         slots['{{SERVICES_TITLE}}'] = 'Our Services';
-        slots['{{SERVICES_TEXT}}'] = userData.description || 'We offer high-quality services tailored to your needs.';
+        slots['{{SERVICES_TEXT}}'] = safeUserData.description || 'We offer high-quality services tailored to your needs.';
         slots['{{ABOUT_PRETITLE}}'] = 'Overview';
-        slots['{{ABOUT_TEXT}}'] = userData.description || 'Dedicated to excellence since 2024.';
+        slots['{{ABOUT_TEXT}}'] = safeUserData.description || 'Dedicated to excellence since 2024.';
         slots['{{FAQ_TITLE}}'] = 'Common Questions';
         slots['{{NEWSLETTER_TITLE}}'] = 'Join our Newsletter';
         slots['{{NEWSLETTER_TEXT}}'] = 'Stay updated with our latest news and offers.';
@@ -113,48 +115,50 @@ export class ContentBuilder {
         // These slots are used by universal-contact.ts and universal-footer.ts
         // Values come from user input; fallback to empty string (not hardcoded demos)
         // ========================================================================
-        slots['{{CONTACT_EMAIL}}'] = userData.email || '';
-        slots['{{CONTACT_PHONE}}'] = userData.phone || '';
-        slots['{{CONTACT_ADDRESS}}'] = userData.address || '';
-        slots['{{CONTACT_CITY}}'] = userData.city || '';
-        slots['{{CONTACT_STATE}}'] = userData.state || '';
-        slots['{{CONTACT_ZIP}}'] = userData.zip || '';
-        slots['{{CONTACT_COUNTRY}}'] = userData.country || '';
-        slots['{{CONTACT_NEIGHBORHOOD}}'] = userData.neighborhood || '';
+        slots['{{CONTACT_EMAIL}}'] = safeUserData.email || '';
+        slots['{{CONTACT_PHONE}}'] = safeUserData.phone || '';
+        slots['{{CONTACT_ADDRESS}}'] = safeUserData.address || '';
+        slots['{{CONTACT_CITY}}'] = safeUserData.city || '';
+        slots['{{CONTACT_STATE}}'] = safeUserData.state || '';
+        slots['{{CONTACT_ZIP}}'] = safeUserData.zip || '';
+        slots['{{CONTACT_COUNTRY}}'] = safeUserData.country || '';
+        slots['{{CONTACT_NEIGHBORHOOD}}'] = safeUserData.neighborhood || '';
 
         // Build full address from parts (if any are provided)
         const addressParts = [
-            userData.address,
-            userData.city,
-            userData.state,
-            userData.zip
+            safeUserData.address,
+            safeUserData.city,
+            safeUserData.state,
+            safeUserData.zip
         ].filter(Boolean);
         slots['{{CONTACT_FULL_ADDRESS}}'] = addressParts.length > 0 ? addressParts.join(', ') : '';
 
         // Social link slots
-        slots['{{SOCIAL_FACEBOOK}}'] = userData.socialLinks?.facebook || '#';
-        slots['{{SOCIAL_INSTAGRAM}}'] = userData.socialLinks?.instagram || '#';
-        slots['{{SOCIAL_TWITTER}}'] = userData.socialLinks?.twitter || '#';
-        slots['{{SOCIAL_LINKEDIN}}'] = userData.socialLinks?.linkedin || '#';
-        slots['{{SOCIAL_YOUTUBE}}'] = userData.socialLinks?.youtube || '#';
-        slots['{{SOCIAL_TIKTOK}}'] = userData.socialLinks?.tiktok || '#';
+        slots['{{SOCIAL_FACEBOOK}}'] = safeUserData.socialLinks?.facebook || '#';
+        slots['{{SOCIAL_INSTAGRAM}}'] = safeUserData.socialLinks?.instagram || '#';
+        slots['{{SOCIAL_TWITTER}}'] = safeUserData.socialLinks?.twitter || '#';
+        slots['{{SOCIAL_LINKEDIN}}'] = safeUserData.socialLinks?.linkedin || '#';
+        slots['{{SOCIAL_YOUTUBE}}'] = safeUserData.socialLinks?.youtube || '#';
+        slots['{{SOCIAL_TIKTOK}}'] = safeUserData.socialLinks?.tiktok || '#';
 
         // ========================================================================
         // Populate page.content with contact info for each page
         // This ensures patterns like universal-contact.ts have access to data
         // ========================================================================
         const contactInfo = {
-            business_name: userData.name || 'Our Business',
-            email: userData.email || '',
-            phone: userData.phone || '',
-            address: userData.address || '',
-            city: userData.city || '',
-            state: userData.state || '',
-            zip: userData.zip || '',
+            business_name: safeUserData.name || 'Our Business',
+            business_type: safeUserData.businessType || safeUserData.industry || '',
+            email: safeUserData.email || '',
+            phone: safeUserData.phone || '',
+            address: safeUserData.address || '',
+            city: safeUserData.city || '',
+            state: safeUserData.state || '',
+            zip: safeUserData.zip || '',
             full_address: addressParts.length > 0 ? addressParts.join(', ') : '',
-            social_facebook: userData.socialLinks?.facebook || '#',
-            social_instagram: userData.socialLinks?.instagram || '#',
-            social_twitter: userData.socialLinks?.twitter || '#'
+            opening_hours: safeUserData.openingHours || {},
+            social_facebook: safeUserData.socialLinks?.facebook || '#',
+            social_instagram: safeUserData.socialLinks?.instagram || '#',
+            social_twitter: safeUserData.socialLinks?.twitter || '#'
         };
 
         // Add contact info to each page's content
@@ -177,9 +181,9 @@ export class ContentBuilder {
             menus: menus,
             slots: slots,
             baseName: baseTheme,
-            businessName: userData.name || 'My PressPilot Site',
+            businessName: safeUserData.name || 'My PressPilot Site',
             industry: industry, // Now passing industry through
-            heroLayout: userData.heroLayout // Hero layout selection
+            heroLayout: safeUserData.heroLayout // Hero layout selection
         };
     }
 }
