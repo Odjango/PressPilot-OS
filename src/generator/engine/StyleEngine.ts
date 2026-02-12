@@ -42,6 +42,11 @@ export class StyleEngine {
                 `    color: ${textToken} !important;`,
                 `}`
             );
+            rules.push(
+                `.has-${slot}-background-color .presspilot-on-colored-bg {`,
+                `    color: ${textToken} !important;`,
+                `}`
+            );
         }
 
         return rules.length > 0 ? '\n' + rules.join('\n') + '\n' : '';
@@ -208,6 +213,26 @@ export class StyleEngine {
             styleContent = styleContent.replace(/Theme Name:.*$/m, `Theme Name: ${themeName}`);
 
             let contrastRules = '';
+            const darkContextContrastRules = `
+/* Dark-context readability: force light outline CTA inside dark hero/cover contexts */
+.wp-block-cover .wp-block-button.is-style-outline .wp-block-button__link,
+.has-contrast-background-color .wp-block-button.is-style-outline .wp-block-button__link {
+    color: var(--wp--preset--color--base) !important;
+    border-color: var(--wp--preset--color--base) !important;
+}
+
+.wp-block-cover .wp-block-button.is-style-outline .wp-block-button__link:hover,
+.has-contrast-background-color .wp-block-button.is-style-outline .wp-block-button__link:hover {
+    color: var(--wp--preset--color--accent-2) !important;
+    border-color: var(--wp--preset--color--accent-2) !important;
+}
+
+/* Dark-context readability: avoid dark accent text on dark surfaces */
+.wp-block-cover .has-accent-color,
+.has-contrast-background-color .has-accent-color {
+    color: var(--wp--preset--color--base) !important;
+}
+`;
             if (await fs.pathExists(themeJsonPath)) {
                 const themeJson = await fs.readJson(themeJsonPath);
                 contrastRules = this.buildBackgroundContrastCss(themeJson);
@@ -294,6 +319,7 @@ main.wp-block-group > :first-child {
    Filled Button Contrast (Palette-Aware)
    ============================================= */
 ${contrastRules}
+${darkContextContrastRules}
 `;
             styleContent += minimalLayoutStyles;
             await fs.writeFile(styleCssPath, styleContent);
