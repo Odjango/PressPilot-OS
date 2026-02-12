@@ -138,3 +138,68 @@
 ## Ongoing: "Hard Gates" Maintenance
 *   **Validator:** Continuously update `WP Theme Output Checker` skill.
 *   **Forensics:** Log any new FSE errors to `attempt-recovery-forensics.md`.
+
+
+
+
+## Phase 14: Generator 2.0 — Pattern Library & Verticals (Feb 2026)
+
+> Branch: `001-generator-2-baseline`
+> Spec: `/specs/001-generator-2-baseline/`
+
+### Completed Tasks
+
+| Task | Commit | Date |
+|------|--------|------|
+| Brand modes (modern, playful, bold, minimal) | — | Feb 2026 |
+| Button contrast fixes (outline buttons, dark backgrounds) | `5b975b5` | Feb 12 |
+| Security hardening (input sanitization, attack tests) | `01dbd32` | Feb 12 |
+| Restaurant patterns (chef, gallery, menu, location) | `cf99574` + follow-ups | Feb 12 |
+| SaaS vertical (8 patterns, 2 recipes) | `cc6ec85` | Feb 12 |
+| Portfolio vertical (9 patterns, 3 recipes, Gallery nav) | `64214c4` | Feb 12 |
+| Agent docs (wp-fse-rules.md, AGENTS.md update) | `64214c4` | Feb 12 |
+
+### In Progress
+
+| Task | Status | Notes |
+|------|--------|-------|
+| Local Service vertical | ⏳ Next | Builds on Restaurant patterns |
+| Visual testing pipeline | ⏳ Planned | Playwright screenshots of generated themes |
+| Ecommerce vertical | ⏳ Planned | Most complex — WooCommerce integration |
+
+### Verticals Status
+
+| Vertical | Patterns | Recipes | Nav Special | Status |
+|----------|----------|---------|-------------|--------|
+| Restaurant | 12+ | classic-bistro, modern-dining | Menu | ✅ Complete |
+| SaaS | 8 | startup-landing, enterprise-product | — | ✅ Complete |
+| Portfolio/Talent | 9 | creative-professional, freelancer, talent-agency | Gallery | ✅ Complete |
+| Local Service | — | — | — | ⏳ Next |
+| Ecommerce | — | — | Shop | ⏳ Planned |
+
+### Security
+
+- [x] Input sanitization (`sanitize.ts`)
+- [x] Path traversal protection
+- [x] PHP injection protection
+- [x] Attack payload test suite
+- [ ] CI security gate (GitHub Actions)
+- [ ] Laravel subprocess argument escaping
+
+### Brand Modes
+
+All verticals support 4 brand modes:
+- `modern` — Clean, professional
+- `playful` — Friendly, rounded
+- `bold` — High contrast, impactful
+- `minimal` — Simple, whitespace-focused
+
+---
+
+## Phase 15: Production Polish (Planned)
+
+- [ ] Visual testing pipeline (Playwright)
+- [ ] Ecommerce vertical with WooCommerce
+- [ ] Multi-language support (RTL for Arabic)
+- [ ] CI security gate integration
+- [ ] Performance optimization for 1000+ users
