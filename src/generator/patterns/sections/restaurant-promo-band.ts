@@ -1,6 +1,7 @@
 import { PageContent } from '../../types';
 import type { SectionContext } from '../../recipes/types';
 import { getRestaurantStyleTokens } from './restaurantThemeTokens';
+import { tokenToCSS } from '../../utils/BlockHelpers';
 
 /**
  * Restaurant Promo Band Section - Phase 3 Token-Aware Version
@@ -25,8 +26,8 @@ export function getRestaurantPromoBandSectionWithContext(ctx: SectionContext): s
     const sectionPadding = tokens.spacing.sectionPadding;
     const buttonMarginTop = tokens.spacing.buttonMarginTop;
 
-    return `<!-- wp:cover {"dimRatio":80,"overlayColor":"contrast","minHeight":280,"align":"full","style":{"spacing":{"padding":{"top":"${sectionPadding}","bottom":"${sectionPadding}"}}}} -->
-<div class="wp-block-cover alignfull" style="min-height:280px;padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+    return `<!-- wp:cover {"dimRatio":80,"overlayColor":"contrast","minHeight":280,"minHeightUnit":"px","align":"full","style":{"spacing":{"padding":{"top":"${sectionPadding}","bottom":"${sectionPadding}"}}}} -->
+<div class="wp-block-cover alignfull" style="min-height:280px;padding-top:${tokenToCSS(sectionPadding)};padding-bottom:${tokenToCSS(sectionPadding)}">
     <span aria-hidden="true" class="wp-block-cover__background has-contrast-background-color has-background-dim-80 has-background-dim"></span>
     <div class="wp-block-cover__inner-container">
         <!-- wp:group {"layout":{"type":"constrained"}} -->
@@ -44,7 +45,7 @@ export function getRestaurantPromoBandSectionWithContext(ctx: SectionContext): s
             <p class="has-base-color has-text-color has-link-color has-text-align-center">50% off selected appetizers and drinks</p>
             <!-- /wp:paragraph -->
             <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"${buttonMarginTop}"}}}} -->
-            <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--40)">
+            <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:${tokenToCSS(buttonMarginTop)}">
                 <!-- wp:button {"backgroundColor":"accent","textColor":"base","style":{"typography":{"fontWeight":"${buttonWeight}"},"border":{"radius":"${buttonRadius}"}}} -->
                 <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="border-radius:${buttonRadius};font-weight:${buttonWeight}">View Specials</a></div>
                 <!-- /wp:button -->
@@ -66,7 +67,7 @@ export function getRestaurantPromoBandSectionWithContext(ctx: SectionContext): s
  */
 export function getRestaurantPromoBandSection(content?: PageContent, brandStyle?: string): string {
     const tokens = getRestaurantStyleTokens(brandStyle);
-    return `<!-- wp:cover {"dimRatio":80,"overlayColor":"contrast","minHeight":280,"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}}} -->
+    return `<!-- wp:cover {"dimRatio":80,"overlayColor":"contrast","minHeight":280,"minHeightUnit":"px","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}}} -->
 <div class="wp-block-cover alignfull" style="min-height:280px;padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
     <span aria-hidden="true" class="wp-block-cover__background has-contrast-background-color has-background-dim-80 has-background-dim"></span>
     <div class="wp-block-cover__inner-container">

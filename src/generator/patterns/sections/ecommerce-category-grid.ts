@@ -13,6 +13,7 @@
 
 import type { SectionContext } from '../../recipes/types';
 import { getModernImageUrl } from '../../utils/ImageProvider';
+import { tokenToCSS } from '../../utils/BlockHelpers';
 
 export function getEcommerceCategoryGridSectionWithContext(ctx: SectionContext): string {
     const { tokens, section } = ctx;
@@ -36,7 +37,7 @@ export function getEcommerceCategoryGridSectionWithContext(ctx: SectionContext):
             <!-- wp:group {"style":{"border":{"radius":"${cardRadius}"},"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30","right":"var:preset|spacing|30"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
             <div class="wp-block-group has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30)">
                 <!-- wp:image {"aspectRatio":"1","scale":"cover","style":{"border":{"radius":"${imageRadius}"}}} -->
-                <figure class="wp-block-image"><img src="${getModernImageUrl('ecommerce', index + 4)}" alt="${cat.name}" style="border-radius:${imageRadius};aspect-ratio:1;object-fit:cover"/></figure>
+                <figure class="wp-block-image has-custom-border" style="border-radius:${tokenToCSS(imageRadius)}"><img src="${getModernImageUrl('ecommerce', index + 4)}" alt="${cat.name}" style="aspect-ratio:1;object-fit:cover"/></figure>
                 <!-- /wp:image -->
                 <!-- wp:heading {"textAlign":"center","level":3,"textColor":"contrast","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
                 <h3 class="wp-block-heading has-text-align-center has-contrast-color has-text-color" style="margin-top:var(--wp--preset--spacing--20)">${cat.name}</h3>
@@ -49,7 +50,7 @@ export function getEcommerceCategoryGridSectionWithContext(ctx: SectionContext):
     const bgColor = section.backgroundColor || 'base-2';
 
     return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"${sectionPadding}","bottom":"${sectionPadding}"}}},"backgroundColor":"${bgColor}","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-${bgColor}-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+<div class="wp-block-group alignfull has-${bgColor}-background-color has-background" style="padding-top:${tokenToCSS(sectionPadding)};padding-bottom:${tokenToCSS(sectionPadding)}">
     <!-- wp:heading {"textAlign":"center","textColor":"contrast"} -->
     <h2 class="wp-block-heading has-text-align-center has-contrast-color has-text-color">Shop by Category</h2>
     <!-- /wp:heading -->

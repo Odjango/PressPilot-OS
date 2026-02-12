@@ -10,6 +10,7 @@
  */
 
 import type { SectionContext } from '../../recipes/types';
+import { tokenToCSS } from '../../utils/BlockHelpers';
 
 export function getEcommerceTrustBadgesSectionWithContext(ctx: SectionContext): string {
     const { tokens, section } = ctx;
@@ -47,7 +48,7 @@ export function getEcommerceTrustBadgesSectionWithContext(ctx: SectionContext): 
     const bgColor = section.backgroundColor || 'base-2';
 
     return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"${sectionPadding}","bottom":"${sectionPadding}"}}},"backgroundColor":"${bgColor}","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-${bgColor}-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+<div class="wp-block-group alignfull has-${bgColor}-background-color has-background" style="padding-top:${tokenToCSS(sectionPadding)};padding-bottom:${tokenToCSS(sectionPadding)}">
     <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"${columnGap}"}}}} -->
     <div class="wp-block-columns alignwide">
         ${badgeColumns}

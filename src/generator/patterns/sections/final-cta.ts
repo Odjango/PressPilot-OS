@@ -1,11 +1,12 @@
 import { PageContent } from '../../types';
 import type { SectionContext } from '../../recipes/types';
+import { tokenToCSS } from '../../utils/BlockHelpers';
 
 /**
  * Final CTA Section - Phase 3 Token-Aware Version
  *
  * Strong call-to-action band at the bottom of the page.
- * Uses `accent` background for brand primary (bold impact).
+ * Uses `contrast` background for high-contrast dark band (works with all palettes).
  *
  * Token mappings:
  * - Section padding: tokens.spacing.sectionPadding
@@ -23,8 +24,8 @@ export function getFinalCTASectionWithContext(ctx: SectionContext): string {
     const buttonWeight = tokens.typography.buttonWeight;
     const buttonRadius = tokens.radius.button;
 
-    return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"${sectionPadding}","bottom":"${sectionPadding}"}}},"backgroundColor":"accent","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-accent-background-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+    return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"${sectionPadding}","bottom":"${sectionPadding}"}}},"backgroundColor":"contrast","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-contrast-background-color has-background" style="padding-top:${tokenToCSS(sectionPadding)};padding-bottom:${tokenToCSS(sectionPadding)}">
     <!-- wp:heading {"textAlign":"center","textColor":"base"} -->
     <h2 class="wp-block-heading has-text-align-center has-base-color has-text-color">${cta.headline}</h2>
     <!-- /wp:heading -->
@@ -32,9 +33,9 @@ export function getFinalCTASectionWithContext(ctx: SectionContext): string {
     <p class="has-text-align-center has-base-color has-text-color">${cta.subheadline}</p>
     <!-- /wp:paragraph -->
     <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"${buttonMarginTop}"}}}} -->
-    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--40)">
-        <!-- wp:button {"backgroundColor":"base","textColor":"accent","style":{"typography":{"fontWeight":"${buttonWeight}"},"border":{"radius":"${buttonRadius}"}}} -->
-        <div class="wp-block-button"><a class="wp-block-button__link has-accent-color has-base-background-color has-text-color has-background wp-element-button" style="border-radius:${buttonRadius};font-weight:${buttonWeight}">${cta.buttonText}</a></div>
+    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:${tokenToCSS(buttonMarginTop)}">
+        <!-- wp:button {"backgroundColor":"base","textColor":"contrast","style":{"typography":{"fontWeight":"${buttonWeight}"},"border":{"radius":"${buttonRadius}"}}} -->
+        <div class="wp-block-button"><a class="wp-block-button__link has-contrast-color has-base-background-color has-text-color has-background wp-element-button" style="border-radius:${buttonRadius};font-weight:${buttonWeight}">${cta.buttonText}</a></div>
         <!-- /wp:button -->
     </div>
     <!-- /wp:buttons -->
@@ -51,8 +52,8 @@ export function getFinalCTASectionWithContext(ctx: SectionContext): string {
 export function getFinalCTASection(content?: PageContent, industry?: string): string {
     const cta = getCTAForIndustry(industry);
 
-    return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"accent","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-accent-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+    return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"contrast","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-contrast-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
     <!-- wp:heading {"textAlign":"center","textColor":"base"} -->
     <h2 class="wp-block-heading has-text-align-center has-base-color has-text-color">${cta.headline}</h2>
     <!-- /wp:heading -->
@@ -61,8 +62,8 @@ export function getFinalCTASection(content?: PageContent, industry?: string): st
     <!-- /wp:paragraph -->
     <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
     <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--40)">
-        <!-- wp:button {"backgroundColor":"base","textColor":"accent","style":{"typography":{"fontWeight":"600"}}} -->
-        <div class="wp-block-button"><a class="wp-block-button__link has-accent-color has-base-background-color has-text-color has-background wp-element-button" style="font-weight:600">${cta.buttonText}</a></div>
+        <!-- wp:button {"backgroundColor":"base","textColor":"contrast","style":{"typography":{"fontWeight":"600"}}} -->
+        <div class="wp-block-button"><a class="wp-block-button__link has-contrast-color has-base-background-color has-text-color has-background wp-element-button" style="font-weight:600">${cta.buttonText}</a></div>
         <!-- /wp:button -->
     </div>
     <!-- /wp:buttons -->

@@ -99,10 +99,10 @@ export const PALETTE_PRESETS: Record<PaletteId, TT4ColorPalette> = {
         contrast: '#374AC8',        // Deep indigo-blue
         'contrast-2': '#5a6fd6',    // Medium blue
         'contrast-3': '#000000',
-        accent: '#FFC3CF',          // Soft pink
-        'accent-2': '#FFF3C3',      // Warm yellow
-        'accent-3': '#D5C3FF',      // Light lavender
-        'accent-4': '#C3FFF3',      // Mint green
+        accent: '#FFC3CF',          // Soft pink (section tint)
+        'accent-2': '#FFF3C3',      // Warm yellow (section tint)
+        'accent-3': '#2D1B69',      // Deep indigo-purple (hero overlay, dark variant)
+        'accent-4': '#C3FFF3',      // Mint green (section tint)
         'accent-5': '#374AC8'       // Blue accent
     },
 

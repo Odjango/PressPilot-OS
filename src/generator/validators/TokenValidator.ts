@@ -40,10 +40,20 @@ export class TokenValidator {
                 
                 // Allow common layout breakpoints and max-widths (400px - 1600px range)
                 if (val >= 400 && val <= 1600 && (
-                    line.includes('layout') || 
+                    line.includes('layout') ||
                     line.includes('width') ||
                     line.includes('Size')
                 )) continue;
+
+                // Allow border-radius values (WP has no preset radius tokens)
+                // Pill buttons use 100px, cards use 8-20px, etc.
+                if (line.includes('border-radius') || line.includes('"radius"')) continue;
+
+                // Allow box-shadow values (WP shadow presets don't cover all use cases)
+                if (line.includes('box-shadow') || line.includes('"shadow"')) continue;
+
+                // Allow min-height values (hero sections use vh or px)
+                if (line.includes('min-height') || line.includes('minHeight')) continue;
 
                 return {
                     valid: false,

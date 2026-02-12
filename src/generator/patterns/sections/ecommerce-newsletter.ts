@@ -13,6 +13,7 @@
  */
 
 import type { SectionContext } from '../../recipes/types';
+import { tokenToCSS } from '../../utils/BlockHelpers';
 
 export function getEcommerceNewsletterSectionWithContext(ctx: SectionContext): string {
     const { tokens } = ctx;
@@ -27,7 +28,7 @@ export function getEcommerceNewsletterSectionWithContext(ctx: SectionContext): s
     const textColor = tokens.colors.newsletterText;
 
     return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"${sectionPadding}","bottom":"${sectionPadding}"}}},"backgroundColor":"${bgColor}","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-${bgColor}-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+<div class="wp-block-group alignfull has-${bgColor}-background-color has-background" style="padding-top:${tokenToCSS(sectionPadding)};padding-bottom:${tokenToCSS(sectionPadding)}">
     <!-- wp:group {"layout":{"type":"constrained","contentSize":"600px"}} -->
     <div class="wp-block-group">
         <!-- wp:heading {"textAlign":"center","textColor":"${textColor}"} -->

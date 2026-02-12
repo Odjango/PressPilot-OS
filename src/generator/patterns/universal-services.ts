@@ -12,7 +12,7 @@ import { PageContent } from '../types';
 export const getUniversalServicesContent = (content?: PageContent) => {
     const title = content?.hero_title || 'Our Services';
     const sub = content?.hero_sub || 'World-class solutions for your business needs.';
-    const heroImage = content?.hero_image || '{{HERO_IMAGE_3}}';
+    const heroImage = content?.hero_image || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&q=80';
 
     // Service Features / Pricing Grid
     // Using simple "Columns" or "Grid" (wp:group with layout:grid)

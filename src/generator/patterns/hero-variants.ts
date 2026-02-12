@@ -41,12 +41,12 @@ import { PageContent, HeroLayout } from '../types';
 export function getFullBleedHero(content?: PageContent): string {
     const title = content?.hero_title || 'Welcome';
     const sub = content?.hero_sub || 'We enable businesses to grow.';
-    const heroImage = content?.hero_image || '{{HERO_IMAGE}}';
+    const heroImage = content?.hero_image || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
 
     return `<!-- wp:cover {"url":"${heroImage}","dimRatio":75,"overlayColor":"accent-3","minHeight":80,"minHeightUnit":"vh","contentPosition":"center left","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
-<div class="wp-block-cover alignfull has-background is-position-center-left" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:80vh">
-    <img class="wp-block-cover__image-background" src="${heroImage}" alt="" data-object-fit="cover"/>
-    <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-70 has-background-dim"></span>
+<div class="wp-block-cover alignfull has-custom-content-position is-position-center-left" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:80vh">
+    <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-80 has-background-dim"></span>
+    <img class="wp-block-cover__image-background" alt="" src="${heroImage}" data-object-fit="cover"/>
     <div class="wp-block-cover__inner-container">
         <!-- wp:heading {"textAlign":"left","level":1,"style":{"typography":{"fontSize":"clamp(3rem, 6vw, 5rem)","lineHeight":"1.1"}},"textColor":"base"} -->
         <h1 class="wp-block-heading has-text-align-left has-base-color has-text-color" style="font-size:clamp(3rem, 6vw, 5rem);line-height:1.1">${title}</h1>
@@ -56,8 +56,8 @@ export function getFullBleedHero(content?: PageContent): string {
         <!-- /wp:paragraph -->
         <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
         <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
-            <!-- wp:button {"backgroundColor":"accent","textColor":"base"} -->
-            <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button">Get Started</a></div>
+            <!-- wp:button {"backgroundColor":"base","textColor":"contrast"} -->
+            <div class="wp-block-button"><a class="wp-block-button__link has-contrast-color has-base-background-color has-text-color has-background wp-element-button">Get Started</a></div>
             <!-- /wp:button -->
             <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"base","textColor":"base","className":"is-style-outline"} -->
             <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px">Learn More</a></div>
@@ -122,7 +122,7 @@ export function getFullWidthHero(content?: PageContent): string {
 export function getSplitHero(content?: PageContent): string {
     const title = content?.hero_title || 'Welcome';
     const sub = content?.hero_sub || 'We enable businesses to grow.';
-    const heroImage = content?.hero_image || '{{HERO_IMAGE}}';
+    const heroImage = content?.hero_image || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
 
     return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
@@ -138,8 +138,8 @@ export function getSplitHero(content?: PageContent): string {
             <!-- /wp:paragraph -->
             <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
             <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
-                <!-- wp:button {"backgroundColor":"accent","textColor":"base","style":{"border":{"radius":"8px"}}} -->
-                <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="border-radius:8px">Get Started</a></div>
+                <!-- wp:button {"backgroundColor":"contrast","textColor":"base","style":{"border":{"radius":"8px"}}} -->
+                <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-contrast-background-color has-text-color has-background wp-element-button" style="border-radius:8px">Get Started</a></div>
                 <!-- /wp:button -->
                 <!-- wp:button {"style":{"border":{"width":"2px","radius":"8px"}},"borderColor":"accent","textColor":"accent","className":"is-style-outline"} -->
                 <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-accent-color has-text-color has-border-color has-accent-border-color wp-element-button" style="border-width:2px;border-radius:8px">Learn More</a></div>
@@ -151,7 +151,7 @@ export function getSplitHero(content?: PageContent): string {
         <!-- wp:column {"width":"50%"} -->
         <div class="wp-block-column" style="flex-basis:50%">
             <!-- wp:image {"sizeSlug":"large","style":{"border":{"radius":"20px"},"shadow":"0 10px 40px rgba(0,0,0,0.15)"}} -->
-            <figure class="wp-block-image size-large has-custom-border"><img src="${heroImage}" alt="" style="border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.15)"/></figure>
+            <figure class="wp-block-image size-large has-custom-border" style="border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.15)"><img src="${heroImage}" alt=""/></figure>
             <!-- /wp:image -->
         </div>
         <!-- /wp:column -->

@@ -9,13 +9,13 @@
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"0","bottom":"0","left":"0","right":"0"}}},"layout":{"type":"default"}} -->
 <div class="wp-block-group alignfull" style="padding-top:0;padding-right:0;padding-bottom:0;padding-left:0">
 
-    <!-- wp:cover {"url":"https://s.w.org/images/core/5.3/MtBlanc1.jpg","dimRatio":60,"overlayColor":"black","minHeight":600,"align":"full"} -->
-    <div class="wp-block-cover alignfull has-black-background-color has-background-dim-60 has-background-dim"
+    <!-- wp:cover {"url":"https://s.w.org/images/core/5.3/MtBlanc1.jpg","dimRatio":60,"overlayColor":"black","minHeight":600,"minHeightUnit":"px","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"}}}} -->
+    <div class="wp-block-cover alignfull"
         style="min-height:600px;padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80)">
         <span aria-hidden="true"
             class="wp-block-cover__background has-black-background-color has-background-dim-60 has-background-dim"></span>
         <img class="wp-block-cover__image-background" src="https://s.w.org/images/core/5.3/MtBlanc1.jpg"
-            alt="Mount Blanc" data-object-fit="cover" />
+            alt="Mount Blanc" data-object-fit="cover"/>
 
         <div class="wp-block-cover__inner-container">
             <!-- wp:group {"layout":{"type":"constrained"}} -->
@@ -37,15 +37,15 @@
                 <!-- /wp:paragraph -->
 
                 <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
-                <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
+                <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--40)">
                     <!-- wp:button {"backgroundColor":"brand-primary","textColor":"white","style":{"border":{"radius":"4px"}}} -->
                     <div class="wp-block-button"><a
-                            class="wp-block-button__link has-white-color has-brand-primary-background-color has-text-color has-background"
+                            class="wp-block-button__link has-white-color has-brand-primary-background-color has-text-color has-background wp-element-button"
                             style="border-radius:4px">Start Now</a></div>
                     <!-- /wp:button -->
 
                     <!-- wp:button {"className":"is-style-outline","style":{"border":{"radius":"4px"},"color":{"text":"#ffffff"}}} -->
-                    <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-color"
+                    <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-color wp-element-button"
                             style="border-radius:4px;color:#ffffff">Documentation</a></div>
                     <!-- /wp:button -->
                 </div>
@@ -108,8 +108,8 @@
         <!-- wp:group {"style":{"spacing":{"padding":{"top":"40px","right":"40px","bottom":"40px","left":"40px"},"blockGap":"20px"},"border":{"radius":"12px"}},"backgroundColor":"white","textColor":"black"} -->
         <div class="wp-block-group has-black-color has-white-background-color has-text-color has-background"
             style="border-radius:12px;padding-top:40px;padding-right:40px;padding-bottom:40px;padding-left:40px">
-            <!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"large","fontStyle":"italic"}}} -->
-            <p class="has-text-align-center has-large-font-size" style="font-style:italic;color:#000000 !important">
+            <!-- wp:paragraph {"align":"center","fontSize":"large","style":{"typography":{"fontStyle":"italic"}}} -->
+            <p class="has-text-align-center has-large-font-size" style="font-style:italic">
                 "This is the best service I
                 have ever used. Highly recommended!"</p>
             <!-- /wp:paragraph -->

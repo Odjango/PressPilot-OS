@@ -2,6 +2,7 @@ import { PageContent } from '../../types';
 import type { SectionContext } from '../../recipes/types';
 import { getRestaurantStyleTokens } from './restaurantThemeTokens';
 import { getRestaurantMenuImageStyle, type BrandMode } from '../../design-system';
+import { tokenToCSS } from '../../utils/BlockHelpers';
 
 /**
  * Restaurant Menu Preview Section - Phase 3 Token-Aware Version
@@ -49,7 +50,7 @@ export function getRestaurantMenuPreviewSectionWithContext(ctx: SectionContext):
     const renderDishColumn = (dish: { name: string; image: string }) => `<!-- wp:column -->
         <div class="wp-block-column">
             <!-- wp:image {"align":"center","sizeSlug":"medium","className":"${imageClass}","style":{"border":{"radius":"${imageRadius}"}}} -->
-            <figure class="wp-block-image aligncenter size-medium ${imageClass}"><img src="${dish.image}" alt="${dish.name}" class="wp-element-border" style="border-radius:${imageRadius}"/></figure>
+            <figure class="wp-block-image aligncenter size-medium ${imageClass} has-custom-border" style="border-radius:${tokenToCSS(imageRadius)}"><img src="${dish.image}" alt="${dish.name}"/></figure>
             <!-- /wp:image -->
             <!-- wp:paragraph {"align":"center","textColor":"contrast","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
             <p class="has-text-align-center has-contrast-color has-text-color" style="margin-top:var(--wp--preset--spacing--20)"><strong>${dish.name}</strong></p>
@@ -58,7 +59,7 @@ export function getRestaurantMenuPreviewSectionWithContext(ctx: SectionContext):
         <!-- /wp:column -->`;
 
     return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"${sectionPadding}","bottom":"${sectionPadding}"}}},"backgroundColor":"base-2","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-base-2-background-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+<div class="wp-block-group alignfull has-base-2-background-color has-background" style="padding-top:${tokenToCSS(sectionPadding)};padding-bottom:${tokenToCSS(sectionPadding)}">
     <!-- wp:heading {"textAlign":"center","textColor":"contrast"} -->
     <h2 class="wp-block-heading has-text-align-center has-contrast-color has-text-color">Featured Delicacies</h2>
     <!-- /wp:heading -->
@@ -67,7 +68,7 @@ export function getRestaurantMenuPreviewSectionWithContext(ctx: SectionContext):
     <!-- /wp:paragraph -->
 
     <!-- wp:columns {"align":"wide","style":{"spacing":{"margin":{"top":"${columnGap}"},"blockGap":{"left":"${columnGap}"}}}} -->
-    <div class="wp-block-columns alignwide" style="margin-top:var(--wp--preset--spacing--50)">
+    <div class="wp-block-columns alignwide" style="margin-top:${tokenToCSS(columnGap)}">
         ${renderDishColumn(dishes[0])}
         ${renderDishColumn(dishes[1])}
         ${renderDishColumn(dishes[2])}
@@ -75,7 +76,7 @@ export function getRestaurantMenuPreviewSectionWithContext(ctx: SectionContext):
     <!-- /wp:columns -->
 
     <!-- wp:columns {"align":"wide","style":{"spacing":{"margin":{"top":"${cardPadding}"},"blockGap":{"left":"${columnGap}"}}}} -->
-    <div class="wp-block-columns alignwide" style="margin-top:var(--wp--preset--spacing--40)">
+    <div class="wp-block-columns alignwide" style="margin-top:${tokenToCSS(cardPadding)}">
         ${renderDishColumn(dishes[3])}
         ${renderDishColumn(dishes[4])}
         ${renderDishColumn(dishes[5])}
@@ -83,9 +84,9 @@ export function getRestaurantMenuPreviewSectionWithContext(ctx: SectionContext):
     <!-- /wp:columns -->
 
     <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"${buttonMarginTop}"}}}} -->
-    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--50)">
-        <!-- wp:button {"backgroundColor":"accent","textColor":"base","style":{"typography":{"fontWeight":"${buttonWeight}"},"border":{"radius":"${buttonRadius}"}}} -->
-        <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="border-radius:${buttonRadius};font-weight:${buttonWeight}">View Full Menu</a></div>
+    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:${tokenToCSS(buttonMarginTop)}">
+        <!-- wp:button {"backgroundColor":"contrast","textColor":"base","style":{"typography":{"fontWeight":"${buttonWeight}"},"border":{"radius":"${buttonRadius}"}}} -->
+        <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-contrast-background-color has-text-color has-background wp-element-button" style="border-radius:${buttonRadius};font-weight:${buttonWeight}">View Full Menu</a></div>
         <!-- /wp:button -->
     </div>
     <!-- /wp:buttons -->
@@ -117,7 +118,7 @@ export function getRestaurantMenuPreviewSection(content?: PageContent, brandStyl
     const renderDishColumn = (dish: { name: string; image: string }) => `<!-- wp:column -->
         <div class="wp-block-column">
             <!-- wp:image {"align":"center","sizeSlug":"medium","className":"${imageClass}","style":{"border":{"radius":"${tokens.imageRadius}"}}} -->
-            <figure class="wp-block-image aligncenter size-medium ${imageClass}"><img src="${dish.image}" alt="${dish.name}" class="wp-element-border" style="border-radius:${tokens.imageRadius}"/></figure>
+            <figure class="wp-block-image aligncenter size-medium ${imageClass} has-custom-border" style="border-radius:${tokenToCSS(tokens.imageRadius)}"><img src="${dish.image}" alt="${dish.name}"/></figure>
             <!-- /wp:image -->
             <!-- wp:paragraph {"align":"center","textColor":"contrast","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
             <p class="has-text-align-center has-contrast-color has-text-color" style="margin-top:var(--wp--preset--spacing--20)"><strong>${dish.name}</strong></p>
@@ -126,7 +127,7 @@ export function getRestaurantMenuPreviewSection(content?: PageContent, brandStyl
         <!-- /wp:column -->`;
 
     return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"${tokens.sectionPadding}","bottom":"${tokens.sectionPadding}"}}},"backgroundColor":"base-2","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-base-2-background-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+<div class="wp-block-group alignfull has-base-2-background-color has-background" style="padding-top:${tokenToCSS(tokens.sectionPadding)};padding-bottom:${tokenToCSS(tokens.sectionPadding)}">
     <!-- wp:heading {"textAlign":"center","textColor":"contrast"} -->
     <h2 class="wp-block-heading has-text-align-center has-contrast-color has-text-color">Featured Delicacies</h2>
     <!-- /wp:heading -->
@@ -135,7 +136,7 @@ export function getRestaurantMenuPreviewSection(content?: PageContent, brandStyl
     <!-- /wp:paragraph -->
 
     <!-- wp:columns {"align":"wide","style":{"spacing":{"margin":{"top":"${tokens.columnGap}"},"blockGap":{"left":"${tokens.columnGap}"}}}} -->
-    <div class="wp-block-columns alignwide" style="margin-top:var(--wp--preset--spacing--50)">
+    <div class="wp-block-columns alignwide" style="margin-top:${tokenToCSS(tokens.columnGap)}">
         ${renderDishColumn(dishes[0])}
         ${renderDishColumn(dishes[1])}
         ${renderDishColumn(dishes[2])}
@@ -143,7 +144,7 @@ export function getRestaurantMenuPreviewSection(content?: PageContent, brandStyl
     <!-- /wp:columns -->
 
     <!-- wp:columns {"align":"wide","style":{"spacing":{"margin":{"top":"${tokens.cardPadding}"},"blockGap":{"left":"${tokens.columnGap}"}}}} -->
-    <div class="wp-block-columns alignwide" style="margin-top:var(--wp--preset--spacing--40)">
+    <div class="wp-block-columns alignwide" style="margin-top:${tokenToCSS(tokens.cardPadding)}">
         ${renderDishColumn(dishes[3])}
         ${renderDishColumn(dishes[4])}
         ${renderDishColumn(dishes[5])}
@@ -151,9 +152,9 @@ export function getRestaurantMenuPreviewSection(content?: PageContent, brandStyl
     <!-- /wp:columns -->
 
     <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"${tokens.buttonMarginTop}"}}}} -->
-    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--50)">
-        <!-- wp:button {"backgroundColor":"accent","textColor":"base","style":{"typography":{"fontWeight":"${tokens.buttonWeight}"},"border":{"radius":"${tokens.buttonRadius}"}}} -->
-        <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="border-radius:${tokens.buttonRadius};font-weight:${tokens.buttonWeight}">View Full Menu</a></div>
+    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:${tokenToCSS(tokens.buttonMarginTop)}">
+        <!-- wp:button {"backgroundColor":"contrast","textColor":"base","style":{"typography":{"fontWeight":"${tokens.buttonWeight}"},"border":{"radius":"${tokens.buttonRadius}"}}} -->
+        <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-contrast-background-color has-text-color has-background wp-element-button" style="border-radius:${tokens.buttonRadius};font-weight:${tokens.buttonWeight}">View Full Menu</a></div>
         <!-- /wp:button -->
     </div>
     <!-- /wp:buttons -->

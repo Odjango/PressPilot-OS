@@ -289,10 +289,9 @@ export class PatternInjector {
                 const slug = slugMatch ? slugMatch[1].trim() : null;
                 if (!slug) continue;
 
-                // Fix core/cover element order: WordPress expects <img> BEFORE <span>
-                // Pattern has <span>...<img>, but Gutenberg save outputs <img>...<span>
+                // Normalize cover block element order: span before img (WP 6.5+ canonical)
                 content = content.replace(
-                    /(<span[^>]*class="wp-block-cover__background[^"]*"[^>]*><\/span>)\s*(<img[^>]*class="wp-block-cover__image-background[^"]*"[^>]*\/>)/g,
+                    /(<img[^>]*class="wp-block-cover__image-background[^"]*"[^>]*\/>)\s*(<span[^>]*class="wp-block-cover__background[^"]*"[^>]*><\/span>)/g,
                     '$2\n    $1'
                 );
 
@@ -318,6 +317,12 @@ export class PatternInjector {
                 templateContent += `<!-- wp:pattern {"slug":"${slug}"} /-->\n`;
             }
         }
+
+        // Safety net: replace any remaining {{PLACEHOLDER}} strings
+        const recipeFallbackHeroUrl = contentJson?.hero?.images?.[0]
+            || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
+        templateContent = templateContent.replace(/\{\{HERO_IMAGE[_0-9]*\}\}/g, recipeFallbackHeroUrl);
+        templateContent = templateContent.replace(/\{\{SOCIAL_[A-Z_]+\}\}/g, '#');
 
         // FSE Block Grammar Security Part
         const fullContent = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
@@ -357,9 +362,15 @@ ${templateContent}
             // brandStyle enables playful vs modern visual differentiation for restaurants
             let homeMarkup = getUniversalHomeContent(homeContent, userData.heroLayout, userData.industry, userData.brandStyle).trim();
 
-            // Normalize cover block element order (img before span) for Gutenberg compatibility
+            // Safety net: replace any remaining {{HERO_IMAGE*}} placeholders
+            const fallbackHeroUrl = contentJson?.hero?.images?.[0]
+                || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
+            homeMarkup = homeMarkup.replace(/\{\{HERO_IMAGE[_0-9]*\}\}/g, fallbackHeroUrl);
+            homeMarkup = homeMarkup.replace(/\{\{SOCIAL_[A-Z_]+\}\}/g, '#');
+
+            // Normalize cover block element order: span before img (WP 6.5+ canonical)
             homeMarkup = homeMarkup.replace(
-                /(<span[^>]*class="wp-block-cover__background[^"]*"[^>]*><\/span>)\s*(<img[^>]*class="wp-block-cover__image-background[^"]*"[^>]*\/>)/g,
+                /(<img[^>]*class="wp-block-cover__image-background[^"]*"[^>]*\/>)\s*(<span[^>]*class="wp-block-cover__background[^"]*"[^>]*><\/span>)/g,
                 '$2\n    $1'
             );
 

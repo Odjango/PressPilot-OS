@@ -14,6 +14,7 @@
 
 import type { SectionContext } from '../../recipes/types';
 import { getModernImageUrl } from '../../utils/ImageProvider';
+import { tokenToCSS } from '../../utils/BlockHelpers';
 
 export function getEcommerceFeaturedProductsSectionWithContext(ctx: SectionContext): string {
     const { tokens, section } = ctx;
@@ -37,7 +38,7 @@ export function getEcommerceFeaturedProductsSectionWithContext(ctx: SectionConte
         <!-- wp:column -->
         <div class="wp-block-column">
             <!-- wp:group {"style":{"border":{"radius":"${cardRadius}"},"spacing":{"padding":{"top":"${cardPadding}","right":"${cardPadding}","bottom":"${cardPadding}","left":"${cardPadding}"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
-            <div class="wp-block-group has-base-background-color has-background" style="border-radius:${cardRadius};padding:var(--wp--preset--spacing--30)">
+            <div class="wp-block-group has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:${tokenToCSS(cardPadding)};padding-right:${tokenToCSS(cardPadding)};padding-bottom:${tokenToCSS(cardPadding)};padding-left:${tokenToCSS(cardPadding)}">
                 <!-- wp:image {"aspectRatio":"4/5","scale":"cover"} -->
                 <figure class="wp-block-image"><img src="${getModernImageUrl('ecommerce', index)}" alt="${product.name}" style="aspect-ratio:4/5;object-fit:cover"/></figure>
                 <!-- /wp:image -->
@@ -62,7 +63,7 @@ export function getEcommerceFeaturedProductsSectionWithContext(ctx: SectionConte
     const bgColor = section.backgroundColor || 'base';
 
     return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"${sectionPadding}","bottom":"${sectionPadding}"}}},"backgroundColor":"${bgColor}","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-${bgColor}-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)">
+<div class="wp-block-group alignfull has-${bgColor}-background-color has-background" style="padding-top:${tokenToCSS(sectionPadding)};padding-bottom:${tokenToCSS(sectionPadding)}">
     <!-- wp:heading {"textAlign":"center","textColor":"contrast"} -->
     <h2 class="wp-block-heading has-text-align-center has-contrast-color has-text-color">Featured Products</h2>
     <!-- /wp:heading -->

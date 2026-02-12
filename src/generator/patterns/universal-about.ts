@@ -4,7 +4,7 @@ import { PageContent } from '../types';
 export const getUniversalAboutContent = (content?: PageContent) => {
     const title = content?.hero_title || 'About Us';
     const sub = content?.hero_sub || 'We are a dedicated team of professionals.';
-    const heroImage = content?.hero_image || '{{HERO_IMAGE_2}}';
+    const heroImage = content?.hero_image || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&q=80';
 
     // Team Section Builder
     let teamHtml = '';

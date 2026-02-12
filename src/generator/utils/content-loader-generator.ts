@@ -59,16 +59,19 @@ export const generateContentLoader = (pages: PageData[], businessName: string, t
                 }
             }
 
-            // 1.5 CLEANUP: Aggressive Default Content Removal
-            wp_delete_post(1, true); 
-            wp_delete_post(2, true); 
-            wp_delete_post(3, true); 
+            // 1.5 CLEANUP: Default Content Removal (safe — only deletes posts/pages, never template parts)
+            foreach ([1, 2, 3] as $default_id) {
+                $p = get_post($default_id);
+                if ($p && in_array($p->post_type, ['post', 'page'], true)) {
+                    wp_delete_post($default_id, true);
+                }
+            }
 
             $junk_posts = get_posts([
                 'post_type' => ['post', 'page'],
                 'post_status' => ['publish', 'draft', 'private', 'trash'],
                 'numberposts' => -1,
-                's' => 'Hello', 
+                's' => 'Hello',
             ]);
             foreach ($junk_posts as $junk) {
                 wp_delete_post($junk->ID, true);

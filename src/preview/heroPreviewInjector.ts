@@ -106,9 +106,9 @@ function pp_hero_full_bleed(\$title, \$sub, \$image) {
     // Full-bleed hero: 80vh min-height, LEFT-aligned text, large heading
     // Key differentiators: immersive height, text-align-left, spacing|70
     return '<!-- wp:cover {"url":"' . esc_attr(\$image) . '","dimRatio":75,"overlayColor":"accent-3","minHeight":80,"minHeightUnit":"vh","contentPosition":"center left","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
-<div class="wp-block-cover alignfull has-background is-position-center-left" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:80vh">
-    <img class="wp-block-cover__image-background" src="' . esc_attr(\$image) . '" alt="" data-object-fit="cover"/>
-    <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-70 has-background-dim" style="background-color:#1a1a2e"></span>
+<div class="wp-block-cover alignfull has-custom-content-position is-position-center-left" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:80vh">
+    <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-80 has-background-dim" style="background-color:#1a1a2e"></span>
+    <img class="wp-block-cover__image-background" alt="" src="' . esc_attr(\$image) . '" data-object-fit="cover"/>
     <div class="wp-block-cover__inner-container">
         <!-- wp:heading {"textAlign":"left","level":1,"style":{"typography":{"fontSize":"clamp(3rem, 6vw, 5rem)","lineHeight":"1.1"}},"textColor":"base"} -->
         <h1 class="wp-block-heading has-text-align-left has-base-color has-text-color" style="font-size:clamp(3rem, 6vw, 5rem);line-height:1.1;color:#ffffff">' . esc_html(\$title) . '</h1>
@@ -118,8 +118,8 @@ function pp_hero_full_bleed(\$title, \$sub, \$image) {
         <!-- /wp:paragraph -->
         <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
         <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
-            <!-- wp:button {"backgroundColor":"accent","textColor":"base"} -->
-            <div class="wp-block-button"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background wp-element-button" style="background-color:#ffffff;color:#1a1a2e">Get Started</a></div>
+            <!-- wp:button {"backgroundColor":"base","textColor":"contrast"} -->
+            <div class="wp-block-button"><a class="wp-block-button__link has-contrast-color has-base-background-color has-text-color has-background wp-element-button" style="background-color:#ffffff;color:#1a1a2e">Get Started</a></div>
             <!-- /wp:button -->
             <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"base","textColor":"base","className":"is-style-outline"} -->
             <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px;border-color:#ffffff;color:#ffffff">Learn More</a></div>

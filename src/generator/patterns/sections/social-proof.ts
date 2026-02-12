@@ -1,5 +1,6 @@
 import { PageContent } from '../../types';
 import type { SectionContext } from '../../recipes/types';
+import { tokenToCSS } from '../../utils/BlockHelpers';
 
 /**
  * Social Proof Section - Phase 3 Token-Aware Version
@@ -24,7 +25,7 @@ export function getSocialProofSectionWithContext(ctx: SectionContext): string {
     const columnGap = tokens.spacing.columnGap;
 
     return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"${sectionPadding}","bottom":"${sectionPadding}"}}},"backgroundColor":"accent-2","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-accent-2-background-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+<div class="wp-block-group alignfull has-accent-2-background-color has-background" style="padding-top:${tokenToCSS(sectionPadding)};padding-bottom:${tokenToCSS(sectionPadding)}">
     <!-- wp:heading {"textAlign":"center","textColor":"contrast"} -->
     <h2 class="wp-block-heading has-text-align-center has-contrast-color has-text-color">What Our Customers Say</h2>
     <!-- /wp:heading -->
@@ -34,12 +35,12 @@ export function getSocialProofSectionWithContext(ctx: SectionContext): string {
     <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"${columnGap}"},"margin":{"top":"var:preset|spacing|50"}}}} -->
     <div class="wp-block-columns alignwide" style="margin-top:var(--wp--preset--spacing--50)">
         <!-- wp:column {"style":{"spacing":{"padding":{"top":"${cardPadding}","right":"${cardPadding}","bottom":"${cardPadding}","left":"${cardPadding}"}},"border":{"radius":"${cardRadius}"}},"backgroundColor":"base"} -->
-        <div class="wp-block-column has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <div class="wp-block-column has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:${tokenToCSS(cardPadding)};padding-right:${tokenToCSS(cardPadding)};padding-bottom:${tokenToCSS(cardPadding)};padding-left:${tokenToCSS(cardPadding)}">
             <!-- wp:paragraph {"textColor":"contrast","fontSize":"medium"} -->
             <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonials[0].quote}"</p>
             <!-- /wp:paragraph -->
-            <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
-            <p class="has-accent-color has-text-color has-small-font-size"><strong>${testimonials[0].name}</strong></p>
+            <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
+            <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonials[0].name}</strong></p>
             <!-- /wp:paragraph -->
             <!-- wp:paragraph {"textColor":"contrast-2","fontSize":"small"} -->
             <p class="has-contrast-2-color has-text-color has-small-font-size">${testimonials[0].title}</p>
@@ -47,12 +48,12 @@ export function getSocialProofSectionWithContext(ctx: SectionContext): string {
         </div>
         <!-- /wp:column -->
         <!-- wp:column {"style":{"spacing":{"padding":{"top":"${cardPadding}","right":"${cardPadding}","bottom":"${cardPadding}","left":"${cardPadding}"}},"border":{"radius":"${cardRadius}"}},"backgroundColor":"base"} -->
-        <div class="wp-block-column has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <div class="wp-block-column has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:${tokenToCSS(cardPadding)};padding-right:${tokenToCSS(cardPadding)};padding-bottom:${tokenToCSS(cardPadding)};padding-left:${tokenToCSS(cardPadding)}">
             <!-- wp:paragraph {"textColor":"contrast","fontSize":"medium"} -->
             <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonials[1].quote}"</p>
             <!-- /wp:paragraph -->
-            <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
-            <p class="has-accent-color has-text-color has-small-font-size"><strong>${testimonials[1].name}</strong></p>
+            <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
+            <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonials[1].name}</strong></p>
             <!-- /wp:paragraph -->
             <!-- wp:paragraph {"textColor":"contrast-2","fontSize":"small"} -->
             <p class="has-contrast-2-color has-text-color has-small-font-size">${testimonials[1].title}</p>
@@ -60,12 +61,12 @@ export function getSocialProofSectionWithContext(ctx: SectionContext): string {
         </div>
         <!-- /wp:column -->
         <!-- wp:column {"style":{"spacing":{"padding":{"top":"${cardPadding}","right":"${cardPadding}","bottom":"${cardPadding}","left":"${cardPadding}"}},"border":{"radius":"${cardRadius}"}},"backgroundColor":"base"} -->
-        <div class="wp-block-column has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+        <div class="wp-block-column has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:${tokenToCSS(cardPadding)};padding-right:${tokenToCSS(cardPadding)};padding-bottom:${tokenToCSS(cardPadding)};padding-left:${tokenToCSS(cardPadding)}">
             <!-- wp:paragraph {"textColor":"contrast","fontSize":"medium"} -->
             <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonials[2].quote}"</p>
             <!-- /wp:paragraph -->
-            <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
-            <p class="has-accent-color has-text-color has-small-font-size"><strong>${testimonials[2].name}</strong></p>
+            <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
+            <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonials[2].name}</strong></p>
             <!-- /wp:paragraph -->
             <!-- wp:paragraph {"textColor":"contrast-2","fontSize":"small"} -->
             <p class="has-contrast-2-color has-text-color has-small-font-size">${testimonials[2].title}</p>
@@ -102,8 +103,8 @@ export function getSocialProofSection(content?: PageContent, industry?: string):
             <!-- wp:paragraph {"textColor":"contrast","fontSize":"medium"} -->
             <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonials[0].quote}"</p>
             <!-- /wp:paragraph -->
-            <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
-            <p class="has-accent-color has-text-color has-small-font-size"><strong>${testimonials[0].name}</strong></p>
+            <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
+            <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonials[0].name}</strong></p>
             <!-- /wp:paragraph -->
             <!-- wp:paragraph {"textColor":"contrast-2","fontSize":"small"} -->
             <p class="has-contrast-2-color has-text-color has-small-font-size">${testimonials[0].title}</p>
@@ -115,8 +116,8 @@ export function getSocialProofSection(content?: PageContent, industry?: string):
             <!-- wp:paragraph {"textColor":"contrast","fontSize":"medium"} -->
             <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonials[1].quote}"</p>
             <!-- /wp:paragraph -->
-            <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
-            <p class="has-accent-color has-text-color has-small-font-size"><strong>${testimonials[1].name}</strong></p>
+            <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
+            <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonials[1].name}</strong></p>
             <!-- /wp:paragraph -->
             <!-- wp:paragraph {"textColor":"contrast-2","fontSize":"small"} -->
             <p class="has-contrast-2-color has-text-color has-small-font-size">${testimonials[1].title}</p>
@@ -128,8 +129,8 @@ export function getSocialProofSection(content?: PageContent, industry?: string):
             <!-- wp:paragraph {"textColor":"contrast","fontSize":"medium"} -->
             <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonials[2].quote}"</p>
             <!-- /wp:paragraph -->
-            <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
-            <p class="has-accent-color has-text-color has-small-font-size"><strong>${testimonials[2].name}</strong></p>
+            <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
+            <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonials[2].name}</strong></p>
             <!-- /wp:paragraph -->
             <!-- wp:paragraph {"textColor":"contrast-2","fontSize":"small"} -->
             <p class="has-contrast-2-color has-text-color has-small-font-size">${testimonials[2].title}</p>
