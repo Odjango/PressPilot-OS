@@ -115,6 +115,16 @@ export class ContentEngine {
                     }
                 }
             }
+
+            // Keep front-page aligned with the finalized home template content.
+            // WordPress prioritizes front-page.html for the homepage.
+            const homeTemplatePath = path.join(themeDir, 'templates', 'home.html');
+            const frontPagePath = path.join(themeDir, 'templates', 'front-page.html');
+            if (await fs.pathExists(homeTemplatePath)) {
+                const finalizedHome = await fs.readFile(homeTemplatePath, 'utf8');
+                await fs.writeFile(frontPagePath, finalizedHome);
+                console.log('[ContentEngine] Synced front-page.html from finalized home.html.');
+            }
         }
     }
 }
