@@ -24,7 +24,7 @@ ContentEngine → Templates + Parts + Patterns → ZIP
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| `types.ts` | `src/generator/types.ts` | All interfaces and type definitions |
+| `types.ts` | `src/generator/types.ts` | All interfaces and type definitions (including PageContent) |
 | `index.ts` | `src/generator/index.ts` | Main orchestrator, entry point |
 | `ContentBuilder.ts` | `src/generator/modules/` | Builds content JSON from user data, spreads all fields through |
 | `ContentEngine.ts` | `src/generator/engine/` | Assembles templates, injects page-specific content |
@@ -485,7 +485,100 @@ config({ path: '.env.local' });
 
 ---
 
-## 14. Content Flow (How Data Reaches Patterns)
+## 14. TypeScript Interfaces
+
+### PageContent Interface
+
+Located in `src/generator/types.ts`. This interface defines what fields can be passed to page template patterns.
+
+```typescript
+export interface PageContent {
+    // Hero fields
+    hero_title?: string;
+    hero_sub?: string;
+    hero_image?: string;
+    
+    // Features & Team arrays
+    features?: Array<{ title: string; desc: string }>;
+    team?: Array<{ name: string; role: string }>;
+    menus?: RestaurantMenu[];
+    
+    // Contact fields (Phase 13)
+    business_name?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    full_address?: string;
+    social_facebook?: string;
+    social_instagram?: string;
+    social_twitter?: string;
+    opening_hours?: Record<string, string>;
+    business_type?: string;
+    
+    // About page fields (Phase 3 - Rich Content)
+    name?: string;
+    about_paragraph_1?: string;
+    about_paragraph_2?: string;
+    about_paragraph_3?: string;
+    
+    // Chef fields
+    chef_name_1?: string;
+    chef_role_1?: string;
+    chef_bio_1?: string;
+    chef_name_2?: string;
+    chef_role_2?: string;
+    chef_bio_2?: string;
+    chef_name_3?: string;
+    chef_role_3?: string;
+    chef_bio_3?: string;
+    
+    // Team fields (alternative format)
+    team_1_name?: string;
+    team_1_role?: string;
+    team_1_bio?: string;
+    team_1_photo?: string;
+    team_2_name?: string;
+    team_2_role?: string;
+    team_2_bio?: string;
+    team_2_photo?: string;
+    team_3_name?: string;
+    team_3_role?: string;
+    team_3_bio?: string;
+    team_3_photo?: string;
+}
+```
+
+### ContentJSON Interface
+
+Located in `src/generator/modules/ContentBuilder.ts`. This is what ContentBuilder returns.
+
+```typescript
+export interface ContentJSON {
+    hero: {
+        headline: string;
+        subheadline: string;
+        pretitle: string;
+        images: string[];
+    };
+    pages: PageData[];
+    menus: RestaurantMenu[];
+    slots: Record<string, string>;
+    baseName: string;
+    businessName: string;
+    industry: string;
+    heroLayout?: HeroLayout;
+    [key: string]: unknown;  // Allows pass-through of all userData fields
+}
+```
+
+**Important**: The `[key: string]: unknown` line enables all fields from the original user data to pass through ContentBuilder, which is essential for rich content to reach the patterns.
+
+---
+
+## 15. Content Flow (How Data Reaches Patterns)
 
 ### For Page Templates (About, Contact, Menu, etc.)
 
@@ -509,18 +602,42 @@ if (page.template === 'universal-menu' && contentJson.menus) {
 
 // Add chef/team data for about pages
 if (page.template === 'universal-about') {
+    const c = contentJson as Record<string, unknown>;
     page.content = {
         ...page.content,
-        business_name: contentJson.business_name || contentJson.name,
-        chef_name_1: contentJson.chef_name_1,
-        // ... all chef/team fields
+        business_name: String(c.business_name || c.name || ''),
+        name: String(c.name || ''),
+        about_paragraph_1: String(c.about_paragraph_1 || ''),
+        about_paragraph_2: String(c.about_paragraph_2 || ''),
+        about_paragraph_3: String(c.about_paragraph_3 || ''),
+        chef_name_1: String(c.chef_name_1 || ''),
+        chef_role_1: String(c.chef_role_1 || ''),
+        chef_bio_1: String(c.chef_bio_1 || ''),
+        chef_name_2: String(c.chef_name_2 || ''),
+        chef_role_2: String(c.chef_role_2 || ''),
+        chef_bio_2: String(c.chef_bio_2 || ''),
+        chef_name_3: String(c.chef_name_3 || ''),
+        chef_role_3: String(c.chef_role_3 || ''),
+        chef_bio_3: String(c.chef_bio_3 || ''),
+        team_1_name: String(c.team_1_name || ''),
+        team_1_role: String(c.team_1_role || ''),
+        team_1_bio: String(c.team_1_bio || ''),
+        team_1_photo: String(c.team_1_photo || ''),
+        team_2_name: String(c.team_2_name || ''),
+        team_2_role: String(c.team_2_role || ''),
+        team_2_bio: String(c.team_2_bio || ''),
+        team_2_photo: String(c.team_2_photo || ''),
+        team_3_name: String(c.team_3_name || ''),
+        team_3_role: String(c.team_3_role || ''),
+        team_3_bio: String(c.team_3_bio || ''),
+        team_3_photo: String(c.team_3_photo || ''),
     };
 }
 ```
 
 ---
 
-## 15. Troubleshooting
+## 16. Troubleshooting
 
 | Error | Cause | Solution |
 |-------|-------|----------|
@@ -531,10 +648,11 @@ if (page.template === 'universal-about') {
 | Picsum fallback images | Unsplash key not loaded | Add `config({ path: '.env.local' })` to script |
 | Chef names not showing | ContentEngine not injecting data | Check `universal-about` handling in ContentEngine |
 | About page generic text | Pattern not reading content fields | Check `universal-about.ts` reads from `content` param |
+| TypeScript error on new field | Field not in PageContent interface | Add field to `PageContent` in `types.ts` |
 
 ---
 
-## 16. Quick Start Examples
+## 17. Quick Start Examples
 
 ### Generate a Restaurant Theme
 ```bash
@@ -557,7 +675,7 @@ npx tsx showcase/scripts/generate-all.ts --limit 1
 
 ---
 
-## 17. File Locations Summary
+## 18. File Locations Summary
 
 | Purpose | Path |
 |---------|------|
@@ -578,7 +696,7 @@ npx tsx showcase/scripts/generate-all.ts --limit 1
 
 ---
 
-## 18. Recent Fixes (February 2026)
+## 19. Recent Fixes (February 2026)
 
 ### Phase 1: Unsplash Image Pipeline
 - **Issue**: Images falling back to Picsum placeholders
@@ -588,13 +706,62 @@ npx tsx showcase/scripts/generate-all.ts --limit 1
 ### Phase 3: About Page Rich Content
 - **Issue**: About page showing generic "make software that just works" text
 - **Root Cause**: `ContentBuilder` wasn't spreading original user data through
-- **Fix 1**: Updated `ContentBuilder.ts` to spread `...safeUserData` in return
+- **Fix 1**: Updated `ContentBuilder.ts` to spread `...safeUserData` in return object
 - **Fix 2**: Updated `ContentEngine.ts` to inject chef/team fields for about pages
 - **Fix 3**: Updated `universal-about.ts` to read flattened field format (`chef_name_1`, etc.)
+- **Fix 4**: Added chef/team fields to `PageContent` interface in `types.ts` for TypeScript support
 - **Files Modified**:
-  - `src/generator/modules/ContentBuilder.ts`
-  - `src/generator/engine/ContentEngine.ts`
-  - `src/generator/patterns/universal-about.ts`
+  - `src/generator/types.ts` — Added chef/team fields to PageContent interface
+  - `src/generator/modules/ContentBuilder.ts` — Added `[key: string]: unknown` and spread userData
+  - `src/generator/engine/ContentEngine.ts` — Added about page data injection with type casting
+  - `src/generator/patterns/universal-about.ts` — Updated to read flattened fields
+
+---
+
+## 20. Adding New Content Fields (Future Reference)
+
+When adding new fields that need to flow to patterns:
+
+1. **Add to `PageContent`** in `src/generator/types.ts`
+2. **Add injection logic** in `ContentEngine.generatePages()` for the relevant template
+3. **Update the pattern** to read the new field from `content`
+4. **Add to catalog** in `showcase/catalog.json` for showcase themes
+
+### Example: Adding a new field `specialty_dish`
+
+**Step 1**: Add to `PageContent` in `types.ts`:
+```typescript
+export interface PageContent {
+    // ... existing fields
+    specialty_dish?: string;
+}
+```
+
+**Step 2**: Add injection in `ContentEngine.ts`:
+```typescript
+if (page.template === 'universal-about') {
+    const c = contentJson as Record<string, unknown>;
+    page.content = {
+        ...page.content,
+        specialty_dish: String(c.specialty_dish || ''),
+        // ... other fields
+    };
+}
+```
+
+**Step 3**: Use in pattern (`universal-about.ts`):
+```typescript
+const specialty = content.specialty_dish || 'Our signature creation';
+```
+
+**Step 4**: Add to catalog theme:
+```json
+{
+  "content": {
+    "specialty_dish": "Wood-fired Margherita Pizza"
+  }
+}
+```
 
 ---
 
