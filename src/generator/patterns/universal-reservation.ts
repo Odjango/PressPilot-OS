@@ -15,7 +15,7 @@ export const getUniversalReservationContent = (content?: PageContent) => {
 
         <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
         <div class="wp-block-buttons">
-            <!-- wp:button {"className":"is-style-fill","style":{"color":{"text":"var:preset|color|primary","background":"var:preset|color|base"}}} -->
+            <!-- wp:button {"className":"is-style-fill","backgroundColor":"base","textColor":"primary"} -->
             <div class="wp-block-button is-style-fill"><a class="wp-block-button__link has-primary-color has-base-background-color has-text-color has-background wp-element-button">Make Reservation</a></div>
             <!-- /wp:button -->
         </div>

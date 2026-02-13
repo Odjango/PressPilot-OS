@@ -122,8 +122,8 @@ endif;
  * ONLY upon theme activation. Non-destructive.
  */
 
-    if (!function_exists('pp_setup_1770939132414')) {
-        function pp_setup_1770939132414() {
+    if (!function_exists('pp_setup_1770941470609')) {
+        function pp_setup_1770941470609() {
             // 1. Set Site Identity
             update_option('blogname', 'White Linen' );
             update_option('blogdescription', 'Culinary experiences crafted with character.' );
@@ -276,6 +276,6 @@ endif;
                 }
             }
         }
-        $setup_func = 'pp_setup_1770939132414';
+        $setup_func = 'pp_setup_1770941470609';
         add_action('after_switch_theme', $setup_func);
     }
