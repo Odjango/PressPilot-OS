@@ -1,0 +1,175 @@
+{
+    "$schema": "https://schemas.wp.org/wp/6.5/theme.json",
+    "version": 2,
+    "title": "Minimal",
+    "settings": {
+        "color": {
+            "palette": [
+                {
+                    "slug": "base",
+                    "color": "#FFFFFF",
+                    "name": "Base"
+                },
+                {
+                    "slug": "base-2",
+                    "color": "#F9FAFB",
+                    "name": "Base / Two"
+                },
+                {
+                    "slug": "contrast",
+                    "color": "#111827",
+                    "name": "Contrast"
+                },
+                {
+                    "slug": "contrast-2",
+                    "color": "#6B7280",
+                    "name": "Contrast / Two"
+                },
+                {
+                    "slug": "contrast-3",
+                    "color": "#E5E7EB",
+                    "name": "Contrast / Three"
+                },
+                {
+                    "slug": "accent",
+                    "color": "#374151",
+                    "name": "Accent"
+                },
+                {
+                    "slug": "accent-2",
+                    "color": "#9CA3AF",
+                    "name": "Accent / Two"
+                },
+                {
+                    "slug": "accent-3",
+                    "color": "#1F2937",
+                    "name": "Accent / Three"
+                },
+                {
+                    "slug": "accent-4",
+                    "color": "#4B5563",
+                    "name": "Accent / Four"
+                },
+                {
+                    "slug": "accent-5",
+                    "color": "#6B7280",
+                    "name": "Accent / Five"
+                },
+                {
+                    "slug": "primary",
+                    "color": "#374151",
+                    "name": "Primary"
+                },
+                {
+                    "slug": "primary-light",
+                    "color": "#9CA3AF",
+                    "name": "Primary light"
+                },
+                {
+                    "slug": "primary-dark",
+                    "color": "#1F2937",
+                    "name": "Primary dark"
+                },
+                {
+                    "slug": "primary-subtle",
+                    "color": "#9CA3AF",
+                    "name": "Primary subtle"
+                },
+                {
+                    "slug": "secondary",
+                    "color": "#4B5563",
+                    "name": "Secondary"
+                },
+                {
+                    "slug": "tertiary",
+                    "color": "#6B7280",
+                    "name": "Tertiary"
+                },
+                {
+                    "slug": "foreground",
+                    "color": "#111827",
+                    "name": "Foreground"
+                },
+                {
+                    "slug": "background",
+                    "color": "#FFFFFF",
+                    "name": "Background"
+                },
+                {
+                    "slug": "surface",
+                    "color": "#F9FAFB",
+                    "name": "Surface"
+                },
+                {
+                    "slug": "body-text",
+                    "color": "#111827",
+                    "name": "Body text"
+                },
+                {
+                    "slug": "heading",
+                    "color": "#111827",
+                    "name": "Heading"
+                },
+                {
+                    "slug": "muted",
+                    "color": "#6B7280",
+                    "name": "Muted"
+                },
+                {
+                    "slug": "border",
+                    "color": "#E5E7EB",
+                    "name": "Border"
+                },
+                {
+                    "slug": "main",
+                    "color": "#111827",
+                    "name": "Main"
+                },
+                {
+                    "slug": "cta-bg",
+                    "color": "#374151",
+                    "name": "Cta bg"
+                },
+                {
+                    "slug": "cta-text",
+                    "color": "#FFFFFF",
+                    "name": "Cta text"
+                }
+            ]
+        }
+    },
+    "styles": {
+        "color": {
+            "background": "var(--wp--preset--color--base)",
+            "text": "var(--wp--preset--color--contrast)"
+        },
+        "elements": {
+            "button": {
+                "color": {
+                    "background": "var(--wp--preset--color--accent)",
+                    "text": "var(--wp--preset--color--base)"
+                },
+                ":hover": {
+                    "color": {
+                        "background": "var(--wp--preset--color--accent-3)"
+                    }
+                }
+            },
+            "link": {
+                "color": {
+                    "text": "var(--wp--preset--color--accent)"
+                },
+                ":hover": {
+                    "color": {
+                        "text": "var(--wp--preset--color--accent-3)"
+                    }
+                }
+            },
+            "heading": {
+                "color": {
+                    "text": "var(--wp--preset--color--contrast)"
+                }
+            }
+        }
+    }
+}

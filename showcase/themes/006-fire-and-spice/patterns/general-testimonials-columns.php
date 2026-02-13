@@ -18,7 +18,7 @@
 
 			<!-- wp:quote {"align":"center","className":"is-style-default"} -->
 			<blockquote class="wp-block-quote has-text-align-center is-style-default"><!-- wp:paragraph -->
-				<p>“Fire &amp;amp; Spice serves the best service in San Francisco. It’s not even close.”</p>
+				<p>“Fire &amp;amp; Spice serves the best service in Los Angeles. It’s not even close.”</p>
 				<!-- /wp:paragraph --><cite>Happy Customer</cite>
 			</blockquote>
 			<!-- /wp:quote -->
@@ -39,7 +39,7 @@
 
 			<!-- wp:quote {"align":"center","className":"is-style-default"} -->
 			<blockquote class="wp-block-quote has-text-align-center is-style-default"><!-- wp:paragraph -->
-				<p>“Fire &amp;amp; Spice serves the best service in San Francisco. It’s not even close.”</p>
+				<p>“Fire &amp;amp; Spice serves the best service in Los Angeles. It’s not even close.”</p>
 				<!-- /wp:paragraph --><cite>Happy Customer</cite>
 			</blockquote>
 			<!-- /wp:quote -->
@@ -60,7 +60,7 @@
 
 			<!-- wp:quote {"align":"center","className":"is-style-default"} -->
 			<blockquote class="wp-block-quote has-text-align-center is-style-default"><!-- wp:paragraph -->
-				<p>“Fire &amp;amp; Spice serves the best service in San Francisco. It’s not even close.”</p>
+				<p>“Fire &amp;amp; Spice serves the best service in Los Angeles. It’s not even close.”</p>
 				<!-- /wp:paragraph --><cite>Happy Customer</cite>
 			</blockquote>
 			<!-- /wp:quote -->

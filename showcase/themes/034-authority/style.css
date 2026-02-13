@@ -1,0 +1,152 @@
+/*
+Theme Name: Authority
+Theme URI: https://wordpress.org/themes/twentytwentyfour/
+Author: the WordPress team
+Author URI: https://wordpress.org
+Description: Twenty Twenty-Four is designed to be flexible, versatile and applicable to any website. Its collection of templates and patterns tailor to different needs, such as presenting a business, blogging and writing or showcasing work. A multitude of possibilities open up with just a few adjustments to color and typography. Twenty Twenty-Four comes with style variations and full page designs to help speed up the site building process, is fully compatible with the site editor, and takes advantage of new design tools introduced in WordPress 6.4.
+Requires at least: 6.4
+Tested up to: 6.9
+Requires PHP: 7.0
+Version: 1.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: twentytwentyfour
+Tags: one-column, custom-colors, custom-menu, custom-logo, editor-style, featured-images, full-site-editing, block-patterns, rtl-language-support, sticky-post, threaded-comments, translation-ready, wide-blocks, block-styles, style-variations, accessibility-ready, blog, portfolio, news
+*/
+
+/* PressPilot Standard Layout Helper */
+body { margin: 0; overflow-x: hidden; width: 100%; }
+.wp-site-blocks { display: flex; flex-direction: column; min-height: 100vh; width: 100%; overflow-x: hidden; }
+
+/* Remove root-level blockGap between header, main, and footer */
+.wp-site-blocks > * { margin-block-start: 0 !important; margin-block-end: 0 !important; }
+
+/* Push footer to bottom of viewport */
+.wp-site-blocks > main,
+.wp-site-blocks > .wp-block-group:not(.wp-block-template-part) {
+    flex-grow: 1;
+}
+
+/* =============================================
+   Sticky Header for Hero Overlay Support
+   ============================================= */
+
+/* Header positioning for full-bleed hero support */
+.presspilot-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Semi-transparent background for glass effect */
+.presspilot-header.has-base-background-color {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Dark mode header support */
+body.is-dark-theme .presspilot-header.has-base-background-color,
+.presspilot-header.has-base-background-color[data-dark="true"] {
+    background-color: rgba(15, 23, 42, 0.95) !important;
+}
+
+/* Ensure hero sections stay below header */
+.wp-block-cover {
+    z-index: 1;
+}
+
+/* =============================================
+   Alignfull Block Spacing Normalization
+   ============================================= */
+
+/* Normalize first block inside main (hero directly under header) */
+main.wp-block-group > :first-child {
+    margin-top: 0 !important;
+}
+
+/* Normalize back-to-back alignfull blocks (no double spacing) */
+.alignfull + .alignfull {
+    margin-top: 0;
+}
+
+/* =============================================
+   Brand-Mode Outline Button Color Normalization
+   ============================================= */
+
+/* Ensure secondary/outline buttons always use brand accent token colors */
+.wp-block-button.is-style-outline .wp-block-button__link,
+.wp-block-button .wp-block-button__link.is-style-outline {
+    color: var(--wp--preset--color--accent) !important;
+    border-color: var(--wp--preset--color--accent) !important;
+    background-color: transparent !important;
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link:hover,
+.wp-block-button .wp-block-button__link.is-style-outline:hover {
+    color: var(--wp--preset--color--accent-3) !important;
+    border-color: var(--wp--preset--color--accent-3) !important;
+    background-color: transparent !important;
+}
+
+/* =============================================
+   Filled Button Contrast (Palette-Aware)
+   ============================================= */
+
+.wp-block-button .wp-block-button__link.has-accent-background-color {
+    color: var(--wp--preset--color--base) !important;
+}
+.has-accent-background-color .presspilot-on-colored-bg {
+    color: var(--wp--preset--color--base) !important;
+}
+.wp-block-button .wp-block-button__link.has-accent-2-background-color {
+    color: var(--wp--preset--color--contrast) !important;
+}
+.has-accent-2-background-color .presspilot-on-colored-bg {
+    color: var(--wp--preset--color--contrast) !important;
+}
+.wp-block-button .wp-block-button__link.has-accent-3-background-color {
+    color: var(--wp--preset--color--base) !important;
+}
+.has-accent-3-background-color .presspilot-on-colored-bg {
+    color: var(--wp--preset--color--base) !important;
+}
+.wp-block-button .wp-block-button__link.has-accent-4-background-color {
+    color: var(--wp--preset--color--contrast) !important;
+}
+.has-accent-4-background-color .presspilot-on-colored-bg {
+    color: var(--wp--preset--color--contrast) !important;
+}
+.wp-block-button .wp-block-button__link.has-accent-5-background-color {
+    color: var(--wp--preset--color--contrast) !important;
+}
+.has-accent-5-background-color .presspilot-on-colored-bg {
+    color: var(--wp--preset--color--contrast) !important;
+}
+.wp-block-button .wp-block-button__link.has-primary-background-color {
+    color: var(--wp--preset--color--base) !important;
+}
+.has-primary-background-color .presspilot-on-colored-bg {
+    color: var(--wp--preset--color--base) !important;
+}
+
+
+/* Dark-context readability: force light outline CTA inside dark hero/cover contexts */
+.wp-block-cover .wp-block-button.is-style-outline .wp-block-button__link,
+.has-contrast-background-color .wp-block-button.is-style-outline .wp-block-button__link {
+    color: var(--wp--preset--color--base) !important;
+    border-color: var(--wp--preset--color--base) !important;
+}
+
+.wp-block-cover .wp-block-button.is-style-outline .wp-block-button__link:hover,
+.has-contrast-background-color .wp-block-button.is-style-outline .wp-block-button__link:hover {
+    color: var(--wp--preset--color--accent-2) !important;
+    border-color: var(--wp--preset--color--accent-2) !important;
+}
+
+/* Dark-context readability: avoid dark accent text on dark surfaces */
+.wp-block-cover .has-accent-color,
+.has-contrast-background-color .has-accent-color {
+    color: var(--wp--preset--color--base) !important;
+}
+

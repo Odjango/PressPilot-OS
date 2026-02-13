@@ -221,11 +221,11 @@ add_filter( 'default_wp_template_part_areas', __NAMESPACE__ . '\template_part_ar
  * ONLY upon theme activation. Non-destructive.
  */
 
-    if (!function_exists('pp_setup_1770939134585')) {
-        function pp_setup_1770939134585() {
+    if (!function_exists('pp_setup_1770944511634')) {
+        function pp_setup_1770944511634() {
             // 1. Set Site Identity
             update_option('blogname', 'CloudFlow' );
-            update_option('blogdescription', 'Modern software built for growth and clarity.' );
+            update_option('blogdescription', 'Designed for the saas space, CloudFlow blends modern aesthetics with practical conversion-focused content.' );
 
             // 1.2 Handle Logo (If exists in assets)
             $logo_rel_path = '/assets/images/logo.png';
@@ -375,6 +375,6 @@ add_filter( 'default_wp_template_part_areas', __NAMESPACE__ . '\template_part_ar
                 }
             }
         }
-        $setup_func = ( __NAMESPACE__ ? __NAMESPACE__ . '\\' : '' ) . 'pp_setup_1770939134585';
+        $setup_func = ( __NAMESPACE__ ? __NAMESPACE__ . '\\' : '' ) . 'pp_setup_1770944511634';
         add_action('after_switch_theme', $setup_func);
     }

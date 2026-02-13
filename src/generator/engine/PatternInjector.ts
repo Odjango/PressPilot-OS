@@ -7,6 +7,7 @@ import { generateMenuPattern } from '../patterns/restaurant-menu';
 import { getModernImageUrl } from '../utils/ImageProvider';
 import { ContentJSON } from '../modules/ContentBuilder';
 import { sanitizeForPHP, sanitizePath } from '../utils/sanitize';
+import { replaceRemainingPlaceholders } from '../utils/placeholderFallback';
 
 /**
  * Demo content replacement patterns by base theme.
@@ -332,6 +333,12 @@ export class PatternInjector {
                 // 4. Image replacement - swap pattern images with Unsplash URLs
                 content = this.applyImageReplacements(content, contentJson.hero.images);
 
+                // 5. Final fallback for any unresolved placeholders
+                content = replaceRemainingPlaceholders(content, {
+                    industry: userData.industry,
+                    heroImage: contentJson?.hero?.images?.[0]
+                });
+
                 await fs.writeFile(fullPath, content);
                 templateContent += `<!-- wp:pattern {"slug":"${slug}"} /-->\n`;
             }
@@ -342,6 +349,10 @@ export class PatternInjector {
             || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
         templateContent = templateContent.replace(/\{\{HERO_IMAGE[_0-9]*\}\}/g, recipeFallbackHeroUrl);
         templateContent = templateContent.replace(/\{\{SOCIAL_[A-Z_]+\}\}/g, '#');
+        templateContent = replaceRemainingPlaceholders(templateContent, {
+            industry: userData.industry,
+            heroImage: recipeFallbackHeroUrl
+        });
 
         // FSE Block Grammar Security Part
         const fullContent = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
@@ -395,6 +406,10 @@ ${templateContent}
                 || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
             homeMarkup = homeMarkup.replace(/\{\{HERO_IMAGE[_0-9]*\}\}/g, fallbackHeroUrl);
             homeMarkup = homeMarkup.replace(/\{\{SOCIAL_[A-Z_]+\}\}/g, '#');
+            homeMarkup = replaceRemainingPlaceholders(homeMarkup, {
+                industry: userData.industry,
+                heroImage: fallbackHeroUrl
+            });
 
             // Normalize cover block element order: span before img (WP 6.5+ canonical)
             homeMarkup = homeMarkup.replace(

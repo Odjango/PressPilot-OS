@@ -10,7 +10,7 @@
 	<figure class="wp-block-media-text__media" style="background-image:url(<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/illustrations/cup-illustration-square.png);background-position:0% 50%"><img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/illustrations/cup-illustration-square.png" alt="" /></figure>
 	<div class="wp-block-media-text__content">
 		<!-- wp:heading {"level":3} -->
-		<h3>100 Market Street</h3>
+		<h3>106 Union Street</h3>
 		<!-- /wp:heading -->
 
 		<!-- wp:separator {"className":"is-style-wide"} -->
@@ -26,11 +26,11 @@
 				<!-- /wp:heading -->
 
 				<!-- wp:paragraph -->
-				<p>100 Market Street<br>San Francisco</p>
+				<p>106 Union Street<br>Los Angeles</p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph -->
-				<p>hello@fire-and-spice.example<br>(555) 010-1000</p>
+				<p>hello@fire-and-spice.example<br>(555) 106-1222</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:column -->

@@ -122,11 +122,11 @@ endif;
  * ONLY upon theme activation. Non-destructive.
  */
 
-    if (!function_exists('pp_setup_1770939133355')) {
-        function pp_setup_1770939133355() {
+    if (!function_exists('pp_setup_1770944510389')) {
+        function pp_setup_1770944510389() {
             // 1. Set Site Identity
             update_option('blogname', 'Fire &amp;amp;amp; Spice' );
-            update_option('blogdescription', 'Culinary experiences crafted with character.' );
+            update_option('blogdescription', 'Designed for the restaurant space, Fire &amp;amp;amp; Spice blends bold aesthetics with practical conversion-focused content.' );
 
             // 1.2 Handle Logo (If exists in assets)
             $logo_rel_path = '/assets/images/logo.png';
@@ -276,6 +276,6 @@ endif;
                 }
             }
         }
-        $setup_func = 'pp_setup_1770939133355';
+        $setup_func = 'pp_setup_1770944510389';
         add_action('after_switch_theme', $setup_func);
     }

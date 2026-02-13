@@ -122,11 +122,11 @@ endif;
  * ONLY upon theme activation. Non-destructive.
  */
 
-    if (!function_exists('pp_setup_1770939131773')) {
-        function pp_setup_1770939131773() {
+    if (!function_exists('pp_setup_1770944508889')) {
+        function pp_setup_1770944508889() {
             // 1. Set Site Identity
             update_option('blogname', 'The Cozy Cup' );
-            update_option('blogdescription', 'Culinary experiences crafted with character.' );
+            update_option('blogdescription', 'Designed for the restaurant space, The Cozy Cup blends playful aesthetics with practical conversion-focused content.' );
 
             // 1.2 Handle Logo (If exists in assets)
             $logo_rel_path = '/assets/images/logo.png';
@@ -276,6 +276,6 @@ endif;
                 }
             }
         }
-        $setup_func = 'pp_setup_1770939131773';
+        $setup_func = 'pp_setup_1770944508889';
         add_action('after_switch_theme', $setup_func);
     }

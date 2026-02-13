@@ -10,7 +10,7 @@
 	<figure class="wp-block-media-text__media" style="background-image:url(<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/illustrations/cup-illustration-square.png);background-position:0% 50%"><img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/illustrations/cup-illustration-square.png" alt="" /></figure>
 	<div class="wp-block-media-text__content">
 		<!-- wp:heading {"level":6,"style":{"spacing":{"margin":{"bottom":"0","top":"0"}}},"backgroundColor":"secondary"} -->
-		<h6 class="has-secondary-background-color has-background" style="margin-top:0;margin-bottom:0">100 Market Street</h6>
+		<h6 class="has-secondary-background-color has-background" style="margin-top:0;margin-bottom:0">107 Park Avenue</h6>
 		<!-- /wp:heading -->
 
 		<!-- wp:heading {"level":1,"style":{"typography":{"fontWeight":"500"},"spacing":{"margin":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40"}}}} -->
@@ -18,7 +18,7 @@
 		<!-- /wp:heading -->
 
 		<!-- wp:paragraph {"fontSize":"large"} -->
-		<p class="has-large-font-size">See our recommendations for the best experiences at Sunday Brunch in Downtown.</p>
+		<p class="has-large-font-size">See our recommendations for the best experiences at Sunday Brunch in Midtown.</p>
 		<!-- /wp:paragraph -->
 
 		<!-- wp:buttons -->

@@ -207,6 +207,33 @@ export class ContentBuilder {
             page.content = { ...page.content, ...contactInfo };
         }
 
+        // --------------------------------------------------------------------
+        // Generic user data -> slot mapping
+        // Enables rich catalog-driven content by mapping any scalar key to
+        // template placeholders with the same token name, e.g.:
+        //   data.testimonial_1_quote -> {{testimonial_1_quote}}
+        //   data.chef_name_1         -> {{chef_name_1}}
+        // --------------------------------------------------------------------
+        for (const [key, value] of Object.entries(safeUserData as Record<string, unknown>)) {
+            if (value === null || value === undefined) continue;
+            if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                slots[`{{${key}}}`] = String(value);
+            }
+        }
+
+        // Common derivatives used by section patterns.
+        const opening = safeUserData.openingHours || {};
+        slots['{{hours_monday}}'] = opening.Monday || 'Closed';
+        slots['{{hours_tuesday}}'] = opening.Tuesday || 'Closed';
+        slots['{{hours_wednesday}}'] = opening.Wednesday || 'Closed';
+        slots['{{hours_thursday}}'] = opening.Thursday || 'Closed';
+        slots['{{hours_friday}}'] = opening.Friday || 'Closed';
+        slots['{{hours_saturday}}'] = opening.Saturday || 'Closed';
+        slots['{{hours_sunday}}'] = opening.Sunday || 'Closed';
+        slots['{{hours_weekday}}'] = opening.Monday || opening.Tuesday || '11:00 AM - 9:00 PM';
+        slots['{{hours_weekend}}'] = opening.Saturday || '10:00 AM - 10:00 PM';
+        slots['{{phone_number}}'] = safeUserData.phone || '';
+
         return {
             hero: {
                 headline: hero_headline,

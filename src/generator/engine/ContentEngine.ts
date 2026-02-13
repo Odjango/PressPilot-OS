@@ -4,6 +4,7 @@ import { generateContentLoader } from '../utils/content-loader-generator';
 import { buildPageTemplate, buildFooterTemplate, buildHeaderTemplate } from '../page-builder';
 import { ContentJSON } from '../modules/ContentBuilder';
 import { sanitizeForPHP } from '../utils/sanitize';
+import { replaceRemainingPlaceholders } from '../utils/placeholderFallback';
 
 export class ContentEngine {
     private applySlotReplacements(content: string, slots: Record<string, string>): string {
@@ -104,7 +105,11 @@ export class ContentEngine {
                 const pagePath = path.join(themeDir, 'templates', `page-${page.slug}.html`);
                 if (await fs.pathExists(pagePath)) {
                     const original = await fs.readFile(pagePath, 'utf8');
-                    const resolved = this.applySlotReplacements(original, contentJson.slots || {});
+                    let resolved = this.applySlotReplacements(original, contentJson.slots || {});
+                    resolved = replaceRemainingPlaceholders(resolved, {
+                        industry: contentJson.industry,
+                        heroImage: contentJson?.hero?.images?.[0]
+                    });
                     if (resolved !== original) {
                         await fs.writeFile(pagePath, resolved);
                     }

@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import path from 'node:path';
 import { chromium } from '@playwright/test';
+import { Jimp } from 'jimp';
 import { serveThemeFromZip } from '../../tests/visual/setup/serve-theme';
 
 interface CatalogTheme {
@@ -18,6 +19,7 @@ const SHOWCASE_ROOT = path.join(ROOT, 'showcase');
 const CATALOG_PATH = path.join(SHOWCASE_ROOT, 'catalog.json');
 const ZIPS_DIR = path.join(SHOWCASE_ROOT, 'zips');
 const SCREENSHOTS_DIR = path.join(SHOWCASE_ROOT, 'screenshots');
+const MAX_HEIGHT = 2000;
 
 function argValue(name: string): string | undefined {
   const hit = process.argv.find((arg) => arg.startsWith(`--${name}=`));
@@ -33,9 +35,18 @@ function resolveRange(): { from: number; to: number } {
   };
 }
 
+async function writeScreenshot(buffer: Buffer, outputPath: string): Promise<void> {
+  const image = await Jimp.read(buffer);
+  if (image.bitmap.height > MAX_HEIGHT) {
+    image.resize({ h: MAX_HEIGHT });
+  }
+  const finalBuffer = await image.getBuffer('image/png');
+  await fs.writeFile(outputPath, finalBuffer);
+}
+
 async function main(): Promise<void> {
   const { from, to } = resolveRange();
-  const catalog = await fs.readJson(CATALOG_PATH) as Catalog;
+  const catalog = (await fs.readJson(CATALOG_PATH)) as Catalog;
   const selected = catalog.themes.filter((t) => {
     const num = Number.parseInt(t.id, 10);
     return num >= from && num <= to;
@@ -47,7 +58,7 @@ async function main(): Promise<void> {
   const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await context.newPage();
 
-  const report: Array<Record<string, string>> = [];
+  const report: Array<Record<string, string | number>> = [];
 
   try {
     for (const theme of selected) {
@@ -61,14 +72,18 @@ async function main(): Promise<void> {
       const served = await serveThemeFromZip(zipPath);
       try {
         await page.goto(served.resolvePageUrl('home'), { waitUntil: 'domcontentloaded', timeout: 60_000 });
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(1200);
 
+        const screenshotBuffer = await page.screenshot({ fullPage: true, type: 'png' });
         const screenshotPath = path.join(SCREENSHOTS_DIR, `${folderName}-homepage.png`);
-        await page.screenshot({ path: screenshotPath, fullPage: false });
+        await writeScreenshot(screenshotBuffer, screenshotPath);
 
+        const img = await Jimp.read(screenshotPath);
         report.push({
           id: theme.id,
           name: theme.name,
+          width: img.bitmap.width,
+          height: img.bitmap.height,
           screenshot: path.relative(ROOT, screenshotPath),
         });
       } finally {
@@ -81,7 +96,7 @@ async function main(): Promise<void> {
   }
 
   console.table(report);
-  console.log(`Captured ${report.length} screenshots (${from}-${to}) at 1280x800.`);
+  console.log(`Captured ${report.length} full-page screenshots (${from}-${to}), max height ${MAX_HEIGHT}px.`);
 }
 
 main().catch((error) => {

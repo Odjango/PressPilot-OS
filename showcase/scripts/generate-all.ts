@@ -13,6 +13,7 @@ interface CatalogTheme {
   tagline: string;
   tags: string[];
   colors: { primary: string; accent: string };
+  content?: GeneratorData;
 }
 
 interface Catalog {
@@ -39,12 +40,6 @@ function resolveRange(): { from: number; to: number } {
     from: Number.isFinite(from) ? Math.max(1, from) : 1,
     to: Number.isFinite(to) ? Math.max(from, to) : 10,
   };
-}
-
-function imageSet(seed: number, topic: string, count = 20): string[] {
-  return Array.from({ length: count }, (_, i) =>
-    `https://source.unsplash.com/800x600/?${encodeURIComponent(topic)}&sig=${seed * 100 + i}`
-  );
 }
 
 function pagesFor(vertical: CatalogTheme['vertical']): PageData[] {
@@ -92,7 +87,7 @@ function pagesFor(vertical: CatalogTheme['vertical']): PageData[] {
   ];
 }
 
-function businessTypeFor(theme: CatalogTheme): string {
+function businessTypeFor(recipe: string): string {
   const byRecipe: Record<string, string> = {
     'classic-bistro': 'casual',
     'modern-dining': 'fine-dining',
@@ -108,100 +103,42 @@ function businessTypeFor(theme: CatalogTheme): string {
     'product-showcase': 'product-showcase',
     'artisan-shop': 'artisan-shop',
   };
-  return byRecipe[theme.recipe] || theme.recipe;
+  return byRecipe[recipe] || recipe;
 }
 
-function topicFor(vertical: CatalogTheme['vertical']): string {
-  switch (vertical) {
-    case 'restaurant': return 'restaurant food interior';
-    case 'saas': return 'saas software dashboard';
-    case 'portfolio': return 'creative portfolio design';
-    case 'local-service': return 'local service business team';
-    case 'ecommerce': return 'ecommerce product lifestyle';
-  }
-}
+function buildData(theme: CatalogTheme): GeneratorData {
+  const content = (theme.content || {}) as GeneratorData;
+  const pages = content.pages || pagesFor(theme.vertical);
 
-function seedData(theme: CatalogTheme): GeneratorData {
-  const numericId = Number.parseInt(theme.id, 10);
-  const images = imageSet(numericId, topicFor(theme.vertical), 22);
-  const pages = pagesFor(theme.vertical);
-
-  const base: GeneratorData = {
-    name: theme.name,
-    industry: theme.vertical,
-    businessType: businessTypeFor(theme),
-    brandMode: theme.brandMode,
-    hero_headline: theme.name,
-    hero_subheadline: theme.tagline,
-    description: `${theme.name} is a production showcase theme for the ${theme.vertical} vertical. Built for ${theme.brandMode} brand personality and ${theme.recipe} composition, it demonstrates polished layout structure, practical content flow, and conversion-ready sections.`,
+  return {
+    ...content,
+    name: content.name || theme.name,
+    industry: content.industry || theme.vertical,
+    businessType: content.businessType || businessTypeFor(theme.recipe),
+    brandMode: content.brandMode || theme.brandMode,
+    hero_headline: content.hero_headline || `${theme.name}`,
+    hero_subheadline: content.hero_subheadline || theme.tagline,
+    description: content.description || `${theme.name} showcase theme for ${theme.vertical}.`,
     pages,
-    images,
-    email: `hello@${theme.slug}.example`,
-    phone: '(555) 010-1000',
-    address: '100 Market Street',
-    city: 'San Francisco',
-    state: 'CA',
-    zip: '94105',
-    country: 'USA',
-    socialLinks: {
-      facebook: `https://facebook.com/${theme.slug}`,
-      instagram: `https://instagram.com/${theme.slug}`,
-      twitter: `https://x.com/${theme.slug}`,
-      linkedin: `https://linkedin.com/company/${theme.slug}`,
-    },
-    openingHours: {
-      Monday: '9:00 AM - 6:00 PM',
-      Tuesday: '9:00 AM - 6:00 PM',
-      Wednesday: '9:00 AM - 6:00 PM',
-      Thursday: '9:00 AM - 6:00 PM',
-      Friday: '9:00 AM - 6:00 PM',
-      Saturday: '10:00 AM - 4:00 PM',
-      Sunday: 'Closed',
-    }
   };
+}
 
-  if (theme.vertical === 'restaurant') {
-    base.menus = [
-      { title: 'Appetizers', items: [
-        { name: 'Seasonal Bruschetta', price: '$14', description: 'Tomato confit, basil, sourdough.' },
-        { name: 'Crispy Calamari', price: '$16', description: 'Lemon aioli, herbs.' },
-        { name: 'Burrata Plate', price: '$18', description: 'Heirloom tomatoes, olive oil.' },
-        { name: 'Roasted Carrots', price: '$13', description: 'Whipped feta, pistachio.' },
-      ]},
-      { title: 'Mains', items: [
-        { name: 'Braised Short Rib', price: '$34', description: 'Parsnip puree, jus.' },
-        { name: 'Pan-Seared Salmon', price: '$29', description: 'Lemon butter, greens.' },
-        { name: 'Truffle Pasta', price: '$27', description: 'Fresh tagliatelle, parmigiano.' },
-        { name: 'Woodfired Chicken', price: '$26', description: 'Herbs, roasted potatoes.' },
-      ]},
-      { title: 'Desserts', items: [
-        { name: 'Tiramisu', price: '$12', description: 'Espresso mascarpone layers.' },
-        { name: 'Panna Cotta', price: '$11', description: 'Vanilla bean, berries.' },
-        { name: 'Chocolate Tart', price: '$13', description: 'Sea salt, cream.' },
-        { name: 'Gelato Trio', price: '$10', description: 'Chef selection.' },
-      ]}
-    ];
+async function verifyThemeOutput(themeDir: string): Promise<void> {
+  const templatesDir = path.join(themeDir, 'templates');
+  const frontPage = path.join(templatesDir, 'front-page.html');
+  if (!(await fs.pathExists(frontPage))) {
+    throw new Error(`Missing front-page template: ${frontPage}`);
   }
 
-  if (theme.vertical === 'ecommerce') {
-    for (let i = 1; i <= 16; i++) {
-      (base as any)[`product_${i}_title`] = `Product ${i}`;
-      (base as any)[`product_${i}_price`] = `$${(20 + i * 3).toFixed(2)}`;
-      (base as any)[`product_${i}_description`] = `Premium product ${i} with crafted materials and reliable quality.`;
-      (base as any)[`product_${i}_image`] = images[(i - 1) % images.length];
-    }
-    for (let i = 1; i <= 4; i++) {
-      (base as any)[`category_${i}_name`] = ['Tops', 'Bottoms', 'Accessories', 'Footwear'][i - 1];
-      (base as any)[`category_${i}_image`] = images[(i + 4) % images.length];
-    }
+  const pageTemplates = (await fs.readdir(templatesDir)).filter((f) => f.startsWith('page-') && f.endsWith('.html'));
+  if (pageTemplates.length < 4) {
+    throw new Error(`Expected at least 4 page templates in ${templatesDir}, found ${pageTemplates.length}`);
   }
-
-  return base;
 }
 
 async function main(): Promise<void> {
   const { from, to } = resolveRange();
-  const catalog = await fs.readJson(CATALOG_PATH) as Catalog;
+  const catalog = (await fs.readJson(CATALOG_PATH)) as Catalog;
 
   await fs.ensureDir(THEMES_DIR);
   await fs.ensureDir(ZIPS_DIR);
@@ -215,32 +152,29 @@ async function main(): Promise<void> {
     throw new Error(`No catalog entries in range ${from}-${to}`);
   }
 
-  const report: Array<Record<string, string>> = [];
+  const report: Array<Record<string, string | number>> = [];
 
   for (const theme of selected) {
     const folderName = `${theme.id}-${theme.slug}`;
-    const outDir = path.join(THEMES_DIR, folderName);
-    const slug = folderName;
+    const data = buildData(theme);
 
     const result = await generateTheme({
       mode: 'standard',
       brandMode: theme.brandMode,
-      slug,
+      slug: folderName,
       outDir: THEMES_DIR,
-      data: seedData(theme),
+      data,
     });
 
     if (result.status !== 'success') {
       throw new Error(`Generation failed: ${theme.id} ${theme.name}`);
     }
 
+    const outThemeDir = path.join(THEMES_DIR, folderName);
+    await verifyThemeOutput(outThemeDir);
+
     const zipPath = path.join(ZIPS_DIR, `${folderName}.zip`);
     await fs.copy(result.downloadPath, zipPath, { overwrite: true });
-
-    const frontPage = path.join(outDir, 'templates', 'front-page.html');
-    if (!(await fs.pathExists(frontPage))) {
-      throw new Error(`Missing front-page template: ${frontPage}`);
-    }
 
     report.push({
       id: theme.id,
@@ -248,7 +182,8 @@ async function main(): Promise<void> {
       vertical: theme.vertical,
       mode: theme.brandMode,
       recipe: theme.recipe,
-      output: path.relative(ROOT, outDir),
+      pages: (data.pages || []).length,
+      output: path.relative(ROOT, outThemeDir),
       zip: path.relative(ROOT, zipPath),
     });
   }

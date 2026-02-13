@@ -122,11 +122,11 @@ endif;
  * ONLY upon theme activation. Non-destructive.
  */
 
-    if (!function_exists('pp_setup_1770941470609')) {
-        function pp_setup_1770941470609() {
+    if (!function_exists('pp_setup_1770944509461')) {
+        function pp_setup_1770944509461() {
             // 1. Set Site Identity
             update_option('blogname', 'White Linen' );
-            update_option('blogdescription', 'Culinary experiences crafted with character.' );
+            update_option('blogdescription', 'Designed for the restaurant space, White Linen blends minimal aesthetics with practical conversion-focused content.' );
 
             // 1.2 Handle Logo (If exists in assets)
             $logo_rel_path = '/assets/images/logo.png';
@@ -276,6 +276,6 @@ endif;
                 }
             }
         }
-        $setup_func = 'pp_setup_1770941470609';
+        $setup_func = 'pp_setup_1770944509461';
         add_action('after_switch_theme', $setup_func);
     }

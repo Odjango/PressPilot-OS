@@ -1,0 +1,6 @@
+{
+    "name": "Single Origin",
+    "base": "ollie",
+    "mode": "standard",
+    "brandMode": "minimal"
+}

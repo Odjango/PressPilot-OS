@@ -28,7 +28,7 @@
 			<!-- wp:buttons {"contentJustification":"right"} -->
 			<div class="wp-block-buttons is-content-justification-right">
 				<!-- wp:button {"backgroundColor":"primary","style":{"spacing":{"padding":{"top":"10px","bottom":"10px","left":"16px","right":"16px"}}}} -->
-				<div class="wp-block-button"><a class="wp-block-button__link has-primary-background-color has-background" style="padding-top:10px;padding-right:16px;padding-bottom:10px;padding-left:16px">(555) 010-1000</a></div>
+				<div class="wp-block-button"><a class="wp-block-button__link has-primary-background-color has-background" style="padding-top:10px;padding-right:16px;padding-bottom:10px;padding-left:16px">(555) 107-1259</a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->
