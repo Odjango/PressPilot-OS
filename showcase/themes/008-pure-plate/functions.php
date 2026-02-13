@@ -122,8 +122,8 @@ endif;
  * ONLY upon theme activation. Non-destructive.
  */
 
-    if (!function_exists('pp_setup_1770944511193')) {
-        function pp_setup_1770944511193() {
+    if (!function_exists('pp_setup_1770992599987')) {
+        function pp_setup_1770992599987() {
             // 1. Set Site Identity
             update_option('blogname', 'Pure Plate' );
             update_option('blogdescription', 'Designed for the restaurant space, Pure Plate blends minimal aesthetics with practical conversion-focused content.' );
@@ -276,6 +276,6 @@ endif;
                 }
             }
         }
-        $setup_func = 'pp_setup_1770944511193';
+        $setup_func = 'pp_setup_1770992599987';
         add_action('after_switch_theme', $setup_func);
     }

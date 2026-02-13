@@ -99,6 +99,40 @@ export class ContentEngine {
                     };
                 }
 
+                // Add chef/team data for about pages
+                if (page.template === 'universal-about') {
+                    const c = contentJson as Record<string, unknown>;
+                    page.content = {
+                        ...page.content,
+                        business_name: String(c.business_name || c.name || ''),
+                        name: String(c.name || ''),
+                        about_paragraph_1: String(c.about_paragraph_1 || ''),
+                        about_paragraph_2: String(c.about_paragraph_2 || ''),
+                        about_paragraph_3: String(c.about_paragraph_3 || ''),
+                        chef_name_1: String(c.chef_name_1 || ''),
+                        chef_role_1: String(c.chef_role_1 || ''),
+                        chef_bio_1: String(c.chef_bio_1 || ''),
+                        chef_name_2: String(c.chef_name_2 || ''),
+                        chef_role_2: String(c.chef_role_2 || ''),
+                        chef_bio_2: String(c.chef_bio_2 || ''),
+                        chef_name_3: String(c.chef_name_3 || ''),
+                        chef_role_3: String(c.chef_role_3 || ''),
+                        chef_bio_3: String(c.chef_bio_3 || ''),
+                        team_1_name: String(c.team_1_name || ''),
+                        team_1_role: String(c.team_1_role || ''),
+                        team_1_bio: String(c.team_1_bio || ''),
+                        team_1_photo: String(c.team_1_photo || ''),
+                        team_2_name: String(c.team_2_name || ''),
+                        team_2_role: String(c.team_2_role || ''),
+                        team_2_bio: String(c.team_2_bio || ''),
+                        team_2_photo: String(c.team_2_photo || ''),
+                        team_3_name: String(c.team_3_name || ''),
+                        team_3_role: String(c.team_3_role || ''),
+                        team_3_bio: String(c.team_3_bio || ''),
+                        team_3_photo: String(c.team_3_photo || ''),
+                    };
+                }
+
                 await buildPageTemplate(themeDir, page, contentJson.baseName, contentJson.heroLayout);
 
                 // Replace token placeholders in generated page templates.

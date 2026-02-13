@@ -221,8 +221,8 @@ add_filter( 'default_wp_template_part_areas', __NAMESPACE__ . '\template_part_ar
  * ONLY upon theme activation. Non-destructive.
  */
 
-    if (!function_exists('pp_setup_1770944512336')) {
-        function pp_setup_1770944512336() {
+    if (!function_exists('pp_setup_1770992600841')) {
+        function pp_setup_1770992600841() {
             // 1. Set Site Identity
             update_option('blogname', 'LaunchPad' );
             update_option('blogdescription', 'Designed for the saas space, LaunchPad blends bold aesthetics with practical conversion-focused content.' );
@@ -375,6 +375,6 @@ add_filter( 'default_wp_template_part_areas', __NAMESPACE__ . '\template_part_ar
                 }
             }
         }
-        $setup_func = ( __NAMESPACE__ ? __NAMESPACE__ . '\\' : '' ) . 'pp_setup_1770944512336';
+        $setup_func = ( __NAMESPACE__ ? __NAMESPACE__ . '\\' : '' ) . 'pp_setup_1770992600841';
         add_action('after_switch_theme', $setup_func);
     }

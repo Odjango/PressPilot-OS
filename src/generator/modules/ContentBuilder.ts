@@ -17,13 +17,14 @@ export interface ContentJSON {
     businessName: string;
     industry: string; // Added industry field
     heroLayout?: HeroLayout; // Hero layout selection (fullBleed, fullWidth, split, minimal)
+    // Allow any additional properties to pass through
+    [key: string]: unknown;
 }
 
 export class ContentBuilder {
     invoke(baseTheme: string, userData: GeneratorData): ContentJSON {
         console.log(`[ContentBuilder] Building content for base: ${baseTheme}`);
         const safeUserData = sanitizeUserInput<GeneratorData>(userData);
-
         const personality = PATTERN_REGISTRY[baseTheme];
         const slots: Record<string, string> = {};
 
@@ -59,7 +60,6 @@ export class ContentBuilder {
 
         // Industry-specific Page Injection
         const vertical = industry;
-
         if (vertical === 'restaurant' || vertical === 'cafe' || vertical === 'restaurant_cafe') {
             if (!pages.find(p => p.slug === 'menu')) {
                 pages.push({ title: 'Menu', slug: 'menu', template: 'universal-menu' });
@@ -234,7 +234,11 @@ export class ContentBuilder {
         slots['{{hours_weekend}}'] = opening.Saturday || '10:00 AM - 10:00 PM';
         slots['{{phone_number}}'] = safeUserData.phone || '';
 
+        // Return ContentJSON with all original userData fields spread in
         return {
+            // Spread all original user data first (so explicit fields below can override)
+            ...safeUserData,
+            // Explicit required fields
             hero: {
                 headline: hero_headline,
                 subheadline: hero_subheadline,
@@ -246,8 +250,9 @@ export class ContentBuilder {
             slots: slots,
             baseName: baseTheme,
             businessName: safeUserData.name || 'My PressPilot Site',
-            industry: industry, // Now passing industry through
-            heroLayout: safeUserData.heroLayout // Hero layout selection
+            name: safeUserData.name || 'My PressPilot Site',
+            industry: industry,
+            heroLayout: safeUserData.heroLayout
         };
     }
 }

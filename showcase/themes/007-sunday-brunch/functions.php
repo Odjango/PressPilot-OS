@@ -122,8 +122,8 @@ endif;
  * ONLY upon theme activation. Non-destructive.
  */
 
-    if (!function_exists('pp_setup_1770944510778')) {
-        function pp_setup_1770944510778() {
+    if (!function_exists('pp_setup_1770992599808')) {
+        function pp_setup_1770992599808() {
             // 1. Set Site Identity
             update_option('blogname', 'Sunday Brunch' );
             update_option('blogdescription', 'Designed for the restaurant space, Sunday Brunch blends playful aesthetics with practical conversion-focused content.' );
@@ -276,6 +276,6 @@ endif;
                 }
             }
         }
-        $setup_func = 'pp_setup_1770944510778';
+        $setup_func = 'pp_setup_1770992599808';
         add_action('after_switch_theme', $setup_func);
     }

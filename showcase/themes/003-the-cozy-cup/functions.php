@@ -122,8 +122,8 @@ endif;
  * ONLY upon theme activation. Non-destructive.
  */
 
-    if (!function_exists('pp_setup_1770944508889')) {
-        function pp_setup_1770944508889() {
+    if (!function_exists('pp_setup_1770992598285')) {
+        function pp_setup_1770992598285() {
             // 1. Set Site Identity
             update_option('blogname', 'The Cozy Cup' );
             update_option('blogdescription', 'Designed for the restaurant space, The Cozy Cup blends playful aesthetics with practical conversion-focused content.' );
@@ -276,6 +276,6 @@ endif;
                 }
             }
         }
-        $setup_func = 'pp_setup_1770944508889';
+        $setup_func = 'pp_setup_1770992598285';
         add_action('after_switch_theme', $setup_func);
     }

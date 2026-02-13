@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+config({ path: '.env.local' });
 import fs from 'fs-extra';
 import path from 'node:path';
 import { generateTheme } from '../../src/generator';

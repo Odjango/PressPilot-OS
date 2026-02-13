@@ -1,4 +1,3 @@
-
 export interface ThemeColors {
     brand: string;
     brand_alt: string;
@@ -61,6 +60,33 @@ export interface PageContent {
     social_twitter?: string;
     opening_hours?: Record<string, string>;
     business_type?: string;
+    // About page fields (Phase 3 - Rich Content)
+    name?: string;
+    about_paragraph_1?: string;
+    about_paragraph_2?: string;
+    about_paragraph_3?: string;
+    // Chef/Team fields
+    chef_name_1?: string;
+    chef_role_1?: string;
+    chef_bio_1?: string;
+    chef_name_2?: string;
+    chef_role_2?: string;
+    chef_bio_2?: string;
+    chef_name_3?: string;
+    chef_role_3?: string;
+    chef_bio_3?: string;
+    team_1_name?: string;
+    team_1_role?: string;
+    team_1_bio?: string;
+    team_1_photo?: string;
+    team_2_name?: string;
+    team_2_role?: string;
+    team_2_bio?: string;
+    team_2_photo?: string;
+    team_3_name?: string;
+    team_3_role?: string;
+    team_3_bio?: string;
+    team_3_photo?: string;
 }
 
 

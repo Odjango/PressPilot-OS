@@ -122,8 +122,8 @@ endif;
  * ONLY upon theme activation. Non-destructive.
  */
 
-    if (!function_exists('pp_setup_1770944508474')) {
-        function pp_setup_1770944508474() {
+    if (!function_exists('pp_setup_1770992598070')) {
+        function pp_setup_1770992598070() {
             // 1. Set Site Identity
             update_option('blogname', 'Ember &amp;amp;amp; Oak' );
             update_option('blogdescription', 'Designed for the restaurant space, Ember &amp;amp;amp; Oak blends bold aesthetics with practical conversion-focused content.' );
@@ -276,6 +276,6 @@ endif;
                 }
             }
         }
-        $setup_func = 'pp_setup_1770944508474';
+        $setup_func = 'pp_setup_1770992598070';
         add_action('after_switch_theme', $setup_func);
     }

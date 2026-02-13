@@ -119,8 +119,8 @@ add_action( 'init', 'frost_register_block_pattern_categories' );
  * ONLY upon theme activation. Non-destructive.
  */
 
-    if (!function_exists('pp_setup_1770944508018')) {
-        function pp_setup_1770944508018() {
+    if (!function_exists('pp_setup_1770992597781')) {
+        function pp_setup_1770992597781() {
             // 1. Set Site Identity
             update_option('blogname', 'Bella Vista' );
             update_option('blogdescription', 'Designed for the restaurant space, Bella Vista blends modern aesthetics with practical conversion-focused content.' );
@@ -273,6 +273,6 @@ add_action( 'init', 'frost_register_block_pattern_categories' );
                 }
             }
         }
-        $setup_func = 'pp_setup_1770944508018';
+        $setup_func = 'pp_setup_1770992597781';
         add_action('after_switch_theme', $setup_func);
     }
