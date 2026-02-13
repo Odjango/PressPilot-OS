@@ -107,17 +107,24 @@ function businessTypeFor(recipe: string): string {
 }
 
 function buildData(theme: CatalogTheme): GeneratorData {
-  const content = (theme.content || {}) as GeneratorData;
+  const content = (theme.content || {}) as GeneratorData & {
+    businessName?: string;
+    headline?: string;
+    tagline?: string;
+  };
   const pages = content.pages || pagesFor(theme.vertical);
+  const normalizedName = content.name || content.businessName || theme.name;
+  const normalizedHeadline = content.hero_headline || content.headline || theme.name;
+  const normalizedSubheadline = content.hero_subheadline || content.tagline || theme.tagline;
 
   return {
     ...content,
-    name: content.name || theme.name,
+    name: normalizedName,
     industry: content.industry || theme.vertical,
     businessType: content.businessType || businessTypeFor(theme.recipe),
     brandMode: content.brandMode || theme.brandMode,
-    hero_headline: content.hero_headline || `${theme.name}`,
-    hero_subheadline: content.hero_subheadline || theme.tagline,
+    hero_headline: normalizedHeadline,
+    hero_subheadline: normalizedSubheadline,
     description: content.description || `${theme.name} showcase theme for ${theme.vertical}.`,
     pages,
   };
