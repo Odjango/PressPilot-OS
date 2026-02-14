@@ -180,4 +180,39 @@ class DataTransformerTest extends TestCase
         $this->assertSame('9:00 AM - 5:00 PM', $result['openingHours']['Monday']);
         $this->assertSame('https://instagram.com/example', $result['socialLinks']['instagram']);
     }
+
+    public function test_maps_bold_and_minimal_brand_style_to_modern_for_generator_compatibility(): void
+    {
+        $transformer = new DataTransformer;
+
+        $base = [
+            'brand' => [
+                'business_name' => 'Brand Co',
+                'business_category' => 'restaurant_cafe',
+            ],
+            'narrative' => [
+                'description_long' => 'Desc',
+            ],
+            'modes' => [
+                'restaurant' => [
+                    'enabled' => true,
+                ],
+            ],
+        ];
+
+        $boldInput = $base;
+        $boldInput['visualControls'] = ['brandStyle' => 'bold'];
+        $bold = $transformer->transformSaaSInputToGeneratorData($boldInput);
+        $this->assertSame('modern', $bold['brandStyle']);
+
+        $minimalInput = $base;
+        $minimalInput['visualControls'] = ['brandStyle' => 'minimal'];
+        $minimal = $transformer->transformSaaSInputToGeneratorData($minimalInput);
+        $this->assertSame('modern', $minimal['brandStyle']);
+
+        $playfulInput = $base;
+        $playfulInput['visualControls'] = ['brandStyle' => 'playful'];
+        $playful = $transformer->transformSaaSInputToGeneratorData($playfulInput);
+        $this->assertSame('playful', $playful['brandStyle']);
+    }
 }

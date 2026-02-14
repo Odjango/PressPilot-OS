@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InternalController;
+use App\Http\Controllers\GenerationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,3 +19,13 @@ Route::prefix('internal')->group(function () {
     Route::post('/jobs/test-dispatch', [InternalController::class, 'testDispatch']);
     Route::get('/jobs/{job_id}', [InternalController::class, 'show']);
 });
+
+/*
+|--------------------------------------------------------------------------
+| M1 Public Generation Routes
+|--------------------------------------------------------------------------
+*/
+Route::post('/generate', [GenerationController::class, 'generate']);
+Route::post('/regenerate', [GenerationController::class, 'regenerate']);
+Route::get('/status', [GenerationController::class, 'status']);
+Route::get('/download', [GenerationController::class, 'download']);

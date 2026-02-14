@@ -166,7 +166,7 @@ class DataTransformer
 
         $brandStyle = data_get($input, 'visualControls.brandStyle');
         if ($brandStyle) {
-            $generatorData['brandStyle'] = $brandStyle;
+            $generatorData['brandStyle'] = $this->mapGeneratorBrandStyle((string) $brandStyle);
         }
 
         $contact = $input['contact'] ?? null;
@@ -191,5 +191,16 @@ class DataTransformer
     private function restaurantEnabled(array $input): bool
     {
         return data_get($input, 'modes.restaurant.enabled') === true;
+    }
+
+    private function mapGeneratorBrandStyle(string $brandStyle): string
+    {
+        $normalized = strtolower(trim($brandStyle));
+
+        return match ($normalized) {
+            'playful', 'modern' => $normalized,
+            'bold', 'minimal' => 'modern',
+            default => 'modern',
+        };
     }
 }
