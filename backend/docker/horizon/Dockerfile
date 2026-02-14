@@ -71,6 +71,7 @@ COPY proven-cores /app/generator/proven-cores
 COPY tsconfig.json /app/generator/tsconfig.json
 COPY bin /app/generator/bin
 COPY presspilot.os.json /app/generator/presspilot.os.json
+COPY app/mvp-demo /app/generator/app/mvp-demo
 # Node.js deps are pre-installed at /opt/generator-deps/node_modules (stage 1).
 # tsx resolves @/ path aliases from /app/generator/tsconfig.json (via cwd).
 #
