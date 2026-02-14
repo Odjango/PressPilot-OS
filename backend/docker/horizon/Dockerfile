@@ -61,6 +61,9 @@ chmod -R 775 /app/storage /app/bootstrap/cache
 # Create job scratch directory
 RUN mkdir -p /tmp/pp-jobs && chown www-data:www-data /tmp/pp-jobs
 # ─── Generator source code (COPY instead of bind-mount for Coolify) ─────────
+# Cache bust to force rebuild of generator layers
+ARG CACHE_BUST=1
+RUN echo "Generator cache bust: $CACHE_BUST"
 # Build context is repo root, so we copy the full generator structure.
 COPY src/generator /app/generator/src/generator
 COPY lib /app/generator/lib
