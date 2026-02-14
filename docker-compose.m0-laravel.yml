@@ -95,12 +95,6 @@ services:
       QUEUE_CONNECTION: redis
       UNSPLASH_ACCESS_KEY: ${UNSPLASH_ACCESS_KEY}
     volumes:
-      # Full repo root — generator needs cwd at repo root for:
-      #   - src/generator/ (engine code)
-      #   - lib/presspilot/ (static site builder, adapters)
-      #   - proven-cores/ (base theme chassis files)
-      #   - tsconfig.json (@/ path alias resolution)
-      - .:/app/generator:ro
       # Shared Laravel storage for logs
       - laravel-storage:/app/storage
     tmpfs:
