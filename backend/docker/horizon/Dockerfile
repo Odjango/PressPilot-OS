@@ -73,7 +73,13 @@ RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
 # Create job scratch directory
 RUN mkdir -p /tmp/pp-jobs && chown www-data:www-data /tmp/pp-jobs
 
-# Generator source is bind-mounted at /app/generator (read-only) at runtime.
+# ─── Generator source code (COPY instead of bind-mount for Coolify) ─────────
+# Build context is repo root, so we copy the full generator structure.
+COPY src/generator /app/generator/src/generator
+COPY lib /app/generator/lib
+COPY proven-cores /app/generator/proven-cores
+COPY tsconfig.json /app/generator/tsconfig.json
+COPY bin /app/generator/bin
 # Node.js deps are pre-installed at /opt/generator-deps/node_modules (stage 1).
 # tsx resolves @/ path aliases from /app/generator/tsconfig.json (via cwd).
 #
