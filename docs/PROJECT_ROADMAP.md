@@ -73,6 +73,7 @@
 *   [x] **Supabase S3 filesystem driver** — uploads theme/preview ZIPs to `generated-themes` bucket
 *   [x] **Internal endpoints** — `GET /health`, `POST /jobs/test-dispatch`, `GET /jobs/{id}`
 *   [x] **Coolify deployment** — Docker stack deployed on VPS
+*   [x] **Horizon packaging fix (2026-02-14)** — switched from bind-mount assumptions to Dockerfile `COPY` for generator payload in `backend/docker/horizon/Dockerfile`; removed `.:/app/generator:ro` from `docker-compose.m0-laravel.yml` for Coolify compatibility
 *   [x] **Full integration test** — `GenerateThemeSmokeTest` (7 tests) + `m0-smoke-test.sh` (Docker E2E)
 *   [ ] **Observability baseline (P8)** — 8 structured-log metrics emitting for 3+ days. Scheduler added to supervisord.conf. Deploy updated stack, then monitor `docker compose logs` for 3 days.
 

@@ -2,7 +2,7 @@
 
 **Feature Branch**: `001-generator-2-baseline`
 **Created**: 2026-02-12
-**Updated**: 2026-02-12
+**Updated**: 2026-02-14
 **Status**: Active
 
 ---
@@ -136,10 +136,25 @@ The n8n workflow (`n8n/presspilot-factory-v2.json`) orchestrates content generat
 | Container | Purpose | Notes |
 |-----------|---------|-------|
 | `laravel-app` | PHP-FPM + nginx | Port 8080, internal only |
-| `laravel-horizon` | Queue worker + Node.js generator | Repo root at `/app/generator:ro` |
+| `laravel-horizon` | Queue worker + Node.js generator | Generator files are copied into image at `/app/generator` during build |
 | `redis` | Queues, sessions, cache | Port 6379, internal only |
 
 The Horizon container has **Node.js 20** installed with pre-built `node_modules`.
+
+### Horizon Build Packaging (Coolify)
+
+- `laravel-horizon` uses `backend/docker/horizon/Dockerfile` with build context `.` (repo root).
+- Generator source is packaged with `COPY` (not bind-mount) to support Coolify deployments.
+- Coolify deployment model does not provide local Docker-style bind-mount behavior for this service.
+
+`backend/docker/horizon/Dockerfile` copies these paths into `/app/generator`:
+- `src/generator` → `/app/generator/src/generator`
+- `lib` → `/app/generator/lib`
+- `proven-cores` → `/app/generator/proven-cores`
+- `bin` → `/app/generator/bin`
+- `tsconfig.json` → `/app/generator/tsconfig.json`
+- `presspilot.os.json` → `/app/generator/presspilot.os.json`
+- `app/mvp-demo` → `/app/generator/app/mvp-demo`
 
 ---
 

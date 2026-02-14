@@ -885,7 +885,7 @@ docker logs presspilot-laravel-horizon 2>&1 | grep '"metric"' | jq -r '.context.
 | U1 (CLI stdin) | **RESOLVED** — `bin/generate.ts:36-44` implements `readStdin()` |
 | U3 (Generator cwd) | **RESOLVED** — `bin/generate.ts:53-55` does `chdir(path.resolve(__dirname, '..'))` |
 | U7 (Puppeteer) | **RESOLVED** — `bin/generate.ts` does not import Puppeteer; generator doesn't use it |
-| U8 (Static site deps) | **RESOLVED** — Docker bind-mounts full repo root at `/app/generator/` |
+| U8 (Static site deps) | **RESOLVED** — Horizon image now copies generator payload into `/app/generator` at build time (`backend/docker/horizon/Dockerfile`); no bind-mount dependency in Coolify |
 
 ### Deferred to M1
 

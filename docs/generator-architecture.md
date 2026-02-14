@@ -88,3 +88,19 @@ Engines:
 3. StyleBuilder creates `StyleJSON` that respects theme rules and brand settings.
 4. Engines apply both JSON contracts to the `tove` core, producing a new FSE theme.
 5. The output is validated and packed as `output/<theme-name>.zip`.
+
+## 7. Deployment Runtime (Laravel Horizon on Coolify)
+
+- The Horizon worker image is built from `backend/docker/horizon/Dockerfile`.
+- Generator runtime path is `/app/generator`.
+- Generator code is baked into the image via `COPY` during build, not runtime bind-mounts.
+- This is required for Coolify deployments, where local-style bind-mount assumptions caused missing generator files and subprocess module resolution failures.
+
+Copied generator payload:
+- `src/generator`
+- `lib`
+- `proven-cores`
+- `bin`
+- `tsconfig.json`
+- `presspilot.os.json`
+- `app/mvp-demo`

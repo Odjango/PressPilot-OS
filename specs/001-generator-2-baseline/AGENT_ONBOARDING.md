@@ -45,6 +45,23 @@ $result = Process::timeout(300)
 - stdin: `{data, mode, slug, outDir}`
 - stdout: `{status, themeName, downloadPath, filename, themeDir, staticPath}`
 
+## 🐳 Horizon Container Packaging (Coolify)
+
+- Dockerfile: `backend/docker/horizon/Dockerfile`
+- Compose service: `laravel-horizon` in `docker-compose.m0-laravel.yml`
+- Build context: repo root (`.`)
+- Generator code is copied into the image with `COPY`, not mounted at runtime.
+- Coolify does not behave like local Docker bind-mount workflows for this deployment path.
+
+Files copied into `/app/generator`:
+- `src/generator`
+- `lib`
+- `proven-cores`
+- `bin`
+- `tsconfig.json`
+- `presspilot.os.json`
+- `app/mvp-demo`
+
 ---
 
 ## 📚 Files to Read First
