@@ -6,6 +6,7 @@ import { PressPilotSaaSInput } from '@/types/presspilot';
 import { buildSaaSInputFromStudioInput, StudioFormInput } from '@/lib/presspilot/studioAdapter';
 import { validateSaaSInput } from '@/lib/presspilot/validation';
 import { transformSaaSInputToGeneratorData } from '@/lib/presspilot/dataTransformer';
+import { proxyJsonToBackend } from '@/lib/presspilot/backendApi';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,6 +69,12 @@ export async function POST(request: Request) {
       };
 
       body.input = studioInput;
+    }
+
+    // M1 feature flag: route generation to Laravel when BACKEND_URL is set.
+    const proxied = await proxyJsonToBackend(request, '/generate', 'POST', body);
+    if (proxied) {
+      return proxied;
     }
 
     // 1. Prepare Payload

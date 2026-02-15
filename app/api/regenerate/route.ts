@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { enqueueJob } from '../../../lib/queue/jobs';
+import { proxyJsonToBackend } from '@/lib/presspilot/backendApi';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +14,15 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: Request) {
     try {
-        const { projectId } = await request.json();
+        const body = await request.json().catch(() => ({}));
+        const { projectId } = body;
+
+        // M1 feature flag: route regeneration to Laravel when BACKEND_URL is set.
+        const proxied = await proxyJsonToBackend(request, '/regenerate', 'POST', body);
+        if (proxied) {
+            return proxied;
+        }
+
         if (!projectId) {
             return NextResponse.json({ error: 'Project ID required' }, { status: 400 });
         }

@@ -1,6 +1,7 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { proxyJsonToBackend } from '@/lib/presspilot/backendApi';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +14,12 @@ const supabaseAdmin = createClient(
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const jobId = searchParams.get('id');
+
+    // M1 feature flag: route status polling to Laravel when BACKEND_URL is set.
+    const proxied = await proxyJsonToBackend(request, `/status?${searchParams.toString()}`, 'GET');
+    if (proxied) {
+        return proxied;
+    }
 
     if (!jobId) {
         return NextResponse.json({ error: 'Job ID required' }, { status: 400 });

@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { isSafeSlug } from '@/lib/presspilot/validation';
+import { backendApiUrl } from '@/lib/presspilot/backendApi';
 
 type DownloadKind = 'theme' | 'static';
 
@@ -24,6 +25,11 @@ const KIND_TO_FOLDER: Record<DownloadKind, string> = {
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
+  const backendDownloadUrl = backendApiUrl(`/download?${searchParams.toString()}`);
+  if (backendDownloadUrl) {
+    return NextResponse.redirect(backendDownloadUrl, 307);
+  }
+
   const kindParam = searchParams.get('kind');
   const slug = searchParams.get('slug');
   const kind = kindParam === 'theme' || kindParam === 'static' ? kindParam : null;
