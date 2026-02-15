@@ -15,7 +15,8 @@ class DataTransformer
         $businessName = data_get($input, 'brand.business_name', 'Untitled Project');
         $tagline = data_get($input, 'brand.business_tagline', '');
         $description = data_get($input, 'narrative.description_long', '');
-        $category = data_get($input, 'brand.business_category', 'service');
+        $category = (string) data_get($input, 'brand.business_category', 'service');
+        $siteType = $this->mapBusinessCategoryToSiteType($category);
 
         $industryMap = [
             'restaurant_cafe' => 'restaurant',
@@ -26,7 +27,11 @@ class DataTransformer
             'other' => 'general',
         ];
 
-        $industry = $industryMap[$category] ?? 'general';
+        $industry = match ($siteType) {
+            'restaurant' => 'restaurant',
+            'ecommerce' => 'ecommerce',
+            default => $industryMap[$category] ?? 'general',
+        };
 
         $generatorData = [
             'name' => $businessName,
@@ -183,6 +188,27 @@ class DataTransformer
         }
 
         return $generatorData;
+    }
+
+    public function mapBusinessCategoryToSiteType(string $category): string
+    {
+        $normalized = strtolower(trim($category));
+        if ($normalized === '') {
+            return 'general';
+        }
+
+        $normalized = str_replace(['e-commerce', 'e_commerce'], 'ecommerce', $normalized);
+        $tokens = preg_split('/[^a-z0-9]+/', $normalized, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+        if (array_intersect($tokens, ['restaurant', 'cafe', 'food']) !== []) {
+            return 'restaurant';
+        }
+
+        if (array_intersect($tokens, ['ecommerce', 'shop']) !== []) {
+            return 'ecommerce';
+        }
+
+        return 'general';
     }
 
     /**

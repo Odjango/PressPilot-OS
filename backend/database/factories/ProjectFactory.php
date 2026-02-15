@@ -31,7 +31,7 @@ class ProjectFactory extends Factory
     public function restaurant(): static
     {
         return $this->state(fn () => [
-            'site_type' => 'restaurant_cafe',
+            'site_type' => 'restaurant',
             'data' => [
                 'name' => $this->faker->company() . ' Restaurant',
                 'industry' => 'restaurant',

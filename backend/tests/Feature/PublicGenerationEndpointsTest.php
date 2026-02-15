@@ -63,6 +63,7 @@ class PublicGenerationEndpointsTest extends TestCase
         $this->assertDatabaseHas('projects', [
             'id' => $response->json('projectId'),
             'name' => 'FlowPilot',
+            'site_type' => 'general',
         ]);
 
         $this->assertDatabaseHas('jobs', [
@@ -80,6 +81,39 @@ class PublicGenerationEndpointsTest extends TestCase
         ]);
 
         $response->assertStatus(404);
+    }
+
+    public function test_generate_normalizes_restaurant_category_to_supported_site_type(): void
+    {
+        $payload = [
+            'payload' => [
+                'brand' => [
+                    'business_name' => 'Harbor Table',
+                    'business_tagline' => 'Seasonal kitchen',
+                    'business_category' => 'restaurant_cafe',
+                ],
+                'narrative' => [
+                    'description_long' => 'Fresh coastal menu.',
+                ],
+                'language' => [
+                    'primary_language' => 'en',
+                    'rtl_required' => false,
+                ],
+                'modes' => [
+                    'business_category' => 'restaurant_cafe',
+                    'restaurant' => ['enabled' => true],
+                    'ecommerce' => ['enabled' => false],
+                ],
+            ],
+        ];
+
+        $response = $this->postJson('/api/generate', $payload);
+
+        $response->assertStatus(202);
+        $this->assertDatabaseHas('projects', [
+            'id' => $response->json('projectId'),
+            'site_type' => 'restaurant',
+        ]);
     }
 
     public function test_regenerate_enqueues_new_job(): void

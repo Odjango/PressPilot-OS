@@ -52,7 +52,9 @@ class GenerationController extends Controller
         $project = Project::create([
             'user_id' => $userId,
             'name' => $projectName,
-            'site_type' => (string) data_get($payload, 'brand.business_category', 'general'),
+            'site_type' => $transformer->mapBusinessCategoryToSiteType(
+                (string) data_get($payload, 'brand.business_category', '')
+            ),
             'language' => (string) data_get($payload, 'language.primary_language', 'en'),
             'data' => $generatorData,
         ]);

@@ -215,4 +215,17 @@ class DataTransformerTest extends TestCase
         $playful = $transformer->transformSaaSInputToGeneratorData($playfulInput);
         $this->assertSame('playful', $playful['brandStyle']);
     }
+
+    public function test_maps_business_categories_to_supported_site_types(): void
+    {
+        $transformer = new DataTransformer;
+
+        $this->assertSame('restaurant', $transformer->mapBusinessCategoryToSiteType('restaurant_cafe'));
+        $this->assertSame('restaurant', $transformer->mapBusinessCategoryToSiteType('food-truck'));
+        $this->assertSame('restaurant', $transformer->mapBusinessCategoryToSiteType('cafe'));
+        $this->assertSame('ecommerce', $transformer->mapBusinessCategoryToSiteType('e-commerce'));
+        $this->assertSame('ecommerce', $transformer->mapBusinessCategoryToSiteType('shopify_store'));
+        $this->assertSame('general', $transformer->mapBusinessCategoryToSiteType('saas_product'));
+        $this->assertSame('general', $transformer->mapBusinessCategoryToSiteType(''));
+    }
 }
