@@ -12,6 +12,7 @@ class Project extends Model
     use HasFactory, HasUuids;
 
     protected $table = 'projects';
+    public $timestamps = false;
 
     public $incrementing = false;
     protected $keyType = 'string';
