@@ -57,6 +57,7 @@ services:
       start_period: 30s
     networks:
       - presspilot-m0
+      - coolify
 
   # ── Laravel Horizon (queue worker + Node generator subprocess) ─────────────
   # Processes jobs from Redis queues. Invokes the Node.js generator via
@@ -151,3 +152,5 @@ volumes:
 networks:
   presspilot-m0:
     driver: bridge
+  coolify:
+    external: true
