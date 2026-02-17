@@ -6,6 +6,7 @@ COPY package.json package-lock.json ./
 
 # CRITICAL FIX: Use --legacy-peer-deps to bypass React 19 vs 18 conflicts
 RUN npm ci --legacy-peer-deps
+RUN npx playwright install --with-deps chromium
 
 COPY . .
 
