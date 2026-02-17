@@ -66,6 +66,7 @@ ARG CACHE_BUST=1
 RUN echo "Generator cache bust: $CACHE_BUST"
 # Build context is repo root, so we copy the full generator structure.
 COPY src/generator /app/generator/src/generator
+COPY assets /app/generator/assets
 COPY lib /app/generator/lib
 COPY proven-cores /app/generator/proven-cores
 COPY tsconfig.json /app/generator/tsconfig.json
