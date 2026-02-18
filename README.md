@@ -67,6 +67,20 @@ WP_PREVIEW_PASS=password123
 
 When WordPress is unavailable, the hero preview feature gracefully falls back—users can still proceed with the simulated preview in Step 3 and generate themes without real screenshots.
 
+## Deployment Status
+
+### Current Production Status (Feb 17, 2026)
+- **Frontend**: https://presspilotapp.com (Coolify - Running)
+- **Laravel Backend**: Coolify Docker Compose stack (Running)
+- **WordPress Factory**: https://factory.presspilotapp.com (Running)
+- **Database**: Supabase PostgreSQL
+- **Queue**: Redis with Laravel Horizon
+
+### Architecture
+- Next.js frontend -> Laravel API -> Horizon Queue -> TypeScript Generator
+- Theme generation uses proven-cores from Vault
+- Unsplash API for industry-specific images
+
 ## 📚 Documentation
 
 ### For AI Agents
