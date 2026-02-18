@@ -2,15 +2,23 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Install system Chromium (Playwright will use this)
+# Install system dependencies for Chromium
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends chromium && \
-    rm -rf /var/lib/apt/lists/*
-
-ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
+    apt-get install -y --no-install-recommends \
+    chromium \
+    libnss3 \
+    libatk-bridge2.0-0 \
+    libdrm2 \
+    libxkbcommon0 \
+    libgbm1 \
+    libasound2 \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json ./
 RUN npm ci --legacy-peer-deps && npm cache clean --force
+
+# Install Playwright Chromium
+RUN npx playwright install chromium
 
 COPY . .
 
