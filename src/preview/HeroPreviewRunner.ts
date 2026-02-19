@@ -189,7 +189,7 @@ export class HeroPreviewRunner {
         // Define output paths
         const filename = `${layout.id}.png`;
         const screenshotPath = path.join(this.options.outputDir, filename);
-        const screenshotUrl = `/tmp/previews/${this.options.sessionId}/${filename}`;
+        const screenshotUrl = `/api/previews/${this.options.sessionId}/${filename}`;
 
         // Try to capture just the hero section
         await this.captureHeroSection(page, screenshotPath);
@@ -251,7 +251,7 @@ export class HeroPreviewRunner {
      * Get the public URL for a screenshot
      */
     static getPublicUrl(sessionId: string, layout: HeroLayout): string {
-        return `/tmp/previews/${sessionId}/${layout}.png`;
+        return `/api/previews/${sessionId}/${layout}.png`;
     }
 }
 
