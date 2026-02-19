@@ -31,6 +31,7 @@ List exactly what is currently implemented. Identify the specific way Tailwind a
 
 ### 5. Runtime Paths (Two Supported Flows)
 - Next.js flow: `app/api/generate/route.ts` accepts Studio input, transforms payload, queues jobs.
+- Next.js preview file flow: `app/api/previews/[...path]/route.ts` serves runtime-created images from `/public/tmp/previews/` via `/api/previews/*`.
 - Laravel M0 flow: backend queue worker invokes generator subprocess (`backend/app/Jobs/GenerateThemeJob.php`).
 - Dockerized Laravel/Horizon stack is defined in `docker-compose.m0-laravel.yml`.
 
@@ -50,10 +51,12 @@ List exactly what is currently implemented. Identify the specific way Tailwind a
 
 ---
 
-## Production Infrastructure (Feb 17, 2026)
+## Production Infrastructure (Feb 19, 2026)
 
 ### Deployment Stack
-- **VPS**: DigitalOcean Droplet (134.209.167.43)
+- **VPS**: DigitalOcean Basic Droplet (134.209.167.43)
+- **VPS Specs**: 8 GB RAM / 160 GB disk / 4 vCPUs / $48 per month
+- **Previous VPS Specs**: 4 GB RAM / 48 GB disk
 - **Orchestration**: Coolify v4
 - **Frontend**: https://presspilotapp.com
 - **Backend API**: Laravel with Horizon (internal Docker network)
@@ -73,7 +76,7 @@ List exactly what is currently implemented. Identify the specific way Tailwind a
 ### Critical Environment Variables
 
 **Frontend:**
-- `BACKEND_URL` - Laravel internal IP (currently http://10.0.1.10:8080) - **verify after redeploys**
+- `BACKEND_URL` - Laravel internal IP (currently http://10.0.1.3:8080, was http://10.0.1.10:8080 before resize/redeploy) - **verify after redeploys**
 - `WP_PREVIEW_URL` - https://factory.presspilotapp.com
 - `WP_PREVIEW_USER` - WordPress admin username
 - `WP_PREVIEW_PASS` - WordPress admin password
@@ -87,13 +90,28 @@ List exactly what is currently implemented. Identify the specific way Tailwind a
 ### Docker Network Notes
 - All services communicate via Coolify's internal Docker network
 - Laravel IP may change after container recreation
-- Verify connectivity: `docker inspect <container> --format '{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}'`
+- Verify backend IP with:
+  `docker inspect $(docker ps --format "{{.Names}}" | grep laravel-app) --format '{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}'`
+- Update `BACKEND_URL` in frontend whenever this IP changes
+
+### Deployment Fixes Applied
+- Frontend Dockerfile optimized:
+  - Removed duplicate Playwright Chromium install
+  - Added cleanup steps to reduce image bloat and disk pressure
+- Runtime preview image serving corrected via API route:
+  - Added `app/api/previews/[...path]/route.ts`
+  - Studio/preview URLs updated from `/tmp/previews/` to `/api/previews/`
 
 ### Common Operations
 
 **Disk space cleanup (frequent issue):**
 ```bash
-docker system prune -af --volumes
+docker system prune -a -f && docker builder prune -a -f
+```
+
+**Check server resources:**
+```bash
+free -h && df -h /
 ```
 
 **Reset WordPress admin password:**
@@ -110,39 +128,24 @@ curl http://<laravel-ip>:8080/api/internal/health
 
 ## Known Issues (Priority Order)
 
-### P1: Hero Previews Not Displaying
-- **Symptom**: Screenshots captured successfully but images show 404 in UI
-- **Cause**: `/tmp/previews/` path not served as static files by Next.js
-- **Location**: Frontend static file configuration
-- **Fix needed**: Configure public serving of preview images or change output path
+### P1: Hero preview captures wrong section
+- **Status**: Preview images display in UI now (display issue fixed), but screenshot target is incorrect.
+- **Symptom**: Captures "Our Story" or another section instead of the hero block.
+- **Cause**: Playwright selector matching wrong element in hero capture logic.
+- **Location**: `src/preview/HeroPreviewRunner.ts`
+- **Fix needed**: Narrow selector strategy to generated hero only.
 
-### P2: Brand Colors Incomplete
-- **Symptom**: Logo with multiple colors (green, red, orange) only applies one color (red) to theme
-- **Cause**: Color extraction not capturing full palette from logo
-- **Location**: `src/generator/modules/` color extraction, `TT4TokenMapper`
-- **Fix needed**: Improve multi-color extraction and mapping to theme tokens
-- **Example**: Luigi Pizza logo has green/red/golden but theme only shows red tones
+### P2: Site Editor "Attempt Recovery" errors
+- **Symptom**: Site Editor prompts recovery on generated testimonial sections.
+- **Cause**: Invalid testimonial block markup.
+- **Location**: Testimonial block pattern generation
+- **Fix needed**: Correct markup and validate with WordPress parser rules.
 
-### P3: Hero Style Mismatch
-- **Symptom**: User selects "Full Bleed" hero but gets "Full Width" layout
-- **Cause**: Hero style preference not passed correctly through generation pipeline
-- **Location**: Frontend -> Backend -> Generator parameter chain
-- **Fix needed**: Trace `heroStyle` parameter through entire flow
-
-### P4: ZIP Download Format
-- **Symptom**: Theme downloads as folder instead of .zip file
-- **Cause**: Frontend download handler or response content-type issue
-- **Location**: Frontend download logic in generate/download flow
-- **Fix needed**: Ensure proper ZIP streaming with correct headers
-
-### P5: Design Quality
-- **Symptom**: Generated themes need visual refinement
-- **Areas for improvement**:
-  - More business-specific images per vertical
-  - Better section layouts and spacing
-  - Richer AI-generated content
-  - Typography pairing improvements
-- **Location**: Generator recipes, patterns, content builders
+### P3: Apostrophe encoding bug
+- **Symptom**: Apostrophes appear as `&#39;` (example: `Memo&#39;s Pizza`).
+- **Cause**: Over-encoding in content transformation/pattern injection.
+- **Location**: Content encoding and render pipeline
+- **Fix needed**: Preserve apostrophes as display text in generated output.
 
 ---
 
@@ -153,12 +156,14 @@ curl http://<laravel-ip>:8080/api/internal/health
 - M1: Production Deployment
 - End-to-end theme generation working
 - Multi-page themes (Home, About, Services, Contact, Menu)
+- Hero preview screenshot generation (Playwright, 4 layouts)
+- Hero preview image display in UI via `/api/previews/`
 - Unsplash image integration
 - Brand color application (partial)
 - Logo injection
 
 ### In Progress 🔄
-- Fix P1-P5 issues (generator quality)
+- Fix P1-P3 quality issues
 
 ### Planned 📋
 - Generate 52 theme combinations for Magazine Gallery

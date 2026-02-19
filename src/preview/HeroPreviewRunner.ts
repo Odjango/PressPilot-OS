@@ -204,23 +204,21 @@ export class HeroPreviewRunner {
     }
 
     /**
-     * Capture the hero section (wp:cover or first alignfull block with background)
+     * Capture the hero section using the pp-hero-preview marker class
      * Falls back to viewport capture if no hero found
      */
     private async captureHeroSection(page: Page, outputPath: string): Promise<void> {
-        // Try to find the hero section - use specific selectors that target actual hero blocks
-        // All our injected heroes have has-background class, so we check for that first
-        // This ensures we match our heroes before footer/other sections
+        // Priority 1: Use our injected marker class (most reliable)
+        // Priority 2-4: Fallback selectors for edge cases
         const heroSelectors = [
-            // Cover blocks with has-background (fullBleed hero)
-            '.wp-block-cover.alignfull.has-background',
-            // Group blocks with background - but only in main content (not footer)
-            // main > first group with has-background should be our hero
+            // PRIMARY: Our injected hero marker class (covers all 4 variants)
+            '.pp-hero-preview',
+            // Fallback: Cover blocks with alignfull (original theme heroes)
+            '.wp-block-cover.alignfull',
+            // Fallback: First alignfull group with background in main content
             'main .wp-block-group.alignfull.has-background',
-            // Fallback: any cover block in main
-            'main .wp-block-cover.alignfull',
-            // Ultimate fallback
-            '.wp-block-cover.alignfull'
+            // Ultimate fallback: Any alignfull element
+            '.alignfull'
         ];
 
         let heroElement = null;

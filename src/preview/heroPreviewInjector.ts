@@ -105,8 +105,9 @@ function pp_get_hero_variant(\$layout) {
 function pp_hero_full_bleed(\$title, \$sub, \$image) {
     // Full-bleed hero: 80vh min-height, LEFT-aligned text, large heading
     // Key differentiators: immersive height, text-align-left, spacing|70
-    return '<!-- wp:cover {"url":"' . esc_attr(\$image) . '","dimRatio":75,"overlayColor":"accent-3","minHeight":80,"minHeightUnit":"vh","contentPosition":"center left","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
-<div class="wp-block-cover alignfull has-custom-content-position is-position-center-left" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:80vh">
+    // pp-hero-preview class added for Playwright targeting
+    return '<!-- wp:cover {"url":"' . esc_attr(\$image) . '","dimRatio":75,"overlayColor":"accent-3","minHeight":80,"minHeightUnit":"vh","contentPosition":"center left","align":"full","className":"pp-hero-preview","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
+<div class="wp-block-cover alignfull pp-hero-preview has-custom-content-position is-position-center-left" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:80vh">
     <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-80 has-background-dim" style="background-color:#1a1a2e"></span>
     <img class="wp-block-cover__image-background" alt="" src="' . esc_attr(\$image) . '" data-object-fit="cover"/>
     <div class="wp-block-cover__inner-container">
@@ -134,8 +135,9 @@ function pp_hero_full_bleed(\$title, \$sub, \$image) {
 function pp_hero_full_width(\$title, \$sub) {
     // Full-width band: COMPACT solid color band (no image), centered text
     // Key differentiators: shorter padding|40, smaller font, inverted button, 800px width
-    return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40"}}},"backgroundColor":"accent-3","layout":{"type":"constrained","contentSize":"800px"}} -->
-<div class="wp-block-group alignfull has-accent-3-background-color has-background" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);background-color:#1a1a2e">
+    // pp-hero-preview class added for Playwright targeting
+    return '<!-- wp:group {"align":"full","className":"pp-hero-preview","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40"}}},"backgroundColor":"accent-3","layout":{"type":"constrained","contentSize":"800px"}} -->
+<div class="wp-block-group alignfull pp-hero-preview has-accent-3-background-color has-background" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);background-color:#1a1a2e">
     <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2rem, 4vw, 3rem)"}},"textColor":"base"} -->
     <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2rem, 4vw, 3rem);color:#ffffff">' . esc_html(\$title) . '</h1>
     <!-- /wp:heading -->
@@ -159,8 +161,9 @@ function pp_hero_full_width(\$title, \$sub) {
 function pp_hero_split(\$title, \$sub, \$image) {
     // Split hero: 2-column layout (text left, image right)
     // Key differentiators: spacing|60, 20px image radius, box-shadow, 8px button radius
-    return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60);background-color:#ffffff">
+    // pp-hero-preview class added for Playwright targeting
+    return '<!-- wp:group {"align":"full","className":"pp-hero-preview","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull pp-hero-preview has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60);background-color:#ffffff">
     <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|60"}}}} -->
     <div class="wp-block-columns alignwide">
         <!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
@@ -199,8 +202,9 @@ function pp_hero_split(\$title, \$sub, \$image) {
 function pp_hero_minimal(\$title, \$sub) {
     // Minimal hero: Maximum whitespace, typography-first design
     // Key differentiators: spacing|80, 700px width, huge heading, single PILL button (100px radius)
-    return '<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"}}},"backgroundColor":"base","layout":{"type":"constrained","contentSize":"700px"}} -->
-<div class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80);background-color:#ffffff">
+    // pp-hero-preview class added for Playwright targeting
+    return '<!-- wp:group {"align":"full","className":"pp-hero-preview","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"}}},"backgroundColor":"base","layout":{"type":"constrained","contentSize":"700px"}} -->
+<div class="wp-block-group alignfull pp-hero-preview has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80);background-color:#ffffff">
     <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(3rem, 7vw, 5rem)","lineHeight":"1.05","letterSpacing":"-0.02em"}},"textColor":"contrast"} -->
     <h1 class="wp-block-heading has-text-align-center has-contrast-color has-text-color" style="font-size:clamp(3rem, 7vw, 5rem);line-height:1.05;letter-spacing:-0.02em;color:#111111">' . esc_html(\$title) . '</h1>
     <!-- /wp:heading -->

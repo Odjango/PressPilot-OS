@@ -1,45 +1,28 @@
 # Known Issues & Future Work
 
-## Current Issues (as of Feb 17, 2026)
+## Current Issues (as of Feb 19, 2026)
 
-### P1 - Hero Previews Not Displaying
-- **Symptom**: Screenshots captured but images show broken/404
-- **Cause**: `/tmp/previews/` path not served as static files
-- **Location**: Frontend static file configuration
-- **Fix needed**: Configure Next.js to serve `/public/tmp/previews/` or change output path
+### P1 - Hero Previews Capture Wrong Section
+- **Status**: Preview images now render in UI (via `/api/previews/`), but content is wrong.
+- **Symptom**: Screenshot shows "Our Story" / non-hero section instead of the selected hero layout.
+- **Cause**: Hero selector logic in Playwright matches the wrong block.
+- **Location**: `src/preview/HeroPreviewRunner.ts` (`captureHeroSection` selector order/criteria)
+- **Fix needed**: Tighten selector strategy to target generated hero block only.
 
-### P2 - Brand Colors Incomplete
-- **Symptom**: Logo has green, red, golden orange but only red applied to theme
-- **Cause**: Color extraction not capturing full palette from logo
-- **Location**: `src/generator/modules/` - color extraction logic, `TT4TokenMapper`
-- **Fix needed**: Improve multi-color extraction and mapping to theme tokens
+### P2 - Site Editor "Attempt Recovery" Errors
+- **Symptom**: WordPress Site Editor prompts "Attempt Recovery" on some generated pages.
+- **Cause**: Invalid testimonial block markup.
+- **Location**: testimonial block pattern generation/serialization
+- **Fix needed**: Correct testimonial block structure and validate against WP block parser.
 
-### P3 - Hero Style Mismatch
-- **Symptom**: User selects "Full Bleed" but gets "Full Width" layout
-- **Cause**: Hero style preference not passed through generation pipeline
-- **Location**: Frontend -> Backend -> Generator parameter passing
-- **Fix needed**: Trace heroStyle parameter through entire flow
+### P3 - HTML Encoding Bug (`&#39;`)
+- **Symptom**: Apostrophes render as HTML entities (example: `Memo&#39;s Pizza`).
+- **Cause**: Over-encoding/escaping in content pipeline before final pattern output.
+- **Location**: content transformation and pattern injection path
+- **Fix needed**: Ensure apostrophes are preserved as text in rendered block content.
 
-### P4 - Download as Folder Instead of ZIP
-- **Symptom**: Theme downloads as folder, not .zip file
-- **Cause**: Frontend download handler or response content-type
-- **Location**: Frontend download logic
-- **Fix needed**: Ensure proper ZIP streaming/download
+## Recently Resolved (Feb 19, 2026)
 
-### P5 - Design Quality
-- **Symptom**: Generated themes need more polish
-- **Areas**:
-  - More business-specific images
-  - Better section layouts
-  - Richer content generation
-- **Location**: Generator recipes, patterns, content builders
-
-## Resolved Issues (Feb 17, 2026)
-
-- ✅ Redis DNS conflict - renamed service to pp-redis
-- ✅ WordPress Factory connection - added WP_PREVIEW_URL
-- ✅ WordPress login - correct env vars (WP_PREVIEW_USER/PASS)
-- ✅ Playwright chromium - switched to node:20-slim, installed system chromium
-- ✅ Docker network connectivity - updated BACKEND_URL to coolify network IP
-- ✅ Missing assets/patterns - added COPY to Horizon Dockerfile
-- ✅ Disk space issues - documented prune procedure
+- ✅ Hero preview image serving path issue resolved with runtime preview API routing.
+- ✅ End-to-end theme generation stable (multi-page outputs: Home, About, Services, Contact, Menu).
+- ✅ Hero screenshot generation runs across 4 layouts with Playwright capture.

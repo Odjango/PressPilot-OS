@@ -20,21 +20,20 @@
 - [x] End-to-end theme generation working
 - [x] Theme download functional
 - [x] Multi-page themes (Home, About, Services, Contact, Menu)
+- [x] Hero preview screenshots generated for 4 layouts
+- [x] Preview images display in UI via `/api/previews/` runtime route
 
 ### Remaining Polish
-- [ ] Hero preview display (P1)
-- [ ] Brand color extraction (P2)
-- [ ] Hero style selection (P3)
-- [ ] ZIP download format (P4)
-- [ ] Design quality improvements (P5)
+- [ ] Hero preview capture accuracy (P1: wrong section selected in screenshot)
+- [ ] Site Editor "Attempt Recovery" on testimonial blocks (P2)
+- [ ] HTML apostrophe encoding (`&#39;`) in generated content (P3)
 
 ## Next Milestones
 
 ### M2: Quality & Polish
-- Fix hero preview display
-- Improve brand color extraction
-- Hero style parameter passing
-- ZIP download fix
+- Fix hero selector targeting in Playwright preview runner
+- Fix testimonial block markup validity
+- Fix apostrophe/entity encoding pipeline
 
 ### M3: Design Enhancement
 - Expand pattern library
