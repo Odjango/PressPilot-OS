@@ -228,7 +228,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         sessionId,
         screenshots: screenshots.map(f => ({
             layout: f.replace('.png', ''),
-            url: `/tmp/previews/${sessionId}/${f}`
+            url: `/api/previews/${sessionId}/${f}`
         }))
     });
 }
