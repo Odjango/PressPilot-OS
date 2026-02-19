@@ -14,6 +14,10 @@ import { getRestaurantProfile } from './restaurant-profile';
  * - Section padding: tokens.spacing.sectionPadding
  * - Card padding: tokens.spacing.cardPadding
  * - Column gap: tokens.spacing.columnGap
+ *
+ * IMPORTANT: Styles (padding, border, backgroundColor) must be on wp:group
+ * inside wp:column, NOT on wp:column directly. WordPress core doesn't
+ * support these attributes on columns and will trigger "Attempt Recovery".
  */
 export function getSocialProofSectionWithContext(ctx: SectionContext): string {
     const { tokens, render } = ctx;
@@ -25,27 +29,31 @@ export function getSocialProofSectionWithContext(ctx: SectionContext): string {
     const cardPadding = tokens.spacing.cardPadding;
     const columnGap = tokens.spacing.columnGap;
 
-    const renderCard = (testimonial: Testimonial) => `<!-- wp:column {"style":{"spacing":{"padding":{"top":"${cardPadding}","right":"${cardPadding}","bottom":"${cardPadding}","left":"${cardPadding}"}},"border":{"radius":"${cardRadius}"}},"backgroundColor":"base"} -->
-        <div class="wp-block-column has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:${tokenToCSS(cardPadding)};padding-right:${tokenToCSS(cardPadding)};padding-bottom:${tokenToCSS(cardPadding)};padding-left:${tokenToCSS(cardPadding)}">
-            <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
-            <p class="has-accent-color has-text-color has-small-font-size">${'★'.repeat(testimonial.rating || 5)}</p>
-            <!-- /wp:paragraph -->
-            <!-- wp:paragraph {"textColor":"contrast","fontSize":"medium"} -->
-            <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonial.quote}"</p>
-            <!-- /wp:paragraph -->
-            <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
-            <div class="wp-block-group">
-                <!-- wp:image {"width":"48px","height":"48px","sizeSlug":"thumbnail","style":{"border":{"radius":"999px"}}} -->
-                <figure class="wp-block-image size-thumbnail is-resized"><img src="${testimonial.image || 'https://placehold.co/96x96/e0e0e0/222222?text=Guest'}" alt="${testimonial.name}" style="border-radius:999px;width:48px;height:48px"/></figure>
-                <!-- /wp:image -->
-                <!-- wp:group {"layout":{"type":"constrained"}} -->
+    const renderCard = (testimonial: Testimonial) => `<!-- wp:column -->
+        <div class="wp-block-column">
+            <!-- wp:group {"style":{"spacing":{"padding":{"top":"${cardPadding}","right":"${cardPadding}","bottom":"${cardPadding}","left":"${cardPadding}"}},"border":{"radius":"${cardRadius}"}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
+            <div class="wp-block-group has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:${tokenToCSS(cardPadding)};padding-right:${tokenToCSS(cardPadding)};padding-bottom:${tokenToCSS(cardPadding)};padding-left:${tokenToCSS(cardPadding)}">
+                <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
+                <p class="has-accent-color has-text-color has-small-font-size">${'★'.repeat(testimonial.rating || 5)}</p>
+                <!-- /wp:paragraph -->
+                <!-- wp:paragraph {"textColor":"contrast","fontSize":"medium"} -->
+                <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonial.quote}"</p>
+                <!-- /wp:paragraph -->
+                <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
                 <div class="wp-block-group">
-                    <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
-                    <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonial.name}</strong></p>
-                    <!-- /wp:paragraph -->
-                    <!-- wp:paragraph {"textColor":"contrast-2","fontSize":"small"} -->
-                    <p class="has-contrast-2-color has-text-color has-small-font-size">${testimonial.title}</p>
-                    <!-- /wp:paragraph -->
+                    <!-- wp:image {"width":"48px","height":"48px","sizeSlug":"thumbnail","style":{"border":{"radius":"999px"}}} -->
+                    <figure class="wp-block-image size-thumbnail is-resized"><img src="${testimonial.image || 'https://placehold.co/96x96/e0e0e0/222222?text=Guest'}" alt="${testimonial.name}" style="border-radius:999px;width:48px;height:48px"/></figure>
+                    <!-- /wp:image -->
+                    <!-- wp:group {"layout":{"type":"constrained"}} -->
+                    <div class="wp-block-group">
+                        <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
+                        <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonial.name}</strong></p>
+                        <!-- /wp:paragraph -->
+                        <!-- wp:paragraph {"textColor":"contrast-2","fontSize":"small"} -->
+                        <p class="has-contrast-2-color has-text-color has-small-font-size">${testimonial.title}</p>
+                        <!-- /wp:paragraph -->
+                    </div>
+                    <!-- /wp:group -->
                 </div>
                 <!-- /wp:group -->
             </div>
@@ -81,27 +89,31 @@ export function getSocialProofSectionWithContext(ctx: SectionContext): string {
 export function getSocialProofSection(content?: PageContent, industry?: string): string {
     const testimonials = getTestimonialsForIndustry(industry, undefined, content);
 
-    const renderCard = (testimonial: Testimonial) => `<!-- wp:column {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"border":{"radius":"8px"}},"backgroundColor":"base"} -->
-        <div class="wp-block-column has-base-background-color has-background" style="border-radius:8px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
-            <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
-            <p class="has-accent-color has-text-color has-small-font-size">${'★'.repeat(testimonial.rating || 5)}</p>
-            <!-- /wp:paragraph -->
-            <!-- wp:paragraph {"textColor":"contrast","fontSize":"medium"} -->
-            <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonial.quote}"</p>
-            <!-- /wp:paragraph -->
-            <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
-            <div class="wp-block-group">
-                <!-- wp:image {"width":"48px","height":"48px","sizeSlug":"thumbnail","style":{"border":{"radius":"999px"}}} -->
-                <figure class="wp-block-image size-thumbnail is-resized"><img src="${testimonial.image || 'https://placehold.co/96x96/e0e0e0/222222?text=Guest'}" alt="${testimonial.name}" style="border-radius:999px;width:48px;height:48px"/></figure>
-                <!-- /wp:image -->
-                <!-- wp:group {"layout":{"type":"constrained"}} -->
+    const renderCard = (testimonial: Testimonial) => `<!-- wp:column -->
+        <div class="wp-block-column">
+            <!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"border":{"radius":"8px"}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
+            <div class="wp-block-group has-base-background-color has-background" style="border-radius:8px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+                <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
+                <p class="has-accent-color has-text-color has-small-font-size">${'★'.repeat(testimonial.rating || 5)}</p>
+                <!-- /wp:paragraph -->
+                <!-- wp:paragraph {"textColor":"contrast","fontSize":"medium"} -->
+                <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonial.quote}"</p>
+                <!-- /wp:paragraph -->
+                <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
                 <div class="wp-block-group">
-                    <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
-                    <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonial.name}</strong></p>
-                    <!-- /wp:paragraph -->
-                    <!-- wp:paragraph {"textColor":"contrast-2","fontSize":"small"} -->
-                    <p class="has-contrast-2-color has-text-color has-small-font-size">${testimonial.title}</p>
-                    <!-- /wp:paragraph -->
+                    <!-- wp:image {"width":"48px","height":"48px","sizeSlug":"thumbnail","style":{"border":{"radius":"999px"}}} -->
+                    <figure class="wp-block-image size-thumbnail is-resized"><img src="${testimonial.image || 'https://placehold.co/96x96/e0e0e0/222222?text=Guest'}" alt="${testimonial.name}" style="border-radius:999px;width:48px;height:48px"/></figure>
+                    <!-- /wp:image -->
+                    <!-- wp:group {"layout":{"type":"constrained"}} -->
+                    <div class="wp-block-group">
+                        <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
+                        <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonial.name}</strong></p>
+                        <!-- /wp:paragraph -->
+                        <!-- wp:paragraph {"textColor":"contrast-2","fontSize":"small"} -->
+                        <p class="has-contrast-2-color has-text-color has-small-font-size">${testimonial.title}</p>
+                        <!-- /wp:paragraph -->
+                    </div>
+                    <!-- /wp:group -->
                 </div>
                 <!-- /wp:group -->
             </div>
@@ -171,7 +183,7 @@ function getTestimonialsForIndustry(
             {
                 quote: 'Impeccable pacing, flawless plating, and remarkable depth of flavor in every course.',
                 name: 'Nina P.',
-                title: 'Chef\'s Counter Guest',
+                title: 'Chefs Counter Guest',
                 image: 'https://placehold.co/96x96/e0e0e0/222222?text=NP',
                 rating: 5
             },
@@ -268,7 +280,7 @@ function getTestimonialsForIndustry(
     const industryTestimonials: Record<string, Testimonial[]> = {
         'restaurant': [
             {
-                quote: 'Best meal we\'ve had in years. The flavors were incredible and the service was impeccable.',
+                quote: 'Best meal we have had in years. The flavors were incredible and the service was impeccable.',
                 name: 'Rachel K.',
                 title: 'Local Food Enthusiast',
                 image: 'https://placehold.co/96x96/e0e0e0/222222?text=RK',
@@ -308,12 +320,12 @@ function getTestimonialsForIndustry(
         ],
         'saas_product': [
             {
-                quote: 'This tool has transformed how our team works. We\'ve saved hours every week.',
+                quote: 'This tool has transformed how our team works. We have saved hours every week.',
                 name: 'Mark D.',
                 title: 'Operations Manager'
             },
             {
-                quote: 'Intuitive interface and powerful features. The best investment we\'ve made.',
+                quote: 'Intuitive interface and powerful features. The best investment we have made.',
                 name: 'Lisa C.',
                 title: 'Startup Founder'
             },
@@ -335,14 +347,14 @@ function getTestimonialsForIndustry(
                 title: 'Project Manager'
             },
             {
-                quote: 'I\'ve recommended them to everyone I know. Truly exceptional service.',
+                quote: 'I have recommended them to everyone I know. Truly exceptional service.',
                 name: 'Amanda L.',
                 title: 'Returning Client'
             }
         ],
         'fitness': [
             {
-                quote: 'The trainers here actually care about your progress. Best gym I\'ve ever joined.',
+                quote: 'The trainers here actually care about your progress. Best gym I have ever joined.',
                 name: 'Mike J.',
                 title: 'Member since 2023'
             },
