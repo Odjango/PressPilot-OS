@@ -32,7 +32,7 @@ export function getSocialProofSectionWithContext(ctx: SectionContext): string {
     const renderCard = (testimonial: Testimonial) => `<!-- wp:column -->
         <div class="wp-block-column">
             <!-- wp:group {"style":{"spacing":{"padding":{"top":"${cardPadding}","right":"${cardPadding}","bottom":"${cardPadding}","left":"${cardPadding}"}},"border":{"radius":"${cardRadius}"}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
-            <div class="wp-block-group has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:${tokenToCSS(cardPadding)};padding-right:${tokenToCSS(cardPadding)};padding-bottom:${tokenToCSS(cardPadding)};padding-left:${tokenToCSS(cardPadding)}">
+            <div class="wp-block-group is-layout-constrained has-base-background-color has-background" style="border-radius:${cardRadius};padding-top:${tokenToCSS(cardPadding)};padding-right:${tokenToCSS(cardPadding)};padding-bottom:${tokenToCSS(cardPadding)};padding-left:${tokenToCSS(cardPadding)}">
                 <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
                 <p class="has-accent-color has-text-color has-small-font-size">${'★'.repeat(testimonial.rating || 5)}</p>
                 <!-- /wp:paragraph -->
@@ -92,7 +92,7 @@ export function getSocialProofSection(content?: PageContent, industry?: string):
     const renderCard = (testimonial: Testimonial) => `<!-- wp:column -->
         <div class="wp-block-column">
             <!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40","right":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40"}},"border":{"radius":"8px"}},"backgroundColor":"base","layout":{"type":"constrained"}} -->
-            <div class="wp-block-group has-base-background-color has-background" style="border-radius:8px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
+            <div class="wp-block-group is-layout-constrained has-base-background-color has-background" style="border-radius:8px;padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
                 <!-- wp:paragraph {"textColor":"accent","fontSize":"small"} -->
                 <p class="has-accent-color has-text-color has-small-font-size">${'★'.repeat(testimonial.rating || 5)}</p>
                 <!-- /wp:paragraph -->
