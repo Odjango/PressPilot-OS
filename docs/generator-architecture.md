@@ -73,6 +73,12 @@ The engines follow an **Assembler pattern**:
 - **PatternInjector** – injects pattern content using `ContentJSON` slots.
 - **ContentEngine** – generates pages and wiring, using `ContentJSON`.
 
+### Recipe vs Static Pattern Guardrail
+
+- Restaurant/cafe homepages are rendered inline through the recipe system (`getUniversalHomeContent()` -> `SectionRenderer` -> `social-proof.ts`) rather than relying on static testimonial pattern references.
+- For restaurant/cafe outputs, `PatternInjector` now removes legacy `patterns/general-testimonials-columns.php` so base-theme artifacts cannot conflict with recipe-rendered testimonial markup.
+- `PatternRegistry` should not register static patterns that duplicate/override sections already rendered inline by recipes.
+
 Engines:
 
 - Never call AI models.
@@ -86,8 +92,9 @@ Engines:
 1. ThemeSelector reads `cores.json` and selects `tove/cafe-landing`.
 2. ContentBuilder creates `ContentJSON` for the restaurant based on user input.
 3. StyleBuilder creates `StyleJSON` that respects theme rules and brand settings.
-4. Engines apply both JSON contracts to the `tove` core, producing a new FSE theme.
-5. The output is validated and packed as `output/<theme-name>.zip`.
+4. Generator runs in Heavy Mode for restaurant/cafe and renders homepage sections inline through the recipe renderer (`getUniversalHomeContent()`).
+5. Engines apply contracts to the `tove` core and remove conflicting legacy testimonial pattern files for restaurant/cafe output.
+6. The output is validated and packed as `output/<theme-name>.zip`.
 
 ## 7. Deployment Runtime (Laravel Horizon on Coolify)
 

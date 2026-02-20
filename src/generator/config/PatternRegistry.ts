@@ -302,7 +302,6 @@ export const PATTERN_REGISTRY: Record<string, ThemePersonality> = {
                     'patterns/restaurant-menu.php',
                     'patterns/restaurant-opening-hours-big.php',
                     'patterns/restaurant-location.php',
-                    'patterns/general-testimonials-columns.php',
                     'patterns/footer-horizontal.php'
                 ]
             }],

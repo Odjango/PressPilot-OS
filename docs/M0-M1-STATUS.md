@@ -25,15 +25,15 @@
 
 ### Remaining Polish
 - [ ] Hero preview capture accuracy (P1: wrong section selected in screenshot)
-- [ ] Site Editor "Attempt Recovery" on testimonial blocks (P2)
-- [ ] HTML apostrophe encoding (`&#39;`) in generated content (P3)
+- [x] Site Editor "Attempt Recovery" on testimonial blocks (P2)
+- [x] HTML apostrophe encoding (`&#39;`) in generated content (P3)
 
 ## Next Milestones
 
 ### M2: Quality & Polish
 - Fix hero selector targeting in Playwright preview runner
-- Fix testimonial block markup validity
-- Fix apostrophe/entity encoding pipeline
+- Verify no conflicting static testimonial patterns are shipped for recipe-rendered restaurant/cafe outputs
+- Guard against sanitizer/escaper double-encoding regressions in content pipeline
 
 ### M3: Design Enhancement
 - Expand pattern library

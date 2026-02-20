@@ -235,6 +235,23 @@ await patternInjector.cleanAllPatterns(themeDir, userData);
 
 This ensures patterns in the WordPress pattern library don't contain marketing content.
 
+### Restaurant Testimonials Conflict Prevention (Current Behavior)
+
+- Restaurant/cafe homepages are assembled inline via `getUniversalHomeContent()` and the recipe renderer, not via a `wp:pattern` testimonial reference.
+- The recipe section type `testimonials` maps to social proof section rendering (`getSocialProofSection()` / `getSocialProofSectionWithContext()`) in `src/generator/patterns/sections/social-proof.ts`.
+- To prevent static-vs-inline conflicts, `PatternInjector` removes `patterns/general-testimonials-columns.php` for restaurant/cafe outputs before template assembly.
+- `PatternRegistry` restaurant configuration must not include legacy testimonial patterns that compete with recipe-rendered testimonials.
+
+---
+
+## Sanitization & Escaping Notes
+
+- `sanitizeForPHP()` still escapes `&`, `<`, `>`, and `"` to prevent unsafe HTML/PHP embedding.
+- Apostrophes (`'`) are intentionally **not** HTML-entity encoded in sanitizer anymore.
+- Safe characters in WordPress block content include apostrophes and normal quote characters when emitted through valid block grammar/serialization.
+- Reason: apostrophes are safely handled later by PHP string escaping (`PhpEscaper.escapeSingleQuoted()`), and pre-encoding them caused double-encoding in output (`&amp;#39;`).
+- Result: business names like `Luigi's Pizza` now render as expected in generated themes.
+
 ---
 
 ## Pattern Files Using Slots

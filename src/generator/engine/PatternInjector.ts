@@ -126,6 +126,23 @@ async function saveBase64AsFile(themeDir: string, dataUri: string): Promise<stri
 export class PatternInjector {
     constructor(private rootDir: string) { }
 
+    private isRestaurantVertical(userData: GeneratorData): boolean {
+        const industry = (userData.industry || '').toLowerCase();
+        return industry === 'restaurant' || industry === 'cafe' || industry === 'restaurant_cafe';
+    }
+
+    private async removeConflictingRestaurantPatterns(themeDir: string, userData: GeneratorData): Promise<void> {
+        if (!this.isRestaurantVertical(userData)) {
+            return;
+        }
+
+        const legacyTestimonialsPath = path.join(themeDir, 'patterns', 'general-testimonials-columns.php');
+        if (await fs.pathExists(legacyTestimonialsPath)) {
+            await fs.remove(legacyTestimonialsPath);
+            console.log('[Pattern] Removed conflicting legacy testimonials pattern for recipe-driven restaurant output.');
+        }
+    }
+
     /**
      * Sanitize ALL base theme patterns from demo/marketing content.
      *
@@ -296,6 +313,8 @@ export class PatternInjector {
     async injectRecipe(themeDir: string, recipe: import('../types').LayoutRecipe, contentJson: any, personality: ThemePersonality, safeName: string, userData: GeneratorData): Promise<void> {
         console.log(`[Pattern] Strategy (Vertical Focus) for ${safeName}...`);
 
+        await this.removeConflictingRestaurantPatterns(themeDir, userData);
+
         let templateContent = '';
 
         for (const patternPath of recipe.patterns) {
@@ -375,6 +394,8 @@ ${templateContent}
 
     async injectHeavyMode(themeDir: string, personality: ThemePersonality, userData: GeneratorData, safeName: string, contentJson: any): Promise<void> {
         console.log('[Pattern] Building Vault-Validated Landing Page...');
+
+        await this.removeConflictingRestaurantPatterns(themeDir, userData);
 
         const heavyPatternSrc = path.join(this.rootDir, UNIVERSAL_PATTERNS.heavy);
         const heavyPatternDest = path.join(themeDir, 'patterns', 'presspilot-heavy.php');
