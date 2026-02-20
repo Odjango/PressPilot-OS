@@ -166,7 +166,10 @@ class DataTransformer
 
         $heroLayout = data_get($input, 'visualControls.heroLayout');
         if ($heroLayout) {
-            $generatorData['heroLayout'] = $heroLayout;
+            $normalizedHeroLayout = $this->normalizeHeroLayout($heroLayout);
+            if ($normalizedHeroLayout) {
+                $generatorData['heroLayout'] = $normalizedHeroLayout;
+            }
         }
 
         $brandStyle = data_get($input, 'visualControls.brandStyle');
@@ -227,6 +230,37 @@ class DataTransformer
             'playful', 'modern' => $normalized,
             'bold', 'minimal' => 'modern',
             default => 'modern',
+        };
+    }
+
+    private function normalizeHeroLayout(mixed $heroLayout): ?string
+    {
+        if (! is_string($heroLayout)) {
+            return null;
+        }
+
+        $normalized = strtolower(trim($heroLayout));
+        $compact = preg_replace('/[\s_-]+/', '', $normalized) ?? '';
+
+        if (str_contains($normalized, 'full bleed') || in_array($compact, ['fullbleed', 'fullbleedhero'], true)) {
+            return 'fullBleed';
+        }
+
+        if (str_contains($normalized, 'full width') || in_array($compact, ['fullwidth', 'fullwidthband'], true)) {
+            return 'fullWidth';
+        }
+
+        if (in_array($compact, ['split', 'splithero'], true)) {
+            return 'split';
+        }
+
+        if (in_array($compact, ['minimal', 'minimalhero'], true)) {
+            return 'minimal';
+        }
+
+        return match ($heroLayout) {
+            'fullBleed', 'fullWidth', 'split', 'minimal' => $heroLayout,
+            default => null,
         };
     }
 }

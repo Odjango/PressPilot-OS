@@ -200,7 +200,9 @@ export function getMinimalHero(content?: PageContent): string {
  * Get hero content by layout type
  */
 export function getHeroByLayout(layout: HeroLayout | undefined, content?: PageContent): string {
-    switch (layout) {
+    const normalizedLayout = normalizeHeroLayout(layout);
+
+    switch (normalizedLayout) {
         case 'fullBleed':
             return getFullBleedHero(content);
         case 'fullWidth':
@@ -213,4 +215,35 @@ export function getHeroByLayout(layout: HeroLayout | undefined, content?: PageCo
             // Default to fullBleed
             return getFullBleedHero(content);
     }
+}
+
+function normalizeHeroLayout(layout: HeroLayout | string | undefined): HeroLayout | undefined {
+    if (typeof layout !== 'string') {
+        return layout;
+    }
+
+    const normalized = layout.trim().toLowerCase();
+    const compact = normalized.replace(/[\s_-]+/g, '');
+
+    if (normalized.includes('full bleed') || compact === 'fullbleed' || compact === 'fullbleedhero') {
+        return 'fullBleed';
+    }
+
+    if (normalized.includes('full width') || compact === 'fullwidth' || compact === 'fullwidthband') {
+        return 'fullWidth';
+    }
+
+    if (compact === 'split' || compact === 'splithero') {
+        return 'split';
+    }
+
+    if (compact === 'minimal' || compact === 'minimalhero') {
+        return 'minimal';
+    }
+
+    if (layout === 'fullBleed' || layout === 'fullWidth' || layout === 'split' || layout === 'minimal') {
+        return layout;
+    }
+
+    return undefined;
 }
