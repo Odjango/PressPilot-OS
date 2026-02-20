@@ -40,12 +40,12 @@ export function getSocialProofSectionWithContext(ctx: SectionContext): string {
                 <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonial.quote}"</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
-                <div class="wp-block-group">
+                <div class="wp-block-group is-layout-flex is-nowrap is-vertically-aligned-center">
                     <!-- wp:image {"width":"48px","height":"48px","sizeSlug":"thumbnail","style":{"border":{"radius":"999px"}}} -->
                     <figure class="wp-block-image size-thumbnail is-resized"><img src="${testimonial.image || 'https://placehold.co/96x96/e0e0e0/222222?text=Guest'}" alt="${testimonial.name}" style="border-radius:999px;width:48px;height:48px"/></figure>
                     <!-- /wp:image -->
                     <!-- wp:group {"layout":{"type":"constrained"}} -->
-                    <div class="wp-block-group">
+                    <div class="wp-block-group is-layout-constrained">
                         <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
                         <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonial.name}</strong></p>
                         <!-- /wp:paragraph -->
@@ -100,12 +100,12 @@ export function getSocialProofSection(content?: PageContent, industry?: string):
                 <p class="has-contrast-color has-text-color has-medium-font-size">"${testimonial.quote}"</p>
                 <!-- /wp:paragraph -->
                 <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
-                <div class="wp-block-group">
+                <div class="wp-block-group is-layout-flex is-nowrap is-vertically-aligned-center">
                     <!-- wp:image {"width":"48px","height":"48px","sizeSlug":"thumbnail","style":{"border":{"radius":"999px"}}} -->
                     <figure class="wp-block-image size-thumbnail is-resized"><img src="${testimonial.image || 'https://placehold.co/96x96/e0e0e0/222222?text=Guest'}" alt="${testimonial.name}" style="border-radius:999px;width:48px;height:48px"/></figure>
                     <!-- /wp:image -->
                     <!-- wp:group {"layout":{"type":"constrained"}} -->
-                    <div class="wp-block-group">
+                    <div class="wp-block-group is-layout-constrained">
                         <!-- wp:paragraph {"textColor":"contrast","fontSize":"small"} -->
                         <p class="has-contrast-color has-text-color has-small-font-size"><strong>${testimonial.name}</strong></p>
                         <!-- /wp:paragraph -->
