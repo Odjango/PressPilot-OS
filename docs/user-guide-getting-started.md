@@ -77,6 +77,12 @@ Before you start:
 - This usually means a block has invalid markup
 - Try regenerating the theme with different settings
 - Report persistent issues with the theme.zip attached
+- Recent fix: testimonial avatar image blocks were hardened to avoid duplicate sizing markup that can trigger editor recovery.
+
+### Hero layout seems wrong after checkout
+- If you used preview/checkout bypass flow, selected hero style is now explicitly mapped into canonical layout values:
+  - `fullBleed`, `fullWidth`, `split`, `minimal`
+- If output still differs, share the selected style value and generated job ID for tracing.
 
 ### Colors don't match my logo
 - PressPilot extracts colors from your logo automatically

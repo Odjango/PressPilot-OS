@@ -133,7 +133,15 @@ export class ContentEngine {
                     };
                 }
 
-                await buildPageTemplate(themeDir, page, contentJson.baseName, contentJson.heroLayout);
+                await buildPageTemplate(
+                    themeDir,
+                    page,
+                    contentJson.baseName,
+                    contentJson.heroLayout,
+                    contentJson.businessName,
+                    contentJson.pages,
+                    Boolean(contentJson.slots['{{LOGO_URL}}'])
+                );
 
                 // Replace token placeholders in generated page templates.
                 const pagePath = path.join(themeDir, 'templates', `page-${page.slug}.html`);

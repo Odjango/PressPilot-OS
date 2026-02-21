@@ -314,6 +314,7 @@ const SECTION_PATTERN_HANDLERS = {
 | Single block broken | Missing layout class | Add `is-layout-constrained` or `is-layout-flex` |
 | Column content broken | Styles on wp:column | Move styles to nested wp:group |
 | Pattern works on frontend, breaks in editor | Static pattern file conflicts with inline content | Remove pattern from PatternRegistry |
+| Testimonial avatars break in all cards | Duplicate image dimensions in both inline style and HTML attrs | Keep width/height only as HTML attrs (`width="48" height="48"`), remove inline width/height |
 
 ### Issue: Encoded Characters Display Wrong
 
@@ -379,6 +380,26 @@ grep -rn "'testimonials':" src/generator/recipes/renderer.ts
 
 # 3. Find the actual generator function
 grep -rn "getSocialProofSection" src/generator/
+
+# 4. Verify social-proof avatar image style has no inline width/height duplication
+grep -rn "border-radius:999px;width:48px;height:48px" src/generator/patterns/sections/social-proof.ts
+
+# 5. Verify social-proof avatar image has no inline border-radius style
+grep -rn 'style="[^"]*border-radius' src/generator/patterns/sections/social-proof.ts
+```
+
+### Step 3b: Trace Hero Layout in Bypass Flow
+
+```bash
+# 1. Confirm bypass route normalizes hero layout
+grep -n "normalizeHeroLayout" app/api/generate/route.ts
+
+# 2. Confirm heroLayout is injected into bypass studioInput
+grep -n "heroLayout" app/api/generate/route.ts
+
+# 3. Confirm fullBleed omits header template-part and uses inline header
+grep -n "includeHeaderPart\\|fullBleed" src/generator/page-builder.ts
+grep -n "getInlineTransparentHeader" src/generator/patterns/hero-variants.ts src/generator/patterns/universal-header.ts
 ```
 
 ### Step 4: Validate Block Grammar
@@ -409,6 +430,7 @@ grep -E "(is-layout-constrained|is-layout-flex)" templates/front-page.html
 | `src/generator/recipes/types.ts` | Section type definitions | 39-80 |
 | `src/generator/config/PatternRegistry.ts` | Static pattern registration | ~295-330 |
 | `src/generator/engine/PatternInjector.ts` | Pattern file injection & cleanup | 129, 313, 395 |
+| `app/api/generate/route.ts` | Bypass generation API hero mapping | normalizeHeroLayout + studioInput.heroLayout |
 
 ### Pattern Generators
 
@@ -447,6 +469,9 @@ Before adding new patterns or sections:
 - [ ] Are styles on wp:group, not wp:column?
 - [ ] Is layout class present (`is-layout-constrained` or `is-layout-flex`)?
 - [ ] Are apostrophes/quotes left unencoded in block content?
+- [ ] Do testimonial avatar images avoid duplicate sizing (no inline width/height when HTML width/height is present)?
+- [ ] Do `wp:image` avatar `<img>` tags avoid inline border styles (use JSON `style.border.radius` instead)?
+- [ ] For `fullBleed`, is header rendered inside Cover and template-part header omitted?
 - [ ] Is there a handler in renderer.ts for this section type?
 - [ ] Is the section type listed in types.ts?
 

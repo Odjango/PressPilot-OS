@@ -207,3 +207,14 @@ All verticals support 4 brand modes:
 - [ ] Multi-language support (RTL for Arabic)
 - [ ] CI security gate integration
 - [ ] Performance optimization for 1000+ users
+
+---
+
+## Patch Note: 2026-02-21
+
+- [x] **Testimonials block hardening (restaurant social proof):**
+  - Removed duplicate avatar dimensions from inline `<img>` style in `src/generator/patterns/sections/social-proof.ts`.
+  - Canonical output now keeps sizing in HTML attributes (`width="48" height="48"`) without inline width/height duplication.
+- [x] **Bypass flow hero-layout reliability:**
+  - Added hero-layout normalization in `app/api/generate/route.ts` for bypass checkout generation.
+  - Mapped selected style into canonical hero enums (`fullBleed`, `fullWidth`, `split`, `minimal`) and injected into `studioInput.heroLayout`.

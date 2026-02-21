@@ -43,6 +43,11 @@ hero dynamically                     front-page.html
         ↓                                   ↓
 Playwright captures                  Theme ZIP created
 screenshot
+        ↓
+ [Bypass Checkout Flow]
+        ↓
+`/api/generate` normalizes selected style
+and sets `studioInput.heroLayout`
 ```
 
 ## File Locations
@@ -252,6 +257,29 @@ If previews don't match final theme:
 1. Compare output of TypeScript function vs PHP function
 2. Check for escaping differences (PHP uses `esc_html()`, `esc_attr()`)
 3. Ensure both use identical TT4 color tokens
+
+### Bypass Flow Uses Wrong Hero Layout
+
+If checkout bypass generation does not match selected hero style:
+1. Confirm `selectedStyle` is passed to `/api/generate`.
+2. Confirm route-level hero normalization exists in `app/api/generate/route.ts`.
+3. Confirm bypass `studioInput` includes `heroLayout` before building SaaS input.
+4. Verify normalized enum is one of: `fullBleed`, `fullWidth`, `split`, `minimal`.
+
+### Full-Bleed Renders Like Full-Width (Header Above Hero)
+
+If `fullBleed` appears to start below a normal header bar:
+
+1. Confirm full-bleed uses inline header inside Cover:
+   - `grep -n "getInlineTransparentHeader" src/generator/patterns/hero-variants.ts`
+2. Confirm template builders skip header template-part for fullBleed:
+   - `grep -n "includeHeaderPart\\|fullBleed" src/generator/page-builder.ts`
+3. Confirm recipe render path forwards header context:
+   - `grep -n "businessName\\|pages\\|hasLogo" src/generator/patterns/universal-home.ts src/generator/recipes/renderer.ts`
+
+Expected architecture:
+- `fullBleed`: `Cover[InlineHeader + HeroContent] -> Sections -> Footer`
+- `fullWidth/split/minimal`: `HeaderPart -> Hero -> Sections -> Footer`
 
 ### Block Validation Errors in WordPress
 

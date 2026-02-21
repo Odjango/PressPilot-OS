@@ -108,7 +108,7 @@ type SectionRendererFn = (
 const SECTION_RENDERERS: Record<SectionType, SectionRendererFn> = {
     // Restaurant sections
     'hero': (_section, ctx) => {
-        return getHeroByLayout(ctx.heroLayout, ctx.content);
+        return getHeroByLayout(ctx.heroLayout, ctx.content, ctx.businessName, ctx.pages, ctx.hasLogo);
     },
 
     'story': (_section, ctx) => {
@@ -210,7 +210,13 @@ const SECTION_RENDERERS_V2: Record<SectionType, SectionRendererFnV2> = {
     // Restaurant sections
     'hero': (ctx) => {
         // Hero still uses legacy function (complex, multiple layouts)
-        return getHeroByLayout(ctx.render.heroLayout, ctx.render.content);
+        return getHeroByLayout(
+            ctx.render.heroLayout,
+            ctx.render.content,
+            ctx.render.businessName,
+            ctx.render.pages,
+            ctx.render.hasLogo
+        );
     },
 
     'story': (ctx) => {

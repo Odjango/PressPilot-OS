@@ -55,7 +55,10 @@ export const getUniversalHomeContent = (
     industry?: string,
     brandStyle?: BrandStyle,
     brandMode?: BrandMode,
-    businessType?: string
+    businessType?: string,
+    businessName?: string,
+    pages?: { title: string, slug: string }[],
+    hasLogo?: boolean
 ) => {
     const normalizedBusinessType = businessType?.toLowerCase().trim();
     // Restaurant Recipe - uses Phase 2+3 Recipe System
@@ -108,7 +111,10 @@ export const getUniversalHomeContent = (
             industry,
             brandStyle,
             brandMode,
-            businessType: normalizedBusinessType
+            businessType: normalizedBusinessType,
+            businessName,
+            pages,
+            hasLogo
         };
 
         // Phase 4: Use recipe-aware rendering with SectionContext for token-driven styling
@@ -135,7 +141,10 @@ export const getUniversalHomeContent = (
             industry,
             brandStyle,
             brandMode,
-            businessType: normalizedBusinessType
+            businessType: normalizedBusinessType,
+            businessName,
+            pages,
+            hasLogo
         };
 
         // Phase 3: Use recipe-aware rendering with SectionContext for token-driven styling
@@ -156,7 +165,10 @@ export const getUniversalHomeContent = (
             industry,
             brandStyle,
             brandMode,
-            businessType: normalizedBusinessType
+            businessType: normalizedBusinessType,
+            businessName,
+            pages,
+            hasLogo
         };
 
         return SectionRenderer.renderSectionsWithRecipe(recipe, renderContext);
@@ -176,7 +188,10 @@ export const getUniversalHomeContent = (
             industry,
             brandStyle,
             brandMode,
-            businessType: normalizedBusinessType
+            businessType: normalizedBusinessType,
+            businessName,
+            pages,
+            hasLogo
         };
 
         return SectionRenderer.renderSectionsWithRecipe(recipe, renderContext);
@@ -196,14 +211,17 @@ export const getUniversalHomeContent = (
             industry,
             brandStyle,
             brandMode,
-            businessType: normalizedBusinessType
+            businessType: normalizedBusinessType,
+            businessName,
+            pages,
+            hasLogo
         };
 
         return SectionRenderer.renderSectionsWithRecipe(recipe, renderContext);
     }
 
     // Generic homepage for all other industries (not yet using recipes)
-    const heroSection = getHeroByLayout(heroLayout, content);
+    const heroSection = getHeroByLayout(heroLayout, content, businessName, pages, hasLogo);
 
     return `${heroSection}
 

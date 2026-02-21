@@ -13,7 +13,15 @@ import { sanitizePath } from './utils/sanitize';
 import { getPortfolioGalleryPageContent } from './patterns/pages/portfolio-gallery-page';
 import { getEcommerceShopPageContent } from './patterns/pages/ecommerce-shop-page';
 
-export const buildPageTemplate = async (themeDir: string, page: PageData, baseName: string = 'twentytwentyfour', heroLayout?: HeroLayout) => {
+export const buildPageTemplate = async (
+    themeDir: string,
+    page: PageData,
+    baseName: string = 'twentytwentyfour',
+    heroLayout?: HeroLayout,
+    businessName?: string,
+    pages?: { title: string, slug: string }[],
+    hasLogo?: boolean
+) => {
     const safeSlug = sanitizePath(page.slug || 'page');
     const filename = `page-${safeSlug}.html`;
     const filePath = path.join(themeDir, 'templates', filename);
@@ -23,7 +31,17 @@ export const buildPageTemplate = async (themeDir: string, page: PageData, baseNa
     // Switch for templates
     switch (page.template) {
         case 'universal-home':
-            innerContent = getUniversalHomeContent(page.content, heroLayout);
+            innerContent = getUniversalHomeContent(
+                page.content,
+                heroLayout,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                businessName,
+                pages,
+                hasLogo
+            );
             break;
         case 'universal-about':
             innerContent = getUniversalAboutContent(page.content);
@@ -49,9 +67,13 @@ export const buildPageTemplate = async (themeDir: string, page: PageData, baseNa
     }
 
     if (innerContent) {
+        const includeHeaderPart = heroLayout !== 'fullBleed';
+        const headerPart = includeHeaderPart
+            ? `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->\n`
+            : '';
+
         // FSE COMPLIANT WRAPPING: Using wp:group with inherit:true for alignment support
-        const content = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
-<!-- wp:group {"tagName":"main","layout":{"type":"constrained","contentSize":"1000px","wideSize":"1200px"},"align":"full"} -->
+        const content = `${headerPart}<!-- wp:group {"tagName":"main","layout":{"type":"constrained","contentSize":"1000px","wideSize":"1200px"},"align":"full"} -->
 <main class="wp-block-group alignfull">
 ${innerContent.trim()}
 </main>

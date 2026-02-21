@@ -193,6 +193,9 @@ export interface RenderContext {
     brandStyle?: BrandStyle;
     brandMode?: BrandMode;
     businessType?: string;
+    businessName?: string;
+    pages?: { title: string, slug: string }[];
+    hasLogo?: boolean;
 }
 
 /**

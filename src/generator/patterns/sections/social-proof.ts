@@ -42,7 +42,7 @@ export function getSocialProofSectionWithContext(ctx: SectionContext): string {
                 <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
                 <div class="wp-block-group is-layout-flex is-nowrap is-vertically-aligned-center">
                     <!-- wp:image {"width":48,"height":48,"sizeSlug":"thumbnail","style":{"border":{"radius":"999px"}}} -->
-                    <figure class="wp-block-image size-thumbnail is-resized"><img src="${testimonial.image || 'https://placehold.co/96x96/e0e0e0/222222?text=Guest'}" alt="${testimonial.name}" style="border-radius:999px" width="48" height="48"/></figure>
+                    <figure class="wp-block-image size-thumbnail is-resized"><img src="${testimonial.image || 'https://placehold.co/96x96/e0e0e0/222222?text=Guest'}" alt="${testimonial.name}" width="48" height="48"/></figure>
                     <!-- /wp:image -->
                     <!-- wp:group {"layout":{"type":"constrained"}} -->
                     <div class="wp-block-group is-layout-constrained">
@@ -102,7 +102,7 @@ export function getSocialProofSection(content?: PageContent, industry?: string):
                 <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
                 <div class="wp-block-group is-layout-flex is-nowrap is-vertically-aligned-center">
                     <!-- wp:image {"width":48,"height":48,"sizeSlug":"thumbnail","style":{"border":{"radius":"999px"}}} -->
-                    <figure class="wp-block-image size-thumbnail is-resized"><img src="${testimonial.image || 'https://placehold.co/96x96/e0e0e0/222222?text=Guest'}" alt="${testimonial.name}" style="border-radius:999px" width="48" height="48"/></figure>
+                    <figure class="wp-block-image size-thumbnail is-resized"><img src="${testimonial.image || 'https://placehold.co/96x96/e0e0e0/222222?text=Guest'}" alt="${testimonial.name}" width="48" height="48"/></figure>
                     <!-- /wp:image -->
                     <!-- wp:group {"layout":{"type":"constrained"}} -->
                     <div class="wp-block-group is-layout-constrained">

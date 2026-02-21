@@ -1,7 +1,7 @@
 # PressPilot Generator Data Flow Architecture
 
-**Last Updated:** 2026-02-02
-**Phase:** 14 - Restaurant Theme Fixes
+**Last Updated:** 2026-02-21
+**Phase:** 14 - Restaurant Theme + Hero Layout Reliability Fixes
 
 ---
 
@@ -241,6 +241,20 @@ This ensures patterns in the WordPress pattern library don't contain marketing c
 - The recipe section type `testimonials` maps to social proof section rendering (`getSocialProofSection()` / `getSocialProofSectionWithContext()`) in `src/generator/patterns/sections/social-proof.ts`.
 - To prevent static-vs-inline conflicts, `PatternInjector` removes `patterns/general-testimonials-columns.php` for restaurant/cafe outputs before template assembly.
 - `PatternRegistry` restaurant configuration must not include legacy testimonial patterns that compete with recipe-rendered testimonials.
+- Testimonial avatar images in `social-proof.ts` must avoid duplicate width/height declarations. Canonical output uses HTML attributes (`width`/`height`) and does not duplicate those dimensions in inline style.
+
+### Checkout Bypass Hero Layout Mapping (Current Behavior)
+
+- The checkout bypass flow (`app/api/generate/route.ts`) receives `selectedStyle` from query/checkout state.
+- `selectedStyle` is normalized via `normalizeHeroLayout()` into canonical generator enum values:
+  - `fullBleed`
+  - `fullWidth`
+  - `split`
+  - `minimal`
+- The normalized result is injected into bypass `studioInput.heroLayout` before calling:
+  - `buildSaaSInputFromStudioInput()`
+  - `transformSaaSInputToGeneratorData()`
+- This prevents silent fallback to default hero layout when bypass flow is used.
 
 ---
 
@@ -356,3 +370,19 @@ To add a new user data field:
 | `src/generator/engine/PatternInjector.ts` | Applies slots + legacy replacements |
 | `src/generator/utils/ContentValidator.ts` | Quality gate for forbidden content |
 | `tests/unit/data-flow.test.ts` | Integration tests |
+
+---
+
+## Full-Bleed Header Data Flow (P1b)
+
+To render a true full-bleed hero, header context now flows through homepage rendering:
+
+1. `buildPageTemplate(themeDir, page, baseName, heroLayout, businessName, pages, hasLogo)`
+2. `getUniversalHomeContent(content, heroLayout, ..., businessName, pages, hasLogo)`
+3. `getHeroByLayout(heroLayout, content, businessName, pages, hasLogo)`
+4. `getFullBleedHero(content, businessName, pages, hasLogo)`
+5. `getInlineTransparentHeader(businessName, pages, hasLogo)`
+
+Result:
+- `fullBleed`: Header is rendered inline inside Cover block.
+- other layouts: Header remains the standard template-part above `<main>`.
