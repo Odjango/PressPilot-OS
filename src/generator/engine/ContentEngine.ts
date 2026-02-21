@@ -137,7 +137,7 @@ export class ContentEngine {
                     themeDir,
                     page,
                     contentJson.baseName,
-                    contentJson.heroLayout,
+                    page.slug === 'home' ? contentJson.heroLayout : undefined,
                     contentJson.businessName,
                     contentJson.pages,
                     Boolean(contentJson.slots['{{LOGO_URL}}'])
