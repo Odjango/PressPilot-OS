@@ -26,6 +26,19 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+const normalizeHeroLayout = (layout: string | undefined): 'fullBleed' | 'fullWidth' | 'split' | 'minimal' => {
+  if (!layout) return 'fullBleed';
+
+  const normalized = layout.toLowerCase().replace(/[-_\s]/g, '');
+
+  if (normalized.includes('fullbleed') || normalized === 'bleed') return 'fullBleed';
+  if (normalized.includes('fullwidth') || normalized === 'wide' || normalized === 'centered') return 'fullWidth';
+  if (normalized.includes('split')) return 'split';
+  if (normalized.includes('minimal') || normalized === 'text') return 'minimal';
+
+  return 'fullBleed';
+};
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json().catch(() => ({}))) as GenerateRequestBody;
@@ -55,11 +68,14 @@ export async function POST(request: Request) {
         })
         .eq('id', body.previewId);
 
+      const heroLayout = normalizeHeroLayout(body.selectedStyle);
+
       // Build input from preview data
       const studioInput: StudioFormInput = {
         businessName: preview.business_name,
         businessDescription: preview.business_description || '',
         businessCategory: preview.industry,
+        heroLayout,
         logoBase64: preview.logo_url || undefined,
         palette: {
           primary: preview.color_primary || '#000000',
