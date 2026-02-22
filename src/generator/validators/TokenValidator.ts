@@ -55,6 +55,9 @@ export class TokenValidator {
                 // Allow min-height values (hero sections use vh or px)
                 if (line.includes('min-height') || line.includes('minHeight')) continue;
 
+                // Allow image dimension attributes (width/height on img elements)
+                if (line.includes('width=') || line.includes('height=')) continue;
+
                 return {
                     valid: false,
                     error: `[TokenValidator] Raw pixel value detected in ${filename} (Line ${i + 1}): '${match[0]}'. Use theme.json spacing/typography tokens.`

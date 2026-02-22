@@ -7,7 +7,6 @@
  * Both must produce identical HTML/block structures for visual consistency.
  */
 import { PageContent, HeroLayout } from '../types';
-import { getInlineTransparentHeader } from './universal-header';
 
 /**
  * Hero Layout Variants - TT4-Aligned
@@ -40,24 +39,17 @@ import { getInlineTransparentHeader } from './universal-header';
  * - Generous padding: spacing|70
  */
 export function getFullBleedHero(
-    content?: PageContent,
-    businessName?: string,
-    pages?: { title: string, slug: string }[],
-    hasLogo?: boolean
+    content?: PageContent
 ): string {
     const title = content?.hero_title || 'Welcome';
     const sub = content?.hero_sub || 'We enable businesses to grow.';
     const heroImage = content?.hero_image || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
-    const inlineHeader = businessName && pages
-        ? getInlineTransparentHeader(businessName, pages, hasLogo)
-        : '';
 
-    return `<!-- wp:cover {"url":"${heroImage}","dimRatio":75,"overlayColor":"accent-3","minHeight":100,"minHeightUnit":"vh","align":"full","style":{"spacing":{"padding":{"top":"0","bottom":"var:preset|spacing|70","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
-<div class="wp-block-cover alignfull" style="padding-top:0;padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:100vh">
+    return `<!-- wp:cover {"url":"${heroImage}","dimRatio":75,"overlayColor":"accent-3","minHeight":100,"minHeightUnit":"vh","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
+<div class="wp-block-cover alignfull" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:100vh">
     <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-80 has-background-dim"></span>
     <img class="wp-block-cover__image-background" alt="" src="${heroImage}" data-object-fit="cover"/>
     <div class="wp-block-cover__inner-container">
-        ${inlineHeader}
         <!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|60"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
         <div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--60)">
             <!-- wp:heading {"textAlign":"left","level":1,"style":{"typography":{"fontSize":"clamp(3rem, 6vw, 5rem)","lineHeight":"1.1"}},"textColor":"base"} -->
@@ -224,7 +216,7 @@ export function getHeroByLayout(
 
     switch (normalizedLayout) {
         case 'fullBleed':
-            return getFullBleedHero(content, businessName, pages, hasLogo);
+            return getFullBleedHero(content);
         case 'fullWidth':
             return getFullWidthHero(content);
         case 'split':
@@ -233,7 +225,7 @@ export function getHeroByLayout(
             return getMinimalHero(content);
         default:
             // Default to fullBleed
-            return getFullBleedHero(content, businessName, pages, hasLogo);
+            return getFullBleedHero(content);
     }
 }
 

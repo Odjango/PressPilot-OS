@@ -441,10 +441,7 @@ ${templateContent}
                 '$2\n    $1'
             );
 
-            const includeHeaderPart = userData.heroLayout !== 'fullBleed';
-            const headerPart = includeHeaderPart
-                ? `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->\n`
-                : '';
+            const headerPart = `<!-- wp:template-part {"slug":"header","tagName":"header"} /-->\n`;
             const fullContent = `${headerPart}<!-- wp:group {"tagName":"main","layout":{"type":"constrained","contentSize":"1000px","wideSize":"1200px"},"align":"full"} -->
 <main class="wp-block-group alignfull">
 ${homeMarkup}

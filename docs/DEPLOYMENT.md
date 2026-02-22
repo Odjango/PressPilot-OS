@@ -18,9 +18,12 @@
 - Removed duplicate Playwright Chromium install step.
 - Added cleanup commands in image build flow to reduce layer bloat and disk pressure.
 
-### Backend IP update after resize/redeploy
-- `BACKEND_URL` now points to `http://10.0.1.3:8080` (previously `http://10.0.1.10:8080`).
-- Laravel container IP can change after recreation/redeploy; always verify before frontend deploy.
+### Backend connectivity (Docker DNS) — RESOLVED
+- **Production value:** `BACKEND_URL=http://laravel-app:8080` (Docker Compose service name)
+- Stable across redeploys — no manual IP lookup needed.
+- **Coolify v4 behavior:** ignores `container_name` from docker-compose; the Docker Compose **service name** is what resolves.
+- Cross-app DNS confirmed working (Feb 21): `laravel-app` resolves from the frontend container via the shared `coolify` external network.
+- Same pattern as Redis: `REDIS_HOST=pp-redis` (service name, not IP).
 
 ### Runtime preview file serving
 - Next.js does not reliably serve runtime-created files from `/public/tmp/previews/`.
@@ -38,7 +41,7 @@
 ## Environment Variables
 
 ### Frontend (`presspilot-nextjs-frontend`)
-- `BACKEND_URL` - Laravel internal IP (currently `http://10.0.1.3:8080`)
+- `BACKEND_URL` - `http://laravel-app:8080` (Docker Compose service name, stable across redeploys)
 - `WP_PREVIEW_URL` - WordPress Factory URL (`https://factory.presspilotapp.com`)
 - `WP_PREVIEW_USER` - WordPress admin username
 - `WP_PREVIEW_PASS` - WordPress admin password
@@ -54,9 +57,10 @@
 
 ## Verification Commands
 
-### Check backend IP after redeploy
+### Verify backend connectivity
 ```bash
-docker inspect $(docker ps --format "{{.Names}}" | grep laravel-app) --format '{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}'
+# From Coolify > frontend container > Terminal (curl not available, use node):
+node -e "require('http').get('http://laravel-app:8080/up', r => { console.log(r.statusCode === 200 ? 'DNS OK' : 'DNS FAIL'); r.resume(); }).on('error', () => console.log('DNS FAIL'))"
 ```
 
 ### Check server resources

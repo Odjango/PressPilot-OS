@@ -6,14 +6,16 @@ import { isDockerAvailable } from './setup/docker';
 import { checkForAttemptRecovery, checkForBlockErrors, getEditorWarnings } from './utils/error-detector';
 
 const SCREENSHOT_DIR = path.resolve(process.cwd(), 'tests/wordpress/screenshots');
-const ADMIN_USER = process.env.WP_TESTS_ADMIN_USER || 'admin';
-const ADMIN_PASS = process.env.WP_TESTS_ADMIN_PASS || 'admin';
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = process.env.WP_TESTS_ADMIN_PASS || 'admin123';
 const EDITOR_READY_SELECTOR =
   '.edit-site-visual-editor, .edit-site-layout, iframe[name="editor-canvas"]';
 
 const CASES = [
   { vertical: 'restaurant', recipe: 'classic-bistro', specialPage: 'menu' },
+  { vertical: 'saas', recipe: 'startup-landing', specialPage: 'about' },
   { vertical: 'portfolio', recipe: 'creative-professional', specialPage: 'gallery' },
+  { vertical: 'local-service', recipe: 'home-services', specialPage: 'services' },
   { vertical: 'ecommerce', recipe: 'boutique-store', specialPage: 'shop' },
 ] as const;
 
@@ -22,10 +24,27 @@ async function loginAdmin(page: Page): Promise<void> {
 
   if (page.url().includes('/wp-admin')) return;
 
-  await page.fill('#user_login', ADMIN_USER);
-  await page.fill('#user_pass', ADMIN_PASS);
-  await page.click('#wp-submit');
-  await page.waitForURL(/wp-admin/, { timeout: 60_000 });
+  const credentialCandidates: Array<{ user: string; pass: string }> = [
+    { user: ADMIN_USER, pass: ADMIN_PASS },
+    { user: 'admin', pass: ADMIN_PASS },
+    { user: 'admin123', pass: ADMIN_PASS },
+  ];
+
+  for (const creds of credentialCandidates) {
+    await page.fill('#user_login', creds.user);
+    await page.fill('#user_pass', creds.pass);
+
+    await Promise.all([
+      page.waitForNavigation({ waitUntil: 'domcontentloaded', timeout: 60_000 }).catch(() => null),
+      page.click('#wp-submit'),
+    ]);
+
+    if (page.url().includes('/wp-admin')) {
+      return;
+    }
+  }
+
+  throw new Error(`Failed to authenticate to WordPress admin. Final URL: ${page.url()}`);
 }
 
 test.describe.configure({ mode: 'serial' });

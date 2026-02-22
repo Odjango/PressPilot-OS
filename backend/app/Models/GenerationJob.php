@@ -61,13 +61,17 @@ class GenerationJob extends Model
     }
 
     /**
-     * Optimistic lock: claim a pending job for processing.
+     * Optimistic lock: claim a pending or retrying job for processing.
      * Returns true if this process won the claim.
+     *
+     * Accepts both 'pending' (first attempt) and 'processing' (retry after
+     * a previous attempt failed mid-execution) to prevent jobs from getting
+     * stuck in 'processing' state when retries can't re-claim them.
      */
     public function claimForProcessing(): bool
     {
         $affected = static::where('id', $this->id)
-            ->where('status', self::STATUS_PENDING)
+            ->whereIn('status', [self::STATUS_PENDING, self::STATUS_PROCESSING])
             ->update([
                 'status' => self::STATUS_PROCESSING,
                 'updated_at' => now(),
