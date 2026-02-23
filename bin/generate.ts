@@ -21,6 +21,7 @@ import { generateTheme } from '../src/generator/index';
 import { StructureValidator } from '../src/generator/validators/StructureValidator';
 import { BlockValidator } from '../src/generator/validators/BlockValidator';
 import { TokenValidator } from '../src/generator/validators/TokenValidator';
+import { BlockConfigValidator } from '../src/generator/validators/BlockConfigValidator';
 import { buildStaticSite } from '../lib/presspilot/staticSite';
 import { buildSaaSInputFromStudioInput } from '../lib/presspilot/studioAdapter';
 import { applyBusinessInputs } from '../lib/presspilot/context';
@@ -45,6 +46,18 @@ function readStdin(): Promise<string> {
 
 function writeResult(obj: Record<string, unknown>): void {
     process.stdout.write(JSON.stringify(obj) + '\n');
+}
+
+/** Recursively collect all .html files under a directory */
+async function getAllHtmlFiles(dir: string): Promise<string[]> {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    const nested = await Promise.all(
+        entries.map(e => {
+            const fullPath = path.join(dir, e.name);
+            return e.isDirectory() ? getAllHtmlFiles(fullPath) : Promise.resolve([fullPath]);
+        })
+    );
+    return nested.flat().filter(f => f.endsWith('.html'));
 }
 
 // ── Main ────────────────────────────────────────────────────────────────────
@@ -124,54 +137,84 @@ async function main(): Promise<void> {
         throw new Error(`Structure validation failed: ${struct.error}`);
     }
 
-    // B. Block & Token validation (mirrors start-worker.ts lines 119-170)
-    console.error('[cli] Running Block & Token validators...');
+    // B. Block name + Token validation on key non-HTML files (theme.json, style.css)
+    //    The HTML check below covers all templates; we still validate theme.json here.
+    console.error('[cli] Running Block & Token validators on theme.json / style.css...');
     const validatorZip = new JSZip();
     await validatorZip.loadAsync(zipBuffer);
-
-    const filesToCheck = ['templates/index.html', 'theme.json', 'style.css'];
     const zipFiles = Object.keys(validatorZip.files);
     const rootFolder = zipFiles[0]?.split('/')[0];
 
-    for (const relPath of filesToCheck) {
+    for (const relPath of ['theme.json', 'style.css']) {
         let content: string | undefined;
         let checkPath = relPath;
-
-        // Try direct path
         if (validatorZip.file(relPath)) {
             content = await validatorZip.file(relPath)?.async('string');
-        }
-        // Try nested under root folder (e.g. theme-slug/templates/...)
-        else if (rootFolder && validatorZip.file(`${rootFolder}/${relPath}`)) {
+        } else if (rootFolder && validatorZip.file(`${rootFolder}/${relPath}`)) {
             checkPath = `${rootFolder}/${relPath}`;
             content = await validatorZip.file(checkPath)?.async('string');
         }
+        if (!content) continue; // missing file already caught by StructureValidator
 
-        if (!content) {
-            if (relPath === 'templates/index.html') {
-                // Check for index.php fallback (WordPress requires one or the other)
-                const phpPath = rootFolder ? `${rootFolder}/index.php` : 'index.php';
-                if (!validatorZip.file(phpPath)) {
-                    throw new Error(
-                        'Validation Error: Missing required template (index.html or index.php).'
-                    );
-                }
-                continue;
-            }
-            throw new Error(`Validation Error: Could not read ${relPath} for inspection.`);
-        }
-
-        const blockRes = BlockValidator.validate(content, checkPath);
-        if (!blockRes.valid) throw new Error(blockRes.error);
-
-        // Skip TokenValidator for theme.json (it defines the hex values)
+        // Only BlockValidator for style.css (TokenValidator would false-positive on hex values)
         if (!checkPath.endsWith('theme.json')) {
             const tokenRes = TokenValidator.validate(content, checkPath);
             if (!tokenRes.valid) throw new Error(tokenRes.error);
         }
     }
 
+    // C. Full HTML scan: BlockName + Token + BlockConfig on every .html file in themeDir
+    //    This is the pre-ZIP gate — catches incomplete block configurations before download.
+    console.error('[cli] Running full HTML scan (BlockName + Token + BlockConfig)...');
+    const allHtmlFiles = await getAllHtmlFiles(result.themeDir);
+    const criticalConfigIssues: string[] = [];
+
+    for (const htmlFile of allHtmlFiles) {
+        const content = await fs.readFile(htmlFile, 'utf8');
+        const rel = path.relative(result.themeDir, htmlFile);
+
+        // Block name validation
+        const blockRes = BlockValidator.validate(content, rel);
+        if (!blockRes.valid) throw new Error(blockRes.error);
+
+        // Design token validation
+        const tokenRes = TokenValidator.validate(content, rel);
+        if (!tokenRes.valid) throw new Error(tokenRes.error);
+
+        // Block config completeness (new: required attributes, valid variation values)
+        const configRes = BlockConfigValidator.validate(content, rel);
+        for (const issue of configRes.issues) {
+            if (issue.severity === 'critical') {
+                criticalConfigIssues.push(`${rel}: ${issue.issue}`);
+            } else if (issue.severity === 'error') {
+                console.error(`[BlockConfig][ERROR] ${issue.issue}`);
+            }
+            // warnings already logged by validateAndWrite during assembly
+        }
+    }
+
+    if (criticalConfigIssues.length > 0) {
+        throw new Error(
+            `Block configuration validation failed — missing required attributes that would crash WordPress Site Editor:\n` +
+            criticalConfigIssues.map(i => `  • ${i}`).join('\n')
+        );
+    }
+
     console.error('[cli] Validation passed.');
+
+    // D. Write content manifest alongside the ZIP (documents slot→value mapping for re-spin)
+    if (result.slots && Object.keys(result.slots).length > 0) {
+        const manifestPath = path.join(
+            path.dirname(result.downloadPath),
+            `${slug ?? 'theme'}-manifest.json`
+        );
+        await fs.writeJson(manifestPath, {
+            generated_at: new Date().toISOString(),
+            theme: result.themeName,
+            slots: result.slots,
+        }, { spaces: 2 });
+        console.error(`[cli] Content manifest written: ${path.basename(manifestPath)}`);
+    }
 
     // ── STEP 3: Build Static Site ───────────────────────────────────────
     // Mirrors start-worker.ts lines 176-209

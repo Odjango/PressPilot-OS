@@ -269,7 +269,8 @@ export async function generateTheme(options: GeneratorOptions = {}) {
             themeName: themeName,
             downloadPath: zipPath,
             filename: `${safeName}.zip`,
-            themeDir: themeDir
+            themeDir: themeDir,
+            slots: contentJson.slots ?? {}
         };
 
     } catch (err) {

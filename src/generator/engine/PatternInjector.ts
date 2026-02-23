@@ -8,6 +8,7 @@ import { getModernImageUrl } from '../utils/ImageProvider';
 import { ContentJSON } from '../modules/ContentBuilder';
 import { sanitizeForPHP, sanitizePath } from '../utils/sanitize';
 import { replaceRemainingPlaceholders } from '../utils/placeholderFallback';
+import { BlockConfigValidator } from '../validators/BlockConfigValidator';
 
 /**
  * Demo content replacement patterns by base theme.
@@ -126,6 +127,27 @@ async function saveBase64AsFile(themeDir: string, dataUri: string): Promise<stri
 export class PatternInjector {
     constructor(private rootDir: string) { }
 
+    /**
+     * Validates block config completeness before writing an HTML file to disk.
+     * Logs CRITICAL/ERROR/WARNING issues to stderr — does NOT block the write
+     * (critical issues are caught again by the pre-ZIP gate in bin/generate.ts).
+     */
+    private async validateAndWrite(filePath: string, content: string): Promise<void> {
+        if (filePath.endsWith('.html')) {
+            const result = BlockConfigValidator.validate(content, path.basename(filePath));
+            for (const issue of result.issues) {
+                if (issue.severity === 'critical') {
+                    console.error(`[BlockConfig][CRITICAL] ${issue.issue}`);
+                } else if (issue.severity === 'error') {
+                    console.error(`[BlockConfig][ERROR] ${issue.issue}`);
+                } else {
+                    console.warn(`[BlockConfig][WARN] ${issue.issue}`);
+                }
+            }
+        }
+        await fs.writeFile(filePath, content);
+    }
+
     private isRestaurantVertical(userData: GeneratorData): boolean {
         const industry = (userData.industry || '').toLowerCase();
         return industry === 'restaurant' || industry === 'cafe' || industry === 'restaurant_cafe';
@@ -211,7 +233,7 @@ export class PatternInjector {
 
             // Only write if content changed
             if (content !== originalContent) {
-                await fs.writeFile(filePath, content);
+                await this.validateAndWrite(filePath, content);
                 cleanedCount++;
             }
         }
@@ -338,7 +360,7 @@ export class PatternInjector {
                 // Global string replacements can corrupt block markup, causing "Attempt recovery" error
                 if (slug.includes('cta-') || slug.includes('cta/') || slug.includes('/cta')) {
                     templateContent += `<!-- wp:pattern {"slug":"${slug}"} /-->\n`;
-                    await fs.writeFile(fullPath, content);
+                    await this.validateAndWrite(fullPath, content);
                     continue;
                 }
 
@@ -358,7 +380,7 @@ export class PatternInjector {
                     heroImage: contentJson?.hero?.images?.[0]
                 });
 
-                await fs.writeFile(fullPath, content);
+                await this.validateAndWrite(fullPath, content);
                 templateContent += `<!-- wp:pattern {"slug":"${slug}"} /-->\n`;
             }
         }
@@ -384,7 +406,7 @@ ${templateContent}
 
         const templates = ['front-page.html', 'index.html', 'home.html'];
         for (const tpl of templates) {
-            await fs.writeFile(path.join(themeDir, 'templates', tpl), fullContent);
+            await this.validateAndWrite(path.join(themeDir, 'templates', tpl), fullContent);
         }
 
         // Force Canonical Parts (Header/Footer)
@@ -449,13 +471,13 @@ ${homeMarkup}
 <!-- /wp:group -->
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
 
-            await fs.writeFile(homeTemplatePath, fullContent);
+            await this.validateAndWrite(homeTemplatePath, fullContent);
 
             // Also write to front-page.html, index.html, home.html for WordPress FSE compatibility
             // WordPress looks for front-page.html when "Your homepage displays" is set to "A static page"
             const homeTemplates = ['front-page.html', 'index.html', 'home.html'];
             for (const tpl of homeTemplates) {
-                await fs.writeFile(path.join(themeDir, 'templates', tpl), fullContent);
+                await this.validateAndWrite(path.join(themeDir, 'templates', tpl), fullContent);
             }
         }
 
@@ -494,7 +516,7 @@ ${homeMarkup}
         await fs.ensureDir(path.dirname(footerPath));
         let footerContent = getUniversalFooterContent(businessName, baseTheme, pages || userData.pages || [], hasLogo).trim();
         footerContent = footerContent.replace(/\{THEME_SLUG\}/g, safeName);
-        await fs.writeFile(footerPath, footerContent);
+        await this.validateAndWrite(footerPath, footerContent);
 
         const headerPath = path.join(themeDir, 'parts', 'header.html');
         await fs.ensureDir(path.dirname(headerPath));
@@ -502,7 +524,7 @@ ${homeMarkup}
         const isEcommerce = ['ecommerce', 'retail', 'shop', 'online_store'].includes(userData.industry?.toLowerCase() || '');
         let headerContent = getUniversalHeaderContent(businessName, finalPages, hasLogo, isEcommerce).trim();
         headerContent = headerContent.replace(/\{THEME_SLUG\}/g, safeName);
-        await fs.writeFile(headerPath, headerContent);
+        await this.validateAndWrite(headerPath, headerContent);
     }
 
     /**
@@ -661,7 +683,7 @@ ${menuPatternContent}`;
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
 
             await fs.ensureDir(path.join(themeDir, 'templates'));
-            await fs.writeFile(path.join(themeDir, 'templates', 'page-menu.html'), menuPageTemplate);
+            await this.validateAndWrite(path.join(themeDir, 'templates', 'page-menu.html'), menuPageTemplate);
             await this.injectNavLink(themeDir, 'Menu', '/menu');
         }
     }
@@ -708,7 +730,7 @@ ${menuPatternContent}`;
         const scheduleContent = schedulePatternHtml.replace('{{SCHEDULE_TABLE}}', scheduleTableHtml);
 
         await fs.ensureDir(path.join(themeDir, 'templates'));
-        await fs.writeFile(path.join(themeDir, 'templates', 'page-schedule.html'), scheduleContent);
+        await this.validateAndWrite(path.join(themeDir, 'templates', 'page-schedule.html'), scheduleContent);
         await this.injectNavLink(themeDir, 'Schedule', '/schedule');
     }
 
@@ -785,7 +807,7 @@ add_action('after_setup_theme', function() {
 
         const shopTemplatePath = path.join(themeDir, 'templates', 'page-shop.html');
         await fs.ensureDir(path.dirname(shopTemplatePath));
-        await fs.writeFile(shopTemplatePath, shopPageTemplate);
+        await this.validateAndWrite(shopTemplatePath, shopPageTemplate);
         console.log(`[PatternMatcher] Created 'page-shop.html' template.`);
 
         // 6. CREATE page-cart.html TEMPLATE
@@ -808,7 +830,7 @@ add_action('after_setup_theme', function() {
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
 
         const cartTemplatePath = path.join(themeDir, 'templates', 'page-cart.html');
-        await fs.writeFile(cartTemplatePath, cartPageTemplate);
+        await this.validateAndWrite(cartTemplatePath, cartPageTemplate);
         console.log(`[PatternMatcher] Created 'page-cart.html' template.`);
 
         // 7. CREATE page-checkout.html TEMPLATE
@@ -831,7 +853,7 @@ add_action('after_setup_theme', function() {
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
 
         const checkoutTemplatePath = path.join(themeDir, 'templates', 'page-checkout.html');
-        await fs.writeFile(checkoutTemplatePath, checkoutPageTemplate);
+        await this.validateAndWrite(checkoutTemplatePath, checkoutPageTemplate);
         console.log(`[PatternMatcher] Created 'page-checkout.html' template.`);
 
         // 8. CREATE archive-product.html TEMPLATE (WooCommerce product listing)
@@ -873,7 +895,7 @@ add_action('after_setup_theme', function() {
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
 
         const archiveProductPath = path.join(themeDir, 'templates', 'archive-product.html');
-        await fs.writeFile(archiveProductPath, archiveProductTemplate);
+        await this.validateAndWrite(archiveProductPath, archiveProductTemplate);
         console.log(`[WooCommerce] Created 'archive-product.html' template.`);
 
         // 9. CREATE single-product.html TEMPLATE (WooCommerce product detail)
@@ -933,7 +955,7 @@ add_action('after_setup_theme', function() {
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->`;
 
         const singleProductPath = path.join(themeDir, 'templates', 'single-product.html');
-        await fs.writeFile(singleProductPath, singleProductTemplate);
+        await this.validateAndWrite(singleProductPath, singleProductTemplate);
         console.log(`[WooCommerce] Created 'single-product.html' template.`);
 
         // 10. Inject Navigation Links
@@ -992,7 +1014,7 @@ add_action('after_setup_theme', function() {
         if (content.includes(closingNavTag)) {
             // Insert new link just before the closing tag
             content = content.replace(closingNavTag, `${navLinkHtml}\n${closingNavTag}`);
-            await fs.writeFile(targetPath, content);
+            await this.validateAndWrite(targetPath, content);
             console.log(`[Pattern] Injected '${label}' link into Header Navigation.`);
         } else {
             // Navigation might be self-closing: <!-- wp:navigation {...} /-->
@@ -1003,7 +1025,7 @@ add_action('after_setup_theme', function() {
                 // Convert self-closing to paired block with our link
                 const newBlock = `${match[1]}-->\n${navLinkHtml}\n<!-- /wp:navigation -->`;
                 content = content.replace(match[0], newBlock);
-                await fs.writeFile(targetPath, content);
+                await this.validateAndWrite(targetPath, content);
                 console.log(`[Pattern] Injected '${label}' link into Header Navigation (converted self-closing).`);
             } else {
                 console.warn(`[Pattern] No wp:navigation block found in header for ${label}. Skipping.`);
