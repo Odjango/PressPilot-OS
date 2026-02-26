@@ -1,8 +1,52 @@
 # PressPilot Project Memory
-**State Saved: 2026-02-08** | **Current Phase: M0 Laravel Foundation ~85% Complete + Generator 2.0 Phase 4 Complete**
+**State Saved: 2026-02-26** | **Current Phase: M1 Complete + Cleanup Done + P5 Active**
 
-> M0 (Laravel dark launch) code complete but NOT deployed to Coolify. "Factory-Stable" in Coolify is WordPress, not Laravel. P10 (deployment) RED. P8 (metrics baseline) blocked by P10. See Section 19.
-> Generator 2.0 Phase 4 (Ecommerce Vertical & Orchestrator Wiring) complete. See Section 18 for details.
+> **2026-02-26 UPDATE:** Full project audit and cleanup completed. All commits current. Project structure reorganized. Memory systems consolidated. See "2026-02-26 Project State" section immediately below for the current snapshot before reading older sections.
+
+---
+
+## 2026-02-26 Project State (CURRENT — Read This First)
+
+### What is Production-Ready
+- **All 5 verticals:** Restaurant, SaaS, Portfolio, Ecommerce, Local Service — all passed WP smoke tests (Feb 21). Zero "Attempt Recovery" errors in Site Editor.
+- **4 brand modes:** modern, playful, bold, minimal — all working
+- **Generator 2.0:** Design token system, recipe engine, slot system, security hardening — complete
+- **Block Config Validation (Feb 23):** BlockConfigValidator enforces required block attributes at two checkpoints (pre-write log + pre-ZIP hard gate)
+- **Deployment:** presspilotapp.com live, Laravel backend running, factory.presspilotapp.com running
+
+### Known Active Issue
+- **P5 — Generation stall at DELIVER step:** Steps 1–4 (including hero preview) complete successfully, but Step 5 stalls at "Building Your Assets" indefinitely. Laravel logs not found at expected container path. Next step: check Coolify log tab, check Horizon dashboard for failed/pending jobs.
+
+### Project Structure (as of Feb 26)
+**Active directories at root:**
+- `src/` — Generator engine, components, preview, hooks
+- `app/` — Next.js App Router (pages + API routes)
+- `lib/` — Shared Next.js/Node utilities (imported by `bin/generate.ts`)
+- `backend/` — Laravel 12 app (API, jobs, queue)
+- `bin/` — Generator CLI entry point
+- `docs/` — All project documentation and FSE Knowledge Base
+- `BRAIN/` — Vision, Constitution, Memory (AI agent knowledge base)
+- `_memory/` — OneContext plugin memory (mirrors key state from BRAIN/MEMORY/)
+- `SKILLS/` — Agent skills (PressPilot Vision Guardian, WP Theme Output Checker, etc.)
+- `tests/`, `scripts/`, `specs/`, `public/`, `docker/`, `supabase/`, `types/`, `agent-os/`
+
+**Archived to `Project Extras/`:** All clutter — 2,211 files in 9 subfolders:
+- `debug-logs/`, `test-zips/`, `old-scripts/`, `old-workflows/`, `old-docs/`, `test-output-runs/`, `legacy-folders/`, `archived-memory/`, `archived-instructions/`
+
+### Memory System (Resolved)
+- **Canonical:** `BRAIN/MEMORY/` — project_state.md, coding_standards.md, user_profile.md, phase-history.md, marketing-seeds.md
+- **OneContext:** `_memory/` — required by plugin, kept in sync
+- **Archived:** `.agent_memory/`, `memory/db.json` → `Project Extras/archived-memory/`
+
+### Instruction Files (Active)
+`CLAUDE.md` → `AI_INSTRUCTIONS.md` → `CONTRIBUTING.md` → `BRAIN/CONSTITUTION/agent-protocol.md` → `.claude/rules/WP_FSE_SKILL.md` → `.github/instructions/wp-fse.instructions.md`
+
+### Git Status
+- Latest commit: `3d3848e` (2026-02-26)
+- All work committed and clean
+- TypeScript: `npx tsc --noEmit` passes (Project Extras excluded via tsconfig.json)
+
+---
 
 ---
 

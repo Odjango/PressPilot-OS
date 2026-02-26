@@ -1,13 +1,34 @@
 # PressPilot OS — Master Roadmap & Project Memory
 
-Last updated: 2026-02-23
+Last updated: 2026-02-26
 
 ---
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `ccc01be` (2026-02-21) — `fix: remove accidental onecontext-ai dependency breaking frontend build`
-- Session work (2026-02-23, not yet committed): Block Config Validation system — see "Block Config Validation" section below
+- Latest commit: `3d3848e` (2026-02-26) — `chore: finalize cleanup — move memory/db.json and last output file`
+- All work is committed. `git status` is clean.
+
+### 2026-02-26 Cleanup Session — Commit chain:
+| Commit | Description |
+|--------|-------------|
+| `3d3848e` | Finalize cleanup — memory/db.json and last output file |
+| `509eb6c` | Move all clutter to Project Extras, archive redundant files (2,211 files) |
+| `41977ad` | Create Project Extras, consolidate memory, clean up clutter |
+| `cccc07d` | Commit accumulated post-Feb23 scaffolding work |
+| `980499a` | feat(validator): BlockConfigValidator with two-checkpoint validation |
+
+### Memory System (Resolved — 2026-02-26)
+Single canonical memory: `BRAIN/MEMORY/` (project_state.md, coding_standards.md, user_profile.md, phase-history.md, marketing-seeds.md)
+OneContext memory: `_memory/` — kept in place, required by OneContext plugin
+Archived: `.agent_memory/` and `memory/` → `Project Extras/archived-memory/`
+
+### Instruction Files (Resolved — 2026-02-26)
+Active: `CLAUDE.md`, `AI_INSTRUCTIONS.md`, `CONTRIBUTING.md`, `BRAIN/CONSTITUTION/agent-protocol.md`, `.claude/rules/WP_FSE_SKILL.md`, `.github/instructions/wp-fse.instructions.md`
+Archived: `AGENTS.md` (wrong project template), `AGENT_PROTOCOL.md` (WPaify/Antigravity project), `gemini.md`
+
+### Project Extras (Created — 2026-02-26)
+All clutter organized into `Project Extras/` with 9 subfolders. Nothing deleted — everything is archived and retrievable. `tsconfig.json` excludes `Project Extras/` from TypeScript compilation.
 
 ## Tech Stack
 - Frontend: Next.js 16 (App Router) + React 19 + TypeScript
@@ -200,20 +221,27 @@ Resolution pipeline (5 layers, in order):
 - ~~WP smoke test all verticals~~ — 5/5 passed, zero recovery errors
 - ~~Verify Codex testimonial changes~~ — included in smoke test pass
 
+### Completed (Feb 23)
+- ~~**Block Config Validation**~~ — BlockConfigValidator + pre-file-write hook + pre-ZIP gate implemented and committed
+
+### Completed (Feb 26)
+- ~~**Commit all staged work**~~ — cccc07d, 41977ad, 509eb6c, 3d3848e all committed
+- ~~**Memory consolidation**~~ — 4 memory systems → 1 canonical (BRAIN/MEMORY/)
+- ~~**Instruction file cleanup**~~ — Archived wrong-project files (AGENTS.md, AGENT_PROTOCOL.md)
+- ~~**Project Extras**~~ — 2,211 files organized and archived, root is clean
+
 ### Infrastructure
 - ~~Stabilize Laravel internal IP~~ — Docker DNS pattern deployed and verified (Feb 21). `BACKEND_URL=http://laravel-app:8080`
-1. Update `docs/KNOWN_ISSUES.md` to reflect P1/P2/P3 all resolved
+1. ~~Update `docs/KNOWN_ISSUES.md`~~ — needs update to mark P1–P4 resolved
 
-### Quality (Active)
-2. ~~**P4: Verify header separation fix**~~ — Codex implemented, `tsc` + all 5 verticals WP smoke test passed (Feb 21)
-3. **P5: Diagnose generation stall** — Find Laravel logs in Docker container, check Horizon dashboard, identify why DELIVER step hangs
-4. ~~**Block Config Validation**~~ — BlockConfigValidator + pre-file-write hook + pre-ZIP gate implemented (Feb 23)
+### Quality (Active — Next Priority)
+1. **P5: Diagnose generation stall** — DELIVER step hangs at "Building Your Assets". Check Coolify log tab (not container path), check Horizon dashboard for failed/pending jobs, check Supabase storage for upload errors.
 
-### Features
-4. Generate 52 theme combinations for Magazine Gallery
-5. Build Magazine Gallery UI (visual theme browser)
-6. Dark Mode toggle for generated themes
-7. Extra Large header font size option
+### Features (Backlog)
+2. Generate 52 theme combinations for Magazine Gallery
+3. Build Magazine Gallery UI (visual theme browser)
+4. Dark Mode toggle for generated themes
+5. Extra Large header font size option
 
 ---
 

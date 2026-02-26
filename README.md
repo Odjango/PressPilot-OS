@@ -152,9 +152,11 @@ When WordPress is unavailable, the hero preview feature gracefully falls back—
 ## 📚 Documentation
 
 ### For AI Agents
-- **[BRAIN/README.md](BRAIN/README.md)** - Start here. Navigation map for the AI knowledge base.
-- **[CLAUDE.md](CLAUDE.md)** - Agent operational contract and rules.
-- **[docs/AGENT_CONTEXT_MASTER.md](docs/AGENT_CONTEXT_MASTER.md)** - Session context and must-read files.
+- **[CLAUDE.md](CLAUDE.md)** - Agent operational contract and rules. Start here.
+- **[docs/AGENT_CONTEXT_MASTER.md](docs/AGENT_CONTEXT_MASTER.md)** - Session context, current mission, and must-read files.
+- **[_memory/main.md](_memory/main.md)** - Most current project state: git commits, active issues, planned work.
+- **[BRAIN/README.md](BRAIN/README.md)** - Navigation map for the full AI knowledge base.
+- **[BRAIN/MEMORY/project_state.md](BRAIN/MEMORY/project_state.md)** - Canonical memory: architecture, learned patterns, lessons.
 
 ### For Developers
 - **[docs/PROJECT_ROADMAP.md](docs/PROJECT_ROADMAP.md)** - Current phase and development timeline.
@@ -168,7 +170,28 @@ BRAIN/
 ├── VISION/       # Business mandate & product principles (locked)
 ├── CONSTITUTION/ # Technical rules & FSE laws (stable)
 ├── MEMORY/       # Learned patterns & phase history (evolves)
+│   ├── project_state.md     # Canonical project state (CURRENT)
+│   ├── coding_standards.md  # Coding rules extracted from codebase
+│   ├── user_profile.md      # Owner profile and working style
+│   ├── phase-history.md     # Full development history
+│   └── marketing-seeds.md   # Marketing content seeds
 └── ARCHIVE/      # Deprecated docs (reference only)
+
+_memory/          # OneContext plugin memory (mirrors BRAIN/MEMORY key state)
+├── main.md       # Master roadmap & repo state
+├── commit.md     # Commit log
+└── log.md        # Work log
+
+Project Extras/   # Archived clutter (NOT active codebase)
+├── debug-logs/        # Error logs, manual fix files, playwright reports
+├── test-zips/         # Old test theme ZIPs
+├── old-scripts/       # Debug and cleanup scripts
+├── old-workflows/     # Old n8n/workflow JSONs
+├── old-docs/          # Superseded documentation
+├── test-output-runs/  # Historical generator output (341 test runs)
+├── legacy-folders/    # Old project phases and experiments
+├── archived-memory/   # Retired memory systems (.agent_memory, memory/)
+└── archived-instructions/ # Retired agent instruction files
 ```
 
 ---

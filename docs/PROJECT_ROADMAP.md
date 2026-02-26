@@ -1,5 +1,7 @@
 # PressPilot OS — Development Roadmap
 
+> **Last updated: 2026-02-26** — Latest commit: `3d3848e`. Project reorganized and cleaned up. All P1–P4 resolved. P5 (generation stall) is the active priority. See `_memory/main.md` for full current state.
+
 ## Phase 1: Stabilization & Core Refactor (Current)
 **Goal:** Reach 100% reliability for generated themes. Eliminate "Attempt Recovery" errors.
 *   [x] **Refactor Generator Core:** Consolidate `PatternInjector`, `StructureValidator`, `ContentEngine` into `src/generator`.

@@ -1,6 +1,6 @@
 # PressPilot Agent Context Master
 
-**Last Updated:** 2026-02-23 | **Current Phase:** All 5 verticals production-ready; Block Config Validation system added
+**Last Updated:** 2026-02-26 | **Current Phase:** All 5 verticals production-ready; project reorganized; P5 diagnosis is next priority
 
 ## 1. WHO YOU ARE
 
@@ -51,18 +51,17 @@ Before writing a single line of code, you must:
 
 ---
 
-## 4. CURRENT MISSION: Stability + Launch Prep
+## 4. CURRENT MISSION: P5 Diagnosis + Launch Prep
 
-**Generator 2.0** is complete across all 5 verticals. The current focus is stability hardening and P5 diagnosis:
+**Generator 2.0** is complete and the project has been fully reorganized (2026-02-26). Current focus:
 
--   **All Phases Complete:** Design system tokens + recipe engine for all 5 verticals
--   **Block Config Validation (2026-02-23):** New `BlockConfigValidator` enforces required block attributes at two checkpoints — pre-file-write logging and pre-ZIP hard gate
--   **P1–P4:** All resolved and verified (Feb 21, 2026)
--   **P5:** Generation stall at DELIVER step — still undiagnosed (needs Laravel/Horizon logs)
+-   **All 5 verticals:** Production-ready. Zero "Attempt Recovery" errors. WP smoke tests passed (Feb 21).
+-   **Block Config Validation (2026-02-23):** `BlockConfigValidator` enforces required block attributes at two checkpoints.
+-   **P1–P4:** All resolved and verified (Feb 21, 2026).
+-   **P5 — Active:** Generation stall at DELIVER step ("Building Your Assets" spinner hangs indefinitely). Steps 1–4 work. Laravel logs not found at container path — check Coolify log tab instead.
+-   **Project Reorganization (2026-02-26):** Completed. All 4 competing memory systems consolidated into `BRAIN/MEMORY/`. 2,211 clutter files moved to `Project Extras/`. Two wrong-project instruction files archived. All committed and clean.
 
-**Phase 15** (Documentation & Marketing) is ongoing in parallel.
-
-Key learnings from all phases are captured in `BRAIN/MEMORY/project_state.md` and `_memory/main.md`.
+Key learnings are in `BRAIN/MEMORY/project_state.md`. OneContext mirrors key state in `_memory/main.md`.
 
 ---
 
@@ -70,11 +69,11 @@ Key learnings from all phases are captured in `BRAIN/MEMORY/project_state.md` an
 
 Refer to [`docs/PROJECT_ROADMAP.md`](PROJECT_ROADMAP.md) for the step-by-step plan.
 
-1.  **P5 Diagnosis**: Find Laravel logs in Docker container (`/app/storage/logs/` may not exist — check Coolify log tab instead), check Horizon dashboard for failed/stalled jobs
-2.  **Commit** block config validation work (5 files: 2 created, 3 modified)
-3.  **User Guides**: Complete "Getting Started" docs for end-users
+1.  **P5 Diagnosis**: Check Coolify log tab for Laravel container output (NOT `/app/storage/logs/` — that path doesn't exist). Check Horizon dashboard for failed/pending jobs. Check Supabase storage for upload errors.
+2.  **KNOWN_ISSUES.md**: Update `docs/KNOWN_ISSUES.md` to mark P1–P4 as resolved (currently stale).
+3.  **User Guides**: Complete "Getting Started" docs for end-users (installing ZIP, using Site Editor)
 4.  **Developer Docs**: Finalize API documentation for `POST /api/generate`
-5.  **Marketing Assets**: Generate screenshots of flagship themes (restaurant + ecommerce)
+5.  **Marketing Assets**: Generate screenshots of 5 flagship themes for landing page
 
 ---
 
@@ -93,5 +92,9 @@ The following files have been archived and should NOT be referenced:
 -   `FACTORY_BUILD_REPORT.md` → Use `docs/generator-architecture.md`
 -   `ROADMAP.md` (root) → Use `docs/PROJECT_ROADMAP.md`
 -   `master-prompt.md` → Use `BRAIN/README.md`
+-   `AGENTS.md` → Archived to `Project Extras/archived-instructions/` (generic template, not PressPilot-specific)
+-   `AGENT_PROTOCOL.md` → Archived to `Project Extras/archived-instructions/` (belongs to WPaify/Antigravity project)
+-   `.agent_memory/` → Archived to `Project Extras/archived-memory/` (superseded by `BRAIN/MEMORY/`)
+-   `memory/db.json` → Archived to `Project Extras/archived-memory/` (old version lock file)
 
-Archived files are in `BRAIN/ARCHIVE/` for historical reference only.
+Archived files live in `BRAIN/ARCHIVE/` or `Project Extras/` — both are for historical reference only.

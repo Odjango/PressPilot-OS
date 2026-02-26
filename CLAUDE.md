@@ -2,18 +2,23 @@
 
 > **Status:** This file is the high-level operational contract for Claude-style agents.
 > For detailed behavioral rules and conflict resolution, see [BRAIN/CONSTITUTION/agent-protocol.md](BRAIN/CONSTITUTION/agent-protocol.md), which is the source of truth for agent behavior.
+> **Last reorganized: 2026-02-26** — Project structure cleaned up. See `_memory/main.md` for current state.
 
 ## HIGH-LEVEL CONTEXT (READ FIRST)
 
 Before applying any of the rules in this file:
 
-1. Read `AGENT_CONTEXT_MASTER.md` to understand PressPilot OS’s vision, constraints, and current mission.
-2. Read `PROJECT_ROADMAP.md` to understand which phase we are in and what the next tasks are.
-3. When relevant, consult:
-   - `VISION/project-vision.md` and `VISION/product-principles.md`
-   - Skills in `SKILLS/` (e.g. PressPilot Vision Guardian, WP Theme Output Checker).
+1. Read `docs/AGENT_CONTEXT_MASTER.md` to understand PressPilot OS’s vision, constraints, and current mission.
+2. Read `docs/PROJECT_ROADMAP.md` to understand which phase we are in and what the next tasks are.
+3. Read `_memory/main.md` for the most current project state (git commits, memory system, what’s in Project Extras).
+4. When relevant, consult:
+   - `BRAIN/VISION/project-vision.md` and `BRAIN/VISION/product-principles.md`
+   - `BRAIN/MEMORY/project_state.md` for learned patterns and architecture decisions
+   - Skills in `SKILLS/` (e.g. PressPilot Vision Guardian, WP Theme Output Checker)
 
 These higher-level files override anything in this document if there is a conflict.
+
+> **Project Extras note:** A `Project Extras/` folder exists at root containing archived clutter (debug logs, old scripts, test ZIPs, legacy folders, retired memory systems). These are NOT part of the active codebase. Do not reference or modify files inside `Project Extras/` unless explicitly asked.
 
 
 ## ROLE
