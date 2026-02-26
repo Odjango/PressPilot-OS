@@ -1,0 +1,1 @@
+For any WordPress block markup generation: follow WP_FSE_SKILL workflow (Index → Batch → Generate) and include the footer checklist.

@@ -226,14 +226,36 @@ const FORBIDDEN_STRINGS = [
 ];
 ```
 
-### Hard Gates (5 validation layers)
+### Hard Gates (6 validation layers — updated 2026-02-23)
 1. Block Markup Structural Gate (stack-based parser)
 2. Attributes JSON Gate (JSON.parse validation)
 3. PressPilot Hard Rules Gate (NAV-REF BAN, PRESET EXISTENCE)
 4. Layout Discipline Gate (nesting depth, media constraints)
 5. Diagnostics
+6. **Block Config Completeness Gate** — `BlockConfigValidator` (NEW, 2026-02-23)
 
-See [docs/pp-hard-gates.md](../../docs/pp-hard-gates.md) for details.
+### BlockConfigValidator (Layer 6)
+**Files:**
+- `src/generator/validators/blocks/BlockAttributeSchema.ts` — per-block attribute specs
+- `src/generator/validators/BlockConfigValidator.ts` — static validator class
+
+**Two checkpoints:**
+1. `PatternInjector.validateAndWrite()` — pre-file-write, logs CRITICAL/ERROR/WARN to stderr
+2. `bin/generate.ts` Step 2C — pre-ZIP gate, scans ALL HTML files, blocks ZIP on critical issues
+
+**Blocks with required attributes:**
+| Block | Required |
+|-------|---------|
+| `core/cover` | `dimRatio` |
+| `core/template-part` | `slug` |
+| `core/social-link` | `service`, `url` |
+| `core/query` | `queryId`, `query` |
+| `core/heading` | `level` |
+| `core/embed` | `url` |
+
+**Content Manifest:** After ZIP creation, `bin/generate.ts` writes `{slug}-manifest.json` alongside the ZIP with a complete `slots` map (slot name → resolved value), enabling future re-spin without full re-generation.
+
+See [docs/pp-hard-gates.md](../../docs/pp-hard-gates.md) for details on layers 1-5.
 
 ---
 

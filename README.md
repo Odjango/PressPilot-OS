@@ -25,6 +25,56 @@ Data-driven theme generation with centralized design system:
 - **Vertical Support:** Restaurant and Ecommerce verticals with industry-specific section patterns.
 - **WCAG AA Compliance:** Safe token pairs for hero overlays, promo bands, and CTAs.
 
+## FSE Knowledge Base
+
+PressPilot uses a comprehensive WordPress Full Site Editing (FSE) Knowledge Base to generate WordPress-compliant themes.
+
+### What is the FSE Knowledge Base?
+
+The FSE KB contains exact specifications for all WordPress 6.7+ core blocks, including:
+- Block attributes and defaults
+- Parent-child constraints
+- CSS class patterns
+- HTML structure
+- Validation rules
+
+### Why We Use It
+
+**Before FSE KB:**
+- Hardcoded block strings
+- Missing default attributes
+- Validation errors in WordPress
+- Manual updates for each block
+
+**After FSE KB:**
+- Automatic attribute defaults
+- Zero validation errors
+- WordPress 6.7+ compliance
+- Single source of truth
+
+### Knowledge Base Location
+
+All FSE documentation is in `docs/fse-kb/`:
+- `FSE-FUNDAMENTALS.md` - FSE architecture overview
+- `BLOCK-MARKUP-SPEC.md` - Universal markup rules
+- `BLOCK-REFERENCE-BATCH-*.md` - Block specifications (Batches 1-7)
+- `FSE-KNOWLEDGE-BASE-INDEX.md` - Quick lookup reference
+
+### How It Works
+
+```typescript
+// Old way (hardcoded)
+const logo = `<!-- wp:site-logo {"width":120} /-->`;
+
+// New way (FSE KB)
+import { getBlockGenerator } from './lib/fse-kb';
+const gen = getBlockGenerator();
+const logo = gen.generate('site-logo', { width: 120 });
+// Generates: <!-- wp:core/site-logo {"width":120,"isLink":true} /-->
+```
+
+The FSE KB automatically adds required defaults like `isLink:true`.
+
 ## 🛠 Tech Stack
 
 - **Frontend:** Next.js 16 (App Router), TailwindCSS, Framer Motion.
@@ -43,6 +93,24 @@ npm run dev
 
 # Build for production
 npm run build
+```
+
+### FSE Knowledge Base Verification
+
+The FSE Knowledge Base is pre-configured and initializes automatically.
+
+```bash
+npm run test:fse-kb
+# or
+npx tsx src/test-fse.ts
+```
+
+**Expected output:**
+```
+Initializing FSE Knowledge Base...
+Loaded 9 block specifications
+FSE Knowledge Base ready
+Available blocks: template-part, group, site-logo, navigation, heading, paragraph, cover, buttons, button
 ```
 
 ### Local WordPress for Hero Previews

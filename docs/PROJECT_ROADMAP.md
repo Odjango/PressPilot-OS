@@ -139,6 +139,7 @@
 ## Ongoing: "Hard Gates" Maintenance
 *   **Validator:** Continuously update `WP Theme Output Checker` skill.
 *   **Forensics:** Log any new FSE errors to `attempt-recovery-forensics.md`.
+*   [x] **Block Config Completeness (2026-02-23):** `BlockConfigValidator` checks required attributes per block before ZIP creation (see below).
 
 
 
@@ -207,6 +208,18 @@ All verticals support 4 brand modes:
 - [ ] Multi-language support (RTL for Arabic)
 - [ ] CI security gate integration
 - [ ] Performance optimization for 1000+ users
+
+---
+
+## Patch Note: 2026-02-23
+
+- [x] **Block Config Validation system:**
+  - New `BlockAttributeSchema.ts` — maps required/recommended attributes + valid values per block type
+  - New `BlockConfigValidator.ts` — static validator class, two severity levels (CRITICAL blocks ZIP, WARNING logs only)
+  - `PatternInjector.validateAndWrite()` — pre-file-write checkpoint logs issues before every HTML write
+  - `bin/generate.ts` Step 2C — pre-ZIP gate scans ALL HTML files; ZIP blocked + exit(1) on CRITICAL issues
+  - `{slug}-manifest.json` written alongside every ZIP documenting slot→value mapping
+  - Critical blocks covered: `core/cover` (dimRatio), `core/template-part` (slug), `core/social-link` (service + url), `core/query` (queryId + query), `core/heading` (level), `core/embed` (url)
 
 ---
 

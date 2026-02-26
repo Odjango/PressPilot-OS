@@ -76,7 +76,7 @@ List exactly what is currently implemented. Identify the specific way Tailwind a
 ### Critical Environment Variables
 
 **Frontend:**
-- `BACKEND_URL` - Laravel internal IP (currently http://10.0.1.3:8080, was http://10.0.1.10:8080 before resize/redeploy) - **verify after redeploys**
+- `BACKEND_URL` - `http://laravel-app:8080` (Docker Compose service name, stable across redeploys — verified Feb 21)
 - `WP_PREVIEW_URL` - https://factory.presspilotapp.com
 - `WP_PREVIEW_USER` - WordPress admin username
 - `WP_PREVIEW_PASS` - WordPress admin password
@@ -87,12 +87,12 @@ List exactly what is currently implemented. Identify the specific way Tailwind a
 - `DATABASE_URL` - Supabase PostgreSQL connection string
 - `SUPABASE_SERVICE_ROLE_KEY` - For storage uploads
 
-### Docker Network Notes
-- All services communicate via Coolify's internal Docker network
-- Laravel IP may change after container recreation
-- Verify backend IP with:
-  `docker inspect $(docker ps --format "{{.Names}}" | grep laravel-app) --format '{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}'`
-- Update `BACKEND_URL` in frontend whenever this IP changes
+### Docker Network / DNS Notes (Resolved Feb 21, 2026)
+- All services communicate via Coolify's internal Docker network (`coolify` external network)
+- **Coolify v4 ignores `container_name`** from docker-compose — use service names instead
+- **Docker Compose service names resolve cross-app** via shared `coolify` network (confirmed Feb 21)
+- `BACKEND_URL=http://laravel-app:8080` — deployed and verified, stable across redeploys
+- `curl`/`wget` not available in frontend container — use `node -e` for DNS tests
 
 ### Deployment Fixes Applied
 - Frontend Dockerfile optimized:
@@ -119,33 +119,44 @@ free -h && df -h /
 docker exec wordpress-moosc0gwkg48kss04c8cgkc4 wp user update admin --user_pass=NewPassword --allow-root
 ```
 
-**Check Laravel health:**
+**Check Laravel health (from frontend container):**
 ```bash
-curl http://<laravel-ip>:8080/api/internal/health
+node -e "require('http').get('http://laravel-app:8080/up', r => { console.log(r.statusCode === 200 ? 'OK' : 'FAIL'); r.resume(); }).on('error', () => console.log('FAIL'))"
 ```
 
 ---
 
-## Known Issues (Priority Order)
+## Known Issues (Updated Feb 21, 2026)
 
-### P1: Hero preview captures wrong section
-- **Status**: Preview images display in UI now (display issue fixed), but screenshot target is incorrect.
-- **Symptom**: Captures "Our Story" or another section instead of the hero block.
-- **Cause**: Playwright selector matching wrong element in hero capture logic.
-- **Location**: `src/preview/HeroPreviewRunner.ts`
-- **Fix needed**: Narrow selector strategy to generated hero only.
+### P1: Hero preview captures wrong section — VERIFIED RESOLVED
+- **Fix**: Commit `6b35765` added `.pp-hero-preview` marker class to all 4 hero variants
+- **Verification**: `test-hero-previews.ts --industry=restaurant` confirmed all 4 layouts (fullBleed, fullWidth, split, minimal) capture correctly using `.pp-hero-preview` selector
 
-### P2: Site Editor "Attempt Recovery" errors
-- **Symptom**: Site Editor prompts recovery on generated testimonial sections.
-- **Cause**: Invalid testimonial block markup.
-- **Location**: Testimonial block pattern generation
-- **Fix needed**: Correct markup and validate with WordPress parser rules.
+### P2: Site Editor "Attempt Recovery" errors — FULLY RESOLVED AND VERIFIED
+- **Root cause**: Block markup issues (wrong inline styles, missing layout classes, duplicate dimensions). NOT placeholder leakage.
+- **Fix**: 6 commits (Feb 19–21) on `social-proof.ts` + Codex fixed 4 industry-specific testimonial files
+- **Verification**: All 5 verticals passed WP smoke test — zero "Attempt Recovery" errors
 
-### P3: Apostrophe encoding bug
-- **Symptom**: Apostrophes appear as `&#39;` (example: `Memo&#39;s Pizza`).
-- **Cause**: Over-encoding in content transformation/pattern injection.
-- **Location**: Content encoding and render pipeline
-- **Fix needed**: Preserve apostrophes as display text in generated output.
+### P3: Apostrophe encoding bug — FULLY RESOLVED
+- **Fix**: Commit `300992c` removed apostrophe HTML-entity encoding from `sanitize.ts`
+- **Root cause**: Double encoding through sanitize + PHP escaping stages
+
+### P4: Header inside fullBleed Cover block — FULLY RESOLVED AND VERIFIED
+- **Root cause**: `PatternInjector.ts:444` excluded header template part for fullBleed; `getFullBleedHero()` embedded inline transparent header inside Cover inner container
+- **Architecture decision**: Header is ALWAYS a separate template part (Option A), never inside Cover
+- **Spec**: `output/HEADER_SEPARATION_SPEC.md`
+- **Codex changes**: Removed `getInlineTransparentHeader()` from `universal-header.ts`, simplified `getFullBleedHero()` in `hero-variants.ts`, removed fullBleed conditional in `PatternInjector.ts`
+- **Verification**: `npx tsc --noEmit` passed, all 5 verticals passed WP smoke test (`theme-activation.spec.ts`)
+
+### P5: Generation stall at "Building Your Assets" — UNDIAGNOSED
+- Steps 1-4 complete, Step 5 (DELIVER) stalls indefinitely
+- Laravel log not found at `/app/storage/logs/laravel.log` in container
+- Need: locate log path, check Horizon dashboard, check Supabase upload
+
+### IMPORTANT: `{{Slot}}` System Is Intentional
+- `{{...}}` tokens in section files are an intentional slot system resolved by ContentBuilder + PatternInjector before output
+- DO NOT convert them to inline `getText()` calls unless there is a specific block-markup reason
+- 5-layer resolution pipeline ensures no `{{...}}` ever reaches theme output
 
 ---
 
@@ -161,9 +172,17 @@ curl http://<laravel-ip>:8080/api/internal/health
 - Unsplash image integration
 - Brand color application (partial)
 - Logo injection
+- P1/P2/P3 quality issues — all resolved and verified (Feb 21)
+- WP smoke test coverage: all 5 verticals (theme-activation.spec.ts)
 
-### In Progress 🔄
-- Fix P1-P3 quality issues
+### Completed ✅ (Feb 21)
+- Stabilize Laravel BACKEND_URL — Docker DNS deployed (`http://laravel-app:8080`)
+
+### Completed ✅ (Feb 21, post-DNS)
+- P4: Header separation fix — Codex implemented, verified (all 5 verticals pass)
+
+### Active 🔧
+- P5: Diagnose generation stall (find Laravel logs, check Horizon)
 
 ### Planned 📋
 - Generate 52 theme combinations for Magazine Gallery

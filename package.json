@@ -27,6 +27,7 @@
     "showcase:generate": "npx tsx showcase/scripts/generate-all.ts",
     "showcase:screenshots": "npx tsx showcase/scripts/capture-screenshots.ts",
     "showcase:all": "npm run showcase:generate && npm run showcase:screenshots",
+    "test:fse-kb": "tsx src/test-fse.ts",
     "prepare": "husky"
   },
   "bin": {

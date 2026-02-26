@@ -6,6 +6,37 @@
 
 ## [Unreleased]
 
+### Added
+- **FSE Knowledge Base Integration** - Complete WordPress 6.7+ block specification system
+  - 9 markdown documentation files covering 39+ WordPress core blocks
+  - TypeScript block generator with automatic attribute defaults
+  - Zero validation errors in WordPress Site Editor
+  - Single source of truth for all block specifications
+
+### Changed
+- **Theme Generator** - Now uses FSE Knowledge Base instead of hardcoded strings
+  - `src/generator/patterns/universal-header.ts` - Refactored to use `getBlockGenerator()`
+  - Automatic application of block defaults (e.g., `isLink:true` for site-logo)
+  - Guaranteed WordPress FSE compliance
+
+### Technical Details
+- **New files:**
+  - `src/lib/fse-kb/parser.ts` - Block specification database
+  - `src/lib/fse-kb/index.ts` - Singleton generator instance
+  - `docs/fse-kb/*.md` - Complete FSE documentation (9 files)
+- **Updated files:**
+  - `src/generator/patterns/universal-header.ts` - FSE KB integration
+- **Benefits:**
+  - Zero "Attempt Recovery" errors in WordPress
+  - Automatic WordPress updates (defaults from KB)
+  - Better code maintainability
+  - Production-ready theme output
+
+### Developer Impact
+- **Breaking Change:** None - output format unchanged
+- **New API:** `initFSEKnowledgeBase()` and `getBlockGenerator()` available
+- **Documentation:** See `docs/fse-kb/FSE-KNOWLEDGE-BASE-INDEX.md`
+
 ### Fixed
 - Full-bleed hero now uses the correct FSE architecture: header is rendered inline inside the Cover block (not as a separate template part above it).
   - Root cause: home templates always injected `header` template-part above `<main>`, so "fullBleed" behaved like full-width hero with a separate top bar.

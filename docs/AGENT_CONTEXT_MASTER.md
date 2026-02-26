@@ -1,6 +1,6 @@
 # PressPilot Agent Context Master
 
-**Last Updated:** 2026-02-06 | **Current Phase:** Generator 2.0 Phase 4 Complete (Ecommerce Vertical)
+**Last Updated:** 2026-02-23 | **Current Phase:** All 5 verticals production-ready; Block Config Validation system added
 
 ## 1. WHO YOU ARE
 
@@ -51,17 +51,18 @@ Before writing a single line of code, you must:
 
 ---
 
-## 4. CURRENT MISSION: Generator 2.0 Expansion + Launch Prep
+## 4. CURRENT MISSION: Stability + Launch Prep
 
-**Generator 2.0** is the current engineering focus — data-driven theme generation with a centralized design system:
+**Generator 2.0** is complete across all 5 verticals. The current focus is stability hardening and P5 diagnosis:
 
--   **Phase 1-2 (Complete):** Design system tokens + recipe engine for restaurants
--   **Phase 4 (Complete):** Ecommerce vertical with full token → recipe → section flow
--   **Phase 5 (Next):** SaaS/Service verticals
+-   **All Phases Complete:** Design system tokens + recipe engine for all 5 verticals
+-   **Block Config Validation (2026-02-23):** New `BlockConfigValidator` enforces required block attributes at two checkpoints — pre-file-write logging and pre-ZIP hard gate
+-   **P1–P4:** All resolved and verified (Feb 21, 2026)
+-   **P5:** Generation stall at DELIVER step — still undiagnosed (needs Laravel/Horizon logs)
 
 **Phase 15** (Documentation & Marketing) is ongoing in parallel.
 
-Key learnings from all phases are captured in `BRAIN/MEMORY/project_state.md`.
+Key learnings from all phases are captured in `BRAIN/MEMORY/project_state.md` and `_memory/main.md`.
 
 ---
 
@@ -69,11 +70,11 @@ Key learnings from all phases are captured in `BRAIN/MEMORY/project_state.md`.
 
 Refer to [`docs/PROJECT_ROADMAP.md`](PROJECT_ROADMAP.md) for the step-by-step plan.
 
-1.  **Gen 2.0 Phase 5**: Add SaaS/Service vertical (design tokens, recipes, section patterns)
-2.  **User Guides**: Complete "Getting Started" docs for end-users
-3.  **Developer Docs**: Finalize API documentation for `POST /api/generate`
-4.  **Marketing Assets**: Generate screenshots of flagship themes (restaurant + ecommerce)
-5.  **Landing Page**: Update with "Generated in 90s" value prop
+1.  **P5 Diagnosis**: Find Laravel logs in Docker container (`/app/storage/logs/` may not exist — check Coolify log tab instead), check Horizon dashboard for failed/stalled jobs
+2.  **Commit** block config validation work (5 files: 2 created, 3 modified)
+3.  **User Guides**: Complete "Getting Started" docs for end-users
+4.  **Developer Docs**: Finalize API documentation for `POST /api/generate`
+5.  **Marketing Assets**: Generate screenshots of flagship themes (restaurant + ecommerce)
 
 ---
 

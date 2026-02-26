@@ -271,6 +271,9 @@ Before delivering any theme file:
 - [ ] parts/header.html and parts/footer.html exist
 - [ ] No `{{placeholder}}` syntax anywhere
 - [ ] No PHP template tags in HTML files
+- [ ] Required block attributes present: `dimRatio` on Cover, `slug` on Template Part, `service`+`url` on Social Link, `level` on Heading, `queryId`+`query` on Query Loop, `url` on Embed
+
+> Note: The generator automatically enforces the above via `BlockConfigValidator` at two checkpoints (pre-file-write + pre-ZIP gate). This checklist is for manual review when writing theme files by hand.
 
 ---
 
