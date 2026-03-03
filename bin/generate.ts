@@ -22,6 +22,7 @@ import { StructureValidator } from '../src/generator/validators/StructureValidat
 import { BlockValidator } from '../src/generator/validators/BlockValidator';
 import { TokenValidator } from '../src/generator/validators/TokenValidator';
 import { BlockConfigValidator } from '../src/generator/validators/BlockConfigValidator';
+import { PlaygroundValidator } from '../src/generator/validators/PlaygroundValidator';
 import { buildStaticSite } from '../lib/presspilot/staticSite';
 import { buildSaaSInputFromStudioInput } from '../lib/presspilot/studioAdapter';
 import { applyBusinessInputs } from '../lib/presspilot/context';
@@ -199,6 +200,24 @@ async function main(): Promise<void> {
             criticalConfigIssues.map(i => `  • ${i}`).join('\n')
         );
     }
+
+    // D. WordPress Playground validation (runtime checks)
+    if (process.env.SKIP_PLAYGROUND_VALIDATION !== 'true') {
+        console.error('[STEP 2D] Running WordPress Playground validation...');
+        const pgResult = await PlaygroundValidator.validate({ themeDir: result.themeDir, timeout: 30000 });
+
+        if (!pgResult.valid) {
+            console.error('[STEP 2D] ❌ Playground validation FAILED:');
+            pgResult.errors.forEach(e => console.error(`  - ${e.type}: ${e.message}`));
+            process.exit(1);
+        }
+
+        pgResult.warnings.forEach(w =>
+            console.error(`[STEP 2D] ⚠️ ${w.type}: ${w.message}`)
+        );
+        console.error(`[STEP 2D] ✅ Passed (${pgResult.duration}ms)`);
+    }
+
 
     console.error('[cli] Validation passed.');
 
