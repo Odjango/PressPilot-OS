@@ -6,9 +6,8 @@ Last updated: 2026-03-03
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `a15c076` (2026-03-03) — `fix(hero): fullBleed nav overlay + fullWidth hero image`
-- Working tree: clean (tracked files); untracked agent prompt files and KB docs exist
-- Hero preview mirror (`heroPreviewInjector.ts`) synced to match updated hero-variants.ts (uncommitted)
+- Latest commit: `bf827ab` (2026-03-03) — `sync(preview): heroPreviewInjector mirrors hero-variants.ts + docs updated`
+- Working tree: clean
 
 ### 2026-03-03 Session — Commit chain:
 | Commit | Description |
@@ -265,15 +264,23 @@ Resolution pipeline (5 layers, in order):
 - ~~**Hero layout rework**~~ — fullBleed transparent nav overlay, fullWidth cover with image (`a15c076`)
 - ~~**Hero preview mirror sync**~~ — `heroPreviewInjector.ts` updated to match hero-variants.ts (uncommitted)
 
-### Quality (Active — Next Priority)
-1. **P5: Diagnose generation stall** — DELIVER step hangs at "Building Your Assets". Check Coolify log tab (not container path), check Horizon dashboard for failed/pending jobs, check Supabase storage for upload errors. Requires server access.
-2. **Test fresh fullBleed generation** — end-to-end test via `bin/generate.ts` to verify hero nav overlay renders correctly in WP
+### Active — Next Priority: SSWG Rewrite
+**Decision (2026-03-03):** P5 generation stall fix is DEPRIORITIZED. The entire generation pipeline will be replaced by SSWG (Solid Smart WordPress Generator). Investing time debugging the current broken pipeline is wasted effort since SSWG replaces it.
 
-### Features (Backlog)
-3. Generate 52 theme combinations for Magazine Gallery
-4. Build Magazine Gallery UI (visual theme browser)
-5. Dark Mode toggle for generated themes
-6. Extra Large header font size option
+- **SSWG Phase 0:** ✅ COMPLETE — foundation, proven-cores audit, protocol established
+- **SSWG Phase 1:** ⬅️ NEXT — Pattern Tokenization Engine (see `AGENT-PROMPT-SSWG-PHASE1-LEAN.md`)
+- **SSWG Phase 2–4:** Queued (assembly engine → frontend → WPaify integration)
+- Reference docs: `agent-os/sswg/` (all phase specs + SSWG-IMPLEMENTATION-PROTOCOL.md + PROVEN-CORES-VAULT-AUDIT.md)
+
+### Deprioritized (Superseded by SSWG)
+- ~~**P5: Diagnose generation stall**~~ — DELIVER step hangs at "Building Your Assets". Skipped — SSWG replaces this pipeline entirely.
+- ~~**Test fresh fullBleed generation**~~ — Deferred until SSWG pipeline is active.
+
+### Features (Backlog — Post-SSWG)
+1. Generate 52 theme combinations for Magazine Gallery
+2. Build Magazine Gallery UI (visual theme browser)
+3. Dark Mode toggle for generated themes
+4. Extra Large header font size option
 
 ---
 
