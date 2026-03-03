@@ -31,27 +31,64 @@ import { PageContent, HeroLayout } from '../types';
  * Full-Bleed Hero
  * Immersive full-screen background image with 75% dark overlay.
  * Uses accent-3 for branded overlay color.
+ * Navigation is EMBEDDED inside the cover block for transparent overlay effect.
  *
  * Key visual characteristics:
- * - 80vh minimum height for immersive feel
+ * - 100vh minimum height for immersive feel
+ * - Transparent nav bar overlaid on the hero image (light text on dark overlay)
  * - LEFT-aligned text (not centered)
  * - Large heading: clamp(3rem, 6vw, 5rem)
  * - Generous padding: spacing|70
  */
 export function getFullBleedHero(
-    content?: PageContent
+    content?: PageContent,
+    businessName?: string,
+    pages?: { title: string, slug: string }[],
+    hasLogo?: boolean
 ): string {
     const title = content?.hero_title || 'Welcome';
     const sub = content?.hero_sub || 'We enable businesses to grow.';
     const heroImage = content?.hero_image || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
+    const siteName = businessName || 'PressPilot Site';
 
-    return `<!-- wp:cover {"url":"${heroImage}","dimRatio":75,"overlayColor":"accent-3","minHeight":100,"minHeightUnit":"vh","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
-<div class="wp-block-cover alignfull" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:100vh">
+    // Build navigation links for the embedded transparent nav
+    const navPages = pages && pages.length > 0 ? pages : [
+        { title: 'Home', slug: '' },
+        { title: 'About', slug: 'about' },
+        { title: 'Services', slug: 'services' },
+        { title: 'Contact', slug: 'contact' }
+    ];
+    const navLinks = navPages.map(page => {
+        const url = page.slug === 'home' || page.slug === '' ? '/' : `/${page.slug}`;
+        return `<!-- wp:navigation-link {"label":"${page.title}","url":"${url}","kind":"custom","isTopLevelLink":true} /-->`;
+    }).join('\n                    ');
+
+    // Logo block (site-logo or site-title)
+    const logoBlock = hasLogo
+        ? `<!-- wp:site-logo {"width":60} /-->`
+        : '';
+    const siteTitleBlock = `<!-- wp:site-title {"level":0,"style":{"typography":{"fontStyle":"normal","fontWeight":"700","fontSize":"1.5rem"}},"textColor":"base"} /-->`;
+
+    return `<!-- wp:cover {"url":"${heroImage}","dimRatio":75,"overlayColor":"accent-3","minHeight":100,"minHeightUnit":"vh","align":"full","style":{"spacing":{"padding":{"top":"0","bottom":"var:preset|spacing|70","left":"0","right":"0"}}},"layout":{"type":"default"}} -->
+<div class="wp-block-cover alignfull" style="padding-top:0;padding-bottom:var(--wp--preset--spacing--70);padding-left:0;padding-right:0;min-height:100vh">
     <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-80 has-background-dim"></span>
     <img class="wp-block-cover__image-background" alt="" src="${heroImage}" data-object-fit="cover"/>
     <div class="wp-block-cover__inner-container">
-        <!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|60"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
-        <div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--60)">
+        <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"flex","justifyContent":"space-between","flexWrap":"nowrap"}} -->
+        <div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50)">
+            <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap"},"style":{"spacing":{"blockGap":"var:preset|spacing|20"}}} -->
+            <div class="wp-block-group">
+                ${logoBlock}
+                ${siteTitleBlock}
+            </div>
+            <!-- /wp:group -->
+            <!-- wp:navigation {"textColor":"base","layout":{"type":"flex","justifyContent":"right","orientation":"horizontal"},"style":{"typography":{"fontWeight":"600","fontSize":"1rem"},"spacing":{"blockGap":"var:preset|spacing|30"}}} -->
+                    ${navLinks}
+            <!-- /wp:navigation -->
+        </div>
+        <!-- /wp:group -->
+        <!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|60","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
+        <div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50)">
             <!-- wp:heading {"textAlign":"left","level":1,"style":{"typography":{"fontSize":"clamp(3rem, 6vw, 5rem)","lineHeight":"1.1"}},"textColor":"base"} -->
             <h1 class="wp-block-heading has-text-align-left has-base-color has-text-color" style="font-size:clamp(3rem, 6vw, 5rem);line-height:1.1">${title}</h1>
             <!-- /wp:heading -->
@@ -77,40 +114,46 @@ export function getFullBleedHero(
 
 /**
  * Full-Width Band Hero
- * Compact solid color band without background image.
- * Uses accent-3 for branded background.
+ * Image hero band with branded overlay, positioned below the standard header.
+ * Uses accent-3 for branded overlay on background image.
  *
  * Key visual characteristics:
- * - Compact height: spacing|40 padding
- * - Centered text
+ * - 60vh height (shorter than fullBleed, not full-screen)
+ * - Background image with 70% overlay (lighter than fullBleed)
+ * - CENTERED text (vs fullBleed's left-aligned)
  * - Smaller heading: clamp(2rem, 4vw, 3rem)
  * - Narrower content: 800px
- * - Inverted primary button (white bg, dark text)
+ * - Standard header is shown separately above this hero
  */
 export function getFullWidthHero(content?: PageContent): string {
     const title = content?.hero_title || 'Welcome';
     const sub = content?.hero_sub || 'We enable businesses to grow.';
+    const heroImage = content?.hero_image || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
 
-    return `<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40"}}},"backgroundColor":"accent-3","layout":{"type":"constrained","contentSize":"800px"}} -->
-<div class="wp-block-group alignfull has-accent-3-background-color has-background" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40)">
-    <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2rem, 4vw, 3rem)"}},"textColor":"base"} -->
-    <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2rem, 4vw, 3rem)">${title}</h1>
-    <!-- /wp:heading -->
-    <!-- wp:paragraph {"align":"center","fontSize":"medium","textColor":"base"} -->
-    <p class="has-text-align-center has-base-color has-text-color has-medium-font-size">${sub}</p>
-    <!-- /wp:paragraph -->
-    <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
-    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--20)">
-        <!-- wp:button {"backgroundColor":"base","textColor":"accent-3"} -->
-        <div class="wp-block-button"><a class="wp-block-button__link has-accent-3-color has-base-background-color has-text-color has-background wp-element-button">Get Started</a></div>
-        <!-- /wp:button -->
-        <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"base","textColor":"base","className":"is-style-outline"} -->
-        <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px">Learn More</a></div>
-        <!-- /wp:button -->
+    return `<!-- wp:cover {"url":"${heroImage}","dimRatio":70,"overlayColor":"accent-3","minHeight":60,"minHeightUnit":"vh","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"800px"}} -->
+<div class="wp-block-cover alignfull" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:60vh">
+    <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-70 has-background-dim"></span>
+    <img class="wp-block-cover__image-background" alt="" src="${heroImage}" data-object-fit="cover"/>
+    <div class="wp-block-cover__inner-container">
+        <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2rem, 4vw, 3rem)"}},"textColor":"base"} -->
+        <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2rem, 4vw, 3rem)">${title}</h1>
+        <!-- /wp:heading -->
+        <!-- wp:paragraph {"align":"center","fontSize":"medium","textColor":"base"} -->
+        <p class="has-text-align-center has-base-color has-text-color has-medium-font-size">${sub}</p>
+        <!-- /wp:paragraph -->
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+        <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--20)">
+            <!-- wp:button {"backgroundColor":"base","textColor":"accent-3"} -->
+            <div class="wp-block-button"><a class="wp-block-button__link has-accent-3-color has-base-background-color has-text-color has-background wp-element-button">Get Started</a></div>
+            <!-- /wp:button -->
+            <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"base","textColor":"base","className":"is-style-outline"} -->
+            <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px">Learn More</a></div>
+            <!-- /wp:button -->
+        </div>
+        <!-- /wp:buttons -->
     </div>
-    <!-- /wp:buttons -->
 </div>
-<!-- /wp:group -->`;
+<!-- /wp:cover -->`;
 }
 
 /**
@@ -216,7 +259,7 @@ export function getHeroByLayout(
 
     switch (normalizedLayout) {
         case 'fullBleed':
-            return getFullBleedHero(content);
+            return getFullBleedHero(content, businessName, pages, hasLogo);
         case 'fullWidth':
             return getFullWidthHero(content);
         case 'split':
@@ -225,7 +268,7 @@ export function getHeroByLayout(
             return getMinimalHero(content);
         default:
             // Default to fullBleed
-            return getFullBleedHero(content);
+            return getFullBleedHero(content, businessName, pages, hasLogo);
     }
 }
 
