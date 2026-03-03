@@ -1,70 +1,61 @@
 # Known Issues & Future Work
 
-## Current Issues (as of Feb 19, 2026)
+## Current Issues (as of Mar 3, 2026)
+
+### P5 - Generation Stall at "Building Your Assets"
+- **Status**: OPEN / UNDIAGNOSED
+- **Symptom**: UI stalls indefinitely at Step 5 (DELIVER) with "Building Your Assets" spinner
+- **Cause**: Unknown — requires Laravel/Horizon logs
+- **Next Steps**:
+  - Locate Laravel logs in Coolify (not `/app/storage/logs/`)
+  - Check Horizon dashboard for failed/pending jobs
+  - Verify Supabase upload stage
+
+## Resolved Issues
 
 ### P1 - Hero Previews Capture Wrong Section
-- **Status**: Preview images now render in UI (via `/api/previews/`), but content is wrong.
-- **Symptom**: Screenshot shows "Our Story" / non-hero section instead of the selected hero layout.
-- **Cause**: Hero selector logic in Playwright matches the wrong block.
-- **Location**: `src/preview/HeroPreviewRunner.ts` (`captureHeroSection` selector order/criteria)
-- **Fix needed**: Tighten selector strategy to target generated hero block only.
-
-### P2 - Site Editor "Attempt Recovery" Errors
-- **Status**: Fixed with follow-up hardening (Feb 21, 2026).
+- **Status**: RESOLVED (Feb 21, 2026)
+- **Fix Commit**: `6b35765`
 - **Resolution**:
-  - Removed conflicting restaurant registration of `general-testimonials-columns.php`.
-  - Added explicit restaurant/cafe cleanup of `patterns/general-testimonials-columns.php` in `PatternInjector`.
-  - Restaurant/cafe testimonials now come from inline recipe-rendered social proof markup (`social-proof.ts`).
-  - Removed duplicate testimonial avatar dimensions in `social-proof.ts` (`style width/height` + HTML `width/height`) to align with canonical `core/image` serialization.
-  - Removed inline `<img style="border-radius:...">` from testimonial avatars and kept avatar radius in wp:image JSON comment attributes only.
+  - Added `.pp-hero-preview` marker class to all hero variants
+  - Hero preview runner now prioritizes `.pp-hero-preview` selector
 
-### P4 - Hero Layout Ignored in Checkout Bypass Flow
-- **Status**: Fixed (Feb 21, 2026).
-- **Symptom**: User-selected hero style in bypass checkout could generate the default hero instead of selected layout.
-- **Cause**: `app/api/generate/route.ts` persisted `selected_style` but never mapped it to `studioInput.heroLayout`.
+### P2 - Site Editor "Attempt Recovery" Errors (Testimonials)
+- **Status**: RESOLVED (Feb 21, 2026)
+- **Fix Commit**: `ce24dd4`
 - **Resolution**:
-  - Added `normalizeHeroLayout()` in `app/api/generate/route.ts`.
-  - Mapped bypass `selectedStyle` into canonical hero enum (`fullBleed`, `fullWidth`, `split`, `minimal`).
-  - Injected normalized value into `studioInput.heroLayout` before payload build.
+  - Removed conflicting restaurant testimonial pattern
+  - Cleaned testimonial markup (layout classes, width/height)
+  - All 5 verticals passed WP smoke tests
 
-### P1b - Full-Bleed Hero Not Truly Full-Bleed
-- **Status**: Fixed (Feb 21, 2026).
-- **Symptom**: Selecting `fullBleed` still rendered a separate header above hero, so hero did not start at top of viewport.
-- **Cause**: Template builders always injected `<!-- wp:template-part {"slug":"header"} /-->` above `<main>`, and fullBleed hero had no inline header variant.
+### P3 - Apostrophe Encoding (`&#39;`)
+- **Status**: RESOLVED (Feb 20, 2026)
+- **Fix Commit**: `300992c`
 - **Resolution**:
-  - Added inline transparent header generator (`getInlineTransparentHeader`) for use inside fullBleed Cover blocks.
-  - Updated fullBleed hero variant to render inline header as first element in Cover inner container.
-  - Updated home template assembly paths to omit header template-part when `heroLayout === 'fullBleed'`.
-  - Propagated `businessName/pages/hasLogo` through home and recipe render paths so inline header has required nav data.
+  - Removed apostrophe HTML-entity conversion from sanitizer
+  - Fixed double-encoding bug (`'` → `&#39;` → `&amp;#39;`)
 
-### P3 - HTML Encoding Bug (`&#39;`)
-- **Status**: Fixed (Feb 20, 2026).
+### P4 - Header Embedded Inside FullBleed Hero
+- **Status**: RESOLVED (Feb 21, 2026)
+- **Fix Commit**: `ce24dd4`
 - **Resolution**:
-  - Removed apostrophe HTML-entity conversion from sanitizer.
-  - Kept PHP single-quoted string escaping as the single source of quote safety.
-  - Eliminated double encoding (`'` -> `&#39;` -> `&amp;#39;`).
+  - Header is now always injected as a separate template part
+  - Removed inline transparent header from fullBleed hero
+  - FullBleed hero now truly starts at top of viewport
 
-## Recently Resolved (Feb 19, 2026)
-
-- ✅ Hero preview image serving path issue resolved with runtime preview API routing.
-- ✅ End-to-end theme generation stable (multi-page outputs: Home, About, Services, Contact, Menu).
-- ✅ Hero screenshot generation runs across 4 layouts with Playwright capture.
-- ✅ Site Editor testimonial recovery issue fixed by removing static-vs-inline testimonial conflicts.
-- ✅ Site Editor testimonial recovery hardened by removing duplicate image sizing attributes in testimonial cards.
-- ✅ Bypass checkout path now honors selected hero layout via explicit normalization/mapping.
-- ✅ Apostrophe rendering fixed for generated business names/content.
+---
 
 ## Troubleshooting: "Attempt Recovery" Errors in Site Editor
 
 **Symptom:** Blocks show "Block contains unexpected or invalid content" with "Attempt recovery" button.
 
 **Common causes:**
-1. Block comment JSON attributes don't match rendered HTML (for example, missing `is-layout-constrained` class).
-2. Conflicting pattern files (static `.php` pattern vs inline recipe-rendered content).
-3. Invalid nesting (styles on `wp:column` instead of nested `wp:group`).
-4. Duplicate sizing declarations on `core/image` markup (`style` width/height plus HTML width/height).
+1. Block comment JSON attributes don't match rendered HTML (missing layout classes)
+2. Conflicting pattern files (static `.php` pattern vs inline recipe-rendered content)
+3. Invalid nesting (styles on `wp:column` instead of nested `wp:group`)
+4. Duplicate sizing on `core/image` markup (`style` + HTML width/height)
 
 **Diagnostic steps:**
-1. Download generated theme ZIP.
-2. Check `patterns/` for unexpected legacy files.
-3. Compare `templates/front-page.html` block markup against WordPress block grammar expectations.
+1. Download generated theme ZIP
+2. Check `patterns/` for unexpected legacy files
+3. Compare `templates/front-page.html` block markup against WordPress block grammar

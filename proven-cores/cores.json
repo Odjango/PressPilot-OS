@@ -1,0 +1,61 @@
+{
+  "cores": [
+    {
+      "slug": "ollie",
+      "name": "Ollie",
+      "patterns": 98,
+      "primary": true,
+      "description": "Primary core theme with excellent token system and 7 color variables",
+      "source": "https://github.com/OllieWP/ollie",
+      "use_case": "General purpose - works for most verticals"
+    },
+    {
+      "slug": "frost",
+      "name": "Frost",
+      "patterns": 50,
+      "primary": false,
+      "description": "Minimalist theme with clean patterns",
+      "source": "https://developer.wordpress.org/themes/frost/",
+      "use_case": "Minimal designs, portfolios, simple business sites"
+    },
+    {
+      "slug": "tove",
+      "name": "Tove",
+      "patterns": 42,
+      "primary": false,
+      "description": "Restaurant and food-focused theme",
+      "source": "https://wordpress.org/themes/tove/",
+      "use_case": "Restaurants, cafes, food service businesses"
+    },
+    {
+      "slug": "spectra-one",
+      "name": "Spectra One",
+      "patterns": 85,
+      "primary": false,
+      "description": "Feature-rich theme with modern patterns",
+      "source": "https://wordpress.org/themes/spectra-one/",
+      "use_case": "Business sites needing rich feature sections"
+    },
+    {
+      "slug": "twentytwentyfour",
+      "name": "Twenty Twenty-Four",
+      "patterns": 56,
+      "primary": false,
+      "description": "WordPress default theme for 2024",
+      "source": "https://wordpress.org/themes/twentytwentyfour/",
+      "use_case": "General purpose, blog-focused sites"
+    },
+    {
+      "slug": "blockbase",
+      "name": "Blockbase",
+      "patterns": 0,
+      "primary": false,
+      "description": "Minimal block theme foundation",
+      "source": "https://github.com/Automattic/blockbase",
+      "use_case": "Custom theme development starting point"
+    }
+  ],
+  "total_patterns": 331,
+  "version": "1.0.0",
+  "last_updated": "2025-03-02"
+}

@@ -1,45 +1,25 @@
-/**
- * SectionRenderer - Generator 2.0 Phase 2 + Phase 3
- *
- * Maps section types to their rendering functions.
- * This is the bridge between declarative recipes and
- * imperative section pattern generators.
- *
- * Phase 3 additions:
- * - V2 renderers that use SectionContext for token-driven styling
- * - renderSectionsWithRecipe() method for recipe-aware rendering
- * - ContextBuilder integration for SectionContext creation
- *
- * IMPORTANT: This maintains exact compatibility with current output.
- * Any changes must be validated with E2E screenshot comparison.
- */
-
-import type {
+import {
     SectionDefinition,
     SectionType,
+    LayoutRecipe,
     SectionContext,
-    RenderContext,
-    LayoutRecipe
+    RenderContext
 } from './types';
 import { ContextBuilder } from './context-builder';
-
-// Import all section renderers (Phase 2 legacy)
-import { getHeroByLayout } from '../patterns/hero-variants';
 import {
     getRestaurantStorySection,
     getRestaurantMenuPreviewSection,
     getRestaurantPromoBandSection,
     getSocialProofSection,
     getFinalCTASection,
+    getRestaurantStorySectionWithContext,
     getRestaurantChefHighlightSectionWithContext,
     getRestaurantGalleryGridSectionWithContext,
+    getRestaurantMenuPreviewSectionWithContext,
     getRestaurantHoursLocationSectionWithContext,
     getRestaurantLocationMapSectionWithContext,
     getRestaurantAwardsPressSectionWithContext,
     getRestaurantReservationFormSectionWithContext,
-    // Phase 3 WithContext variants
-    getRestaurantStorySectionWithContext,
-    getRestaurantMenuPreviewSectionWithContext,
     getRestaurantPromoBandSectionWithContext,
     getSocialProofSectionWithContext,
     getFinalCTASectionWithContext,
@@ -70,7 +50,6 @@ import {
     getLocalBookingCTASectionWithContext,
     getLocalFAQSectionWithContext,
     getLocalTrustBadgesSectionWithContext,
-    // Phase 4 Ecommerce sections
     getEcommerceHeroSectionWithContext,
     getEcommerceCategoriesSectionWithContext,
     getEcommerceCategoryGridSectionWithContext,
@@ -83,6 +62,7 @@ import {
     getEcommerceInstagramSectionWithContext,
     getEcommerceBannerSaleSectionWithContext
 } from '../patterns/sections';
+import { getHeroByLayout } from '../patterns/hero-variants';
 
 // =============================================================================
 // Phase 2 Section Renderer Mapping (Legacy)
@@ -105,7 +85,7 @@ type SectionRendererFn = (
  * NOTE: Phase 2 implementations ignore section.backgroundColor as
  * the patterns hardcode their own backgrounds.
  */
-const SECTION_RENDERERS: Record<SectionType, SectionRendererFn> = {
+const SECTION_RENDERERS: Partial<Record<SectionType, SectionRendererFn>> = {
     // Restaurant sections
     'hero': (_section, ctx) => {
         return getHeroByLayout(ctx.heroLayout, ctx.content, ctx.businessName, ctx.pages, ctx.hasLogo);
@@ -114,16 +94,10 @@ const SECTION_RENDERERS: Record<SectionType, SectionRendererFn> = {
     'story': (_section, ctx) => {
         return getRestaurantStorySection(ctx.content, ctx.brandStyle);
     },
-    'chef-highlight': (_section, _ctx) => '',
-    'gallery-grid': (_section, _ctx) => '',
 
     'menu-preview': (_section, ctx) => {
         return getRestaurantMenuPreviewSection(ctx.content, ctx.brandStyle);
     },
-    'hours-location': (_section, _ctx) => '',
-    'location-map': (_section, _ctx) => '',
-    'awards-press': (_section, _ctx) => '',
-    'reservation-form': (_section, _ctx) => '',
 
     'promo-band': (_section, ctx) => {
         return getRestaurantPromoBandSection(ctx.content, ctx.brandStyle);
@@ -135,59 +109,7 @@ const SECTION_RENDERERS: Record<SectionType, SectionRendererFn> = {
 
     'final-cta': (_section, ctx) => {
         return getFinalCTASection(ctx.content, ctx.industry);
-    },
-
-    'footer': (_section, _ctx) => {
-        // Footer is handled separately by template-part injection
-        // See PatternInjector.injectGlobalParts()
-        return '';
-    },
-    // SaaS sections
-    'saas-hero': () => '',
-    'saas-features-grid': () => '',
-    'saas-pricing-table': () => '',
-    'saas-testimonials': () => '',
-    'saas-how-it-works': () => '',
-    'saas-cta-banner': () => '',
-    'saas-faq': () => '',
-    'saas-logos': () => '',
-    // Portfolio sections
-    'portfolio-hero': () => '',
-    'portfolio-about': () => '',
-    'portfolio-gallery': () => '',
-    'portfolio-project-card': () => '',
-    'portfolio-skills': () => '',
-    'portfolio-experience': () => '',
-    'portfolio-testimonials': () => '',
-    'portfolio-contact': () => '',
-    'portfolio-cta': () => '',
-    // Local service sections
-    'local-hero': () => '',
-    'local-services-grid': () => '',
-    'local-about': () => '',
-    'local-team': () => '',
-    'local-testimonials': () => '',
-    'local-location': () => '',
-    'local-hours': () => '',
-    'local-booking-cta': () => '',
-    'local-faq': () => '',
-    'local-trust-badges': () => '',
-
-    // Ecommerce sections - Phase 2 legacy stubs (use V2 renderers via renderSectionsWithRecipe)
-    'ecommerce-hero': () => '',
-    'ecommerce-categories': () => '',
-    'category-grid': () => '',
-    'ecommerce-featured-products': () => '',
-    'featured-products': () => '',
-    'ecommerce-product-grid': () => '',
-    'ecommerce-about-brand': () => '',
-    'ecommerce-testimonials': () => '',
-    'ecommerce-instagram': () => '',
-    'ecommerce-banner-sale': () => '',
-    'ecommerce-trust-badges': () => '',
-    'trust-badges': () => '',
-    'ecommerce-newsletter': () => '',
-    'newsletter': () => ''
+    }
 };
 
 // =============================================================================
