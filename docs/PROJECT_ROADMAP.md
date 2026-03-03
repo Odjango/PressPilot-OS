@@ -1,6 +1,6 @@
 # PressPilot OS — Development Roadmap
 
-> **Last updated: 2026-02-26** — Latest commit: `3d3848e`. Project reorganized and cleaned up. All P1–P4 resolved. P5 (generation stall) is the active priority. See `_memory/main.md` for full current state.
+> **Last updated: 2026-03-03** — Latest commit: `a15c076`. Generator Fix Plan Phases 0/1/3/4 complete. Hero layout rework done (fullBleed nav overlay, fullWidth cover). P5 (generation stall) still open — requires server access. See `_memory/main.md` for full current state.
 
 ## Phase 1: Stabilization & Core Refactor (Current)
 **Goal:** Reach 100% reliability for generated themes. Eliminate "Attempt Recovery" errors.
@@ -210,6 +210,28 @@ All verticals support 4 brand modes:
 - [ ] Multi-language support (RTL for Arabic)
 - [ ] CI security gate integration
 - [ ] Performance optimization for 1000+ users
+
+---
+
+## Patch Note: 2026-03-03
+
+- [x] **Generator Fix Plan execution (Phases 0/1/3/4):**
+  - Phase 0/1: Gold standard ZIP rebuilt, dead code removed, docs updated (`f7d5069`)
+  - Phase 3: PlaygroundValidator — CLI-based WordPress Playground validation as build gate, Step 2D in pipeline (`437d1cb`)
+    - Uses `@wp-playground/cli` subprocess (not `@wp-playground/node` which doesn't exist)
+    - Replaces stub validation scripts with real implementations
+    - npm scripts: `validate:theme`, `validate:all-cores`, `validate:gold-standard`
+  - Phase 4: InputValidator (Step 0), AccessibilityValidator, ContentBuilder smart truncation (`b13e836`)
+  - Phase 2 (P5 fix) still OPEN — requires server/Coolify access
+- [x] **Hero layout rework (`a15c076`):**
+  - fullBleed: Re-embedded transparent nav inside Cover (100vh, site-title + nav links overlay)
+  - fullWidth: Converted from solid color `wp:group` to `wp:cover` with background image + 70% overlay, 60vh
+  - PatternInjector: Conditionally skips header template-part for fullBleed only
+  - `getHeroByLayout()` now passes `businessName`, `pages`, `hasLogo` to fullBleed variant
+- [x] **Hero preview mirror sync:**
+  - `heroPreviewInjector.ts` updated to match new fullBleed (embedded nav, 100vh) and fullWidth (cover with image) structures
+  - New `HeroPreviewOptions` interface for passing nav params
+  - Hero detection filter updated (both fullBleed and fullWidth now `core/cover`)
 
 ---
 

@@ -17,19 +17,46 @@ import fs from 'fs-extra';
 import path from 'path';
 import { HeroLayout, PageContent } from '../generator/types';
 
+export interface HeroPreviewOptions {
+    businessName?: string;
+    pages?: { title: string; slug: string }[];
+    hasLogo?: boolean;
+}
+
 /**
  * Generate PHP code for hero preview support
  * This mirrors the hero-variants.ts patterns but outputs PHP
  */
-function generateHeroVariantsPHP(content: PageContent): string {
+function generateHeroVariantsPHP(content: PageContent, options?: HeroPreviewOptions): string {
     const title = content?.hero_title || 'Welcome';
     const sub = content?.hero_sub || 'We enable businesses to grow.';
     const heroImage = content?.hero_image || '';
+    const businessName = options?.businessName || content?.business_name || 'PressPilot Site';
+    const hasLogo = options?.hasLogo ?? false;
+    const pages = options?.pages ?? [
+        { title: 'Home', slug: '' },
+        { title: 'About', slug: 'about' },
+        { title: 'Services', slug: 'services' },
+        { title: 'Contact', slug: 'contact' }
+    ];
 
     // Escape for PHP strings
     const escTitle = title.replace(/'/g, "\\'");
     const escSub = sub.replace(/'/g, "\\'");
     const escImage = heroImage.replace(/'/g, "\\'");
+    const escBusinessName = businessName.replace(/'/g, "\\'");
+
+    // Build PHP nav links array
+    const phpNavLinks = pages.map(p => {
+        const url = (p.slug === 'home' || p.slug === '') ? '/' : `/${p.slug}`;
+        const label = p.title.replace(/'/g, "\\'");
+        return `        array('label' => '${label}', 'url' => '${url}')`;
+    }).join(',\n');
+
+    // Build the logo block PHP
+    const phpLogoBlock = hasLogo
+        ? `'<!-- wp:site-logo {"width":60} /-->'`
+        : `''`;
 
     return `
 // PressPilot Hero Preview Support
@@ -60,18 +87,16 @@ add_filter('render_block', function(\$block_content, \$block) {
         strpos(\$block['attrs']['slug'], 'hero') !== false;
 
     // Match cover blocks with alignfull AND min-height (hero-specific)
-    // Covers fullBleed layout which uses core/cover with min-height:80vh
+    // Covers fullBleed (100vh) and fullWidth (60vh) layouts — both use core/cover
     \$is_cover = \$block['blockName'] === 'core/cover' &&
         strpos(\$block_content, 'alignfull') !== false &&
         strpos(\$block_content, 'min-height') !== false;
 
-    // Match group blocks that are hero sections (fullWidth, split, minimal layouts)
+    // Match group blocks that are hero sections (split, minimal layouts)
     // These use core/group with alignfull and specific spacing values
     \$is_hero_group = \$block['blockName'] === 'core/group' &&
         strpos(\$block_content, 'alignfull') !== false &&
-        (strpos(\$block_content, 'spacing--40') !== false ||  // fullWidth
-         strpos(\$block_content, 'spacing--60') !== false ||  // split
-         strpos(\$block_content, 'spacing--70') !== false ||  // fullBleed (variant)
+        (strpos(\$block_content, 'spacing--60') !== false ||  // split
          strpos(\$block_content, 'spacing--80') !== false);   // minimal
 
     // Replace hero pattern, cover, or group blocks that look like heroes
@@ -87,75 +112,113 @@ function pp_get_hero_variant(\$layout) {
     \$title = '${escTitle}';
     \$sub = '${escSub}';
     \$image = '${escImage}';
+    \$business_name = '${escBusinessName}';
+    \$has_logo = ${hasLogo ? 'true' : 'false'};
+    \$pages = array(
+${phpNavLinks}
+    );
+    \$logo_block = ${phpLogoBlock};
 
     switch (\$layout) {
         case 'fullBleed':
-            return pp_hero_full_bleed(\$title, \$sub, \$image);
+            return pp_hero_full_bleed(\$title, \$sub, \$image, \$business_name, \$pages, \$has_logo, \$logo_block);
         case 'fullWidth':
-            return pp_hero_full_width(\$title, \$sub);
+            return pp_hero_full_width(\$title, \$sub, \$image);
         case 'split':
             return pp_hero_split(\$title, \$sub, \$image);
         case 'minimal':
             return pp_hero_minimal(\$title, \$sub);
         default:
-            return pp_hero_full_bleed(\$title, \$sub, \$image);
+            return pp_hero_full_bleed(\$title, \$sub, \$image, \$business_name, \$pages, \$has_logo, \$logo_block);
     }
 }
 
-function pp_hero_full_bleed(\$title, \$sub, \$image) {
-    // Full-bleed hero: 80vh min-height, LEFT-aligned text, large heading
-    // Key differentiators: immersive height, text-align-left, spacing|70
+function pp_hero_full_bleed(\$title, \$sub, \$image, \$business_name, \$pages, \$has_logo, \$logo_block) {
+    // Full-bleed hero: 100vh, embedded transparent nav overlay, LEFT-aligned text
+    // Matches hero-variants.ts getFullBleedHero() — nav inside cover block
     // pp-hero-preview class added for Playwright targeting
-    return '<!-- wp:cover {"url":"' . esc_attr(\$image) . '","dimRatio":75,"overlayColor":"accent-3","minHeight":80,"minHeightUnit":"vh","contentPosition":"center left","align":"full","className":"pp-hero-preview","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
-<div class="wp-block-cover alignfull pp-hero-preview has-custom-content-position is-position-center-left" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:80vh">
-    <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-80 has-background-dim" style="background-color:#1a1a2e"></span>
+
+    // Build nav links from pages array
+    \$nav_links = '';
+    foreach (\$pages as \$page) {
+        \$url = (\$page['slug'] === 'home' || \$page['slug'] === '') ? '/' : '/' . \$page['slug'];
+        \$nav_links .= '<!-- wp:navigation-link {"label":"' . esc_attr(\$page['label']) . '","url":"' . esc_attr(\$url) . '","kind":"custom","isTopLevelLink":true} /-->
+                    ';
+    }
+
+    \$site_title_block = '<!-- wp:site-title {"level":0,"style":{"typography":{"fontStyle":"normal","fontWeight":"700","fontSize":"1.5rem"}},"textColor":"base"} /-->';
+
+    return '<!-- wp:cover {"url":"' . esc_attr(\$image) . '","dimRatio":75,"overlayColor":"accent-3","minHeight":100,"minHeightUnit":"vh","align":"full","className":"pp-hero-preview","style":{"spacing":{"padding":{"top":"0","bottom":"var:preset|spacing|70","left":"0","right":"0"}}},"layout":{"type":"default"}} -->
+<div class="wp-block-cover alignfull pp-hero-preview" style="padding-top:0;padding-bottom:var(--wp--preset--spacing--70);padding-left:0;padding-right:0;min-height:100vh">
+    <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-80 has-background-dim"></span>
     <img class="wp-block-cover__image-background" alt="" src="' . esc_attr(\$image) . '" data-object-fit="cover"/>
     <div class="wp-block-cover__inner-container">
-        <!-- wp:heading {"textAlign":"left","level":1,"style":{"typography":{"fontSize":"clamp(3rem, 6vw, 5rem)","lineHeight":"1.1"}},"textColor":"base"} -->
-        <h1 class="wp-block-heading has-text-align-left has-base-color has-text-color" style="font-size:clamp(3rem, 6vw, 5rem);line-height:1.1;color:#ffffff">' . esc_html(\$title) . '</h1>
+        <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"flex","justifyContent":"space-between","flexWrap":"nowrap"}} -->
+        <div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50)">
+            <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap"},"style":{"spacing":{"blockGap":"var:preset|spacing|20"}}} -->
+            <div class="wp-block-group">
+                ' . \$logo_block . '
+                ' . \$site_title_block . '
+            </div>
+            <!-- /wp:group -->
+            <!-- wp:navigation {"textColor":"base","layout":{"type":"flex","justifyContent":"right","orientation":"horizontal"},"style":{"typography":{"fontWeight":"600","fontSize":"1rem"},"spacing":{"blockGap":"var:preset|spacing|30"}}} -->
+                    ' . \$nav_links . '
+            <!-- /wp:navigation -->
+        </div>
+        <!-- /wp:group -->
+        <!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|60","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"900px","justifyContent":"left"}} -->
+        <div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50)">
+            <!-- wp:heading {"textAlign":"left","level":1,"style":{"typography":{"fontSize":"clamp(3rem, 6vw, 5rem)","lineHeight":"1.1"}},"textColor":"base"} -->
+            <h1 class="wp-block-heading has-text-align-left has-base-color has-text-color" style="font-size:clamp(3rem, 6vw, 5rem);line-height:1.1">' . esc_html(\$title) . '</h1>
+            <!-- /wp:heading -->
+            <!-- wp:paragraph {"fontSize":"large","textColor":"base","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+            <p class="has-base-color has-text-color has-large-font-size" style="margin-top:var(--wp--preset--spacing--20)">' . esc_html(\$sub) . '</p>
+            <!-- /wp:paragraph -->
+            <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
+            <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
+                <!-- wp:button {"backgroundColor":"base","textColor":"contrast"} -->
+                <div class="wp-block-button"><a class="wp-block-button__link has-contrast-color has-base-background-color has-text-color has-background wp-element-button">Get Started</a></div>
+                <!-- /wp:button -->
+                <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"base","textColor":"base","className":"is-style-outline"} -->
+                <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px">Learn More</a></div>
+                <!-- /wp:button -->
+            </div>
+            <!-- /wp:buttons -->
+        </div>
+        <!-- /wp:group -->
+    </div>
+</div>
+<!-- /wp:cover -->';
+}
+
+function pp_hero_full_width(\$title, \$sub, \$image) {
+    // Full-width band hero: 60vh cover with image + 70% overlay, centered text
+    // Matches hero-variants.ts getFullWidthHero() — wp:cover with background image
+    // pp-hero-preview class added for Playwright targeting
+    return '<!-- wp:cover {"url":"' . esc_attr(\$image) . '","dimRatio":70,"overlayColor":"accent-3","minHeight":60,"minHeightUnit":"vh","align":"full","className":"pp-hero-preview","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"800px"}} -->
+<div class="wp-block-cover alignfull pp-hero-preview" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);min-height:60vh">
+    <span aria-hidden="true" class="wp-block-cover__background has-accent-3-background-color has-background-dim-70 has-background-dim"></span>
+    <img class="wp-block-cover__image-background" alt="" src="' . esc_attr(\$image) . '" data-object-fit="cover"/>
+    <div class="wp-block-cover__inner-container">
+        <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2rem, 4vw, 3rem)"}},"textColor":"base"} -->
+        <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2rem, 4vw, 3rem)">' . esc_html(\$title) . '</h1>
         <!-- /wp:heading -->
-        <!-- wp:paragraph {"fontSize":"large","textColor":"base","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
-        <p class="has-base-color has-text-color has-large-font-size" style="margin-top:var(--wp--preset--spacing--20);color:#ffffff">' . esc_html(\$sub) . '</p>
+        <!-- wp:paragraph {"align":"center","fontSize":"medium","textColor":"base"} -->
+        <p class="has-text-align-center has-base-color has-text-color has-medium-font-size">' . esc_html(\$sub) . '</p>
         <!-- /wp:paragraph -->
-        <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
-        <div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--40)">
-            <!-- wp:button {"backgroundColor":"base","textColor":"contrast"} -->
-            <div class="wp-block-button"><a class="wp-block-button__link has-contrast-color has-base-background-color has-text-color has-background wp-element-button" style="background-color:#ffffff;color:#1a1a2e">Get Started</a></div>
+        <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+        <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--20)">
+            <!-- wp:button {"backgroundColor":"base","textColor":"accent-3"} -->
+            <div class="wp-block-button"><a class="wp-block-button__link has-accent-3-color has-base-background-color has-text-color has-background wp-element-button">Get Started</a></div>
             <!-- /wp:button -->
             <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"base","textColor":"base","className":"is-style-outline"} -->
-            <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px;border-color:#ffffff;color:#ffffff">Learn More</a></div>
+            <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px">Learn More</a></div>
             <!-- /wp:button -->
         </div>
         <!-- /wp:buttons -->
     </div>
 </div>
 <!-- /wp:cover -->';
-}
-
-function pp_hero_full_width(\$title, \$sub) {
-    // Full-width band: COMPACT solid color band (no image), centered text
-    // Key differentiators: shorter padding|40, smaller font, inverted button, 800px width
-    // pp-hero-preview class added for Playwright targeting
-    return '<!-- wp:group {"align":"full","className":"pp-hero-preview","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40"}}},"backgroundColor":"accent-3","layout":{"type":"constrained","contentSize":"800px"}} -->
-<div class="wp-block-group alignfull pp-hero-preview has-accent-3-background-color has-background" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);background-color:#1a1a2e">
-    <!-- wp:heading {"textAlign":"center","level":1,"style":{"typography":{"fontSize":"clamp(2rem, 4vw, 3rem)"}},"textColor":"base"} -->
-    <h1 class="wp-block-heading has-text-align-center has-base-color has-text-color" style="font-size:clamp(2rem, 4vw, 3rem);color:#ffffff">' . esc_html(\$title) . '</h1>
-    <!-- /wp:heading -->
-    <!-- wp:paragraph {"align":"center","fontSize":"medium","textColor":"base"} -->
-    <p class="has-text-align-center has-base-color has-text-color has-medium-font-size" style="color:#ffffff">' . esc_html(\$sub) . '</p>
-    <!-- /wp:paragraph -->
-    <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
-    <div class="wp-block-buttons is-layout-flex is-content-justification-center" style="margin-top:var(--wp--preset--spacing--20)">
-        <!-- wp:button {"backgroundColor":"base","textColor":"accent-3"} -->
-        <div class="wp-block-button"><a class="wp-block-button__link has-accent-3-color has-base-background-color has-text-color has-background wp-element-button" style="background-color:#ffffff;color:#1a1a2e">Get Started</a></div>
-        <!-- /wp:button -->
-        <!-- wp:button {"style":{"border":{"width":"2px"}},"borderColor":"base","textColor":"base","className":"is-style-outline"} -->
-        <div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-base-border-color wp-element-button" style="border-width:2px;border-color:#ffffff;color:#ffffff">Learn More</a></div>
-        <!-- /wp:button -->
-    </div>
-    <!-- /wp:buttons -->
-</div>
-<!-- /wp:group -->';
 }
 
 function pp_hero_split(\$title, \$sub, \$image) {
@@ -229,7 +292,8 @@ function pp_hero_minimal(\$title, \$sub) {
  */
 export async function injectHeroPreviewSupport(
     themeDir: string,
-    content: PageContent
+    content: PageContent,
+    options?: HeroPreviewOptions
 ): Promise<void> {
     const functionsPath = path.join(themeDir, 'functions.php');
 
@@ -247,7 +311,7 @@ export async function injectHeroPreviewSupport(
     }
 
     // Generate the PHP code
-    const phpCode = generateHeroVariantsPHP(content);
+    const phpCode = generateHeroVariantsPHP(content, options);
 
     // Remove closing PHP tag if present
     functionsContent = functionsContent.replace(/\?>[\s]*$/, '').trim();

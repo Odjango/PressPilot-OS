@@ -1,13 +1,22 @@
 # PressPilot OS — Master Roadmap & Project Memory
 
-Last updated: 2026-02-26
+Last updated: 2026-03-03
 
 ---
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `a4fb1c1` (2026-02-26) — `docs: update all memory and context files to reflect 2026-02-26 session`
-- All work is committed. `git status` is clean.
+- Latest commit: `a15c076` (2026-03-03) — `fix(hero): fullBleed nav overlay + fullWidth hero image`
+- Working tree: clean (tracked files); untracked agent prompt files and KB docs exist
+- Hero preview mirror (`heroPreviewInjector.ts`) synced to match updated hero-variants.ts (uncommitted)
+
+### 2026-03-03 Session — Commit chain:
+| Commit | Description |
+|--------|-------------|
+| `a15c076` | fix(hero): fullBleed nav overlay + fullWidth hero image |
+| `b13e836` | feat: Phase 4 complete — InputValidator, AccessibilityValidator, content safety, docs updated |
+| `437d1cb` | feat(validator): PlaygroundValidator — CLI-based WordPress theme validation |
+| `f7d5069` | chore: Phase 0 checkpoint — gold standard clean, dead code removed, audit fixes committed |
 
 ### 2026-02-26 Full Session — Commit chain:
 | Commit | Description |
@@ -154,18 +163,15 @@ Resolution pipeline (5 layers, in order):
 - PHP escaping via `PhpEscaper.ts` remains the single source of quote safety
 
 ### P4 — Header embedded inside fullBleed hero Cover block
-- **Status: FULLY RESOLVED AND VERIFIED (Feb 21)**
-- **Root cause:** For `heroLayout === 'fullBleed'`, `PatternInjector.ts:444` excluded the header template part and instead `getFullBleedHero()` embedded an inline transparent header inside the Cover block's `inner-container`. This caused:
-  1. `position: sticky` CSS had no effect (sticky doesn't work inside Cover inner container)
-  2. Header was visually part of the hero, not at the page top
-  3. Two divergent header code paths (solid vs transparent) created maintenance burden
-- **Architecture decision:** Option A — Header is ALWAYS a separate template part above the hero, never nested inside Cover. Backed by `WORDPRESS_FSE_REFERENCE.md` Section 4 and Perplexity research.
-- **Spec:** `output/HEADER_SEPARATION_SPEC.md` (precise line numbers, 3 files)
-- **Codex implementation (Feb 21):**
-  - `hero-variants.ts` — removed `getInlineTransparentHeader` import, simplified `getFullBleedHero()` to single `content` param, updated `getHeroByLayout()` calls
-  - `universal-header.ts` — deleted `getInlineTransparentHeader()` function (lines 63-108), kept `getUniversalHeaderContent()` (lines 14-61)
-  - `PatternInjector.ts` — removed fullBleed conditional, header template part now always included
-- **Verification:** `npx tsc --noEmit` passed, all 5 verticals passed WP smoke test (`theme-activation.spec.ts`)
+- **Status: INTENTIONALLY REVERSED (Mar 3)**
+- **Original fix (Feb 21):** Separated header from hero Cover block for sticky positioning. Worked but lost the premium transparent nav overlay aesthetic.
+- **Reversal (Mar 3, `a15c076`):** fullBleed hero now re-embeds transparent navigation inside the Cover block:
+  - `getFullBleedHero()` accepts `businessName`, `pages`, `hasLogo` params
+  - Builds inline nav with site-title + navigation-link blocks inside the cover's inner-container
+  - `PatternInjector` skips header template-part when `heroLayout === 'fullBleed'` (other layouts still get the separate header)
+  - fullWidth hero also reworked: now uses `wp:cover` with background image + 70% overlay (was solid color `wp:group`)
+- **Tradeoff accepted:** Sticky header doesn't work inside Cover inner container, but the transparent nav overlay on the hero image is a higher-value visual pattern for landing pages
+- **Preview mirror:** `heroPreviewInjector.ts` synced to match both fullBleed (100vh, embedded nav) and fullWidth (cover with image) changes
 
 ### P5 — Generation stall at "Building Your Assets" (Step 5 DELIVER)
 - **Status: UNDIAGNOSED — needs Laravel/Horizon logs**
@@ -176,11 +182,20 @@ Resolution pipeline (5 layers, in order):
 
 
 ## Generator Fix Plan Completion (2026-03-03)
-- Phase 1: Checkpoint complete — gold standard ZIP rebuilt, dead code removed
-- Phase 2: P5 diagnosis — OPEN (Laravel/Horizon logs pending)
-- Phase 3: PlaygroundValidator — live WordPress validation as build gate
-- Phase 4: InputValidator + ContentBuilder truncation + AccessibilityValidator
-- All validators: InputValidator → BlockConfigValidator → PlaygroundValidator → AccessibilityValidator
+- Phase 0/1: ✅ Checkpoint complete — gold standard ZIP rebuilt, dead code removed (`f7d5069`)
+- Phase 2: ⏳ P5 diagnosis — OPEN (Laravel/Horizon logs pending, requires server access)
+- Phase 3: ✅ PlaygroundValidator — CLI-based WordPress validation as build gate (`437d1cb`)
+  - NOTE: Used `@wp-playground/cli` subprocess (not `@wp-playground/node` as original plan said — that package doesn't exist)
+- Phase 4: ✅ InputValidator + ContentBuilder truncation + AccessibilityValidator (`b13e836`)
+- All validators: InputValidator (Step 0) → BlockConfigValidator (Step 2C) → PlaygroundValidator (Step 2D) → AccessibilityValidator (post-build)
+
+### Post-Phase-4: Hero Layout Rework (`a15c076`)
+- fullBleed hero: re-embedded transparent nav inside Cover block (100vh, nav overlay effect)
+  - **Architecture reversal:** This intentionally reverses the Feb 21 P4 fix that separated header from hero
+  - Rationale: Visual quality — transparent nav on hero image is a premium design pattern; sticky positioning tradeoff accepted
+  - PatternInjector now conditionally skips header template-part when `heroLayout === 'fullBleed'`
+- fullWidth hero: converted from solid color `wp:group` to `wp:cover` with background image + 70% overlay, 60vh
+- Hero preview mirror (`heroPreviewInjector.ts`) synced to match both changes (uncommitted)
 
 ---
 
@@ -243,25 +258,33 @@ Resolution pipeline (5 layers, in order):
 - ~~Stabilize Laravel internal IP~~ — Docker DNS pattern deployed and verified (Feb 21). `BACKEND_URL=http://laravel-app:8080`
 1. ~~Update `docs/KNOWN_ISSUES.md`~~ — needs update to mark P1–P4 resolved
 
+### Completed (Mar 3)
+- ~~**Phase 0/1: Checkpoint & Hygiene**~~ — gold standard ZIP rebuilt, dead code removed (`f7d5069`)
+- ~~**Phase 3: PlaygroundValidator**~~ — CLI-based WP validation wired as Step 2D in pipeline (`437d1cb`)
+- ~~**Phase 4: Hardening**~~ — InputValidator, AccessibilityValidator, ContentBuilder truncation (`b13e836`)
+- ~~**Hero layout rework**~~ — fullBleed transparent nav overlay, fullWidth cover with image (`a15c076`)
+- ~~**Hero preview mirror sync**~~ — `heroPreviewInjector.ts` updated to match hero-variants.ts (uncommitted)
+
 ### Quality (Active — Next Priority)
-1. **P5: Diagnose generation stall** — DELIVER step hangs at "Building Your Assets". Check Coolify log tab (not container path), check Horizon dashboard for failed/pending jobs, check Supabase storage for upload errors.
+1. **P5: Diagnose generation stall** — DELIVER step hangs at "Building Your Assets". Check Coolify log tab (not container path), check Horizon dashboard for failed/pending jobs, check Supabase storage for upload errors. Requires server access.
+2. **Test fresh fullBleed generation** — end-to-end test via `bin/generate.ts` to verify hero nav overlay renders correctly in WP
 
 ### Features (Backlog)
-2. Generate 52 theme combinations for Magazine Gallery
-3. Build Magazine Gallery UI (visual theme browser)
-4. Dark Mode toggle for generated themes
-5. Extra Large header font size option
+3. Generate 52 theme combinations for Magazine Gallery
+4. Build Magazine Gallery UI (visual theme browser)
+5. Dark Mode toggle for generated themes
+6. Extra Large header font size option
 
 ---
 
 ## Architecture Note: Header Template Part
 
-**The header must ALWAYS be a separate template part, NEVER nested inside a Cover block.**
+**Header handling depends on hero layout:**
 
-- WP FSE best practice: header is `<!-- wp:template-part {"slug":"header"} /-->` at the top of every template
-- `position: sticky` only works when the header is a top-level element, not inside a Cover's inner container
+- **fullBleed:** Header is EMBEDDED inside the Cover block as a transparent nav overlay (site-title + navigation links). No separate header template-part. Sticky positioning is sacrificed for the premium transparent overlay aesthetic. `PatternInjector` conditionally skips `<!-- wp:template-part {"slug":"header"} /-->` for fullBleed.
+- **All other layouts (fullWidth, split, minimal):** Header is a separate `<!-- wp:template-part {"slug":"header"} /-->` at the top of every template, per WP FSE best practice. `position: sticky` works correctly.
 - Reference: `WORDPRESS_FSE_REFERENCE.md` Section 4 (Header Consistency & Fullbleed vs Fullwidth)
-- For fullBleed heroes: hero Cover block sits below the header template part. The "overlay" effect comes from the Cover's own full-viewport height, not from embedding the header inside it.
+- This dual-path was introduced in `a15c076` (Mar 3) — intentionally reversing the Feb 21 separation decision for visual quality.
 
 ## Lessons Learned (Feb 21 audit)
 - `{{...}}` tokens in section files are slots, not bugs — always trace the full pipeline before flagging
@@ -269,6 +292,11 @@ Resolution pipeline (5 layers, in order):
 - `docs/KNOWN_ISSUES.md` can go stale — always verify against code before trusting docs
 - Two content resolution patterns now coexist: slot system (majority) and inline `getText()` (4 testimonial files). Both work, but be aware of the inconsistency.
 - Header must never be nested inside hero Cover block — breaks sticky positioning and creates two divergent code paths
+
+## Lessons Learned (Mar 3 — Hero Layout Rework)
+- Architecture decisions can be intentionally reversed when visual quality outweighs technical purity — the transparent nav overlay is a premium pattern worth the sticky positioning tradeoff
+- When TS source-of-truth changes, the PHP preview mirror (`heroPreviewInjector.ts`) must be updated in the same session — it's easy to forget and causes visual inconsistency in hero previews
+- fullWidth hero conversion (group → cover with image) was a clean improvement with no tradeoffs — should have been done from the start
 
 ## Lessons Learned (Feb 23 — Block Config Validation)
 - `core/cover` without `dimRatio` is the single most common silent crash — it renders but the dim class is wrong
