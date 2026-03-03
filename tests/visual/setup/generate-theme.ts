@@ -53,11 +53,18 @@ function runGenerate(payload: Record<string, unknown>): Promise<string> {
 
 export async function generateThemeForVisual(request: GenerateThemeRequest): Promise<GenerateThemeResult> {
   const payload = {
+    base: 'ollie',
     mode: 'standard',
     brandMode: request.brandMode,
     slug: request.slug,
     outDir: request.outputDir,
     data: {
+      businessName: `${request.vertical} ${request.brandMode}`,
+      businessDescription: 'Automated screenshots verify generated layouts.',
+      businessCategory: request.vertical,
+      tagline: 'Built for Visual Testing',
+      email: 'visual-tests@presspilot.dev',
+      website: 'https://presspilot.dev/visual-tests',
       name: `${request.vertical} ${request.brandMode}`,
       industry: request.vertical,
       businessType: request.recipe,

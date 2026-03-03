@@ -3,6 +3,62 @@ import { PATTERN_REGISTRY } from '../config/PatternRegistry';
 import { getModernImageUrl } from '../utils/ImageProvider';
 import { sanitizeUserInput } from '../utils/sanitize';
 
+function truncateSlot(value: string, maxLength: number, label: string): string {
+    if (value.length <= maxLength) return value;
+    console.error(`[ContentBuilder] ⚠️ Truncated ${label}: ${value.length} → ${maxLength} chars`);
+    return value.substring(0, maxLength - 1) + '…';
+}
+
+function getSlotLimit(key: string): { maxLength: number; label: string } {
+    const label = key.replace(/^\{\{/, '').replace(/\}\}$/, '');
+    const upper = label.toUpperCase();
+
+    if (upper.includes('EMAIL')) {
+        return { maxLength: 254, label };
+    }
+    if (upper.includes('PHONE')) {
+        return { maxLength: 20, label };
+    }
+    if (
+        upper.includes('URL') ||
+        upper.includes('WEBSITE') ||
+        upper.startsWith('SOCIAL_') ||
+        upper.includes('FACEBOOK') ||
+        upper.includes('INSTAGRAM') ||
+        upper.includes('TWITTER') ||
+        upper.includes('LINKEDIN') ||
+        upper.includes('YOUTUBE') ||
+        upper.includes('TIKTOK')
+    ) {
+        return { maxLength: 2048, label };
+    }
+    if (upper.includes('BUSINESS_NAME') || upper === 'STORE_NAME' || upper === 'BUSINESS_NAME') {
+        return { maxLength: 60, label };
+    }
+    if (upper.includes('PRETITLE') || upper.includes('TAGLINE')) {
+        return { maxLength: 100, label };
+    }
+    if (upper.includes('TEXT') || upper.includes('SUBHEADLINE')) {
+        return { maxLength: 200, label };
+    }
+    if (upper.includes('ANSWER') || upper.includes('DESCRIPTION') || upper.includes('STORY') || upper.includes('BIO')) {
+        return { maxLength: 400, label };
+    }
+    if (upper.includes('TITLE') || upper.includes('HEADLINE') || upper.includes('NAME')) {
+        return { maxLength: 80, label };
+    }
+
+    return { maxLength: 400, label };
+}
+
+function applySlotTruncation(slots: Record<string, string>): void {
+    for (const [key, value] of Object.entries(slots)) {
+        if (typeof value !== 'string') continue;
+        const limit = getSlotLimit(key);
+        slots[key] = truncateSlot(value, limit.maxLength, limit.label);
+    }
+}
+
 export interface ContentJSON {
     hero: {
         headline: string;
@@ -29,8 +85,16 @@ export class ContentBuilder {
         const slots: Record<string, string> = {};
 
         // 1. Map Hero Content
-        const hero_headline = safeUserData.hero_headline || 'Build your site with clicks, not code.';
-        const hero_subheadline = safeUserData.hero_subheadline || 'Easily create beautiful, fully-customizable websites.';
+        const hero_headline = truncateSlot(
+            safeUserData.hero_headline || 'Build your site with clicks, not code.',
+            80,
+            'HERO_TITLE'
+        );
+        const hero_subheadline = truncateSlot(
+            safeUserData.hero_subheadline || 'Easily create beautiful, fully-customizable websites.',
+            200,
+            'HERO_TEXT'
+        );
         const industry = (safeUserData.industry || 'saas').toLowerCase();
 
         if (personality) {
@@ -75,7 +139,8 @@ export class ContentBuilder {
         }
 
         // 4. Universal Slots (For Prepared Cores)
-        slots['{{BUSINESS_NAME}}'] = safeUserData.name || 'My PressPilot Site';
+        const businessName = truncateSlot(safeUserData.name || 'My PressPilot Site', 60, 'BUSINESS_NAME');
+        slots['{{BUSINESS_NAME}}'] = businessName;
         slots['{{HERO_TITLE}}'] = hero_headline;
         slots['{{HERO_TEXT}}'] = hero_subheadline;
         slots['{{HERO_PRETITLE}}'] = industry.toUpperCase();
@@ -89,8 +154,8 @@ export class ContentBuilder {
         slots['{{NEWSLETTER_TITLE}}'] = 'Join our Newsletter';
         slots['{{NEWSLETTER_TEXT}}'] = 'Stay updated with our latest news and offers.';
         slots['{{NEWSLETTER_BUTTON}}'] = 'Subscribe';
-        slots['{{store_name}}'] = safeUserData.name || 'Our Store';
-        slots['{{business_name}}'] = safeUserData.name || 'Our Business';
+        slots['{{store_name}}'] = businessName || 'Our Store';
+        slots['{{business_name}}'] = businessName || 'Our Business';
         slots['{{tagline}}'] = hero_subheadline;
         slots['{{brand_story}}'] = safeUserData.description || 'We curate thoughtful products with quality craftsmanship and everyday usefulness.';
         slots['{{sale_headline}}'] = 'Seasonal Picks Are Here';
@@ -183,7 +248,7 @@ export class ContentBuilder {
         // This ensures patterns like universal-contact.ts have access to data
         // ========================================================================
         const contactInfo = {
-            business_name: safeUserData.name || 'Our Business',
+            business_name: businessName || 'Our Business',
             business_type: safeUserData.businessType || safeUserData.industry || '',
             email: safeUserData.email || '',
             phone: safeUserData.phone || '',
@@ -235,6 +300,8 @@ export class ContentBuilder {
         slots['{{phone_number}}'] = safeUserData.phone || '';
 
         // Return ContentJSON with all original userData fields spread in
+        applySlotTruncation(slots);
+
         return {
             // Spread all original user data first (so explicit fields below can override)
             ...safeUserData,
@@ -249,8 +316,8 @@ export class ContentBuilder {
             menus: menus,
             slots: slots,
             baseName: baseTheme,
-            businessName: safeUserData.name || 'My PressPilot Site',
-            name: safeUserData.name || 'My PressPilot Site',
+            businessName: businessName,
+            name: businessName,
             industry: industry,
             heroLayout: safeUserData.heroLayout
         };

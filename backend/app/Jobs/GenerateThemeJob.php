@@ -69,9 +69,20 @@ class GenerateThemeJob implements ShouldQueue
             if (empty($generatorData['name'])) {
                 $generatorData['name'] = $project->name;
             }
+            if (empty($generatorData['businessName'])) {
+                $generatorData['businessName'] = $generatorData['name'] ?? $project->name;
+            }
+            if (empty($generatorData['businessDescription']) && ! empty($generatorData['description'])) {
+                $generatorData['businessDescription'] = $generatorData['description'];
+            }
+            if (empty($generatorData['businessCategory']) && ! empty($generatorData['industry'])) {
+                $generatorData['businessCategory'] = $generatorData['industry'];
+            }
 
             // 3. Build stdin JSON for generator subprocess
             $stdinPayload = json_encode([
+                'base' => (string) ($generatorData['base'] ?? 'ollie'),
+                'brandMode' => (string) ($generatorData['brandMode'] ?? 'modern'),
                 'data' => $generatorData,
                 'mode' => 'standard',
                 'slug' => $this->jobId,

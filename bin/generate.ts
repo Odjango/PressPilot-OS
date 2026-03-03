@@ -23,6 +23,8 @@ import { BlockValidator } from '../src/generator/validators/BlockValidator';
 import { TokenValidator } from '../src/generator/validators/TokenValidator';
 import { BlockConfigValidator } from '../src/generator/validators/BlockConfigValidator';
 import { PlaygroundValidator } from '../src/generator/validators/PlaygroundValidator';
+import { InputValidator } from '../src/generator/validators/InputValidator';
+import { AccessibilityValidator } from '../src/generator/validators/AccessibilityValidator';
 import { buildStaticSite } from '../lib/presspilot/staticSite';
 import { buildSaaSInputFromStudioInput } from '../lib/presspilot/studioAdapter';
 import { applyBusinessInputs } from '../lib/presspilot/context';
@@ -83,6 +85,15 @@ async function main(): Promise<void> {
         writeResult({ status: 'error', error: 'Invalid JSON on stdin' });
         process.exit(1);
     }
+
+    // ── STEP 0: Input validation ──────────────────────────────────────────
+    const inputResult = InputValidator.validate(input);
+    if (!inputResult.valid) {
+        console.error('[STEP 0] ❌ Invalid input:');
+        inputResult.errors.forEach(e => console.error(`  - ${e.field}: ${e.message}`));
+        process.exit(1);
+    }
+
 
     const {
         base,
@@ -205,6 +216,13 @@ async function main(): Promise<void> {
     if (process.env.SKIP_PLAYGROUND_VALIDATION !== 'true') {
         console.error('[STEP 2D] Running WordPress Playground validation...');
         const pgResult = await PlaygroundValidator.validate({ themeDir: result.themeDir, timeout: 30000 });
+
+
+    // Step 2E: Accessibility check
+    const a11yResult = await AccessibilityValidator.validate(result.themeDir);
+    a11yResult.errors.forEach(e => console.error(`[A11Y] ❌ ${e.message}`));
+    a11yResult.warnings.forEach(w => console.error(`[A11Y] ⚠️ ${w.message}`));
+    // Accessibility errors are warnings, not build-blockers (yet)
 
         if (!pgResult.valid) {
             console.error('[STEP 2D] ❌ Playground validation FAILED:');
