@@ -59,8 +59,16 @@ PROMPT;
         $description = $project['description'] ?? $project['businessDescription'] ?? '';
         $category = $project['category'] ?? $project['businessCategory'] ?? 'general';
         $language = $project['language'] ?? 'English';
-        $pages = $project['pages'] ?? ['home', 'about', 'services', 'contact', 'blog'];
-        $pageList = is_array($pages) ? implode(', ', $pages) : (string) $pages;
+        $rawPages = $project['pages'] ?? ['home', 'about', 'services', 'contact', 'blog'];
+        // Pages may be nested objects from DataTransformer (e.g. [{title, slug, ...}])
+        // or flat strings. Extract slug/title for the prompt.
+        $pages = array_map(function ($page) {
+            if (is_array($page)) {
+                return $page['slug'] ?? $page['title'] ?? 'page';
+            }
+            return (string) $page;
+        }, $rawPages);
+        $pageList = implode(', ', $pages);
 
         return <<<PROMPT
 Business Name: {$name}
