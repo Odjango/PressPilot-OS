@@ -73,6 +73,12 @@ COPY tsconfig.json /app/generator/tsconfig.json
 COPY bin /app/generator/bin
 COPY presspilot.os.json /app/generator/presspilot.os.json
 COPY app/mvp-demo /app/generator/app/mvp-demo
+# ─── SSWG Phase 2: pattern-library + proven-cores at paths expected by PHP ────
+# PHP services use base_path('../pattern-library/') => /pattern-library/
+# and base_path('../proven-cores/') => /proven-cores/
+# These must be siblings of /app/ so the relative paths resolve correctly.
+COPY pattern-library /pattern-library
+COPY proven-cores /proven-cores
 # Node.js deps are pre-installed at /opt/generator-deps/node_modules (stage 1).
 # tsx resolves @/ path aliases from /app/generator/tsconfig.json (via cwd).
 #

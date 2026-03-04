@@ -95,6 +95,14 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       QUEUE_CONNECTION: redis
       UNSPLASH_ACCESS_KEY: ${UNSPLASH_ACCESS_KEY}
+      # SSWG Phase 2 — AI + validation config
+      PRESSPILOT_AI_PROVIDER: ${PRESSPILOT_AI_PROVIDER:-claude}
+      PRESSPILOT_AI_MODEL: ${PRESSPILOT_AI_MODEL:-claude-sonnet-4}
+      PRESSPILOT_AI_KEY: ${PRESSPILOT_AI_KEY}
+      PRESSPILOT_AI_ENDPOINT: ${PRESSPILOT_AI_ENDPOINT:-https://api.anthropic.com/v1/messages}
+      PRESSPILOT_AI_MAX_TOKENS: ${PRESSPILOT_AI_MAX_TOKENS:-2048}
+      PRESSPILOT_N8N_WEBHOOK_URL: ${PRESSPILOT_N8N_WEBHOOK_URL:-}
+      PRESSPILOT_SKIP_PLAYGROUND_VALIDATION: ${PRESSPILOT_SKIP_PLAYGROUND_VALIDATION:-false}
     volumes:
       # Shared Laravel storage for logs
       - laravel-storage:/app/storage
