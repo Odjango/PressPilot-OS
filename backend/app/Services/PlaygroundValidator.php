@@ -13,6 +13,17 @@ class PlaygroundValidator
      */
     public function validate(string $themeDir): array
     {
+        if (config('presspilot.skip_playground_validation')) {
+            return [
+                'valid' => true,
+                'errors' => [],
+                'warnings' => [[
+                    'type' => 'VALIDATION_SKIPPED',
+                    'message' => 'Playground validation bypassed via config.',
+                ]],
+            ];
+        }
+
         if (! is_dir($themeDir)) {
             return [
                 'valid' => false,

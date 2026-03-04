@@ -9,4 +9,5 @@ return [
         'max_tokens' => env('PRESSPILOT_AI_MAX_TOKENS', 2048),
     ],
     'n8n_webhook_url' => env('PRESSPILOT_N8N_WEBHOOK_URL'),
+    'skip_playground_validation' => env('PRESSPILOT_SKIP_PLAYGROUND_VALIDATION', false),
 ];

@@ -304,8 +304,9 @@ Resolution pipeline (5 layers, in order):
 **Decision (2026-03-03):** P5 generation stall fix is DEPRIORITIZED. The entire generation pipeline will be replaced by SSWG (Solid Smart WordPress Generator).
 
 - **SSWG Phase 0:** ✅ COMPLETE — foundation, proven-cores audit, protocol established
-- **SSWG Phase 1:** ⬅️ BLOCKING — Pattern Tokenization Engine (80-100 tokenized patterns + registry.json). Phase 2 services are built but need these patterns to function.
-- **SSWG Phase 2:** ✅ CODE COMPLETE (2026-03-04) — all 6 services built, tested, cleanup applied. See "SSWG Phase 2 Session" below for details. Pending: run `php artisan test` on VPS, AIPlannerTest with Http::fake(), end-to-end 3-vertical verification (blocked on Phase 1 patterns).
+- **SSWG Phase 1:** ✅ COMPLETE — 115 tokenized patterns across 5 cores (ollie, frost, tove, spectra-one, tt4). Token vocabulary: 81 tokens. Registry: registry.json with full metadata. Exceeds 80-100 target.
+- **SSWG Phase 2:** ✅ CODE COMPLETE + DEPLOYED (2026-03-04) — all 6 services built, tested, cleanup applied, merged to main, deployed via Coolify. Horizon healthy, queues idle. See "SSWG Phase 2 Session" below for details.
+- **SSWG Phase 2.5 (Pipeline Activation):** ⬅️ IN PROGRESS — Anthropic API key set in Coolify env. PlaygroundValidator bypass added (`PRESSPILOT_SKIP_PLAYGROUND_VALIDATION=true`) to enable E2E testing without Playground CLI in Docker. Next: set env flag in Coolify, test full pipeline with real business data.
 - **SSWG Phase 3–4:** Queued (frontend integration → WPaify)
 - Reference docs: `agent-os/sswg/` (all phase specs + PROTOCOL.md + PROVEN-CORES-VAULT-AUDIT.md)
 
