@@ -2,13 +2,21 @@
 
 namespace App\Jobs;
 
+use App\Services\AIPlanner;
+use App\Services\ImageHandler;
+use App\Services\MetricsLogger;
+use App\Services\PatternSelector;
+use App\Services\PlaygroundValidator;
+use App\Services\PlaceholderProvider;
+use App\Services\ThemeAssembler;
+use App\Services\TokenInjector;
+use App\Services\UnsplashProvider;
 use App\Models\GeneratedTheme;
 use App\Models\GenerationJob;
-use App\Services\MetricsLogger;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
@@ -40,7 +48,6 @@ class GenerateThemeJob implements ShouldQueue
             'worker_id' => gethostname(),
         ]);
 
-        // 1. Optimistic lock: claim the job
         $job = GenerationJob::find($this->jobId);
         if (! $job || ! $job->claimForProcessing()) {
             Log::warning('GenerateThemeJob: Could not claim job', [
@@ -51,120 +58,69 @@ class GenerateThemeJob implements ShouldQueue
         }
 
         $tempDir = "/tmp/pp-jobs/{$this->jobId}";
-
-        // Create workspace (generator also creates via fs.emptyDir,
-        // but this ensures the path exists before subprocess launch)
         if (! is_dir($tempDir)) {
             mkdir($tempDir, 0755, true);
         }
 
         try {
-            // 2. Load project data
             $project = $job->project;
             if (! $project) {
                 throw new \RuntimeException("Project not found: {$this->projectId}");
             }
 
-            $generatorData = $project->data ?? [];
-            if (empty($generatorData['name'])) {
-                $generatorData['name'] = $project->name;
-            }
-            if (empty($generatorData['businessName'])) {
-                $generatorData['businessName'] = $generatorData['name'] ?? $project->name;
-            }
-            if (empty($generatorData['businessDescription']) && ! empty($generatorData['description'])) {
-                $generatorData['businessDescription'] = $generatorData['description'];
-            }
-            if (empty($generatorData['businessCategory']) && ! empty($generatorData['industry'])) {
-                $generatorData['businessCategory'] = $generatorData['industry'];
-            }
+            $projectData = $project->data ?? [];
+            $projectData['name'] = $projectData['name'] ?? $project->name;
+            $projectData['slug'] = $projectData['slug'] ?? $this->jobId;
+            $projectData['businessCategory'] = $projectData['businessCategory'] ?? $project->site_type;
+            $projectData['language'] = $projectData['language'] ?? $project->language;
 
-            // 3. Build stdin JSON for generator subprocess
-            $stdinPayload = json_encode([
-                'base' => (string) ($generatorData['base'] ?? 'ollie'),
-                'brandMode' => (string) ($generatorData['brandMode'] ?? 'modern'),
-                'data' => $generatorData,
-                'mode' => 'standard',
-                'slug' => $this->jobId,
-                'outDir' => $tempDir,
-            ], JSON_THROW_ON_ERROR);
+            $aiPlanner = app(AIPlanner::class);
+            $content = $aiPlanner->generate($projectData);
 
-            // 4. Invoke Node generator subprocess
-            $subprocessStart = microtime(true);
+            $patternSelector = app(PatternSelector::class);
+            $imageHandler = new ImageHandler(new UnsplashProvider, new PlaceholderProvider);
+            $themeAssembler = app(ThemeAssembler::class);
+            $validator = app(PlaygroundValidator::class);
 
-            $result = Process::timeout(300)
-                ->env([
-                    'NODE_ENV' => 'production',
-                    'UNSPLASH_ACCESS_KEY' => config('services.unsplash.key'),
-                ])
-                ->path('/app/generator')
-                ->input($stdinPayload)
-                ->run('npx tsx /app/generator/bin/generate.ts');
+            $assembled = $this->attemptAssembly(
+                $patternSelector,
+                $projectData,
+                $content,
+                $imageHandler,
+                $themeAssembler,
+                $validator,
+                $tempDir,
+                0
+            );
 
-            $subprocessDuration = (int) ((microtime(true) - $subprocessStart) * 1000);
-
-            $metrics->emit('generator.subprocess_duration_ms', [
-                'job_id' => $this->jobId,
-                'exit_code' => $result->exitCode(),
-                'duration_ms' => $subprocessDuration,
-            ]);
-
-            // Log stderr (generator progress messages)
-            if ($result->errorOutput()) {
-                Log::info('generator.stderr', [
-                    'job_id' => $this->jobId,
-                    'stderr' => mb_substr($result->errorOutput(), 0, 10000),
-                ]);
-            }
-
-            if ($result->failed()) {
-                throw new \RuntimeException(
-                    "Generator subprocess failed (exit {$result->exitCode()}): "
-                    .mb_substr($result->errorOutput(), 0, 2000)
+            if (! $assembled['validation']['valid']) {
+                $assembled = $this->attemptAssembly(
+                    $patternSelector,
+                    $projectData,
+                    $content,
+                    $imageHandler,
+                    $themeAssembler,
+                    $validator,
+                    $tempDir,
+                    1
                 );
-            }
 
-            // 5. Parse stdout JSON and validate against GeneratorOutput schema
-            $output = json_decode(trim($result->output()), true, 512, JSON_THROW_ON_ERROR);
-
-            if (($output['status'] ?? '') !== 'success') {
-                throw new \RuntimeException(
-                    'Generator returned non-success: '.($output['error'] ?? 'unknown')
-                );
-            }
-
-            // Validate required GeneratorOutput fields
-            foreach (['themeName', 'downloadPath', 'filename', 'themeDir'] as $field) {
-                if (empty($output[$field]) || ! is_string($output[$field])) {
-                    throw new \RuntimeException(
-                        "Generator output missing required field: {$field}"
-                    );
+                if (! $assembled['validation']['valid']) {
+                    throw new \RuntimeException('Theme failed Playground validation.');
                 }
             }
 
-            // 6. Upload theme ZIP to Supabase Storage
-            if (! file_exists($output['downloadPath'])) {
-                throw new \RuntimeException(
-                    "Theme ZIP not found at: {$output['downloadPath']}"
-                );
+            if (! file_exists($assembled['zipPath'])) {
+                throw new \RuntimeException('Theme ZIP not found.');
             }
 
             $themeStoragePath = "themes/{$this->projectId}/{$this->jobId}.zip";
-            $this->uploadFile($output['downloadPath'], $themeStoragePath, $metrics);
+            $this->uploadFile($assembled['zipPath'], $themeStoragePath, $metrics);
 
-            // 7. Upload static ZIP to Supabase Storage (if produced)
-            $staticStoragePath = "previews/{$this->projectId}/{$this->jobId}.zip";
-            if (! empty($output['staticPath']) && file_exists($output['staticPath'])) {
-                $this->uploadFile($output['staticPath'], $staticStoragePath, $metrics);
-            }
-
-            // 8. Update job status to completed
             $job->markCompleted([
                 'download_path' => $themeStoragePath,
-                'static_path' => $staticStoragePath,
             ]);
 
-            // 9. Insert generated_themes record (24h expiry)
             GeneratedTheme::create([
                 'job_id' => $this->jobId,
                 'file_path' => $themeStoragePath,
@@ -172,8 +128,10 @@ class GenerateThemeJob implements ShouldQueue
                 'expires_at' => now()->addHours(24),
             ]);
 
-            $totalDuration = (int) ((microtime(true) - $startTime) * 1000);
+            $downloadUrl = $this->createSignedUrl($themeStoragePath, $metrics);
+            $this->sendWelcomeEmail($projectData, $downloadUrl);
 
+            $totalDuration = (int) ((microtime(true) - $startTime) * 1000);
             $metrics->emit('job.completed', [
                 'job_id' => $this->jobId,
                 'duration_ms' => $totalDuration,
@@ -181,14 +139,10 @@ class GenerateThemeJob implements ShouldQueue
         } catch (Throwable $e) {
             throw $e;
         } finally {
-            // 10. Clean up temp directory
             $this->cleanupTempDir($tempDir);
         }
     }
 
-    /**
-     * Handle final job failure (after all retries exhausted).
-     */
     public function failed(?Throwable $exception): void
     {
         $job = GenerationJob::find($this->jobId);
@@ -198,6 +152,115 @@ class GenerateThemeJob implements ShouldQueue
             'job_id' => $this->jobId,
             'error' => $exception?->getMessage(),
             'attempt' => $this->attempts(),
+        ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $projectData
+     * @return array<string, array<int, string>>
+     */
+    private function buildPatternSelection(PatternSelector $selector, array $projectData, int $offset): array
+    {
+        $vertical = $projectData['businessCategory'] ?? $projectData['category'] ?? 'general';
+        $style = $projectData['brandStyle'] ?? $projectData['style'] ?? 'modern';
+
+        return [
+            'home' => $this->patternsForPage($selector, 'home', $vertical, $style, $offset),
+            'about' => $this->patternsForPage($selector, 'about', $vertical, $style, $offset),
+            'services' => $this->patternsForPage($selector, 'services', $vertical, $style, $offset),
+            'contact' => $this->patternsForPage($selector, 'contact', $vertical, $style, $offset),
+            'blog' => $this->patternsForPage($selector, 'blog', $vertical, $style, $offset),
+            'header' => $this->patternsForPage($selector, 'header', $vertical, $style, $offset),
+            'footer' => $this->patternsForPage($selector, 'footer', $vertical, $style, $offset),
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function patternsForPage(
+        PatternSelector $selector,
+        string $pageType,
+        string $vertical,
+        string $style,
+        int $offset
+    ): array {
+        return $selector->selectForPageWithOffset($pageType, $vertical, $style, $offset);
+    }
+
+    /**
+     * @param  array<string, array<int, string>>  $patterns
+     * @param  array<string, string>  $content
+     * @return array{0: array<string, array<int, array<string, mixed>>>, 1: array<string, string>}
+     */
+    private function injectPatterns(array $patterns, array $content): array
+    {
+        $registry = $this->loadRegistry();
+        $injector = app(TokenInjector::class);
+        $injected = [];
+        $imageTokens = [];
+
+        foreach ($patterns as $page => $patternIds) {
+            $injected[$page] = [];
+            foreach ($patternIds as $patternId) {
+                if (! isset($registry[$patternId])) {
+                    continue;
+                }
+
+                $patternMeta = $registry[$patternId];
+                $requiredTokens = $patternMeta['required_tokens'] ?? [];
+
+                foreach ($patternMeta['image_slots'] ?? [] as $imageToken) {
+                    if (isset($content[$imageToken])) {
+                        $imageTokens[$imageToken] = $content[$imageToken];
+                    }
+                }
+
+                $patternPath = base_path('../pattern-library/'.$patternMeta['file']);
+                $patternContent = $injector->inject($patternPath, $content, $requiredTokens);
+
+                $injected[$page][] = [
+                    'pattern_id' => $patternId,
+                    'slug' => $patternMeta['slug'] ?? $patternId,
+                    'category' => $patternMeta['category'] ?? 'sections',
+                    'content' => $patternContent,
+                ];
+            }
+        }
+
+        return [$injected, $imageTokens];
+    }
+
+    /**
+     * @return array<string, array<string, mixed>>
+     */
+    private function loadRegistry(): array
+    {
+        $path = base_path('../pattern-library/registry.json');
+        $payload = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
+        $indexed = [];
+
+        foreach ($payload['patterns'] ?? [] as $pattern) {
+            $patternId = $pattern['pattern_id'] ?? null;
+            if ($patternId) {
+                $indexed[$patternId] = $pattern;
+            }
+        }
+
+        return $indexed;
+    }
+
+    private function sendWelcomeEmail(array $projectData, string $downloadPath): void
+    {
+        $webhook = config('presspilot.n8n_webhook_url');
+        if (! $webhook) {
+            return;
+        }
+
+        Http::post($webhook, [
+            'user_email' => $projectData['email'] ?? null,
+            'business_name' => $projectData['name'] ?? 'PressPilot',
+            'download_url' => $downloadPath,
         ]);
     }
 
@@ -222,10 +285,56 @@ class GenerateThemeJob implements ShouldQueue
         ]);
     }
 
+    private function createSignedUrl(string $storagePath, MetricsLogger $metrics): string
+    {
+        $disk = Storage::disk('supabase');
+
+        if (method_exists($disk, 'temporaryUrl')) {
+            $signedUrl = $disk->temporaryUrl($storagePath, now()->addHours(24));
+        } else {
+            $signedUrl = $storagePath;
+        }
+
+        $metrics->emit('storage.signed_url_generated', [
+            'job_id' => $this->jobId,
+            'path' => $storagePath,
+        ]);
+
+        return $signedUrl;
+    }
+
     private function cleanupTempDir(string $dir): void
     {
         if (is_dir($dir)) {
-            Process::run('rm -rf '.escapeshellarg($dir));
+            app(ThemeAssembler::class)->deleteDirectory($dir);
         }
+    }
+
+    /**
+     * @param  array<string, mixed>  $projectData
+     * @param  array<string, string>  $content
+     * @return array{zipPath: string, themeDir: string, validation: array<string, mixed>}
+     */
+    private function attemptAssembly(
+        PatternSelector $patternSelector,
+        array $projectData,
+        array $content,
+        ImageHandler $imageHandler,
+        ThemeAssembler $themeAssembler,
+        PlaygroundValidator $validator,
+        string $tempDir,
+        int $offset
+    ): array {
+        $patterns = $this->buildPatternSelection($patternSelector, $projectData, $offset);
+        [$injectedPatterns, $imageTokens] = $this->injectPatterns($patterns, $content);
+        $images = $imageHandler->generateImages($projectData, $tempDir.'/assets/images', $imageTokens);
+        $assembled = $themeAssembler->assemble($projectData, $injectedPatterns, $images);
+        $validation = $validator->validate($assembled['themeDir']);
+
+        return [
+            'zipPath' => $assembled['zipPath'],
+            'themeDir' => $assembled['themeDir'],
+            'validation' => $validation,
+        ];
     }
 }

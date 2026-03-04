@@ -1,6 +1,6 @@
 # PressPilot OS — Development Roadmap
 
-> **Last updated: 2026-03-03** — Latest commit: `a15c076`. Generator Fix Plan Phases 0/1/3/4 complete. Hero layout rework done (fullBleed nav overlay, fullWidth cover). P5 (generation stall) still open — requires server access. See `_memory/main.md` for full current state.
+> **Last updated: 2026-03-04** — SSWG Phase 2 code complete. All 6 assembly engine services built + cleanup applied. Tests pending VPS run. Phase 1 (tokenized patterns) still blocking end-to-end generation. See `_memory/main.md` for full current state.
 
 ## Phase 1: Stabilization & Core Refactor (Current)
 **Goal:** Reach 100% reliability for generated themes. Eliminate "Attempt Recovery" errors.
@@ -210,6 +210,25 @@ All verticals support 4 brand modes:
 - [ ] Multi-language support (RTL for Arabic)
 - [ ] CI security gate integration
 - [ ] Performance optimization for 1000+ users
+
+---
+
+## Patch Note: 2026-03-04
+
+- [x] **SSWG Phase 2 — Assembly Engine code complete:**
+  - All 6 services implemented: PatternSelector, TokenInjector, ThemeAssembler, ImageHandler, AIPlanner, PlaygroundValidator
+  - GenerateThemeJob refactored to use full SSWG pipeline with retry + offset-based pattern diversification
+  - Pipeline: AIPlanner → PatternSelector → TokenInjector → ImageHandler → ThemeAssembler → PlaygroundValidator → Supabase → n8n webhook
+- [x] **Phase 2 cleanup (code review fixes):**
+  - Extracted `ContentGenerationException` and `MissingTokenException` to `app/Exceptions/` (PSR-4 compliance)
+  - Fixed hardcoded `/tmp/themes/` → `sys_get_temp_dir()."/pp-themes/"` in ThemeAssembler
+  - Refactored AIPlanner from raw `file_get_contents` to Laravel `Http` facade (testable with `Http::fake()`)
+  - Added `ThemeAssemblerTest.php` with 5 test cases (file structure, header, credit, JSON, ZIP)
+- [ ] **Phase 2 pending:**
+  - Run `php artisan test` on VPS (production container needs `composer install --dev`)
+  - Create `AIPlannerTest.php` with `Http::fake()` mocked API calls
+  - End-to-end 3-vertical verification (blocked on Phase 1 — tokenized patterns not yet created)
+  - Branch/PR workflow per SSWG spec (work currently on `main`)
 
 ---
 

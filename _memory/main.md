@@ -1,6 +1,6 @@
 # PressPilot OS — Master Roadmap & Project Memory
 
-Last updated: 2026-03-03
+Last updated: 2026-03-04
 
 ---
 
@@ -8,6 +8,42 @@ Last updated: 2026-03-03
 - Branch: `main`
 - Latest commit: `bf827ab` (2026-03-03) — `sync(preview): heroPreviewInjector mirrors hero-variants.ts + docs updated`
 - Working tree: clean
+
+### 2026-03-04 Session — SSWG Phase 2 Code Complete + Cleanup
+
+**Services delivered by coding agent:**
+| File | Purpose |
+|------|---------|
+| `backend/app/Services/PatternSelector.php` | Selects patterns by vertical/style with Ollie fallback |
+| `backend/app/Services/TokenInjector.php` | str_replace {{TOKEN}} injection with HTML escaping |
+| `backend/app/Services/ThemeAssembler.php` | Builds complete theme.zip from patterns + project data |
+| `backend/app/Services/ImageHandler.php` | Image sourcing with UnsplashProvider + PlaceholderProvider |
+| `backend/app/Services/AIPlanner.php` | Claude API content generation with retry logic |
+| `backend/app/Services/PlaygroundValidator.php` | WP Playground CLI validation via blueprint |
+| `backend/app/Jobs/GenerateThemeJob.php` | Full pipeline orchestration with retry + offset |
+| `backend/config/presspilot.php` | AI + n8n config |
+
+**Cleanup applied (by review session):**
+| Fix | Files Changed |
+|-----|---------------|
+| Extract `ContentGenerationException` to own file | `app/Exceptions/ContentGenerationException.php`, `AIPlanner.php` |
+| Extract `MissingTokenException` to own file | `app/Exceptions/MissingTokenException.php`, `TokenInjector.php`, `TokenInjectorTest.php` |
+| Fix hardcoded `/tmp/themes/` → `sys_get_temp_dir()` | `ThemeAssembler.php` |
+| Refactor AIPlanner HTTP to Laravel `Http` facade | `AIPlanner.php` (was raw `file_get_contents`) |
+| Add ThemeAssembler unit test (5 cases) | `tests/Unit/ThemeAssemblerTest.php` |
+
+**Tests created:**
+- `PatternSelectorTest.php` — 4 tests (vertical affinity, fallback, page coverage)
+- `TokenInjectorTest.php` — 4 tests (injection, missing token, escaping, block comment integrity)
+- `ThemeAssemblerTest.php` — 5 tests (file structure, header, credit, JSON validity, ZIP)
+- `DataTransformerTest.php` — pre-existing
+
+**Tests NOT yet run** — production container lacks dev dependencies. Command: `docker exec <container> composer install --dev && docker exec <container> php artisan test`
+
+**Gaps vs SSWG Phase 2 spec:**
+1. `AIPlannerTest.php` not yet created (should use `Http::fake()`)
+2. End-to-end 3-vertical verification blocked on Phase 1 (tokenized patterns don't exist yet)
+3. Work is on `main` branch, not `feat/phase-2-assembly-engine` as spec requires
 
 ### 2026-03-03 Session — Commit chain:
 | Commit | Description |
@@ -264,13 +300,14 @@ Resolution pipeline (5 layers, in order):
 - ~~**Hero layout rework**~~ — fullBleed transparent nav overlay, fullWidth cover with image (`a15c076`)
 - ~~**Hero preview mirror sync**~~ — `heroPreviewInjector.ts` updated to match hero-variants.ts (uncommitted)
 
-### Active — Next Priority: SSWG Rewrite
-**Decision (2026-03-03):** P5 generation stall fix is DEPRIORITIZED. The entire generation pipeline will be replaced by SSWG (Solid Smart WordPress Generator). Investing time debugging the current broken pipeline is wasted effort since SSWG replaces it.
+### Active — SSWG Implementation
+**Decision (2026-03-03):** P5 generation stall fix is DEPRIORITIZED. The entire generation pipeline will be replaced by SSWG (Solid Smart WordPress Generator).
 
 - **SSWG Phase 0:** ✅ COMPLETE — foundation, proven-cores audit, protocol established
-- **SSWG Phase 1:** ⬅️ NEXT — Pattern Tokenization Engine (see `AGENT-PROMPT-SSWG-PHASE1-LEAN.md`)
-- **SSWG Phase 2–4:** Queued (assembly engine → frontend → WPaify integration)
-- Reference docs: `agent-os/sswg/` (all phase specs + SSWG-IMPLEMENTATION-PROTOCOL.md + PROVEN-CORES-VAULT-AUDIT.md)
+- **SSWG Phase 1:** ⬅️ BLOCKING — Pattern Tokenization Engine (80-100 tokenized patterns + registry.json). Phase 2 services are built but need these patterns to function.
+- **SSWG Phase 2:** ✅ CODE COMPLETE (2026-03-04) — all 6 services built, tested, cleanup applied. See "SSWG Phase 2 Session" below for details. Pending: run `php artisan test` on VPS, AIPlannerTest with Http::fake(), end-to-end 3-vertical verification (blocked on Phase 1 patterns).
+- **SSWG Phase 3–4:** Queued (frontend integration → WPaify)
+- Reference docs: `agent-os/sswg/` (all phase specs + PROTOCOL.md + PROVEN-CORES-VAULT-AUDIT.md)
 
 ### Deprioritized (Superseded by SSWG)
 - ~~**P5: Diagnose generation stall**~~ — DELIVER step hangs at "Building Your Assets". Skipped — SSWG replaces this pipeline entirely.
