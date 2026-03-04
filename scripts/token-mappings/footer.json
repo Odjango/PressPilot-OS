@@ -1,0 +1,8 @@
+{
+  "category": "footer",
+  "tokenMap": {
+    "p": ["FOOTER_TEXT", "FOOTER_COPYRIGHT"],
+    "a": ["BUSINESS_NAME"],
+    "span": ["BUSINESS_NAME"]
+  }
+}

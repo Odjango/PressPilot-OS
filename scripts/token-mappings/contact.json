@@ -1,0 +1,9 @@
+{
+  "category": "contact",
+  "tokenMap": {
+    "h2": ["CONTACT_TITLE"],
+    "p": ["CONTACT_TEXT", "CONTACT_ADDRESS", "CONTACT_STATE"],
+    "a": ["CONTACT_EMAIL"],
+    "span": ["CONTACT_PHONE"]
+  }
+}

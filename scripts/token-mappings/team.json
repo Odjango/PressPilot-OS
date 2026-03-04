@@ -1,0 +1,10 @@
+{
+  "category": "team",
+  "tokenMap": {
+    "h2": ["TEAM_TITLE"],
+    "p": ["TEAM_TEXT"],
+    "h3": ["TEAM_1_NAME", "TEAM_2_NAME"],
+    "span": ["TEAM_1_ROLE", "TEAM_2_ROLE"],
+    "alt": ["IMAGE_TEAM_1", "IMAGE_TEAM_2"]
+  }
+}

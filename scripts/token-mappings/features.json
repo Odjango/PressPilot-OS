@@ -1,0 +1,9 @@
+{
+  "category": "features",
+  "tokenMap": {
+    "h2": ["FEATURES_TITLE"],
+    "p": ["FEATURES_TEXT", "FEATURE_1_TEXT", "FEATURE_2_TEXT", "FEATURE_3_TEXT"],
+    "h3": ["FEATURE_1_TITLE", "FEATURE_2_TITLE", "FEATURE_3_TITLE"],
+    "alt": ["IMAGE_FEATURE_1", "IMAGE_FEATURE_2"]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "category": "testimonials",
+  "tokenMap": {
+    "h2": ["TESTIMONIALS_TITLE"],
+    "p": ["TESTIMONIAL_1_TEXT", "TESTIMONIAL_2_TEXT"],
+    "h3": ["TESTIMONIAL_1_AUTHOR", "TESTIMONIAL_2_AUTHOR"],
+    "span": ["TESTIMONIAL_1_ROLE", "TESTIMONIAL_2_ROLE"],
+    "alt": ["IMAGE_TESTIMONIAL_1"]
+  }
+}

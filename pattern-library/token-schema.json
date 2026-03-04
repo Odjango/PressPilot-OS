@@ -1,0 +1,100 @@
+{
+  "version": "1.0",
+  "tokens": [
+    {"name":"HERO_PRETITLE","type":"text","maxLength":60,"description":"Eyebrow/pretitle text","exampleValue":"Family-owned since 1985","usedInSections":["hero"]},
+    {"name":"HERO_TITLE","type":"text","maxLength":80,"description":"Main hero headline","exampleValue":"The Best Pizza in Brooklyn","usedInSections":["hero"]},
+    {"name":"HERO_TEXT","type":"text","maxLength":200,"description":"Hero supporting copy","exampleValue":"Hand-tossed dough, fresh ingredients.","usedInSections":["hero"]},
+    {"name":"HERO_CTA","type":"text","maxLength":30,"description":"Primary hero button text","exampleValue":"View Menu","usedInSections":["hero","cta"]},
+    {"name":"HERO_CTA_URL","type":"url","maxLength":2048,"description":"Primary hero button link","exampleValue":"/menu","usedInSections":["hero"]},
+    {"name":"HERO_CTA_SECONDARY","type":"text","maxLength":30,"description":"Secondary hero button text","exampleValue":"Learn More","usedInSections":["hero"]},
+    {"name":"HERO_CTA_SECONDARY_URL","type":"url","maxLength":2048,"description":"Secondary hero button link","exampleValue":"/about","usedInSections":["hero"]},
+    {"name":"IMAGE_HERO","type":"image","maxLength":2048,"description":"Hero image URL","exampleValue":"https://example.com/hero.jpg","usedInSections":["hero"]},
+
+    {"name":"FEATURES_TITLE","type":"text","maxLength":80,"description":"Features section heading","exampleValue":"Why Choose Us","usedInSections":["features"]},
+    {"name":"FEATURES_TEXT","type":"text","maxLength":200,"description":"Features intro copy","exampleValue":"Three reasons customers love us.","usedInSections":["features"]},
+    {"name":"FEATURE_1_TITLE","type":"text","maxLength":60,"description":"Feature 1 title","exampleValue":"Fresh Ingredients","usedInSections":["features"]},
+    {"name":"FEATURE_1_TEXT","type":"text","maxLength":150,"description":"Feature 1 description","exampleValue":"Local produce and artisan cheeses.","usedInSections":["features"]},
+    {"name":"FEATURE_2_TITLE","type":"text","maxLength":60,"description":"Feature 2 title","exampleValue":"Wood-Fired Oven","usedInSections":["features"]},
+    {"name":"FEATURE_2_TEXT","type":"text","maxLength":150,"description":"Feature 2 description","exampleValue":"900°F for the perfect crust.","usedInSections":["features"]},
+    {"name":"FEATURE_3_TITLE","type":"text","maxLength":60,"description":"Feature 3 title","exampleValue":"Family Recipes","usedInSections":["features"]},
+    {"name":"FEATURE_3_TEXT","type":"text","maxLength":150,"description":"Feature 3 description","exampleValue":"Passed down for generations.","usedInSections":["features"]},
+    {"name":"IMAGE_FEATURE_1","type":"image","maxLength":2048,"description":"Feature image 1","exampleValue":"https://example.com/feature-1.jpg","usedInSections":["features"]},
+    {"name":"IMAGE_FEATURE_2","type":"image","maxLength":2048,"description":"Feature image 2","exampleValue":"https://example.com/feature-2.jpg","usedInSections":["features"]},
+
+    {"name":"ABOUT_TITLE","type":"text","maxLength":80,"description":"About section heading","exampleValue":"Our Story","usedInSections":["about"]},
+    {"name":"ABOUT_TEXT","type":"text","maxLength":400,"description":"About paragraph","exampleValue":"Founded in 1985 by the Rossi family...","usedInSections":["about"]},
+    {"name":"ABOUT_MISSION","type":"text","maxLength":200,"description":"Mission statement","exampleValue":"Serve authentic flavors daily.","usedInSections":["about"]},
+    {"name":"ABOUT_TAGLINE","type":"text","maxLength":120,"description":"Short about tagline","exampleValue":"Tradition meets craft.","usedInSections":["about"]},
+    {"name":"IMAGE_ABOUT","type":"image","maxLength":2048,"description":"About image URL","exampleValue":"https://example.com/about.jpg","usedInSections":["about"]},
+
+    {"name":"TEAM_TITLE","type":"text","maxLength":80,"description":"Team section heading","exampleValue":"Meet the Team","usedInSections":["team"]},
+    {"name":"TEAM_TEXT","type":"text","maxLength":200,"description":"Team intro copy","exampleValue":"Local experts at your service.","usedInSections":["team"]},
+    {"name":"TEAM_1_NAME","type":"text","maxLength":60,"description":"Team member 1 name","exampleValue":"Marco Rossi","usedInSections":["team"]},
+    {"name":"TEAM_1_ROLE","type":"text","maxLength":60,"description":"Team member 1 role","exampleValue":"Head Chef","usedInSections":["team"]},
+    {"name":"IMAGE_TEAM_1","type":"image","maxLength":2048,"description":"Team member 1 photo","exampleValue":"https://example.com/team-1.jpg","usedInSections":["team"]},
+    {"name":"TEAM_2_NAME","type":"text","maxLength":60,"description":"Team member 2 name","exampleValue":"Sofia Rossi","usedInSections":["team"]},
+    {"name":"IMAGE_TEAM_2","type":"image","maxLength":2048,"description":"Team member 2 photo","exampleValue":"https://example.com/team-2.jpg","usedInSections":["team"]},
+
+    {"name":"TESTIMONIALS_TITLE","type":"text","maxLength":80,"description":"Testimonials section heading","exampleValue":"What Customers Say","usedInSections":["testimonials"]},
+    {"name":"TESTIMONIAL_1_TEXT","type":"text","maxLength":300,"description":"Testimonial 1 text","exampleValue":"Best pizza in the city.","usedInSections":["testimonials"]},
+    {"name":"TESTIMONIAL_1_AUTHOR","type":"text","maxLength":60,"description":"Testimonial 1 author","exampleValue":"James Wilson","usedInSections":["testimonials"]},
+    {"name":"TESTIMONIAL_1_ROLE","type":"text","maxLength":60,"description":"Testimonial 1 context","exampleValue":"Food Blogger","usedInSections":["testimonials"]},
+    {"name":"TESTIMONIAL_2_TEXT","type":"text","maxLength":300,"description":"Testimonial 2 text","exampleValue":"Friendly staff and fast service.","usedInSections":["testimonials"]},
+    {"name":"TESTIMONIAL_2_AUTHOR","type":"text","maxLength":60,"description":"Testimonial 2 author","exampleValue":"Lena Ortiz","usedInSections":["testimonials"]},
+    {"name":"IMAGE_TESTIMONIAL_1","type":"image","maxLength":2048,"description":"Testimonial avatar","exampleValue":"https://example.com/avatar.jpg","usedInSections":["testimonials"]},
+
+    {"name":"CONTACT_TITLE","type":"text","maxLength":80,"description":"Contact section heading","exampleValue":"Get In Touch","usedInSections":["contact"]},
+    {"name":"CONTACT_TEXT","type":"text","maxLength":200,"description":"Contact intro copy","exampleValue":"We’d love to hear from you.","usedInSections":["contact"]},
+    {"name":"CONTACT_EMAIL","type":"text","maxLength":254,"description":"Contact email address","exampleValue":"hello@romapizza.com","usedInSections":["contact","footer"]},
+    {"name":"CONTACT_PHONE","type":"text","maxLength":30,"description":"Contact phone number","exampleValue":"(212) 555-0123","usedInSections":["contact","footer"]},
+    {"name":"CONTACT_ADDRESS","type":"text","maxLength":200,"description":"Contact address","exampleValue":"123 Main St","usedInSections":["contact","footer"]},
+    {"name":"CONTACT_STATE","type":"text","maxLength":60,"description":"Contact state/region","exampleValue":"NY","usedInSections":["contact","footer"]},
+
+    {"name":"PRICING_TITLE","type":"text","maxLength":80,"description":"Pricing section heading","exampleValue":"Plans & Pricing","usedInSections":["pricing"]},
+    {"name":"PRICING_TEXT","type":"text","maxLength":200,"description":"Pricing intro copy","exampleValue":"Choose the plan that fits.","usedInSections":["pricing"]},
+    {"name":"PLAN_1_NAME","type":"text","maxLength":40,"description":"Plan 1 name","exampleValue":"Starter","usedInSections":["pricing"]},
+    {"name":"PLAN_1_PRICE","type":"text","maxLength":20,"description":"Plan 1 price","exampleValue":"$19/mo","usedInSections":["pricing"]},
+    {"name":"PLAN_1_FEATURES","type":"text","maxLength":200,"description":"Plan 1 features","exampleValue":"5 pages, basic SEO","usedInSections":["pricing"]},
+    {"name":"PLAN_1_CTA","type":"text","maxLength":30,"description":"Plan 1 CTA","exampleValue":"Get Started","usedInSections":["pricing","cta"]},
+    {"name":"PLAN_2_NAME","type":"text","maxLength":40,"description":"Plan 2 name","exampleValue":"Professional","usedInSections":["pricing"]},
+    {"name":"PLAN_2_PRICE","type":"text","maxLength":20,"description":"Plan 2 price","exampleValue":"$49/mo","usedInSections":["pricing"]},
+    {"name":"PLAN_2_FEATURES","type":"text","maxLength":200,"description":"Plan 2 features","exampleValue":"Unlimited pages","usedInSections":["pricing"]},
+    {"name":"PLAN_2_CTA","type":"text","maxLength":30,"description":"Plan 2 CTA","exampleValue":"Upgrade","usedInSections":["pricing","cta"]},
+
+    {"name":"CTA_TITLE","type":"text","maxLength":80,"description":"CTA heading","exampleValue":"Ready to get started?","usedInSections":["cta"]},
+    {"name":"CTA_TEXT","type":"text","maxLength":200,"description":"CTA copy","exampleValue":"Book your table today.","usedInSections":["cta"]},
+    {"name":"CTA_BUTTON","type":"text","maxLength":30,"description":"CTA button text","exampleValue":"Contact Us","usedInSections":["cta"]},
+
+    {"name":"BLOG_TITLE","type":"text","maxLength":80,"description":"Blog section heading","exampleValue":"Latest News","usedInSections":["blog"]},
+
+    {"name":"BUSINESS_NAME","type":"text","maxLength":80,"description":"Business/site name","exampleValue":"Roma Pizza","usedInSections":["header","footer"]},
+    {"name":"FOOTER_TEXT","type":"text","maxLength":200,"description":"Footer summary text","exampleValue":"Serving authentic Italian cuisine.","usedInSections":["footer"]},
+    {"name":"FOOTER_COPYRIGHT","type":"text","maxLength":120,"description":"Footer copyright text","exampleValue":"© 2026 Roma Pizza","usedInSections":["footer"]},
+    {"name":"SOCIAL_FACEBOOK","type":"url","maxLength":2048,"description":"Facebook URL","exampleValue":"https://facebook.com/roma","usedInSections":["header","footer"]},
+    {"name":"SOCIAL_INSTAGRAM","type":"url","maxLength":2048,"description":"Instagram URL","exampleValue":"https://instagram.com/roma","usedInSections":["header","footer"]},
+    {"name":"SOCIAL_TWITTER","type":"url","maxLength":2048,"description":"Twitter/X URL","exampleValue":"https://x.com/roma","usedInSections":["header","footer"]},
+
+    {"name":"MENU_TITLE","type":"text","maxLength":80,"description":"Menu heading","exampleValue":"Our Menu","usedInSections":["restaurant"]},
+    {"name":"MENU_SECTION_1_TITLE","type":"text","maxLength":60,"description":"Menu section title","exampleValue":"Appetizers","usedInSections":["restaurant"]},
+    {"name":"MENU_ITEM_1_NAME","type":"text","maxLength":60,"description":"Menu item name","exampleValue":"Bruschetta","usedInSections":["restaurant"]},
+    {"name":"MENU_ITEM_1_DESC","type":"text","maxLength":150,"description":"Menu item description","exampleValue":"Tomato, basil, olive oil.","usedInSections":["restaurant"]},
+    {"name":"MENU_ITEM_1_PRICE","type":"text","maxLength":20,"description":"Menu item price","exampleValue":"$12","usedInSections":["restaurant"]},
+    {"name":"OPENING_HOURS","type":"text","maxLength":200,"description":"Restaurant hours","exampleValue":"Mon–Sun 11am–9pm","usedInSections":["restaurant"]},
+    {"name":"RESERVATION_TITLE","type":"text","maxLength":80,"description":"Reservation heading","exampleValue":"Reserve a Table","usedInSections":["restaurant"]},
+    {"name":"RESERVATION_TEXT","type":"text","maxLength":200,"description":"Reservation copy","exampleValue":"Call or book online.","usedInSections":["restaurant"]},
+
+    {"name":"IMAGE_GALLERY_1","type":"image","maxLength":2048,"description":"Gallery image 1","exampleValue":"https://example.com/gallery-1.jpg","usedInSections":["gallery","about"]},
+    {"name":"IMAGE_GALLERY_2","type":"image","maxLength":2048,"description":"Gallery image 2","exampleValue":"https://example.com/gallery-2.jpg","usedInSections":["gallery","about"]},
+    {"name":"IMAGE_GALLERY_3","type":"image","maxLength":2048,"description":"Gallery image 3","exampleValue":"https://example.com/gallery-3.jpg","usedInSections":["gallery","about"]},
+
+    {"name":"FAQ_TITLE","type":"text","maxLength":80,"description":"FAQ heading","exampleValue":"Frequently Asked Questions","usedInSections":["faq"]},
+    {"name":"FAQ_1_QUESTION","type":"text","maxLength":120,"description":"FAQ question","exampleValue":"Do you offer delivery?","usedInSections":["faq"]},
+    {"name":"FAQ_1_ANSWER","type":"text","maxLength":300,"description":"FAQ answer","exampleValue":"Yes, within a 5-mile radius.","usedInSections":["faq"]},
+
+    {"name":"NEWSLETTER_TITLE","type":"text","maxLength":80,"description":"Newsletter heading","exampleValue":"Stay in the loop","usedInSections":["newsletter"]},
+    {"name":"NEWSLETTER_TEXT","type":"text","maxLength":200,"description":"Newsletter text","exampleValue":"Subscribe for weekly updates.","usedInSections":["newsletter"]},
+    {"name":"NEWSLETTER_BUTTON","type":"text","maxLength":30,"description":"Newsletter button","exampleValue":"Subscribe","usedInSections":["newsletter"]},
+
+    {"name":"NUMBERS_TITLE","type":"text","maxLength":80,"description":"Numbers section heading","exampleValue":"By the numbers","usedInSections":["numbers"]}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "category": "newsletter",
+  "tokenMap": {
+    "h2": ["NEWSLETTER_TITLE"],
+    "p": ["NEWSLETTER_TEXT"],
+    "a": ["NEWSLETTER_BUTTON"]
+  }
+}

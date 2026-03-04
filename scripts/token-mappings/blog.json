@@ -1,0 +1,6 @@
+{
+  "category": "blog",
+  "tokenMap": {
+    "h2": ["BLOG_TITLE"]
+  }
+}

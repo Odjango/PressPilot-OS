@@ -1,0 +1,8 @@
+{
+  "category": "cta",
+  "tokenMap": {
+    "h2": ["CTA_TITLE"],
+    "p": ["CTA_TEXT"],
+    "a": ["CTA_BUTTON"]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "category": "header",
+  "tokenMap": {
+    "p": ["BUSINESS_NAME"],
+    "a": ["BUSINESS_NAME"],
+    "span": ["BUSINESS_NAME"]
+  }
+}

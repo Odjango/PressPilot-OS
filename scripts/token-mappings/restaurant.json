@@ -1,0 +1,8 @@
+{
+  "category": "restaurant",
+  "tokenMap": {
+    "h2": ["MENU_TITLE", "RESERVATION_TITLE"],
+    "h3": ["MENU_SECTION_1_TITLE"],
+    "p": ["MENU_ITEM_1_NAME", "MENU_ITEM_1_DESC", "MENU_ITEM_1_PRICE", "OPENING_HOURS", "RESERVATION_TEXT"]
+  }
+}

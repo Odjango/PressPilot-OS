@@ -1,0 +1,8 @@
+{
+  "category": "about",
+  "tokenMap": {
+    "h2": ["ABOUT_TITLE"],
+    "p": ["ABOUT_TEXT", "ABOUT_MISSION", "ABOUT_TAGLINE"],
+    "alt": ["IMAGE_ABOUT"]
+  }
+}

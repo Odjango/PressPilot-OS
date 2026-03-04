@@ -1,0 +1,10 @@
+{
+  "category": "pricing",
+  "tokenMap": {
+    "h2": ["PRICING_TITLE"],
+    "p": ["PRICING_TEXT", "PLAN_1_FEATURES", "PLAN_2_FEATURES"],
+    "h3": ["PLAN_1_NAME", "PLAN_2_NAME"],
+    "span": ["PLAN_1_PRICE", "PLAN_2_PRICE"],
+    "a": ["PLAN_1_CTA", "PLAN_2_CTA"]
+  }
+}

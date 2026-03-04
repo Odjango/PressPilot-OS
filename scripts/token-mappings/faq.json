@@ -1,0 +1,8 @@
+{
+  "category": "faq",
+  "tokenMap": {
+    "h2": ["FAQ_TITLE"],
+    "h3": ["FAQ_1_QUESTION"],
+    "p": ["FAQ_1_ANSWER"]
+  }
+}

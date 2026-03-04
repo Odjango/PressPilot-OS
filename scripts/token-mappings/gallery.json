@@ -1,0 +1,6 @@
+{
+  "category": "gallery",
+  "tokenMap": {
+    "alt": ["IMAGE_GALLERY_1", "IMAGE_GALLERY_2", "IMAGE_GALLERY_3"]
+  }
+}

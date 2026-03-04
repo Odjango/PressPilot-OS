@@ -1,0 +1,11 @@
+{
+  "category": "hero",
+  "tokenMap": {
+    "h1": ["HERO_TITLE"],
+    "h2": ["HERO_PRETITLE"],
+    "p": ["HERO_TEXT"],
+    "a": ["HERO_CTA", "HERO_CTA_SECONDARY"],
+    "span": ["HERO_PRETITLE"],
+    "alt": ["IMAGE_HERO"]
+  }
+}
