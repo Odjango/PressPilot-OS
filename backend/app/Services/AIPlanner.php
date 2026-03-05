@@ -180,12 +180,22 @@ PROMPT;
     /**
      * @param  array<string, string>  $tokens
      */
-    private function validateTokens(array $tokens): void
+    /**
+     * Validate AI-generated tokens against schema.
+     * Soft validation: logs warnings for missing tokens and fills empty defaults
+     * so the pipeline can continue. Hard-failing here blocks the entire generation
+     * when the AI omits even one token (common with large vocabularies).
+     *
+     * @param  array<string, string>  $tokens
+     * @return array<string, string>  Tokens with defaults filled for any missing entries
+     */
+    private function validateTokens(array &$tokens): void
     {
+        $missing = [];
+
         foreach ($this->tokenSchema as $token) {
             $name = $token['name'] ?? null;
             $maxLength = $token['maxLength'] ?? null;
-            $required = $token['required'] ?? true;
 
             if (! $name) {
                 continue;
@@ -196,19 +206,27 @@ PROMPT;
                 continue;
             }
 
-            if ($required && ! array_key_exists($name, $tokens)) {
-                throw new ContentGenerationException("Missing token: {$name}");
-            }
-
+            // Fill missing tokens with empty string so TokenInjector can proceed.
             if (! array_key_exists($name, $tokens)) {
+                $tokens[$name] = '';
+                $missing[] = $name;
                 continue;
             }
 
             $value = (string) $tokens[$name];
 
             if ($maxLength && mb_strlen($value) > $maxLength) {
-                throw new ContentGenerationException("Token {$name} exceeds max length");
+                // Truncate instead of failing — preserves partial content.
+                $tokens[$name] = mb_substr($value, 0, $maxLength);
+                Log::warning("AIPlanner: Token {$name} truncated to {$maxLength} chars");
             }
+        }
+
+        if (count($missing) > 0) {
+            Log::warning('AIPlanner: Missing tokens filled with defaults', [
+                'count' => count($missing),
+                'tokens' => array_slice($missing, 0, 10),
+            ]);
         }
     }
 }
