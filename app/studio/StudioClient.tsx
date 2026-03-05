@@ -21,6 +21,7 @@ import { RestaurantMenu } from "@/src/generator/types";
 import StepProgress from "./components/StepProgress";
 import { ArrowLeft, ArrowRight, Wand2, Download, CheckCircle2, Sparkles, Info, X, Loader2, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
+import PlaygroundThemePreview from "./components/PlaygroundThemePreview";
 
 
 type StudioProject = {
@@ -1361,9 +1362,17 @@ export default function StudioClient({ slug }: Props) {
               </button>
             </div>
             {heroPreviewError && (
-              <p className="mt-4 text-sm font-medium text-red-400 bg-red-950/50 p-4 rounded-xl border border-red-900/50 text-center">
-                {heroPreviewError}
-              </p>
+              <div className="mt-4 text-sm font-medium text-red-400 bg-red-950/50 p-4 rounded-xl border border-red-900/50 text-center space-y-3">
+                <p>{heroPreviewError}</p>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(4)}
+                  className="inline-flex items-center gap-2 rounded-full bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/20 transition-colors"
+                >
+                  Skip Preview — Go to Generate
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
             )}
           </div>
         )}
@@ -1512,12 +1521,19 @@ export default function StudioClient({ slug }: Props) {
               </h2>
               <p className="mx-auto max-w-md text-slate-400 font-medium">
                 {jobStatus === "completed"
-                  ? "Download your professional WordPress theme and static site bundle below."
+                  ? "Preview your theme live below, then download when ready."
                   : jobStatus === "failed"
                     ? "There was an error while generating your theme. Please try again or contact support."
                     : "PressPilot is currently compiling your custom block theme, injecting patterns, and generating your static site."}
               </p>
             </div>
+
+            {jobStatus === "completed" && artifacts?.themeUrl && (
+              <PlaygroundThemePreview
+                themeZipUrl={artifacts.themeUrl}
+                themeName={project?.name}
+              />
+            )}
 
             <div className="flex justify-center">
               <div className={`group relative flex flex-col items-center rounded-3xl border-2 p-8 transition-all duration-500 max-w-sm w-full ${jobStatus === "completed"
