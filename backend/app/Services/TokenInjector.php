@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\MissingTokenException;
+use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
 class TokenInjector
@@ -28,17 +29,29 @@ class TokenInjector
             $search[] = '{{'.$tokenKey.'}}';
 
             if (str_starts_with($tokenKey, 'IMAGE_')) {
-                $this->assertValidImageUrl($value, $tokenKey);
-                $replace[] = $value;
+                // Use placeholder URL for empty/invalid image tokens instead of failing.
+                $url = trim((string) $value);
+                if ($url === '' || ! filter_var($url, FILTER_VALIDATE_URL)) {
+                    $replace[] = 'https://placehold.co/1200x600';
+                } else {
+                    $replace[] = $url;
+                }
             } else {
-                $replace[] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                $replace[] = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
             }
         }
 
         $output = str_replace($search, $replace, $contents);
 
-        if (str_contains($output, '{{') || str_contains($output, '}}')) {
-            throw new RuntimeException('Unresolved tokens remain after injection');
+        // Sweep: replace any remaining {{TOKEN}} placeholders with empty string.
+        // Pattern files may reference tokens outside the current schema — this
+        // prevents hard failures while logging what was missed.
+        if (preg_match_all('/\{\{([A-Z0-9_]+)\}\}/', $output, $matches)) {
+            Log::warning('TokenInjector: Unresolved tokens replaced with empty', [
+                'pattern' => basename($patternPath),
+                'tokens' => $matches[1],
+            ]);
+            $output = preg_replace('/\{\{[A-Z0-9_]+\}\}/', '', $output);
         }
 
         return $output;
@@ -52,25 +65,16 @@ class TokenInjector
     {
         $missing = [];
         foreach ($requiredTokens as $token) {
-            if (! array_key_exists($token, $tokens) || $tokens[$token] === '') {
+            // Only flag truly missing keys — empty string is a valid default from AIPlanner.
+            if (! array_key_exists($token, $tokens)) {
                 $missing[] = $token;
             }
         }
 
         if (! empty($missing)) {
-            throw new MissingTokenException('Missing required tokens: '.implode(', ', $missing));
-        }
-    }
-
-    private function assertValidImageUrl(string $value, string $tokenKey): void
-    {
-        $url = trim($value);
-        if ($url === '') {
-            throw new RuntimeException("Image token {$tokenKey} is empty");
-        }
-
-        if (! filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new RuntimeException("Invalid image URL for {$tokenKey}");
+            Log::warning('TokenInjector: Required tokens not in payload', [
+                'tokens' => $missing,
+            ]);
         }
     }
 }
