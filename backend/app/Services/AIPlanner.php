@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\ContentGenerationException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AIPlanner
 {
@@ -27,8 +28,13 @@ class AIPlanner
 
         $response = $this->requestWithRetry($systemPrompt, $userPrompt);
 
-        $decoded = json_decode($response, true);
+        $cleaned = $this->extractJson($response);
+        $decoded = json_decode($cleaned, true);
         if (! is_array($decoded)) {
+            Log::error('AIPlanner: Failed to parse AI response', [
+                'raw_response' => mb_substr($response, 0, 500),
+                'cleaned' => mb_substr($cleaned, 0, 500),
+            ]);
             throw new ContentGenerationException('AI response was not valid JSON.');
         }
 
@@ -137,6 +143,33 @@ PROMPT;
         }
 
         return $content;
+    }
+
+    /**
+     * Extract JSON from AI response, stripping markdown code fences and preamble.
+     */
+    private function extractJson(string $response): string
+    {
+        $trimmed = trim($response);
+
+        // Try raw parse first — if it's already valid JSON, return as-is.
+        if (json_decode($trimmed, true) !== null) {
+            return $trimmed;
+        }
+
+        // Strip markdown code fences: ```json ... ``` or ``` ... ```
+        if (preg_match('/```(?:json)?\s*\n?(.*?)\n?\s*```/s', $trimmed, $matches)) {
+            return trim($matches[1]);
+        }
+
+        // Find first { and last } — extract the JSON object.
+        $firstBrace = strpos($trimmed, '{');
+        $lastBrace = strrpos($trimmed, '}');
+        if ($firstBrace !== false && $lastBrace !== false && $lastBrace > $firstBrace) {
+            return substr($trimmed, $firstBrace, $lastBrace - $firstBrace + 1);
+        }
+
+        return $trimmed;
     }
 
     /**
