@@ -45,12 +45,17 @@ class AIPlanner
 
     private function buildSystemPrompt(): string
     {
-        $tokens = json_encode($this->tokenSchema, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        // Filter out IMAGE_* tokens — those are sourced by ImageHandler, not AI.
+        $textTokens = array_values(array_filter(
+            $this->tokenSchema,
+            fn (array $t) => ! str_starts_with($t['name'] ?? '', 'IMAGE_')
+        ));
+        $tokens = json_encode($textTokens, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
         return <<<PROMPT
 You are generating content for a WordPress theme builder.
 Return ONLY a valid JSON object with token names as keys and plain text values.
-No HTML, no markdown, no block markup.
+No HTML, no markdown, no block markup. Do not include any IMAGE_* tokens.
 Token vocabulary:
 {$tokens}
 PROMPT;
@@ -183,6 +188,11 @@ PROMPT;
             $required = $token['required'] ?? true;
 
             if (! $name) {
+                continue;
+            }
+
+            // IMAGE_* tokens are sourced by ImageHandler, not AI.
+            if (str_starts_with($name, 'IMAGE_')) {
                 continue;
             }
 
