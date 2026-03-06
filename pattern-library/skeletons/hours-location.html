@@ -1,0 +1,50 @@
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"},"margin":{"top":"0","bottom":"0"}}},"backgroundColor":"base-2","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-2-background-color has-background" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+
+    <!-- wp:heading {"textAlign":"center","style":{"typography":{"fontWeight":"700"}},"fontSize":"x-large"} -->
+    <h2 class="wp-block-heading has-text-align-center has-x-large-font-size" style="font-weight:700">{{HOURS_TITLE}}</h2>
+    <!-- /wp:heading -->
+
+    <!-- wp:spacer {"height":"var:preset|spacing|50"} -->
+    <div style="height:var(--wp--preset--spacing--50)" aria-hidden="true" class="wp-block-spacer"></div>
+    <!-- /wp:spacer -->
+
+    <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|60"}}}} -->
+    <div class="wp-block-columns alignwide">
+
+        <!-- wp:column -->
+        <div class="wp-block-column">
+            <!-- wp:heading {"level":3,"style":{"typography":{"fontWeight":"700","textTransform":"uppercase","letterSpacing":"1px"}},"fontSize":"small"} -->
+            <h3 class="wp-block-heading has-small-font-size" style="font-weight:700;text-transform:uppercase;letter-spacing:1px">Hours</h3>
+            <!-- /wp:heading -->
+            <!-- wp:paragraph {"fontSize":"medium"} -->
+            <p class="has-medium-font-size">{{HOURS_WEEKDAY}}</p>
+            <!-- /wp:paragraph -->
+            <!-- wp:paragraph {"fontSize":"medium"} -->
+            <p class="has-medium-font-size">{{HOURS_WEEKEND}}</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
+
+        <!-- wp:column -->
+        <div class="wp-block-column">
+            <!-- wp:heading {"level":3,"style":{"typography":{"fontWeight":"700","textTransform":"uppercase","letterSpacing":"1px"}},"fontSize":"small"} -->
+            <h3 class="wp-block-heading has-small-font-size" style="font-weight:700;text-transform:uppercase;letter-spacing:1px">Location</h3>
+            <!-- /wp:heading -->
+            <!-- wp:paragraph {"fontSize":"medium"} -->
+            <p class="has-medium-font-size">{{LOCATION_ADDRESS}}</p>
+            <!-- /wp:paragraph -->
+            <!-- wp:paragraph {"fontSize":"medium"} -->
+            <p class="has-medium-font-size">{{LOCATION_PHONE}}</p>
+            <!-- /wp:paragraph -->
+            <!-- wp:paragraph {"textColor":"contrast-2","fontSize":"small"} -->
+            <p class="has-contrast-2-color has-text-color has-small-font-size">{{LOCATION_TEXT}}</p>
+            <!-- /wp:paragraph -->
+        </div>
+        <!-- /wp:column -->
+
+    </div>
+    <!-- /wp:columns -->
+
+</div>
+<!-- /wp:group -->

@@ -74,46 +74,42 @@ class GenerateThemeJob implements ShouldQueue
             $projectData['businessCategory'] = $projectData['businessCategory'] ?? $project->site_type;
             $projectData['language'] = $projectData['language'] ?? $project->language;
 
+            // Step 1: AI generates content tokens
             $aiPlanner = app(AIPlanner::class);
-            $content = $aiPlanner->generate($projectData);
+            $tokens = $aiPlanner->generate($projectData);
 
+            // Step 2: PatternSelector picks skeletons by vertical recipe
+            $category = $this->normalizeCategory($projectData['businessCategory'] ?? $projectData['category'] ?? 'local_service');
             $patternSelector = app(PatternSelector::class);
+            $skeletonSelections = $patternSelector->select($category);
+
+            // Step 3: ImageHandler gets Unsplash URLs and merge into tokens
             $imageHandler = new ImageHandler(new UnsplashProvider, new PlaceholderProvider);
+            $imageTokens = $this->extractImageTokens($skeletonSelections);
+            $imageUrls = $imageHandler->generateImages($projectData, $tempDir . '/assets/images', $imageTokens);
+            $allTokens = array_merge($tokens, $imageUrls);
+
+            // Step 4: TokenInjector processes skeletons with all tokens
+            $tokenInjector = app(TokenInjector::class);
+            $pageHtml = $tokenInjector->processSkeletons($skeletonSelections, $allTokens);
+
+            // Step 5: ThemeAssembler builds the theme ZIP
             $themeAssembler = app(ThemeAssembler::class);
+            $assembled = $themeAssembler->assemble($projectData, $allTokens, $pageHtml);
+
+            // Step 6: Validate assembled theme
             $validator = app(PlaygroundValidator::class);
+            $validation = $validator->validate($assembled['themeDir']);
 
-            $assembled = $this->attemptAssembly(
-                $patternSelector,
-                $projectData,
-                $content,
-                $imageHandler,
-                $themeAssembler,
-                $validator,
-                $tempDir,
-                0
-            );
-
-            if (! $assembled['validation']['valid']) {
-                $assembled = $this->attemptAssembly(
-                    $patternSelector,
-                    $projectData,
-                    $content,
-                    $imageHandler,
-                    $themeAssembler,
-                    $validator,
-                    $tempDir,
-                    1
-                );
-
-                if (! $assembled['validation']['valid']) {
-                    throw new \RuntimeException('Theme failed Playground validation.');
-                }
+            if (! $validation['valid']) {
+                throw new \RuntimeException('Theme failed Playground validation: ' . ($validation['errors'][0] ?? 'Unknown error'));
             }
 
             if (! file_exists($assembled['zipPath'])) {
                 throw new \RuntimeException('Theme ZIP not found.');
             }
 
+            // Step 7: Upload and finalize
             $themeStoragePath = "themes/{$this->projectId}/{$this->jobId}.zip";
             $this->uploadFile($assembled['zipPath'], $themeStoragePath, $metrics);
 
@@ -156,98 +152,58 @@ class GenerateThemeJob implements ShouldQueue
     }
 
     /**
-     * @param  array<string, mixed>  $projectData
-     * @return array<string, array<int, string>>
+     * Normalize business category to vertical key
      */
-    private function buildPatternSelection(PatternSelector $selector, array $projectData, int $offset): array
+    private function normalizeCategory(string $category): string
     {
-        $vertical = $projectData['businessCategory'] ?? $projectData['category'] ?? 'general';
-        $style = $projectData['brandStyle'] ?? $projectData['style'] ?? 'modern';
-
-        return [
-            'home' => $this->patternsForPage($selector, 'home', $vertical, $style, $offset),
-            'about' => $this->patternsForPage($selector, 'about', $vertical, $style, $offset),
-            'services' => $this->patternsForPage($selector, 'services', $vertical, $style, $offset),
-            'contact' => $this->patternsForPage($selector, 'contact', $vertical, $style, $offset),
-            'blog' => $this->patternsForPage($selector, 'blog', $vertical, $style, $offset),
-            'header' => $this->patternsForPage($selector, 'header', $vertical, $style, $offset),
-            'footer' => $this->patternsForPage($selector, 'footer', $vertical, $style, $offset),
+        $map = [
+            'restaurant' => 'restaurant',
+            'food' => 'restaurant',
+            'cafe' => 'restaurant',
+            'ecommerce' => 'ecommerce',
+            'shop' => 'ecommerce',
+            'store' => 'ecommerce',
+            'retail' => 'ecommerce',
+            'saas' => 'saas',
+            'software' => 'saas',
+            'tech' => 'saas',
+            'technology' => 'saas',
+            'portfolio' => 'portfolio',
+            'agency' => 'portfolio',
+            'creative' => 'portfolio',
+            'photography' => 'portfolio',
+            'local_service' => 'local_service',
+            'service' => 'local_service',
+            'plumber' => 'local_service',
+            'contractor' => 'local_service',
         ];
+
+        return $map[strtolower($category)] ?? 'local_service';
     }
 
     /**
+     * Extract image token names from skeleton selections
+     *
+     * @param  array<string, array<int, array<string, mixed>>>  $skeletonSelections
      * @return array<int, string>
      */
-    private function patternsForPage(
-        PatternSelector $selector,
-        string $pageType,
-        string $vertical,
-        string $style,
-        int $offset
-    ): array {
-        return $selector->selectForPageWithOffset($pageType, $vertical, $style, $offset);
-    }
-
-    /**
-     * @param  array<string, array<int, string>>  $patterns
-     * @param  array<string, string>  $content
-     * @return array{0: array<string, array<int, array<string, mixed>>>, 1: array<string, string>}
-     */
-    private function injectPatterns(array $patterns, array $content): array
+    private function extractImageTokens(array $skeletonSelections): array
     {
-        $registry = $this->loadRegistry();
-        $injector = app(TokenInjector::class);
-        $injected = [];
         $imageTokens = [];
 
-        foreach ($patterns as $page => $patternIds) {
-            $injected[$page] = [];
-            foreach ($patternIds as $patternId) {
-                if (! isset($registry[$patternId])) {
-                    continue;
-                }
-
-                $patternMeta = $registry[$patternId];
-                $requiredTokens = $patternMeta['required_tokens'] ?? [];
-
-                foreach ($patternMeta['image_slots'] ?? [] as $imageToken) {
-                    if (isset($content[$imageToken])) {
-                        $imageTokens[$imageToken] = $content[$imageToken];
+        foreach ($skeletonSelections as $pageType => $skeletons) {
+            foreach ($skeletons as $skeleton) {
+                $requiredTokens = $skeleton['required_tokens'] ?? [];
+                foreach ($requiredTokens as $token) {
+                    // Collect image-related tokens (IMAGE_* convention)
+                    if (strpos($token, 'IMAGE_') === 0 && ! in_array($token, $imageTokens, true)) {
+                        $imageTokens[] = $token;
                     }
                 }
-
-                $patternPath = base_path('../pattern-library/'.$patternMeta['file']);
-                $patternContent = $injector->inject($patternPath, $content, $requiredTokens);
-
-                $injected[$page][] = [
-                    'pattern_id' => $patternId,
-                    'slug' => $patternMeta['slug'] ?? $patternId,
-                    'category' => $patternMeta['category'] ?? 'sections',
-                    'content' => $patternContent,
-                ];
             }
         }
 
-        return [$injected, $imageTokens];
-    }
-
-    /**
-     * @return array<string, array<string, mixed>>
-     */
-    private function loadRegistry(): array
-    {
-        $path = base_path('../pattern-library/registry.json');
-        $payload = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
-        $indexed = [];
-
-        foreach ($payload['patterns'] ?? [] as $pattern) {
-            $patternId = $pattern['pattern_id'] ?? null;
-            if ($patternId) {
-                $indexed[$patternId] = $pattern;
-            }
-        }
-
-        return $indexed;
+        return $imageTokens;
     }
 
     private function sendWelcomeEmail(array $projectData, string $downloadPath): void
@@ -308,33 +264,5 @@ class GenerateThemeJob implements ShouldQueue
         if (is_dir($dir)) {
             app(ThemeAssembler::class)->deleteDirectory($dir);
         }
-    }
-
-    /**
-     * @param  array<string, mixed>  $projectData
-     * @param  array<string, string>  $content
-     * @return array{zipPath: string, themeDir: string, validation: array<string, mixed>}
-     */
-    private function attemptAssembly(
-        PatternSelector $patternSelector,
-        array $projectData,
-        array $content,
-        ImageHandler $imageHandler,
-        ThemeAssembler $themeAssembler,
-        PlaygroundValidator $validator,
-        string $tempDir,
-        int $offset
-    ): array {
-        $patterns = $this->buildPatternSelection($patternSelector, $projectData, $offset);
-        [$injectedPatterns, $imageTokens] = $this->injectPatterns($patterns, $content);
-        $images = $imageHandler->generateImages($projectData, $tempDir.'/assets/images', $imageTokens);
-        $assembled = $themeAssembler->assemble($projectData, $injectedPatterns, $images);
-        $validation = $validator->validate($assembled['themeDir']);
-
-        return [
-            'zipPath' => $assembled['zipPath'],
-            'themeDir' => $assembled['themeDir'],
-            'validation' => $validation,
-        ];
     }
 }

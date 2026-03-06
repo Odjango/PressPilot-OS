@@ -9,11 +9,11 @@ class ThemeAssembler
 {
     /**
      * @param  array<string, mixed>  $project
-     * @param  array<string, mixed>  $patterns
-     * @param  array<string, string>  $images
+     * @param  array<string, string>  $tokens  All tokens (text + image)
+     * @param  array<string, string>  $pageHtml  Injected HTML keyed by page type (home, about, services, contact)
      * @return array{themeDir: string, zipPath: string}
      */
-    public function assemble(array $project, array $patterns, array $images = []): array
+    public function assemble(array $project, array $tokens, array $pageHtml): array
     {
         $slug = $this->resolveSlug($project);
         $themeDir = sys_get_temp_dir()."/pp-themes/{$slug}";
@@ -22,10 +22,8 @@ class ThemeAssembler
         $this->copyBaseFiles($themeDir);
         $this->writeStyleSheet($themeDir, $project);
         $this->writeThemeJson($themeDir, $project);
-        $this->writeTemplates($themeDir, $slug, $patterns);
-        $this->writeParts($themeDir, $slug, $patterns, $project);
-        $this->writePatterns($themeDir, $slug, $patterns);
-        $this->copyImages($themeDir, $images);
+        $this->writeTemplates($themeDir, $pageHtml);
+        $this->writeParts($themeDir, $project, $tokens);
 
         $zipPath = $this->zipTheme($themeDir, $slug);
 
@@ -35,9 +33,6 @@ class ThemeAssembler
         ];
     }
 
-    /**
-     * @param  array<string, mixed>  $project
-     */
     private function resolveSlug(array $project): string
     {
         $slug = $project['slug'] ?? $project['name'] ?? 'presspilot-theme';
@@ -92,9 +87,6 @@ class ThemeAssembler
         }
     }
 
-    /**
-     * @param  array<string, mixed>  $project
-     */
     private function writeStyleSheet(string $themeDir, array $project): void
     {
         $name = (string) ($project['name'] ?? 'PressPilot Theme');
@@ -118,9 +110,6 @@ class ThemeAssembler
         file_put_contents($themeDir.'/style.css', $header);
     }
 
-    /**
-     * @param  array<string, mixed>  $project
-     */
     private function writeThemeJson(string $themeDir, array $project): void
     {
         $basePath = base_path('../proven-cores/ollie/theme.json');
@@ -130,6 +119,7 @@ class ThemeAssembler
 
         $themeJson = json_decode(file_get_contents($basePath), true, 512, JSON_THROW_ON_ERROR);
 
+        // Override colors from project
         $colors = $project['colors'] ?? [];
         $paletteOverrides = [
             'primary' => $colors['primary'] ?? null,
@@ -148,115 +138,249 @@ class ThemeAssembler
             }
         }
 
+        // Override font family
         $fontFamily = $project['fontFamily'] ?? ($project['fonts']['primary'] ?? null);
         if ($fontFamily && isset($themeJson['settings']['typography']['fontFamilies'][0])) {
             $themeJson['settings']['typography']['fontFamilies'][0]['fontFamily'] = $fontFamily.', system-ui, sans-serif';
             $themeJson['settings']['typography']['fontFamilies'][0]['name'] = $fontFamily;
         }
 
+        // Add custom templates registration
+        $themeJson['customTemplates'] = [
+            ['name' => 'page-about', 'title' => 'About', 'postTypes' => ['page']],
+            ['name' => 'page-services', 'title' => 'Services', 'postTypes' => ['page']],
+            ['name' => 'page-contact', 'title' => 'Contact', 'postTypes' => ['page']],
+        ];
+
+        // Ensure templateParts are registered
+        $themeJson['templateParts'] = [
+            ['name' => 'header', 'area' => 'header', 'title' => 'Header'],
+            ['name' => 'footer', 'area' => 'footer', 'title' => 'Footer'],
+        ];
+
         file_put_contents($themeDir.'/theme.json', json_encode($themeJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 
     /**
-     * @param  array<string, mixed>  $patterns
+     * Write all template files from injected page HTML.
+     *
+     * @param  array<string, string>  $pageHtml  Keyed by page type
      */
-    private function writeTemplates(string $themeDir, string $slug, array $patterns): void
+    private function writeTemplates(string $themeDir, array $pageHtml): void
     {
         $templatesDir = $themeDir.'/templates';
         if (! is_dir($templatesDir)) {
             mkdir($templatesDir, 0755, true);
         }
 
-        $homePatterns = $patterns['home'] ?? [];
-        $blogPattern = $patterns['blog'][0] ?? ($patterns['home'][0] ?? null);
+        // front-page.html — uses home page sections
+        $homeContent = $pageHtml['home'] ?? '';
+        file_put_contents($templatesDir.'/front-page.html', $this->wrapTemplate($homeContent));
 
-        $frontPageBlocks = $this->patternReferences($slug, $homePatterns);
-        $blogReference = $blogPattern ? $this->patternReference($slug, $blogPattern) : '';
+        // page-about.html — uses about page sections
+        $aboutContent = $pageHtml['about'] ?? '';
+        file_put_contents($templatesDir.'/page-about.html', $this->wrapTemplate($aboutContent));
 
-        $frontPage = $this->wrapTemplate($frontPageBlocks);
-        $indexTemplate = $this->wrapTemplate($blogReference);
+        // page-services.html — uses services page sections
+        $servicesContent = $pageHtml['services'] ?? '';
+        file_put_contents($templatesDir.'/page-services.html', $this->wrapTemplate($servicesContent));
 
-        file_put_contents($templatesDir.'/front-page.html', $frontPage);
-        file_put_contents($templatesDir.'/index.html', $indexTemplate);
+        // page-contact.html — uses contact page sections
+        $contactContent = $pageHtml['contact'] ?? '';
+        file_put_contents($templatesDir.'/page-contact.html', $this->wrapTemplate($contactContent));
+
+        // Generic fallback templates
         file_put_contents($templatesDir.'/page.html', $this->defaultPageTemplate());
         file_put_contents($templatesDir.'/single.html', $this->defaultSingleTemplate());
         file_put_contents($templatesDir.'/404.html', $this->default404Template());
+        file_put_contents($templatesDir.'/index.html', $this->defaultIndexTemplate());
     }
 
     /**
-     * @param  array<string, mixed>  $patterns
-     * @param  array<string, mixed>  $project
+     * Write header and footer parts.
      */
-    private function writeParts(string $themeDir, string $slug, array $patterns, array $project): void
+    private function writeParts(string $themeDir, array $project, array $tokens): void
     {
         $partsDir = $themeDir.'/parts';
         if (! is_dir($partsDir)) {
             mkdir($partsDir, 0755, true);
         }
 
-        $header = $patterns['header'][0]['content'] ?? '';
-        $footer = $patterns['footer'][0]['content'] ?? '';
-
-        $headerMarkup = $this->extractMarkup($header);
-        if (trim($headerMarkup) === '' || str_contains($headerMarkup, '<!-- wp:navigation')) {
-            $headerMarkup = $this->fallbackHeader($project);
-        }
-
-        $footerMarkup = $this->extractMarkup($footer);
-        if (trim($footerMarkup) === '') {
-            $footerMarkup = $this->fallbackFooter($project);
-        }
-
-        file_put_contents($partsDir.'/header.html', $headerMarkup);
-        file_put_contents($partsDir.'/footer.html', $footerMarkup.$this->pressPilotCredit($project));
+        file_put_contents($partsDir.'/header.html', $this->buildHeader($project));
+        file_put_contents($partsDir.'/footer.html', $this->buildPressPilotFooter($project, $tokens));
     }
 
     /**
-     * @param  array<string, mixed>  $patterns
+     * Build the PressPilot branded 3-column footer.
      */
-    private function writePatterns(string $themeDir, string $slug, array $patterns): void
+    private function buildPressPilotFooter(array $project, array $tokens): string
     {
-        $patternsDir = $themeDir.'/patterns';
-        if (! is_dir($patternsDir)) {
-            mkdir($patternsDir, 0755, true);
-        }
+        $businessName = htmlspecialchars((string) ($project['name'] ?? 'Business'), ENT_QUOTES, 'UTF-8');
+        $footerTagline = htmlspecialchars((string) ($tokens['FOOTER_TAGLINE'] ?? "Welcome to {$businessName}"), ENT_QUOTES, 'UTF-8');
+        $contactText = htmlspecialchars((string) ($tokens['CONTACT_TEXT'] ?? "Get in touch with us today."), ENT_QUOTES, 'UTF-8');
+        $year = date('Y');
 
-        foreach ($this->flattenPatterns($patterns) as $pattern) {
-            $patternSlug = $pattern['slug'] ?? ($pattern['pattern_id'] ?? 'pattern');
-            $patternSlug = str_replace('/', '-', $patternSlug);
-            $title = $pattern['title'] ?? ($pattern['pattern_id'] ?? $patternSlug);
-            $title = str_replace('/', ' ', $title);
-            $category = $pattern['category'] ?? 'sections';
-            $content = $this->extractMarkup((string) ($pattern['content'] ?? ''));
+        return <<<FOOTER
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|50"}}},"backgroundColor":"base-2","textColor":"contrast","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-contrast-color has-base-2-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--50)">
 
-            $header = "<?php\n/**\n * Title: {$title}\n * Slug: {$slug}/{$patternSlug}\n * Categories: presspilot/{$category}\n */\n?>\n";
+    <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|70"}}}} -->
+    <div class="wp-block-columns alignwide">
+        <!-- wp:column {"width":"33%"} -->
+        <div class="wp-block-column" style="flex-basis:33%">
+            <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"top"}} -->
+            <div class="wp-block-group">
+                <!-- wp:group {"layout":{"type":"flex","orientation":"vertical","justifyContent":"left"}} -->
+                <div class="wp-block-group">
+                    <!-- wp:site-title {"style":{"typography":{"fontStyle":"normal","fontWeight":"700","fontSize":"1.5rem"}}} /-->
+                    <!-- wp:paragraph {"fontSize":"small","textColor":"contrast-2"} -->
+                    <p class="has-small-font-size has-contrast-2-color has-text-color">{$footerTagline}</p>
+                    <!-- /wp:paragraph -->
+                </div>
+                <!-- /wp:group -->
+            </div>
+            <!-- /wp:group -->
+        </div>
+        <!-- /wp:column -->
+        <!-- wp:column {"width":"33%"} -->
+        <div class="wp-block-column" style="flex-basis:33%">
+            <!-- wp:heading {"level":4,"textColor":"contrast","style":{"typography":{"fontWeight":"700","textTransform":"uppercase","letterSpacing":"1px"}},"fontSize":"small"} -->
+            <h4 class="wp-block-heading has-small-font-size has-contrast-color has-text-color" style="font-weight:700;text-transform:uppercase;letter-spacing:1px">Quick Links</h4>
+            <!-- /wp:heading -->
+            <!-- wp:list {"style":{"spacing":{"blockGap":"0.75rem"}},"textColor":"contrast","fontSize":"small"} -->
+            <ul class="has-contrast-color has-text-color has-small-font-size">
+            <li>Home</li>
+            <li>About</li>
+            <li>Services</li>
+            <li>Contact</li>
+            </ul>
+            <!-- /wp:list -->
+        </div>
+        <!-- /wp:column -->
+        <!-- wp:column {"width":"33%"} -->
+        <div class="wp-block-column" style="flex-basis:33%">
+            <!-- wp:heading {"level":4,"textColor":"contrast","style":{"typography":{"fontWeight":"700","textTransform":"uppercase","letterSpacing":"1px"}},"fontSize":"small"} -->
+            <h4 class="wp-block-heading has-small-font-size has-contrast-color has-text-color" style="font-weight:700;text-transform:uppercase;letter-spacing:1px">Get In Touch</h4>
+            <!-- /wp:heading -->
+            <!-- wp:paragraph {"fontSize":"small","textColor":"contrast-2"} -->
+            <p class="has-small-font-size has-contrast-2-color has-text-color">{$contactText}</p>
+            <!-- /wp:paragraph -->
+            <!-- wp:social-links {"iconColor":"contrast","iconColorValue":"currentColor","size":"has-normal-icon-size","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}},"className":"is-style-logos-only"} -->
+            <ul class="wp-block-social-links has-normal-icon-size has-icon-color is-style-logos-only">
+                <!-- wp:social-link {"url":"#","service":"facebook"} /-->
+                <!-- wp:social-link {"url":"#","service":"x"} /-->
+                <!-- wp:social-link {"url":"#","service":"instagram"} /-->
+            </ul>
+            <!-- /wp:social-links -->
+        </div>
+        <!-- /wp:column -->
+    </div>
+    <!-- /wp:columns -->
 
-            file_put_contents($patternsDir.'/'.$patternSlug.'.php', $header.$content);
-        }
+    <!-- wp:spacer {"height":"var:preset|spacing|50"} -->
+    <div style="height:var(--wp--preset--spacing--50)" aria-hidden="true" class="wp-block-spacer"></div>
+    <!-- /wp:spacer -->
+
+    <!-- wp:paragraph {"align":"center","fontSize":"small","textColor":"contrast-2"} -->
+    <p class="has-text-align-center has-small-font-size has-contrast-2-color has-text-color">&copy; {$year} {$businessName}. All rights reserved. Powered by <a href="https://www.presspilotapp.com" target="_blank" rel="noopener noreferrer" style="color:inherit">PressPilot</a>.</p>
+    <!-- /wp:paragraph -->
+
+</div>
+<!-- /wp:group -->
+FOOTER;
     }
 
     /**
-     * @param  array<string, string>  $images
+     * Build a simple header with site title and nav links.
      */
-    private function copyImages(string $themeDir, array $images): void
+    private function buildHeader(array $project): string
     {
-        if (empty($images)) {
-            return;
-        }
+        $name = htmlspecialchars((string) ($project['name'] ?? 'PressPilot'), ENT_QUOTES, 'UTF-8');
 
-        $assetsDir = $themeDir.'/assets/images';
-        if (! is_dir($assetsDir)) {
-            mkdir($assetsDir, 0755, true);
-        }
+        return <<<HEADER
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
+<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50)">
+    <!-- wp:site-title {"level":0,"style":{"typography":{"fontWeight":"700"}}} /-->
+    <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
+    <div class="wp-block-group">
+        <!-- wp:paragraph --><p><a href="/">Home</a></p><!-- /wp:paragraph -->
+        <!-- wp:paragraph --><p><a href="/about">About</a></p><!-- /wp:paragraph -->
+        <!-- wp:paragraph --><p><a href="/services">Services</a></p><!-- /wp:paragraph -->
+        <!-- wp:paragraph --><p><a href="/contact">Contact</a></p><!-- /wp:paragraph -->
+    </div>
+    <!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+HEADER;
+    }
 
-        foreach ($images as $token => $path) {
-            if (! file_exists($path)) {
-                continue;
-            }
+    private function wrapTemplate(string $content): string
+    {
+        return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
+            $content."\n\n".
+            "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
+    }
 
-            $destination = $assetsDir.'/'.strtolower($token).'.jpg';
-            copy($path, $destination);
-        }
+    private function defaultPageTemplate(): string
+    {
+        return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
+            "<!-- wp:group {\"tagName\":\"main\",\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<main class=\"wp-block-group\">\n".
+            "<!-- wp:post-content /-->\n".
+            "</main>\n".
+            "<!-- /wp:group -->\n\n".
+            "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
+    }
+
+    private function defaultSingleTemplate(): string
+    {
+        return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
+            "<!-- wp:group {\"tagName\":\"main\",\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<main class=\"wp-block-group\">\n".
+            "<!-- wp:post-title {\"level\":1} -->\n".
+            "<h1 class=\"wp-block-post-title\"></h1>\n".
+            "<!-- /wp:post-title -->\n".
+            "<!-- wp:post-content /-->\n".
+            "</main>\n".
+            "<!-- /wp:group -->\n\n".
+            "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
+    }
+
+    private function default404Template(): string
+    {
+        return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
+            "<!-- wp:group {\"tagName\":\"main\",\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<main class=\"wp-block-group\">\n".
+            "<!-- wp:heading {\"level\":2} -->\n".
+            "<h2 class=\"wp-block-heading\">Page not found</h2>\n".
+            "<!-- /wp:heading -->\n".
+            "<!-- wp:paragraph -->\n".
+            "<p>The page you are looking for could not be found.</p>\n".
+            "<!-- /wp:paragraph -->\n".
+            "</main>\n".
+            "<!-- /wp:group -->\n\n".
+            "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
+    }
+
+    private function defaultIndexTemplate(): string
+    {
+        return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
+            "<!-- wp:group {\"tagName\":\"main\",\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<main class=\"wp-block-group\">\n".
+            "<!-- wp:query {\"queryId\":1,\"query\":{\"perPage\":10,\"pages\":0,\"offset\":0,\"postType\":\"post\",\"order\":\"desc\",\"orderBy\":\"date\",\"author\":\"\",\"search\":\"\",\"exclude\":[],\"sticky\":\"\",\"inherit\":true}} -->\n".
+            "<!-- wp:post-template -->\n".
+            "<!-- wp:post-title {\"isLink\":true} /-->\n".
+            "<!-- wp:post-excerpt /-->\n".
+            "<!-- /wp:post-template -->\n".
+            "<!-- wp:query-pagination -->\n".
+            "<!-- wp:query-pagination-previous /-->\n".
+            "<!-- wp:query-pagination-numbers /-->\n".
+            "<!-- wp:query-pagination-next /-->\n".
+            "<!-- /wp:query-pagination -->\n".
+            "<!-- /wp:query -->\n".
+            "</main>\n".
+            "<!-- /wp:group -->\n\n".
+            "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
     }
 
     private function zipTheme(string $themeDir, string $slug): string
@@ -291,155 +415,5 @@ class ThemeAssembler
         $zip->close();
 
         return $zipPath;
-    }
-
-    /**
-     * @param  array<int, array<string, mixed>>  $patterns
-     */
-    private function patternReferences(string $slug, array $patterns): string
-    {
-        $markup = '';
-        foreach ($patterns as $pattern) {
-            $markup .= $this->patternReference($slug, $pattern);
-        }
-
-        return $markup;
-    }
-
-    /**
-     * @param  array<string, mixed>  $pattern
-     */
-    private function patternReference(string $slug, array $pattern): string
-    {
-        $patternSlug = $pattern['slug'] ?? ($pattern['pattern_id'] ?? 'pattern');
-        $patternSlug = str_replace('/', '-', $patternSlug);
-
-        return "<!-- wp:pattern {\"slug\":\"{$slug}/{$patternSlug}\"} /-->\n\n";
-    }
-
-    private function wrapTemplate(string $content): string
-    {
-        return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
-            "<!-- wp:group {\"tagName\":\"main\"} -->\n".
-            "<main class=\"wp-block-group\">\n".
-            $content.
-            "</main>\n".
-            "<!-- /wp:group -->\n\n".
-            "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
-    }
-
-    private function defaultPageTemplate(): string
-    {
-        return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
-            "<!-- wp:group {\"tagName\":\"main\"} -->\n".
-            "<main class=\"wp-block-group\">\n".
-            "<!-- wp:post-content /-->\n".
-            "</main>\n".
-            "<!-- /wp:group -->\n\n".
-            "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
-    }
-
-    private function defaultSingleTemplate(): string
-    {
-        return $this->defaultPageTemplate();
-    }
-
-    private function default404Template(): string
-    {
-        return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
-            "<!-- wp:group {\"tagName\":\"main\"} -->\n".
-            "<main class=\"wp-block-group\">\n".
-            "<!-- wp:heading -->\n".
-            "<h2>Page not found</h2>\n".
-            "<!-- /wp:heading -->\n".
-            "<!-- wp:paragraph -->\n".
-            "<p>The page you are looking for could not be found.</p>\n".
-            "<!-- /wp:paragraph -->\n".
-            "</main>\n".
-            "<!-- /wp:group -->\n\n".
-            "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
-    }
-
-    /**
-     * @param  array<string, mixed>  $patterns
-     * @return array<int, array<string, mixed>>
-     */
-    private function flattenPatterns(array $patterns): array
-    {
-        $flattened = [];
-
-        foreach ($patterns as $group) {
-            if (! is_array($group)) {
-                continue;
-            }
-
-            foreach ($group as $pattern) {
-                if (is_array($pattern)) {
-                    $flattened[] = $pattern;
-                }
-            }
-        }
-
-        return $flattened;
-    }
-
-    private function extractMarkup(string $patternContent): string
-    {
-        $closePos = strpos($patternContent, '?>');
-        if ($closePos === false) {
-            return $patternContent;
-        }
-
-        return substr($patternContent, $closePos + 2);
-    }
-
-    /**
-     * @param  array<string, mixed>  $project
-     */
-    private function pressPilotCredit(array $project): string
-    {
-        $name = (string) ($project['name'] ?? 'PressPilot');
-
-        return "\n<!-- wp:paragraph -->\n".
-            "<p>© ".date('Y')." {$name}. Powered by <a href=\"https://presspilotapp.com\">PressPilot</a>.</p>\n".
-            "<!-- /wp:paragraph -->\n";
-    }
-
-    /**
-     * @param  array<string, mixed>  $project
-     */
-    private function fallbackHeader(array $project): string
-    {
-        $name = (string) ($project['name'] ?? 'PressPilot');
-
-        return "<!-- wp:group {\"align\":\"full\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\",\"justifyContent\":\"space-between\"}} -->\n".
-            "<div class=\"wp-block-group alignfull\">\n".
-            "<!-- wp:site-title {\"level\":0} -->\n".
-            "<h1 class=\"wp-block-site-title\"><a href=\"/\" rel=\"home\">{$name}</a></h1>\n".
-            "<!-- /wp:site-title -->\n".
-            "<!-- wp:group {\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\",\"justifyContent\":\"right\"}} -->\n".
-            "<div class=\"wp-block-group\">\n".
-            "<!-- wp:paragraph --><p><a href=\"/\">Home</a></p><!-- /wp:paragraph -->\n".
-            "<!-- wp:paragraph --><p><a href=\"/about\">About</a></p><!-- /wp:paragraph -->\n".
-            "<!-- wp:paragraph --><p><a href=\"/services\">Services</a></p><!-- /wp:paragraph -->\n".
-            "<!-- wp:paragraph --><p><a href=\"/contact\">Contact</a></p><!-- /wp:paragraph -->\n".
-            "<!-- wp:paragraph --><p><a href=\"/blog\">Blog</a></p><!-- /wp:paragraph -->\n".
-            "</div><!-- /wp:group -->\n".
-            "</div><!-- /wp:group -->\n";
-    }
-
-    /**
-     * @param  array<string, mixed>  $project
-     */
-    private function fallbackFooter(array $project): string
-    {
-        $name = (string) ($project['name'] ?? 'PressPilot');
-
-        return "<!-- wp:group {\"align\":\"full\",\"layout\":{\"type\":\"constrained\"}} -->\n".
-            "<div class=\"wp-block-group alignfull\">\n".
-            "<!-- wp:paragraph -->\n".
-            "<p>© ".date('Y')." {$name}. All rights reserved.</p>\n".
-            "<!-- /wp:paragraph -->\n".
-            "</div><!-- /wp:group -->\n";
     }
 }

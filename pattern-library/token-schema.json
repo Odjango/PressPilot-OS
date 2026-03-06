@@ -1,100 +1,1378 @@
 {
-  "version": "1.0",
+  "version": "1.0.0",
+  "description": "Token schema for PressPilot pattern library",
   "tokens": [
-    {"name":"HERO_PRETITLE","type":"text","maxLength":60,"description":"Eyebrow/pretitle text","exampleValue":"Family-owned since 1985","usedInSections":["hero"]},
-    {"name":"HERO_TITLE","type":"text","maxLength":80,"description":"Main hero headline","exampleValue":"The Best Pizza in Brooklyn","usedInSections":["hero"]},
-    {"name":"HERO_TEXT","type":"text","maxLength":200,"description":"Hero supporting copy","exampleValue":"Hand-tossed dough, fresh ingredients.","usedInSections":["hero"]},
-    {"name":"HERO_CTA","type":"text","maxLength":30,"description":"Primary hero button text","exampleValue":"View Menu","usedInSections":["hero","cta"]},
-    {"name":"HERO_CTA_URL","type":"url","maxLength":2048,"description":"Primary hero button link","exampleValue":"/menu","usedInSections":["hero"]},
-    {"name":"HERO_CTA_SECONDARY","type":"text","maxLength":30,"description":"Secondary hero button text","exampleValue":"Learn More","usedInSections":["hero"]},
-    {"name":"HERO_CTA_SECONDARY_URL","type":"url","maxLength":2048,"description":"Secondary hero button link","exampleValue":"/about","usedInSections":["hero"]},
-    {"name":"IMAGE_HERO","type":"image","maxLength":2048,"description":"Hero image URL","exampleValue":"https://example.com/hero.jpg","usedInSections":["hero"]},
-
-    {"name":"FEATURES_TITLE","type":"text","maxLength":80,"description":"Features section heading","exampleValue":"Why Choose Us","usedInSections":["features"]},
-    {"name":"FEATURES_TEXT","type":"text","maxLength":200,"description":"Features intro copy","exampleValue":"Three reasons customers love us.","usedInSections":["features"]},
-    {"name":"FEATURE_1_TITLE","type":"text","maxLength":60,"description":"Feature 1 title","exampleValue":"Fresh Ingredients","usedInSections":["features"]},
-    {"name":"FEATURE_1_TEXT","type":"text","maxLength":150,"description":"Feature 1 description","exampleValue":"Local produce and artisan cheeses.","usedInSections":["features"]},
-    {"name":"FEATURE_2_TITLE","type":"text","maxLength":60,"description":"Feature 2 title","exampleValue":"Wood-Fired Oven","usedInSections":["features"]},
-    {"name":"FEATURE_2_TEXT","type":"text","maxLength":150,"description":"Feature 2 description","exampleValue":"900°F for the perfect crust.","usedInSections":["features"]},
-    {"name":"FEATURE_3_TITLE","type":"text","maxLength":60,"description":"Feature 3 title","exampleValue":"Family Recipes","usedInSections":["features"]},
-    {"name":"FEATURE_3_TEXT","type":"text","maxLength":150,"description":"Feature 3 description","exampleValue":"Passed down for generations.","usedInSections":["features"]},
-    {"name":"IMAGE_FEATURE_1","type":"image","maxLength":2048,"description":"Feature image 1","exampleValue":"https://example.com/feature-1.jpg","usedInSections":["features"]},
-    {"name":"IMAGE_FEATURE_2","type":"image","maxLength":2048,"description":"Feature image 2","exampleValue":"https://example.com/feature-2.jpg","usedInSections":["features"]},
-
-    {"name":"ABOUT_TITLE","type":"text","maxLength":80,"description":"About section heading","exampleValue":"Our Story","usedInSections":["about"]},
-    {"name":"ABOUT_TEXT","type":"text","maxLength":400,"description":"About paragraph","exampleValue":"Founded in 1985 by the Rossi family...","usedInSections":["about"]},
-    {"name":"ABOUT_MISSION","type":"text","maxLength":200,"description":"Mission statement","exampleValue":"Serve authentic flavors daily.","usedInSections":["about"]},
-    {"name":"ABOUT_TAGLINE","type":"text","maxLength":120,"description":"Short about tagline","exampleValue":"Tradition meets craft.","usedInSections":["about"]},
-    {"name":"IMAGE_ABOUT","type":"image","maxLength":2048,"description":"About image URL","exampleValue":"https://example.com/about.jpg","usedInSections":["about"]},
-
-    {"name":"TEAM_TITLE","type":"text","maxLength":80,"description":"Team section heading","exampleValue":"Meet the Team","usedInSections":["team"]},
-    {"name":"TEAM_TEXT","type":"text","maxLength":200,"description":"Team intro copy","exampleValue":"Local experts at your service.","usedInSections":["team"]},
-    {"name":"TEAM_1_NAME","type":"text","maxLength":60,"description":"Team member 1 name","exampleValue":"Marco Rossi","usedInSections":["team"]},
-    {"name":"TEAM_1_ROLE","type":"text","maxLength":60,"description":"Team member 1 role","exampleValue":"Head Chef","usedInSections":["team"]},
-    {"name":"IMAGE_TEAM_1","type":"image","maxLength":2048,"description":"Team member 1 photo","exampleValue":"https://example.com/team-1.jpg","usedInSections":["team"]},
-    {"name":"TEAM_2_NAME","type":"text","maxLength":60,"description":"Team member 2 name","exampleValue":"Sofia Rossi","usedInSections":["team"]},
-    {"name":"IMAGE_TEAM_2","type":"image","maxLength":2048,"description":"Team member 2 photo","exampleValue":"https://example.com/team-2.jpg","usedInSections":["team"]},
-
-    {"name":"TESTIMONIALS_TITLE","type":"text","maxLength":80,"description":"Testimonials section heading","exampleValue":"What Customers Say","usedInSections":["testimonials"]},
-    {"name":"TESTIMONIAL_1_TEXT","type":"text","maxLength":300,"description":"Testimonial 1 text","exampleValue":"Best pizza in the city.","usedInSections":["testimonials"]},
-    {"name":"TESTIMONIAL_1_AUTHOR","type":"text","maxLength":60,"description":"Testimonial 1 author","exampleValue":"James Wilson","usedInSections":["testimonials"]},
-    {"name":"TESTIMONIAL_1_ROLE","type":"text","maxLength":60,"description":"Testimonial 1 context","exampleValue":"Food Blogger","usedInSections":["testimonials"]},
-    {"name":"TESTIMONIAL_2_TEXT","type":"text","maxLength":300,"description":"Testimonial 2 text","exampleValue":"Friendly staff and fast service.","usedInSections":["testimonials"]},
-    {"name":"TESTIMONIAL_2_AUTHOR","type":"text","maxLength":60,"description":"Testimonial 2 author","exampleValue":"Lena Ortiz","usedInSections":["testimonials"]},
-    {"name":"IMAGE_TESTIMONIAL_1","type":"image","maxLength":2048,"description":"Testimonial avatar","exampleValue":"https://example.com/avatar.jpg","usedInSections":["testimonials"]},
-
-    {"name":"CONTACT_TITLE","type":"text","maxLength":80,"description":"Contact section heading","exampleValue":"Get In Touch","usedInSections":["contact"]},
-    {"name":"CONTACT_TEXT","type":"text","maxLength":200,"description":"Contact intro copy","exampleValue":"We’d love to hear from you.","usedInSections":["contact"]},
-    {"name":"CONTACT_EMAIL","type":"text","maxLength":254,"description":"Contact email address","exampleValue":"hello@romapizza.com","usedInSections":["contact","footer"]},
-    {"name":"CONTACT_PHONE","type":"text","maxLength":30,"description":"Contact phone number","exampleValue":"(212) 555-0123","usedInSections":["contact","footer"]},
-    {"name":"CONTACT_ADDRESS","type":"text","maxLength":200,"description":"Contact address","exampleValue":"123 Main St","usedInSections":["contact","footer"]},
-    {"name":"CONTACT_STATE","type":"text","maxLength":60,"description":"Contact state/region","exampleValue":"NY","usedInSections":["contact","footer"]},
-
-    {"name":"PRICING_TITLE","type":"text","maxLength":80,"description":"Pricing section heading","exampleValue":"Plans & Pricing","usedInSections":["pricing"]},
-    {"name":"PRICING_TEXT","type":"text","maxLength":200,"description":"Pricing intro copy","exampleValue":"Choose the plan that fits.","usedInSections":["pricing"]},
-    {"name":"PLAN_1_NAME","type":"text","maxLength":40,"description":"Plan 1 name","exampleValue":"Starter","usedInSections":["pricing"]},
-    {"name":"PLAN_1_PRICE","type":"text","maxLength":20,"description":"Plan 1 price","exampleValue":"$19/mo","usedInSections":["pricing"]},
-    {"name":"PLAN_1_FEATURES","type":"text","maxLength":200,"description":"Plan 1 features","exampleValue":"5 pages, basic SEO","usedInSections":["pricing"]},
-    {"name":"PLAN_1_CTA","type":"text","maxLength":30,"description":"Plan 1 CTA","exampleValue":"Get Started","usedInSections":["pricing","cta"]},
-    {"name":"PLAN_2_NAME","type":"text","maxLength":40,"description":"Plan 2 name","exampleValue":"Professional","usedInSections":["pricing"]},
-    {"name":"PLAN_2_PRICE","type":"text","maxLength":20,"description":"Plan 2 price","exampleValue":"$49/mo","usedInSections":["pricing"]},
-    {"name":"PLAN_2_FEATURES","type":"text","maxLength":200,"description":"Plan 2 features","exampleValue":"Unlimited pages","usedInSections":["pricing"]},
-    {"name":"PLAN_2_CTA","type":"text","maxLength":30,"description":"Plan 2 CTA","exampleValue":"Upgrade","usedInSections":["pricing","cta"]},
-
-    {"name":"CTA_TITLE","type":"text","maxLength":80,"description":"CTA heading","exampleValue":"Ready to get started?","usedInSections":["cta"]},
-    {"name":"CTA_TEXT","type":"text","maxLength":200,"description":"CTA copy","exampleValue":"Book your table today.","usedInSections":["cta"]},
-    {"name":"CTA_BUTTON","type":"text","maxLength":30,"description":"CTA button text","exampleValue":"Contact Us","usedInSections":["cta"]},
-
-    {"name":"BLOG_TITLE","type":"text","maxLength":80,"description":"Blog section heading","exampleValue":"Latest News","usedInSections":["blog"]},
-
-    {"name":"BUSINESS_NAME","type":"text","maxLength":80,"description":"Business/site name","exampleValue":"Roma Pizza","usedInSections":["header","footer"]},
-    {"name":"FOOTER_TEXT","type":"text","maxLength":200,"description":"Footer summary text","exampleValue":"Serving authentic Italian cuisine.","usedInSections":["footer"]},
-    {"name":"FOOTER_COPYRIGHT","type":"text","maxLength":120,"description":"Footer copyright text","exampleValue":"© 2026 Roma Pizza","usedInSections":["footer"]},
-    {"name":"SOCIAL_FACEBOOK","type":"url","maxLength":2048,"description":"Facebook URL","exampleValue":"https://facebook.com/roma","usedInSections":["header","footer"]},
-    {"name":"SOCIAL_INSTAGRAM","type":"url","maxLength":2048,"description":"Instagram URL","exampleValue":"https://instagram.com/roma","usedInSections":["header","footer"]},
-    {"name":"SOCIAL_TWITTER","type":"url","maxLength":2048,"description":"Twitter/X URL","exampleValue":"https://x.com/roma","usedInSections":["header","footer"]},
-
-    {"name":"MENU_TITLE","type":"text","maxLength":80,"description":"Menu heading","exampleValue":"Our Menu","usedInSections":["restaurant"]},
-    {"name":"MENU_SECTION_1_TITLE","type":"text","maxLength":60,"description":"Menu section title","exampleValue":"Appetizers","usedInSections":["restaurant"]},
-    {"name":"MENU_ITEM_1_NAME","type":"text","maxLength":60,"description":"Menu item name","exampleValue":"Bruschetta","usedInSections":["restaurant"]},
-    {"name":"MENU_ITEM_1_DESC","type":"text","maxLength":150,"description":"Menu item description","exampleValue":"Tomato, basil, olive oil.","usedInSections":["restaurant"]},
-    {"name":"MENU_ITEM_1_PRICE","type":"text","maxLength":20,"description":"Menu item price","exampleValue":"$12","usedInSections":["restaurant"]},
-    {"name":"OPENING_HOURS","type":"text","maxLength":200,"description":"Restaurant hours","exampleValue":"Mon–Sun 11am–9pm","usedInSections":["restaurant"]},
-    {"name":"RESERVATION_TITLE","type":"text","maxLength":80,"description":"Reservation heading","exampleValue":"Reserve a Table","usedInSections":["restaurant"]},
-    {"name":"RESERVATION_TEXT","type":"text","maxLength":200,"description":"Reservation copy","exampleValue":"Call or book online.","usedInSections":["restaurant"]},
-
-    {"name":"IMAGE_GALLERY_1","type":"image","maxLength":2048,"description":"Gallery image 1","exampleValue":"https://example.com/gallery-1.jpg","usedInSections":["gallery","about"]},
-    {"name":"IMAGE_GALLERY_2","type":"image","maxLength":2048,"description":"Gallery image 2","exampleValue":"https://example.com/gallery-2.jpg","usedInSections":["gallery","about"]},
-    {"name":"IMAGE_GALLERY_3","type":"image","maxLength":2048,"description":"Gallery image 3","exampleValue":"https://example.com/gallery-3.jpg","usedInSections":["gallery","about"]},
-
-    {"name":"FAQ_TITLE","type":"text","maxLength":80,"description":"FAQ heading","exampleValue":"Frequently Asked Questions","usedInSections":["faq"]},
-    {"name":"FAQ_1_QUESTION","type":"text","maxLength":120,"description":"FAQ question","exampleValue":"Do you offer delivery?","usedInSections":["faq"]},
-    {"name":"FAQ_1_ANSWER","type":"text","maxLength":300,"description":"FAQ answer","exampleValue":"Yes, within a 5-mile radius.","usedInSections":["faq"]},
-
-    {"name":"NEWSLETTER_TITLE","type":"text","maxLength":80,"description":"Newsletter heading","exampleValue":"Stay in the loop","usedInSections":["newsletter"]},
-    {"name":"NEWSLETTER_TEXT","type":"text","maxLength":200,"description":"Newsletter text","exampleValue":"Subscribe for weekly updates.","usedInSections":["newsletter"]},
-    {"name":"NEWSLETTER_BUTTON","type":"text","maxLength":30,"description":"Newsletter button","exampleValue":"Subscribe","usedInSections":["newsletter"]},
-
-    {"name":"NUMBERS_TITLE","type":"text","maxLength":80,"description":"Numbers section heading","exampleValue":"By the numbers","usedInSections":["numbers"]}
+    {
+      "name": "HERO_TITLE",
+      "description": "Main hero section headline",
+      "maxLength": 80,
+      "group": "hero",
+      "vertical": "general"
+    },
+    {
+      "name": "HERO_PRETITLE",
+      "description": "Hero section pre-title/eyebrow",
+      "maxLength": 60,
+      "group": "hero",
+      "vertical": "general"
+    },
+    {
+      "name": "HERO_TEXT",
+      "description": "Hero section supporting text",
+      "maxLength": 200,
+      "group": "hero",
+      "vertical": "general"
+    },
+    {
+      "name": "HERO_CTA",
+      "description": "Hero primary call-to-action button",
+      "maxLength": 40,
+      "group": "hero",
+      "vertical": "general"
+    },
+    {
+      "name": "HERO_CTA_SECONDARY",
+      "description": "Hero secondary call-to-action button",
+      "maxLength": 40,
+      "group": "hero",
+      "vertical": "general"
+    },
+    {
+      "name": "IMAGE_HERO",
+      "description": "Hero section background/featured image URL",
+      "maxLength": 500,
+      "group": "hero",
+      "vertical": "general"
+    },
+    {
+      "name": "ABOUT_TITLE",
+      "description": "About section heading",
+      "maxLength": 80,
+      "group": "about",
+      "vertical": "general"
+    },
+    {
+      "name": "ABOUT_TEXT",
+      "description": "Primary about section body text",
+      "maxLength": 400,
+      "group": "about",
+      "vertical": "general"
+    },
+    {
+      "name": "ABOUT_TEXT_2",
+      "description": "Secondary about section body text",
+      "maxLength": 400,
+      "group": "about",
+      "vertical": "general"
+    },
+    {
+      "name": "IMAGE_ABOUT",
+      "description": "About section featured image URL",
+      "maxLength": 500,
+      "group": "about",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURES_TITLE",
+      "description": "Features section heading",
+      "maxLength": 80,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURES_SUBTITLE",
+      "description": "Features section subheading",
+      "maxLength": 120,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_1_TITLE",
+      "description": "First feature title",
+      "maxLength": 60,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_1_TEXT",
+      "description": "First feature description",
+      "maxLength": 200,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_2_TITLE",
+      "description": "Second feature title",
+      "maxLength": 60,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_2_TEXT",
+      "description": "Second feature description",
+      "maxLength": 200,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_3_TITLE",
+      "description": "Third feature title",
+      "maxLength": 60,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_3_TEXT",
+      "description": "Third feature description",
+      "maxLength": 200,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_4_TITLE",
+      "description": "Fourth feature title",
+      "maxLength": 60,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_4_TEXT",
+      "description": "Fourth feature description",
+      "maxLength": 200,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_5_TITLE",
+      "description": "Fifth feature title",
+      "maxLength": 60,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_5_TEXT",
+      "description": "Fifth feature description",
+      "maxLength": 200,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_6_TITLE",
+      "description": "Sixth feature title",
+      "maxLength": 60,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "FEATURE_6_TEXT",
+      "description": "Sixth feature description",
+      "maxLength": 200,
+      "group": "features",
+      "vertical": "general"
+    },
+    {
+      "name": "TESTIMONIALS_TITLE",
+      "description": "Testimonials section heading",
+      "maxLength": 80,
+      "group": "testimonials",
+      "vertical": "general"
+    },
+    {
+      "name": "TESTIMONIAL_1_TEXT",
+      "description": "First testimonial quote",
+      "maxLength": 300,
+      "group": "testimonials",
+      "vertical": "general"
+    },
+    {
+      "name": "TESTIMONIAL_1_NAME",
+      "description": "First testimonial author name",
+      "maxLength": 60,
+      "group": "testimonials",
+      "vertical": "general"
+    },
+    {
+      "name": "TESTIMONIAL_1_ROLE",
+      "description": "First testimonial author role/title",
+      "maxLength": 60,
+      "group": "testimonials",
+      "vertical": "general"
+    },
+    {
+      "name": "TESTIMONIAL_2_TEXT",
+      "description": "Second testimonial quote",
+      "maxLength": 300,
+      "group": "testimonials",
+      "vertical": "general"
+    },
+    {
+      "name": "TESTIMONIAL_2_NAME",
+      "description": "Second testimonial author name",
+      "maxLength": 60,
+      "group": "testimonials",
+      "vertical": "general"
+    },
+    {
+      "name": "TESTIMONIAL_2_ROLE",
+      "description": "Second testimonial author role/title",
+      "maxLength": 60,
+      "group": "testimonials",
+      "vertical": "general"
+    },
+    {
+      "name": "TESTIMONIAL_3_TEXT",
+      "description": "Third testimonial quote",
+      "maxLength": 300,
+      "group": "testimonials",
+      "vertical": "general"
+    },
+    {
+      "name": "TESTIMONIAL_3_NAME",
+      "description": "Third testimonial author name",
+      "maxLength": 60,
+      "group": "testimonials",
+      "vertical": "general"
+    },
+    {
+      "name": "TESTIMONIAL_3_ROLE",
+      "description": "Third testimonial author role/title",
+      "maxLength": 60,
+      "group": "testimonials",
+      "vertical": "general"
+    },
+    {
+      "name": "CTA_TITLE",
+      "description": "Call-to-action banner heading",
+      "maxLength": 80,
+      "group": "cta",
+      "vertical": "general"
+    },
+    {
+      "name": "CTA_TEXT",
+      "description": "Call-to-action banner supporting text",
+      "maxLength": 200,
+      "group": "cta",
+      "vertical": "general"
+    },
+    {
+      "name": "CTA_BUTTON",
+      "description": "Primary call-to-action button label",
+      "maxLength": 40,
+      "group": "cta",
+      "vertical": "general"
+    },
+    {
+      "name": "CTA_BUTTON_SECONDARY",
+      "description": "Secondary call-to-action button label",
+      "maxLength": 40,
+      "group": "cta",
+      "vertical": "general"
+    },
+    {
+      "name": "EMERGENCY_CTA",
+      "description": "Emergency/urgent call-to-action",
+      "maxLength": 40,
+      "group": "cta",
+      "vertical": "general"
+    },
+    {
+      "name": "CONTACT_TITLE",
+      "description": "Contact section heading",
+      "maxLength": 80,
+      "group": "contact",
+      "vertical": "general"
+    },
+    {
+      "name": "CONTACT_TEXT",
+      "description": "Contact section introductory text",
+      "maxLength": 200,
+      "group": "contact",
+      "vertical": "general"
+    },
+    {
+      "name": "CONTACT_ADDRESS",
+      "description": "Physical address",
+      "maxLength": 150,
+      "group": "contact",
+      "vertical": "general"
+    },
+    {
+      "name": "CONTACT_PHONE",
+      "description": "Phone number",
+      "maxLength": 30,
+      "group": "contact",
+      "vertical": "general"
+    },
+    {
+      "name": "CONTACT_EMAIL",
+      "description": "Email address",
+      "maxLength": 60,
+      "group": "contact",
+      "vertical": "general"
+    },
+    {
+      "name": "CONTACT_HOURS",
+      "description": "Business hours text",
+      "maxLength": 60,
+      "group": "contact",
+      "vertical": "general"
+    },
+    {
+      "name": "FAQ_TITLE",
+      "description": "FAQ section heading",
+      "maxLength": 80,
+      "group": "faq",
+      "vertical": "general"
+    },
+    {
+      "name": "FAQ_SUBTITLE",
+      "description": "FAQ section subheading",
+      "maxLength": 120,
+      "group": "faq",
+      "vertical": "general"
+    },
+    {
+      "name": "FAQ_1_Q",
+      "description": "First FAQ question",
+      "maxLength": 120,
+      "group": "faq",
+      "vertical": "general"
+    },
+    {
+      "name": "FAQ_1_A",
+      "description": "First FAQ answer",
+      "maxLength": 400,
+      "group": "faq",
+      "vertical": "general"
+    },
+    {
+      "name": "FAQ_2_Q",
+      "description": "Second FAQ question",
+      "maxLength": 120,
+      "group": "faq",
+      "vertical": "general"
+    },
+    {
+      "name": "FAQ_2_A",
+      "description": "Second FAQ answer",
+      "maxLength": 400,
+      "group": "faq",
+      "vertical": "general"
+    },
+    {
+      "name": "FAQ_3_Q",
+      "description": "Third FAQ question",
+      "maxLength": 120,
+      "group": "faq",
+      "vertical": "general"
+    },
+    {
+      "name": "FAQ_3_A",
+      "description": "Third FAQ answer",
+      "maxLength": 400,
+      "group": "faq",
+      "vertical": "general"
+    },
+    {
+      "name": "FAQ_4_Q",
+      "description": "Fourth FAQ question",
+      "maxLength": 120,
+      "group": "faq",
+      "vertical": "general"
+    },
+    {
+      "name": "FAQ_4_A",
+      "description": "Fourth FAQ answer",
+      "maxLength": 400,
+      "group": "faq",
+      "vertical": "general"
+    },
+    {
+      "name": "GALLERY_TITLE",
+      "description": "Gallery section heading",
+      "maxLength": 80,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "GALLERY_SUBTITLE",
+      "description": "Gallery section subheading",
+      "maxLength": 120,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "IMAGE_GALLERY_1",
+      "description": "First gallery image URL",
+      "maxLength": 500,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "IMAGE_GALLERY_2",
+      "description": "Second gallery image URL",
+      "maxLength": 500,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "IMAGE_GALLERY_3",
+      "description": "Third gallery image URL",
+      "maxLength": 500,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "IMAGE_GALLERY_4",
+      "description": "Fourth gallery image URL",
+      "maxLength": 500,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "IMAGE_GALLERY_5",
+      "description": "Fifth gallery image URL",
+      "maxLength": 500,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "IMAGE_GALLERY_6",
+      "description": "Sixth gallery image URL",
+      "maxLength": 500,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "GALLERY_ALT_1",
+      "description": "First gallery image alt text",
+      "maxLength": 120,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "GALLERY_ALT_2",
+      "description": "Second gallery image alt text",
+      "maxLength": 120,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "GALLERY_ALT_3",
+      "description": "Third gallery image alt text",
+      "maxLength": 120,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "GALLERY_ALT_4",
+      "description": "Fourth gallery image alt text",
+      "maxLength": 120,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "GALLERY_ALT_5",
+      "description": "Fifth gallery image alt text",
+      "maxLength": 120,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "GALLERY_ALT_6",
+      "description": "Sixth gallery image alt text",
+      "maxLength": 120,
+      "group": "gallery",
+      "vertical": "general"
+    },
+    {
+      "name": "STATS_TITLE",
+      "description": "Statistics section heading",
+      "maxLength": 80,
+      "group": "stats",
+      "vertical": "general"
+    },
+    {
+      "name": "STATS_1_NUMBER",
+      "description": "First statistic number",
+      "maxLength": 20,
+      "group": "stats",
+      "vertical": "general"
+    },
+    {
+      "name": "STATS_1_LABEL",
+      "description": "First statistic label",
+      "maxLength": 40,
+      "group": "stats",
+      "vertical": "general"
+    },
+    {
+      "name": "STATS_2_NUMBER",
+      "description": "Second statistic number",
+      "maxLength": 20,
+      "group": "stats",
+      "vertical": "general"
+    },
+    {
+      "name": "STATS_2_LABEL",
+      "description": "Second statistic label",
+      "maxLength": 40,
+      "group": "stats",
+      "vertical": "general"
+    },
+    {
+      "name": "STATS_3_NUMBER",
+      "description": "Third statistic number",
+      "maxLength": 20,
+      "group": "stats",
+      "vertical": "general"
+    },
+    {
+      "name": "STATS_3_LABEL",
+      "description": "Third statistic label",
+      "maxLength": 40,
+      "group": "stats",
+      "vertical": "general"
+    },
+    {
+      "name": "TEAM_TITLE",
+      "description": "Team section heading",
+      "maxLength": 80,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "TEAM_SUBTITLE",
+      "description": "Team section subheading",
+      "maxLength": 120,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "TEAM_1_NAME",
+      "description": "First team member name",
+      "maxLength": 60,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "TEAM_1_ROLE",
+      "description": "First team member role",
+      "maxLength": 60,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "TEAM_1_BIO",
+      "description": "First team member bio",
+      "maxLength": 400,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "IMAGE_TEAM_1",
+      "description": "First team member photo URL",
+      "maxLength": 500,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "TEAM_2_NAME",
+      "description": "Second team member name",
+      "maxLength": 60,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "TEAM_2_ROLE",
+      "description": "Second team member role",
+      "maxLength": 60,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "TEAM_2_BIO",
+      "description": "Second team member bio",
+      "maxLength": 400,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "IMAGE_TEAM_2",
+      "description": "Second team member photo URL",
+      "maxLength": 500,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "TEAM_3_NAME",
+      "description": "Third team member name",
+      "maxLength": 60,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "TEAM_3_ROLE",
+      "description": "Third team member role",
+      "maxLength": 60,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "TEAM_3_BIO",
+      "description": "Third team member bio",
+      "maxLength": 400,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "IMAGE_TEAM_3",
+      "description": "Third team member photo URL",
+      "maxLength": 500,
+      "group": "team",
+      "vertical": "general"
+    },
+    {
+      "name": "MENU_TITLE",
+      "description": "Menu section heading",
+      "maxLength": 80,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_SUBTITLE",
+      "description": "Menu section subheading",
+      "maxLength": 120,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_CAT_1_NAME",
+      "description": "First menu category name",
+      "maxLength": 60,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_CAT_2_NAME",
+      "description": "Second menu category name",
+      "maxLength": 60,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_1_NAME",
+      "description": "First menu item name",
+      "maxLength": 80,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_1_DESC",
+      "description": "First menu item description",
+      "maxLength": 200,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_1_PRICE",
+      "description": "First menu item price",
+      "maxLength": 20,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_2_NAME",
+      "description": "Second menu item name",
+      "maxLength": 80,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_2_DESC",
+      "description": "Second menu item description",
+      "maxLength": 200,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_2_PRICE",
+      "description": "Second menu item price",
+      "maxLength": 20,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_3_NAME",
+      "description": "Third menu item name",
+      "maxLength": 80,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_3_DESC",
+      "description": "Third menu item description",
+      "maxLength": 200,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_3_PRICE",
+      "description": "Third menu item price",
+      "maxLength": 20,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_4_NAME",
+      "description": "Fourth menu item name",
+      "maxLength": 80,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_4_DESC",
+      "description": "Fourth menu item description",
+      "maxLength": 200,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_4_PRICE",
+      "description": "Fourth menu item price",
+      "maxLength": 20,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_5_NAME",
+      "description": "Fifth menu item name",
+      "maxLength": 80,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_5_DESC",
+      "description": "Fifth menu item description",
+      "maxLength": 200,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_5_PRICE",
+      "description": "Fifth menu item price",
+      "maxLength": 20,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_6_NAME",
+      "description": "Sixth menu item name",
+      "maxLength": 80,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_6_DESC",
+      "description": "Sixth menu item description",
+      "maxLength": 200,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "MENU_ITEM_6_PRICE",
+      "description": "Sixth menu item price",
+      "maxLength": 20,
+      "group": "menu",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "HOURS_TITLE",
+      "description": "Hours section heading",
+      "maxLength": 80,
+      "group": "hours",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "HOURS_WEEKDAY",
+      "description": "Weekday hours",
+      "maxLength": 60,
+      "group": "hours",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "HOURS_WEEKEND",
+      "description": "Weekend hours",
+      "maxLength": 60,
+      "group": "hours",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "RESERVATION_TITLE",
+      "description": "Reservation section heading",
+      "maxLength": 80,
+      "group": "reservation",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "RESERVATION_TEXT",
+      "description": "Reservation section text",
+      "maxLength": 200,
+      "group": "reservation",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "RESERVATION_CTA",
+      "description": "Reservation call-to-action button",
+      "maxLength": 40,
+      "group": "reservation",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "CHEF_NAME",
+      "description": "Chef name",
+      "maxLength": 60,
+      "group": "chef",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "CHEF_TITLE",
+      "description": "Chef title/position",
+      "maxLength": 60,
+      "group": "chef",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "CHEF_BIO",
+      "description": "Chef biography",
+      "maxLength": 400,
+      "group": "chef",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "IMAGE_CHEF",
+      "description": "Chef photo URL",
+      "maxLength": 500,
+      "group": "chef",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "PRODUCTS_TITLE",
+      "description": "Products section heading",
+      "maxLength": 80,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCTS_SUBTITLE",
+      "description": "Products section subheading",
+      "maxLength": 120,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_1_NAME",
+      "description": "First product name",
+      "maxLength": 80,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_1_DESC",
+      "description": "First product description",
+      "maxLength": 200,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_1_PRICE",
+      "description": "First product price",
+      "maxLength": 20,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "IMAGE_PRODUCT_1",
+      "description": "First product image URL",
+      "maxLength": 500,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_2_NAME",
+      "description": "Second product name",
+      "maxLength": 80,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_2_DESC",
+      "description": "Second product description",
+      "maxLength": 200,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_2_PRICE",
+      "description": "Second product price",
+      "maxLength": 20,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "IMAGE_PRODUCT_2",
+      "description": "Second product image URL",
+      "maxLength": 500,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_3_NAME",
+      "description": "Third product name",
+      "maxLength": 80,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_3_DESC",
+      "description": "Third product description",
+      "maxLength": 200,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_3_PRICE",
+      "description": "Third product price",
+      "maxLength": 20,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "IMAGE_PRODUCT_3",
+      "description": "Third product image URL",
+      "maxLength": 500,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_4_NAME",
+      "description": "Fourth product name",
+      "maxLength": 80,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_4_DESC",
+      "description": "Fourth product description",
+      "maxLength": 200,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_4_PRICE",
+      "description": "Fourth product price",
+      "maxLength": 20,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "IMAGE_PRODUCT_4",
+      "description": "Fourth product image URL",
+      "maxLength": 500,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_5_NAME",
+      "description": "Fifth product name",
+      "maxLength": 80,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_5_DESC",
+      "description": "Fifth product description",
+      "maxLength": 200,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_5_PRICE",
+      "description": "Fifth product price",
+      "maxLength": 20,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "IMAGE_PRODUCT_5",
+      "description": "Fifth product image URL",
+      "maxLength": 500,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_6_NAME",
+      "description": "Sixth product name",
+      "maxLength": 80,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_6_DESC",
+      "description": "Sixth product description",
+      "maxLength": 200,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_6_PRICE",
+      "description": "Sixth product price",
+      "maxLength": 20,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "IMAGE_PRODUCT_6",
+      "description": "Sixth product image URL",
+      "maxLength": 500,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRODUCT_CTA",
+      "description": "Products section call-to-action button",
+      "maxLength": 40,
+      "group": "products",
+      "vertical": "ecommerce"
+    },
+    {
+      "name": "PRICING_TITLE",
+      "description": "Pricing section heading",
+      "maxLength": 80,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PRICING_SUBTITLE",
+      "description": "Pricing section subheading",
+      "maxLength": 120,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_1_NAME",
+      "description": "First pricing plan name",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_1_DESC",
+      "description": "First pricing plan description",
+      "maxLength": 200,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_1_PRICE",
+      "description": "First pricing plan price",
+      "maxLength": 20,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_1_PERIOD",
+      "description": "First pricing plan billing period",
+      "maxLength": 30,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_1_FEATURE_1",
+      "description": "First plan feature 1",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_1_FEATURE_2",
+      "description": "First plan feature 2",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_1_FEATURE_3",
+      "description": "First plan feature 3",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_1_FEATURE_4",
+      "description": "First plan feature 4",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_2_NAME",
+      "description": "Second pricing plan name",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_2_DESC",
+      "description": "Second pricing plan description",
+      "maxLength": 200,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_2_PRICE",
+      "description": "Second pricing plan price",
+      "maxLength": 20,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_2_PERIOD",
+      "description": "Second pricing plan billing period",
+      "maxLength": 30,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_2_FEATURE_1",
+      "description": "Second plan feature 1",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_2_FEATURE_2",
+      "description": "Second plan feature 2",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_2_FEATURE_3",
+      "description": "Second plan feature 3",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_2_FEATURE_4",
+      "description": "Second plan feature 4",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_3_NAME",
+      "description": "Third pricing plan name",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_3_DESC",
+      "description": "Third pricing plan description",
+      "maxLength": 200,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_3_PRICE",
+      "description": "Third pricing plan price",
+      "maxLength": 20,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_3_PERIOD",
+      "description": "Third pricing plan billing period",
+      "maxLength": 30,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_3_FEATURE_1",
+      "description": "Third plan feature 1",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_3_FEATURE_2",
+      "description": "Third plan feature 2",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_3_FEATURE_3",
+      "description": "Third plan feature 3",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PLAN_3_FEATURE_4",
+      "description": "Third plan feature 4",
+      "maxLength": 60,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PRICING_CTA",
+      "description": "Pricing section call-to-action button",
+      "maxLength": 40,
+      "group": "pricing",
+      "vertical": "saas"
+    },
+    {
+      "name": "PROCESS_TITLE",
+      "description": "Process/steps section heading",
+      "maxLength": 80,
+      "group": "process",
+      "vertical": "general"
+    },
+    {
+      "name": "PROCESS_SUBTITLE",
+      "description": "Process/steps section subheading",
+      "maxLength": 120,
+      "group": "process",
+      "vertical": "general"
+    },
+    {
+      "name": "PROCESS_1_TITLE",
+      "description": "First process step title",
+      "maxLength": 60,
+      "group": "process",
+      "vertical": "general"
+    },
+    {
+      "name": "PROCESS_1_DESC",
+      "description": "First process step description",
+      "maxLength": 200,
+      "group": "process",
+      "vertical": "general"
+    },
+    {
+      "name": "PROCESS_2_TITLE",
+      "description": "Second process step title",
+      "maxLength": 60,
+      "group": "process",
+      "vertical": "general"
+    },
+    {
+      "name": "PROCESS_2_DESC",
+      "description": "Second process step description",
+      "maxLength": 200,
+      "group": "process",
+      "vertical": "general"
+    },
+    {
+      "name": "PROCESS_3_TITLE",
+      "description": "Third process step title",
+      "maxLength": 60,
+      "group": "process",
+      "vertical": "general"
+    },
+    {
+      "name": "PROCESS_3_DESC",
+      "description": "Third process step description",
+      "maxLength": 200,
+      "group": "process",
+      "vertical": "general"
+    },
+    {
+      "name": "SERVICE_AREA_TITLE",
+      "description": "Service areas section heading",
+      "maxLength": 80,
+      "group": "services",
+      "vertical": "local_service"
+    },
+    {
+      "name": "SERVICE_AREA_TEXT",
+      "description": "Service areas introductory text",
+      "maxLength": 200,
+      "group": "services",
+      "vertical": "local_service"
+    },
+    {
+      "name": "SERVICE_AREA_1",
+      "description": "First service area name",
+      "maxLength": 60,
+      "group": "services",
+      "vertical": "local_service"
+    },
+    {
+      "name": "SERVICE_AREA_2",
+      "description": "Second service area name",
+      "maxLength": 60,
+      "group": "services",
+      "vertical": "local_service"
+    },
+    {
+      "name": "SERVICE_AREA_3",
+      "description": "Third service area name",
+      "maxLength": 60,
+      "group": "services",
+      "vertical": "local_service"
+    },
+    {
+      "name": "SERVICE_AREA_4",
+      "description": "Fourth service area name",
+      "maxLength": 60,
+      "group": "services",
+      "vertical": "local_service"
+    },
+    {
+      "name": "LOCATION_ADDRESS",
+      "description": "Location physical address",
+      "maxLength": 150,
+      "group": "contact",
+      "vertical": "general"
+    },
+    {
+      "name": "LOCATION_PHONE",
+      "description": "Location phone number",
+      "maxLength": 30,
+      "group": "contact",
+      "vertical": "general"
+    },
+    {
+      "name": "LOCATION_TEXT",
+      "description": "Location description text",
+      "maxLength": 200,
+      "group": "contact",
+      "vertical": "general"
+    },
+    {
+      "name": "LICENSE_TEXT",
+      "description": "License or legal text",
+      "maxLength": 400,
+      "group": "footer",
+      "vertical": "general"
+    },
+    {
+      "name": "FOOTER_TAGLINE",
+      "description": "Footer tagline",
+      "maxLength": 200,
+      "group": "footer",
+      "vertical": "general"
+    },
+    {
+      "name": "BUSINESS_NAME",
+      "description": "Business name",
+      "maxLength": 80,
+      "group": "footer",
+      "vertical": "general"
+    }
   ]
 }

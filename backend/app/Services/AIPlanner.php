@@ -9,12 +9,18 @@ use Illuminate\Support\Facades\Log;
 class AIPlanner
 {
     private array $tokenSchema;
+    private array $verticalRecipes;
+    private array $skeletonRegistry;
 
-    public function __construct(?string $schemaPath = null)
+    public function __construct(?string $schemaPath = null, ?string $recipesPath = null, ?string $registryPath = null)
     {
         $schemaPath ??= base_path('../pattern-library/token-schema.json');
-        $payload = json_decode(file_get_contents($schemaPath), true, 512, JSON_THROW_ON_ERROR);
-        $this->tokenSchema = $payload['tokens'] ?? [];
+        $recipesPath ??= base_path('../pattern-library/vertical-recipes.json');
+        $registryPath ??= base_path('../pattern-library/skeleton-registry.json');
+
+        $this->tokenSchema = json_decode(file_get_contents($schemaPath), true, 512, JSON_THROW_ON_ERROR)['tokens'] ?? [];
+        $this->verticalRecipes = json_decode(file_get_contents($recipesPath), true) ?? [];
+        $this->skeletonRegistry = json_decode(file_get_contents($registryPath), true) ?? [];
     }
 
     /**
@@ -23,7 +29,11 @@ class AIPlanner
      */
     public function generate(array $project): array
     {
-        $systemPrompt = $this->buildSystemPrompt();
+        $category = $project['category'] ?? $project['businessCategory'] ?? 'local_service';
+        $category = strtolower(trim($category));
+
+        $requiredTokens = $this->getRequiredTokens($category);
+        $systemPrompt = $this->buildSystemPrompt($category, $requiredTokens);
         $userPrompt = $this->buildUserPrompt($project);
 
         $response = $this->requestWithRetry($systemPrompt, $userPrompt);
@@ -38,39 +48,89 @@ class AIPlanner
             throw new ContentGenerationException('AI response was not valid JSON.');
         }
 
-        $this->validateTokens($decoded);
+        $this->validateTokens($decoded, $requiredTokens, $project);
 
         return $decoded;
     }
 
-    private function buildSystemPrompt(): string
+    /**
+     * Get the list of text tokens needed for this vertical.
+     * Looks up the recipe, collects all skeleton required_tokens, removes IMAGE_* tokens.
+     *
+     * @return array<int, string>
+     */
+    private function getRequiredTokens(string $category): array
     {
-        // Build a compact token list: just names grouped by purpose.
-        // This dramatically reduces input token count vs. dumping the full schema.
-        $textTokens = array_filter(
-            $this->tokenSchema,
-            fn (array $t) => ! str_starts_with($t['name'] ?? '', 'IMAGE_')
-        );
+        $recipe = $this->verticalRecipes[$category]
+            ?? $this->verticalRecipes['local_service']
+            ?? [];
 
-        $tokenNames = array_map(fn (array $t) => $t['name'], $textTokens);
-        $tokenList = implode(', ', $tokenNames);
+        $requiredTokens = [];
+
+        foreach ($recipe as $page => $skeletonIds) {
+            foreach ($skeletonIds as $skeletonId) {
+                $skeleton = $this->skeletonRegistry[$skeletonId] ?? null;
+                if ($skeleton && isset($skeleton['required_tokens'])) {
+                    $requiredTokens = array_merge($requiredTokens, $skeleton['required_tokens']);
+                }
+            }
+        }
+
+        // Also add footer tokens used by ThemeAssembler (not in skeletons)
+        $requiredTokens[] = 'FOOTER_TAGLINE';
+        $requiredTokens[] = 'CONTACT_TEXT';
+        $requiredTokens[] = 'BUSINESS_NAME';
+
+        // Remove IMAGE_* tokens (handled by ImageHandler) and deduplicate
+        return array_values(array_unique(array_filter(
+            $requiredTokens,
+            fn(string $t) => !str_starts_with($t, 'IMAGE_')
+        )));
+    }
+
+    /**
+     * Build a compact system prompt listing only the tokens this vertical needs.
+     */
+    private function buildSystemPrompt(string $category, array $requiredTokens): string
+    {
+        $tokenList = implode(', ', $requiredTokens);
+
+        // Build category-specific hints
+        $categoryHints = match ($category) {
+            'restaurant' => "- MENU_ITEM_*: real dish names with descriptions and realistic prices\n- CHEF_*: chef/owner name, title, and compelling bio\n- RESERVATION_*: compelling reservation call-to-action\n- HOURS_*: realistic business hours",
+            'ecommerce' => "- PRODUCT_*: real product names with descriptions and realistic prices\n- PRODUCT_CTA: shopping call-to-action like 'Shop Now' or 'Add to Cart'",
+            'saas' => "- PLAN_*: realistic SaaS pricing tiers (free/starter, pro, enterprise)\n- STATS_*: impressive but believable metrics (e.g., '99.9%' uptime, '10K+' users)\n- PRICING_CTA: action-oriented like 'Start Free Trial'",
+            'portfolio' => "- PROCESS_*: creative workflow steps (e.g., Discovery, Design, Deliver)\n- GALLERY_ALT_*: descriptive alt text for portfolio pieces",
+            'local_service' => "- SERVICE_AREA_*: realistic local area/neighborhood names\n- EMERGENCY_CTA: urgent call-to-action like 'Call Now for Emergency Service'\n- LICENSE_TEXT: professional licensing statement",
+            default => "",
+        };
 
         return <<<PROMPT
-You are generating content for a WordPress theme builder.
+You are generating website content for a WordPress theme.
+Write as if you ARE the business owner. Every text must be specific to the business.
+No generic placeholder text. No lorem ipsum. No "Your Business Here".
+
 Return ONLY a valid JSON object with token names as keys and plain text values.
-No HTML, no markdown, no block markup. Do not include any IMAGE_* tokens.
+No HTML tags, no markdown, no block markup. Do not include any IMAGE_* tokens.
 
 Required tokens: {$tokenList}
 
-Rules:
-- HERO_TITLE, HERO_PRETITLE, HERO_TEXT: compelling hero section copy
-- ABOUT_TITLE, ABOUT_TEXT: about the business (2-3 sentences)
-- FEATURE_*: feature titles and descriptions
-- TESTIMONIAL_*: realistic customer testimonials with names and roles
-- CTA_*: call-to-action text and button labels
-- CONTACT_*: business contact info (address, phone, email, hours)
-- FOOTER_*: footer tagline and copyright text
-- All values must be plain text, specific to the business. No placeholders.
+Content rules:
+- HERO_TITLE: compelling, specific headline (not generic)
+- HERO_PRETITLE: short eyebrow text (category or tagline)
+- HERO_TEXT: 1-2 sentences describing the business value
+- ABOUT_TITLE, ABOUT_TEXT, ABOUT_TEXT_2: genuine business story
+- FEATURE_*_TITLE, FEATURE_*_TEXT: specific features/benefits of THIS business
+- TESTIMONIAL_*_TEXT: realistic customer quotes (2-3 sentences each)
+- TESTIMONIAL_*_NAME: realistic full names
+- TESTIMONIAL_*_ROLE: customer context (e.g., "Loyal Customer since 2019")
+- CTA_*: action-oriented button text and supporting copy
+- CONTACT_*: realistic business contact information
+- FOOTER_TAGLINE: short business tagline for footer
+- BUSINESS_NAME: exact business name
+- FAQ_*_Q, FAQ_*_A: real frequently asked questions and detailed answers
+{$categoryHints}
+- All values must be plain text only. No HTML.
 PROMPT;
     }
 
@@ -83,9 +143,7 @@ PROMPT;
         $description = $project['description'] ?? $project['businessDescription'] ?? '';
         $category = $project['category'] ?? $project['businessCategory'] ?? 'general';
         $language = $project['language'] ?? 'English';
-        $rawPages = $project['pages'] ?? ['home', 'about', 'services', 'contact', 'blog'];
-        // Pages may be nested objects from DataTransformer (e.g. [{title, slug, ...}])
-        // or flat strings. Extract slug/title for the prompt.
+        $rawPages = $project['pages'] ?? ['home', 'about', 'services', 'contact'];
         $pages = array_map(function ($page) {
             if (is_array($page)) {
                 return $page['slug'] ?? $page['title'] ?? 'page';
@@ -100,6 +158,8 @@ Description: {$description}
 Category: {$category}
 Language: {$language}
 Pages: {$pageList}
+
+Generate ALL required tokens with content specific to "{$name}". Make it sound professional and authentic.
 PROMPT;
     }
 
@@ -165,7 +225,6 @@ PROMPT;
             $body = $response->body();
             $errorMsg = "AI request failed with status {$status}.";
 
-            // Include rate limit detail so retry logic can detect it
             if ($status === 429) {
                 $retryAfter = $response->header('retry-after');
                 $errorMsg = "AI rate limit hit (status 429). Retry-After: {$retryAfter}s. Body: ".mb_substr($body, 0, 200);
@@ -194,17 +253,14 @@ PROMPT;
     {
         $trimmed = trim($response);
 
-        // Try raw parse first — if it's already valid JSON, return as-is.
         if (json_decode($trimmed, true) !== null) {
             return $trimmed;
         }
 
-        // Strip markdown code fences: ```json ... ``` or ``` ... ```
         if (preg_match('/```(?:json)?\s*\n?(.*?)\n?\s*```/s', $trimmed, $matches)) {
             return trim($matches[1]);
         }
 
-        // Find first { and last } — extract the JSON object.
         $firstBrace = strpos($trimmed, '{');
         $lastBrace = strrpos($trimmed, '}');
         if ($firstBrace !== false && $lastBrace !== false && $lastBrace > $firstBrace) {
@@ -215,55 +271,81 @@ PROMPT;
     }
 
     /**
-     * @param  array<string, string>  $tokens
-     */
-    /**
-     * Validate AI-generated tokens against schema.
-     * Soft validation: logs warnings for missing tokens and fills empty defaults
-     * so the pipeline can continue. Hard-failing here blocks the entire generation
-     * when the AI omits even one token (common with large vocabularies).
+     * Validate and fill missing tokens with sensible defaults.
      *
      * @param  array<string, string>  $tokens
-     * @return array<string, string>  Tokens with defaults filled for any missing entries
+     * @param  array<int, string>  $requiredTokens
+     * @param  array<string, mixed>  $project
      */
-    private function validateTokens(array &$tokens): void
+    private function validateTokens(array &$tokens, array $requiredTokens, array $project): void
     {
+        $businessName = $project['name'] ?? 'Business';
+        $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '', $businessName));
         $missing = [];
 
-        foreach ($this->tokenSchema as $token) {
-            $name = $token['name'] ?? null;
-            $maxLength = $token['maxLength'] ?? null;
-
-            if (! $name) {
+        foreach ($requiredTokens as $tokenName) {
+            if (str_starts_with($tokenName, 'IMAGE_')) {
                 continue;
             }
 
-            // IMAGE_* tokens are sourced by ImageHandler, not AI.
-            if (str_starts_with($name, 'IMAGE_')) {
-                continue;
+            if (! array_key_exists($tokenName, $tokens) || trim((string) $tokens[$tokenName]) === '') {
+                $tokens[$tokenName] = $this->getDefaultValue($tokenName, $businessName, $slug);
+                $missing[] = $tokenName;
             }
+        }
 
-            // Fill missing tokens with empty string so TokenInjector can proceed.
-            if (! array_key_exists($name, $tokens)) {
-                $tokens[$name] = '';
-                $missing[] = $name;
-                continue;
-            }
+        // Also validate against full schema for maxLength
+        $schemaMap = [];
+        foreach ($this->tokenSchema as $t) {
+            $schemaMap[$t['name']] = $t;
+        }
 
-            $value = (string) $tokens[$name];
-
-            if ($maxLength && mb_strlen($value) > $maxLength) {
-                // Truncate instead of failing — preserves partial content.
-                $tokens[$name] = mb_substr($value, 0, $maxLength);
-                Log::warning("AIPlanner: Token {$name} truncated to {$maxLength} chars");
+        foreach ($tokens as $name => $value) {
+            $maxLen = $schemaMap[$name]['maxLength'] ?? null;
+            if ($maxLen && mb_strlen((string) $value) > $maxLen) {
+                $tokens[$name] = mb_substr((string) $value, 0, $maxLen);
+                Log::warning("AIPlanner: Token {$name} truncated to {$maxLen} chars");
             }
         }
 
         if (count($missing) > 0) {
             Log::warning('AIPlanner: Missing tokens filled with defaults', [
                 'count' => count($missing),
-                'tokens' => array_slice($missing, 0, 10),
+                'tokens' => array_slice($missing, 0, 20),
             ]);
         }
+    }
+
+    /**
+     * Get a sensible default value for a missing token.
+     */
+    private function getDefaultValue(string $tokenName, string $businessName, string $slug): string
+    {
+        return match (true) {
+            $tokenName === 'BUSINESS_NAME' => $businessName,
+            $tokenName === 'CONTACT_EMAIL' => "info@{$slug}.com",
+            $tokenName === 'CONTACT_PHONE' => '(555) 123-4567',
+            $tokenName === 'CONTACT_ADDRESS' => '123 Main Street, Suite 100',
+            $tokenName === 'CONTACT_HOURS' => 'Mon-Fri 9:00 AM - 5:00 PM',
+            $tokenName === 'FOOTER_TAGLINE' => "Welcome to {$businessName}",
+            $tokenName === 'CONTACT_TEXT' => "Get in touch with {$businessName} today.",
+            str_contains($tokenName, '_CTA') || str_contains($tokenName, '_BUTTON') => 'Get Started',
+            str_contains($tokenName, 'PRICE') => '$0',
+            str_contains($tokenName, 'PERIOD') => '/mo',
+            str_contains($tokenName, '_TITLE') || str_contains($tokenName, '_NAME') => $businessName,
+            str_contains($tokenName, '_TEXT') || str_contains($tokenName, '_DESC') || str_contains($tokenName, '_BIO') => "Learn more about {$businessName}.",
+            str_contains($tokenName, '_ROLE') => 'Team Member',
+            str_contains($tokenName, '_NUMBER') => '100+',
+            str_contains($tokenName, '_LABEL') => 'Metric',
+            str_contains($tokenName, '_Q') => "What makes {$businessName} different?",
+            str_contains($tokenName, '_A') => "We pride ourselves on quality and customer satisfaction.",
+            str_contains($tokenName, 'HOURS_WEEKDAY') => 'Monday - Friday: 9:00 AM - 6:00 PM',
+            str_contains($tokenName, 'HOURS_WEEKEND') => 'Saturday - Sunday: 10:00 AM - 4:00 PM',
+            str_contains($tokenName, 'LOCATION_') => $businessName,
+            str_contains($tokenName, 'SERVICE_AREA_') => 'Local Area',
+            str_contains($tokenName, 'LICENSE_TEXT') => 'Licensed and Insured',
+            str_contains($tokenName, 'GALLERY_ALT_') => "{$businessName} gallery image",
+            default => $businessName,
+        };
     }
 }
