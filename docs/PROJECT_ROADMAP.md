@@ -1,276 +1,212 @@
 # PressPilot OS — Development Roadmap
 
-> **Last updated: 2026-03-04** — SSWG Phase 2 code complete. All 6 assembly engine services built + cleanup applied. Tests pending VPS run. Phase 1 (tokenized patterns) still blocking end-to-end generation. See `_memory/main.md` for full current state.
-
-## Phase 1: Stabilization & Core Refactor (Current)
-**Goal:** Reach 100% reliability for generated themes. Eliminate "Attempt Recovery" errors.
-*   [x] **Refactor Generator Core:** Consolidate `PatternInjector`, `StructureValidator`, `ContentEngine` into `src/generator`.
-*   [x] **Implement Color Harmonization:** `ColorHarmonizer` utility with WCAG checks and saturation caps.
-*   [x] **Implement Stable Navigation:** Migrate `universal-header.ts` to use self-closing `wp:navigation` blocks.
-*   [x] **Audit FSE Compliance:** Document full compliance rules in `WORDPRESS_FSE_REFERENCE.md`.
-*   [x] **Final Smoke Test:** Verify `npm run dev` and `npm run build` pass consistently.
-
-## Phase 2: Vertical Expansion (Restaurant & Café)
-**Goal:** Deliver deep value for the Restaurant vertical with structured data features.
-*   [x] **UI - Menu Upload Flow:** Create `src/app/studio/steps/MenuUploader.tsx`.
-    *   Allow raw text paste or file upload.
-    *   Parse into structured JSON (`RestaurantMenu` type).
-*   [x] **Generator - Page Templates:** Create `src/generator/patterns/universal-menu.ts`.
-    *   Implement "Menu Section" pattern (Tabs or List view).
-    *   Implement "Dish Card" pattern (Image, Title, Price, Description).
-*   [x] **Logic - Menu Injection:** Wire `ContentEngine` to populate menu patterns from parsed data.
-*   [x] **Testing:** Verify menu page generation in standard and heavy content modes.
-
-
-## Phase 3: SaaS Studio UI Polish
-**Goal:** Make the "Hands" (SaaS App) feel as premium as the "Brain" (Generator).
-*   [x] **Global Layout:** Unified dark AppShell with consistent header/footer across all pages (Phase 15.1).
-*   [ ] **Step Navigation:** Implement smooth transitions between onboarding steps.
-*   [ ] **Preview Accuracy:** Ensure `staticSite.ts` preview matches the final WordPress theme output 1:1.
-*   [ ] **Mobile Responsiveness:** Verify Studio UI on mobile devices.
-
-## Phase 13: Generator Best Practices Upgrade (Complete)
-**Goal:** Improve data flow, hero differentiation, and content validation.
-*   [x] **Contact Data Flow:** Wire Studio UI contact fields through full pipeline.
-*   [x] **Hero Layout Differentiation:** Implement fullBleed, fullWidth, split, minimal hero variants.
-*   [x] **Restaurant brandStyle Routing:** Map playful → Tove, modern → Frost.
-*   [x] **Content Validation:** Add ContentValidator to catch forbidden demo strings.
-
-## Phase 14: Restaurant Theme Fixes (Complete)
-**Goal:** Fix critical issues in Frost and Tove restaurant theme generation.
-*   [x] **Frost "Build with Frost" Removal:** Add restaurant recipe + legacy content replacements.
-*   [x] **Frost Testimonial Names:** Replace demo names (Allison Taylor, etc.) with neutral guest names.
-*   [x] **Split Hero Fix:** Force Heavy Mode for restaurants to ensure hero layout differentiation.
-*   [x] **Tove Spacing Normalization:** Reduce page padding from spacing-70 to spacing-50.
-*   [x] **Tove Menu Contrast:** Add explicit textColor="foreground" for readability.
-*   [x] **Tove Opening Hours:** Replace narrow 3-column layout with horizontal table.
-*   [x] **Pattern Cleaning:** Add cleanAllPatterns() to sanitize ALL base theme patterns post-chassis.
-
-## Phase 15: Documentation & Marketing Prep
-**Goal:** Prepare for public launch and user onboarding.
-*   [x] **UI Shell Unification:** Dark theme AppShell with unified header/footer (Phase 15.1 complete).
-*   [ ] **User Guides:** Create "Getting Started" docs for end-users (installing the ZIP, using Site Editor).
-*   [ ] **Developer Docs:** Finalize API documentation for `POST /api/generate`.
-*   [ ] **Marketing Assets:** Generate screenshots of "Flagship" themes (Restaurant, Agency, SaaS).
-*   [ ] **Landing Page:** Update the main landing page with "Generated in 90s" value prop and live demo link.
-
-**Next up for Phase 15:**
-- Capture hero screenshots from 5 flagship themes (Bella Trattoria, Slate Wine Bar, Nexus Digital, The Cozy Cup, Ember & Oak)
-- Refine landing copy with reliability-first positioning ("FSE themes without editor errors")
-- Complete user guide with install walkthrough and Site Editor intro
+> **Last updated: 2026-03-06** — SSWG Phase 2.7 COMPLETE. Skeleton-based pipeline rewrite addresses all 6 quality issues. Needs deploy + end-to-end verification. Phase 3 UNBLOCKED pending verification.
+> **Canonical SSWG specs:** `agent-os/sswg/PROTOCOL.md` + `agent-os/sswg/PHASE-{0-4}.md`
+> **Decisions:** `DECISIONS.md` (change log included)
+> **Current state:** `_memory/main.md`
 
 ---
 
-## M0-M3: Laravel Migration Roadmap (Strangler Fig)
+## ACTIVE WORK STREAM: SSWG (Solid Smart WordPress Generator)
 
-> Strategy: Incrementally move backend responsibilities from Next.js API routes + Node worker to Laravel, with zero production interruption at each phase boundary.
+> **Decision (2026-03-03):** The old Node.js generator pipeline is DEPRECATED. SSWG replaces it entirely.
+> SSWG is a pattern-assembly engine: AI generates content JSON → deterministic engine selects pre-validated patterns → injects content via `{{TOKEN}}` replacement → assembles theme.zip → validates → uploads.
 
-### M0: Foundation (COMPLETE — 2026-02-08)
-*Laravel stands up alongside Next.js. No production traffic.*
-*   [x] **Laravel 12 scaffold** in `backend/` with Sanctum, Horizon, Redis
-*   [x] **Docker Compose stack** — `laravel-app` (PHP-FPM + nginx), `laravel-horizon` (PHP-CLI + Node 20), `redis`
-*   [x] **Eloquent models** — `Project`, `GenerationJob`, `GeneratedTheme`, `User` mapping to existing Supabase tables
-*   [x] **`bin/generate.ts`** — CLI wrapper accepting JSON stdin, producing JSON stdout (validates + builds static site)
-*   [x] **`GenerateThemeJob`** — Laravel queue job invoking Node generator via subprocess
-*   [x] **Supabase S3 filesystem driver** — uploads theme/preview ZIPs to `generated-themes` bucket
-*   [x] **Internal endpoints** — `GET /health`, `POST /jobs/test-dispatch`, `GET /jobs/{id}`
-*   [x] **Coolify deployment** — Docker stack deployed on VPS
-*   [x] **Horizon packaging fix (2026-02-14)** — switched from bind-mount assumptions to Dockerfile `COPY` for generator payload in `backend/docker/horizon/Dockerfile`; removed `.:/app/generator:ro` from `docker-compose.m0-laravel.yml` for Coolify compatibility
-*   [x] **Full integration test** — `GenerateThemeSmokeTest` (7 tests) + `m0-smoke-test.sh` (Docker E2E)
-*   [ ] **Observability baseline (P8)** — 8 structured-log metrics emitting for 3+ days. Scheduler added to supervisord.conf. Deploy updated stack, then monitor `docker compose logs` for 3 days.
+### SSWG Phase 0: Foundation — COMPLETE
+- Playground CLI installed and validated
+- Gold-standard restaurant theme verified
+- Protocol and phase specs established
+- Proven-cores vault audited (7 themes, 338 patterns)
 
-### M1: Jobs Migration (Next)
-*Laravel takes over job creation and processing. Node polling worker retired.*
-*   [ ] **PHP data transformer** — port `transformSaaSInputToGeneratorData()` from TypeScript to PHP
-*   [ ] **Public API endpoints** — `POST /generate`, `POST /regenerate`, `GET /status`, `GET /download`
-*   [ ] **`BACKEND_URL` feature flag** — Next.js routes requests to Laravel when set
-*   [ ] **Node worker shutdown** — drain queue, stop worker, Horizon becomes sole processor
-*   [ ] **`pp_projects` → `projects` unification** — migration DDL, backfill, single canonical table
-*   [ ] **BrandStyle 4→2 mapping** — decide handling for `bold`/`minimal` before they reach generator
-*   [ ] **Logo download pipeline** — download logos from Supabase Storage to temp file for ColorThief
+### SSWG Phase 1: Pattern Tokenization — COMPLETE
+- 115 tokenized patterns across 5 cores (ollie, frost, tove, spectra-one, tt4)
+- Token vocabulary: 81 tokens (71 text + 10 IMAGE_*)
+- Registry: `pattern-library/registry.json` with full metadata
+- Token spec: `pattern-library/token-schema.json`
+- Exceeds 80-100 target from spec
 
-### M2: Auth + Billing (Deferred)
-*Real authentication and payment integration.*
-*   [ ] **Sanctum auth** — register/login endpoints, token-based API auth
-*   [ ] **LemonSqueezy webhooks** — payment status, subscription management
-*   [ ] **`hero_previews` migration** — table schema typed, payment flow moved to Laravel
-*   [ ] **RLS simplification** — application-layer auth replaces bypassed RLS
+### SSWG Phase 2: Assembly Engine — COMPLETE (2026-03-04)
+- 6 Laravel services: AIPlanner, PatternSelector, TokenInjector, ImageHandler, ThemeAssembler, PlaygroundValidator
+- GenerateThemeJob orchestrates full pipeline with retry + offset-based pattern diversification
+- Code review cleanup: exception extraction, temp dir fix, Http facade, unit tests
+- Deployed to production via Coolify
 
-### M3: Cutover (Deferred)
-*Next.js API routes retired. Laravel is sole backend.*
-*   [ ] **Next.js API route removal** — all `app/api/*/route.ts` deleted or proxied
-*   [ ] **`pp_projects` table retirement** — legacy table dropped after data migration verified
-*   [ ] **`SUPABASE_SERVICE_ROLE_KEY` removal** — no longer needed by any runtime
-*   [ ] **Full Laravel API** — all endpoints behind Sanctum auth, rate limiting, Sentry integration
+### SSWG Phase 2.5: Pipeline Activation — COMPLETE (2026-03-05)
+- First successful end-to-end run — Luigi Pizza restaurant theme generated in 17 seconds
+- 6 bugs fixed during activation (see `_memory/main.md` "Phase 2.5 Bug Fix Chain")
 
----
+### SSWG Phase 2.7: Quality Fix (Skeleton Pipeline) — COMPLETE (2026-03-06)
+**Complete pipeline rewrite replacing Ollie-dependent patterns with skeleton-based theme generation.**
 
-## Generator 2.0: Design System & Recipe Engine (Current)
-**Goal:** Replace hardcoded homepage assembly with data-driven token → recipe → section rendering.
+- [x] 20 HTML skeleton patterns — pure block markup, ALL text = `{{TOKEN}}`, zero hardcoded content
+- [x] skeleton-registry.json + vertical-recipes.json — deterministic page layouts for 5 verticals
+- [x] token-schema.json expanded: 81 → 196 vertical-specific tokens
+- [x] AIPlanner.php — vertical-aware token generation
+- [x] PatternSelector.php — deterministic recipe-based skeleton lookup
+- [x] TokenInjector.php — skeleton loading + block grammar validation
+- [x] ThemeAssembler.php — PressPilot 3-column footer + inner page templates
+- [x] GenerateThemeJob.php — linear 7-step pipeline
+- [x] Static verification passed — all cross-references valid, PHP syntax clean
 
-### Gen 2.0 Phase 1: Design System Foundation (Complete)
-*   [x] **Centralized Token API:** `getDesignTokens(brandMode, vertical)` resolver
-*   [x] **4 Brand Modes:** playful, modern, minimal, bold — each with distinct radii, spacing, typography
-*   [x] **Restaurant Vertical Tokens:** Backward-compatible bridge from legacy `restaurantThemeTokens.ts`
-*   [x] **23 Unit Tests:** Full coverage for token resolution and brand mode differentiation
+**All 6 quality issues addressed:**
+- [x] Block markup validity — proven block grammar in skeletons, validated post-injection
+- [x] Hero images — IMAGE_* tokens in block comment JSON + img src
+- [x] Inner pages — about, services, contact from vertical recipes
+- [x] PressPilot footer — custom 3-column design
+- [x] Ollie content leakage — eliminated (100% tokenized)
+- [x] Footer site name — wp:site-title + BUSINESS_NAME token
 
-### Gen 2.0 Phase 2: Recipe System (Complete)
-*   [x] **LayoutRecipe Interface:** Data-driven section definitions with background slots and config
-*   [x] **RecipeSelector:** Picks best recipe based on vertical + brandMode + priority
-*   [x] **SectionRenderer:** Maps section types to pattern functions
-*   [x] **Restaurant Recipes:** Classic Bistro (playful) + Modern Dining (modern)
-*   [x] **37 Unit Tests:** Recipe selection + section order validation
+**⚠️ NEEDS:** Push to GitHub → Coolify auto-deploy → generate 5 test themes to verify end-to-end
 
-### Gen 2.0 Phase 4: Ecommerce Vertical (Complete)
-*   [x] **Ecommerce Design Tokens:** `src/generator/design-system/verticals/ecommerce.ts`
-*   [x] **Ecommerce Recipes:** Product Showcase (modern/bold) + Minimal Store (playful/minimal)
-*   [x] **5 Section Patterns:** Hero, Category Grid, Featured Products, Trust Badges, Newsletter
-*   [x] **Heavy Mode for Ecommerce:** `FORCE_HEAVY_FOR_ECOMMERCE` flag in orchestrator
-*   [x] **WCAG AA Contrast Fix:** Safe token pairs for hero overlays and newsletter sections
-*   [x] **Brand Style Expansion:** Added `bold` and `minimal` to `TT4BrandStyle` type
-*   [x] **41 Unit Tests:** Ecommerce design tokens + section order validation
+### SSWG Phase 3: Frontend Integration — UNBLOCKED (pending Phase 2.7 deploy verification)
+**Goal:** Connect Next.js frontend to new engine. Full user flow from form to download.
+**Spec:** `agent-os/sswg/PHASE-3.md`
 
-### Gen 2.0 Phase 5: SaaS/Service Vertical (Next)
-*   [x] **SaaS Design Tokens:** `src/generator/design-system/verticals/saas.ts`
-*   [x] **SaaS Recipes:** Feature-driven layouts with pricing tables, testimonials
-*   [x] **SaaS Section Patterns:** Pricing grid, feature comparison, integration logos
-*   [x] **Heavy Mode for SaaS:** Route SaaS verticals through recipe engine
+- [x] **Task 3.1:** Studio form → Laravel `/api/generate` wiring. ✅ Already complete.
+- [x] **Task 3.2:** ~~Playground Preview~~ — ❌ REVERTED. See DECISIONS.md KNOWN DEAD ENDS.
+- [ ] **Task 3.3:** Image Tier integration — ready after Phase 2.7 verified
+- [ ] **Task 3.4:** Error handling & retry flow — ready after Phase 2.7 verified
+
+**Checkpoint:** Complete user journey: visit site → fill form → generate → preview → download. Works for 3+ business types.
+
+### SSWG Phase 4: WPaify Integration — QUEUED
+**Goal:** HTML-to-WordPress theme conversion for WPaify product.
+**Spec:** `agent-os/sswg/PHASE-4.md`
+**Prerequisite:** Phase 3 merged and working.
 
 ---
 
-## Ongoing: "Hard Gates" Maintenance
-*   **Validator:** Continuously update `WP Theme Output Checker` skill.
-*   **Forensics:** Log any new FSE errors to `attempt-recovery-forensics.md`.
-*   [x] **Block Config Completeness (2026-02-23):** `BlockConfigValidator` checks required attributes per block before ZIP creation (see below).
+## M0-M3: Laravel Migration Roadmap
 
+> Strategy: Incrementally move backend from Next.js to Laravel. SSWG accelerated this — many M1 items are now resolved or superseded.
 
+### M0: Foundation — COMPLETE (2026-02-08)
+*   [x] Laravel 12 scaffold, Docker Compose, Eloquent models, Horizon, Redis
+*   [x] Coolify deployment, integration tests, Supabase S3 driver
+*   See `_memory/main.md` Section 19 for full details
 
+### M1: Jobs Migration — PARTIALLY SUPERSEDED BY SSWG
+*Some items resolved by SSWG, some still needed:*
 
-## Phase 14: Generator 2.0 — Pattern Library & Verticals (Feb 2026)
-
-> Branch: `001-generator-2-baseline`
-> Spec: `/specs/001-generator-2-baseline/`
-
-### Completed Tasks
-
-| Task | Commit | Date |
-|------|--------|------|
-| Brand modes (modern, playful, bold, minimal) | — | Feb 2026 |
-| Button contrast fixes (outline buttons, dark backgrounds) | `5b975b5` | Feb 12 |
-| Security hardening (input sanitization, attack tests) | `01dbd32` | Feb 12 |
-| Restaurant patterns (chef, gallery, menu, location) | `cf99574` + follow-ups | Feb 12 |
-| SaaS vertical (8 patterns, 2 recipes) | `cc6ec85` | Feb 12 |
-| Portfolio vertical (9 patterns, 3 recipes, Gallery nav) | `64214c4` | Feb 12 |
-| Local Service vertical | — | Feb 12 |
-| Ecommerce vertical | — | Feb 12 |
-| Visual testing pipeline (Playwright) | `103ed7e` | Feb 12 |
-| Agent docs (wp-fse-rules.md, AGENTS.md update) | `64214c4` | Feb 12 |
-
-### In Progress
-
-| Task | Status | Notes |
+| Item | Status | Notes |
 |------|--------|-------|
-| Visual testing pipeline | ⏳ Planned | Playwright screenshots of generated themes |
-| WordPress install verification | ⏳ Next | Test ZIPs in actual WordPress |
-| CI integration | ⏳ Planned | GitHub Actions for visual tests |
+| PHP data transformer | DONE (SSWG) | `DataTransformer.php` handles payload transformation |
+| Public API endpoints | DONE (SSWG) | `POST /api/generate`, `GET /api/status` exist |
+| `BACKEND_URL` feature flag | DONE | Already set in Coolify production. `proxyJsonToBackend()` active. Confirmed 2026-03-05. |
+| Node worker shutdown | NEEDED | After Phase 3 confirms Laravel handles all generation |
+| `pp_projects` → `projects` unification | NEEDED | Migration DDL still pending |
+| BrandStyle 4→2 mapping | SUPERSEDED | Brand modes dropped for SSWG MVP (see DECISIONS.md) |
+| Logo download pipeline | NEEDED | ColorThief integration for brand color extraction |
 
-### Verticals Status
+### M2: Auth + Billing — DEFERRED
+*   Sanctum auth, LemonSqueezy webhooks, RLS simplification
+*   Blocked on M1 completion + Phase 3
 
-| Vertical | Patterns | Recipes | Nav Special | Status |
-|----------|----------|---------|-------------|--------|
-| Restaurant | 12+ | classic-bistro, modern-dining | Menu | ✅ Complete |
-| SaaS | 8 | startup-landing, enterprise-product | — | ✅ Complete |
-| Portfolio/Talent | 9 | creative-professional, freelancer, talent-agency | Gallery | ✅ Complete |
-| Local Service | 10 | home-services, professional-services, wellness-services | — | ✅ Complete |
-| Ecommerce | 10 | boutique-store, product-showcase, artisan-shop | Shop | ✅ Complete |
-
-### Security
-
-- [x] Input sanitization (`sanitize.ts`)
-- [x] Path traversal protection
-- [x] PHP injection protection
-- [x] Attack payload test suite
-- [ ] CI security gate (GitHub Actions)
-- [ ] Laravel subprocess argument escaping
-
-### Brand Modes
-
-All verticals support 4 brand modes:
-- `modern` — Clean, professional
-- `playful` — Friendly, rounded
-- `bold` — High contrast, impactful
-- `minimal` — Simple, whitespace-focused
+### M3: Cutover — DEFERRED
+*   Next.js API route removal, table retirement, full Laravel API
+*   Blocked on M2
 
 ---
 
-## Phase 15: Production Polish (Planned)
+## HISTORICAL: Previous Work Streams (All Complete)
 
-- [ ] Visual testing pipeline (Playwright)
-- [ ] Ecommerce vertical with WooCommerce
-- [ ] Multi-language support (RTL for Arabic)
-- [ ] CI security gate integration
-- [ ] Performance optimization for 1000+ users
+> These sections document completed work from the old Node.js generator era (pre-SSWG).
+> The old generator in `src/generator/` is LEGACY and deprecated. Do not modify it.
+> All future generation work goes through SSWG Laravel services.
 
----
+<details>
+<summary>Click to expand historical phases</summary>
 
-## Patch Note: 2026-03-04
+### Phase 1: Stabilization & Core Refactor — COMPLETE
+*   [x] Refactor Generator Core, Color Harmonization, Stable Navigation, FSE Compliance, Smoke Tests
 
-- [x] **SSWG Phase 2 — Assembly Engine code complete:**
-  - All 6 services implemented: PatternSelector, TokenInjector, ThemeAssembler, ImageHandler, AIPlanner, PlaygroundValidator
-  - GenerateThemeJob refactored to use full SSWG pipeline with retry + offset-based pattern diversification
-  - Pipeline: AIPlanner → PatternSelector → TokenInjector → ImageHandler → ThemeAssembler → PlaygroundValidator → Supabase → n8n webhook
-- [x] **Phase 2 cleanup (code review fixes):**
-  - Extracted `ContentGenerationException` and `MissingTokenException` to `app/Exceptions/` (PSR-4 compliance)
-  - Fixed hardcoded `/tmp/themes/` → `sys_get_temp_dir()."/pp-themes/"` in ThemeAssembler
-  - Refactored AIPlanner from raw `file_get_contents` to Laravel `Http` facade (testable with `Http::fake()`)
-  - Added `ThemeAssemblerTest.php` with 5 test cases (file structure, header, credit, JSON, ZIP)
-- [ ] **Phase 2 pending:**
-  - Run `php artisan test` on VPS (production container needs `composer install --dev`)
-  - Create `AIPlannerTest.php` with `Http::fake()` mocked API calls
-  - End-to-end 3-vertical verification (blocked on Phase 1 — tokenized patterns not yet created)
-  - Branch/PR workflow per SSWG spec (work currently on `main`)
+### Phase 2: Vertical Expansion (Restaurant) — COMPLETE
+*   [x] Menu Upload Flow, Page Templates, Menu Injection, Testing
 
----
+### Phase 3: SaaS Studio UI Polish — PARTIALLY COMPLETE
+*   [x] Global Layout (dark AppShell)
+*   [ ] Step Navigation, Preview Accuracy, Mobile Responsiveness — SUPERSEDED by SSWG Phase 3
 
-## Patch Note: 2026-03-03
+### Phase 13: Generator Best Practices — COMPLETE
+*   [x] Contact Data Flow, Hero Layout Differentiation, brandStyle Routing, Content Validation
 
-- [x] **Generator Fix Plan execution (Phases 0/1/3/4):**
-  - Phase 0/1: Gold standard ZIP rebuilt, dead code removed, docs updated (`f7d5069`)
-  - Phase 3: PlaygroundValidator — CLI-based WordPress Playground validation as build gate, Step 2D in pipeline (`437d1cb`)
-    - Uses `@wp-playground/cli` subprocess (not `@wp-playground/node` which doesn't exist)
-    - Replaces stub validation scripts with real implementations
-    - npm scripts: `validate:theme`, `validate:all-cores`, `validate:gold-standard`
-  - Phase 4: InputValidator (Step 0), AccessibilityValidator, ContentBuilder smart truncation (`b13e836`)
-  - Phase 2 (P5 fix) still OPEN — requires server/Coolify access
-- [x] **Hero layout rework (`a15c076`):**
-  - fullBleed: Re-embedded transparent nav inside Cover (100vh, site-title + nav links overlay)
-  - fullWidth: Converted from solid color `wp:group` to `wp:cover` with background image + 70% overlay, 60vh
-  - PatternInjector: Conditionally skips header template-part for fullBleed only
-  - `getHeroByLayout()` now passes `businessName`, `pages`, `hasLogo` to fullBleed variant
-- [x] **Hero preview mirror sync:**
-  - `heroPreviewInjector.ts` updated to match new fullBleed (embedded nav, 100vh) and fullWidth (cover with image) structures
-  - New `HeroPreviewOptions` interface for passing nav params
-  - Hero detection filter updated (both fullBleed and fullWidth now `core/cover`)
+### Phase 14: Restaurant Theme Fixes — COMPLETE
+*   [x] Frost/Tove fixes, Heavy Mode forcing, Pattern Cleaning
+
+### Phase 15: Documentation & Marketing Prep — PARTIAL
+*   [x] UI Shell Unification
+*   [ ] User Guides, Developer Docs, Marketing Assets, Landing Page — BACKLOG (post-SSWG Phase 3)
+
+### Generator 2.0: Design System & Recipe Engine — COMPLETE (LEGACY)
+*   Gen 2.0 Phases 1-5 all complete (design tokens, recipes, restaurant/ecommerce/SaaS verticals)
+*   This system is part of the old Node.js generator and is NOT used by SSWG
+*   SSWG uses its own pattern selection via `PatternSelector.php` + `registry.json`
+
+### Generator Fix Plan (Mar 2026) — COMPLETE
+*   Phase 0/1: Gold standard rebuild, dead code removal (commit `f7d5069`)
+*   Phase 3: PlaygroundValidator via `@wp-playground/cli` (commit `437d1cb`)
+*   Phase 4: InputValidator, AccessibilityValidator, ContentBuilder truncation (commit `b13e836`)
+*   Phase 2 (P5 diagnosis): DEPRIORITIZED — superseded by SSWG
+
+</details>
 
 ---
 
-## Patch Note: 2026-02-23
+## Ongoing Maintenance
 
-- [x] **Block Config Validation system:**
-  - New `BlockAttributeSchema.ts` — maps required/recommended attributes + valid values per block type
-  - New `BlockConfigValidator.ts` — static validator class, two severity levels (CRITICAL blocks ZIP, WARNING logs only)
-  - `PatternInjector.validateAndWrite()` — pre-file-write checkpoint logs issues before every HTML write
-  - `bin/generate.ts` Step 2C — pre-ZIP gate scans ALL HTML files; ZIP blocked + exit(1) on CRITICAL issues
-  - `{slug}-manifest.json` written alongside every ZIP documenting slot→value mapping
-  - Critical blocks covered: `core/cover` (dimRatio), `core/template-part` (slug), `core/social-link` (service + url), `core/query` (queryId + query), `core/heading` (level), `core/embed` (url)
+- **Hard Gates:** BlockConfigValidator enforces required block attributes (pre-write + pre-ZIP)
+- **FSE Compliance:** Rules in `WORDPRESS_FSE_REFERENCE.md` and `.claude/rules/WP_FSE_SKILL.md`
+- **Security:** Input sanitization, path traversal protection, attack payload tests
 
 ---
 
-## Patch Note: 2026-02-21
+## Backlog (Post-SSWG Phase 3)
 
-- [x] **Testimonials block hardening (restaurant social proof):**
-  - Removed duplicate avatar dimensions from inline `<img>` style in `src/generator/patterns/sections/social-proof.ts`.
-  - Canonical output now keeps sizing in HTML attributes (`width="48" height="48"`) without inline width/height duplication.
-- [x] **Bypass flow hero-layout reliability:**
-  - Added hero-layout normalization in `app/api/generate/route.ts` for bypass checkout generation.
-  - Mapped selected style into canonical hero enums (`fullBleed`, `fullWidth`, `split`, `minimal`) and injected into `studioInput.heroLayout`.
+| Item | Priority | Notes |
+|------|----------|-------|
+| Multi-vertical end-to-end test | HIGH | ✅ DONE (2026-03-06) — 5/5 verticals pass mechanically. Phase 2.7 addresses all 6 quality issues. Needs post-deploy re-test. |
+| User guides (install ZIP, Site Editor) | HIGH | Needed for launch |
+| API documentation (`POST /api/generate`) | HIGH | Needed for launch |
+| Marketing assets (flagship screenshots) | MEDIUM | After pipeline produces polished themes |
+| Landing page update | MEDIUM | "Generated in 17s" value prop |
+| Playground preview validation | MEDIUM | Phase 3 Task 3.2 |
+| Image generation integration | MEDIUM | Replace placehold.co with AI-generated images |
+| Brand mode support | LOW | Post-launch via Ollie style variations |
+| Style variations (High Contrast, Dark) | LOW | Post-launch |
+| WooCommerce patterns | LOW | Ecommerce vertical enhancement |
+| Multi-language / RTL | LOW | |
+| CI/CD pipeline (GitHub Actions) | LOW | Visual tests, security gate |
+
+---
+
+## Patch Notes
+
+### 2026-03-06
+- [x] Multi-vertical pipeline test (AM) — 5/5 themes generated mechanically, 6 quality issues found
+- [x] **Phase 2.7 complete (PM)** — skeleton-based pipeline rewrite addressing all 6 quality issues
+  - 20 HTML skeleton patterns, 196 tokens, 5 vertical recipes
+  - All services rewritten: AIPlanner, PatternSelector, TokenInjector, ThemeAssembler, GenerateThemeJob
+  - Commit `70a0c1c` — 39 files changed, +5,086 / -732 lines
+- [ ] **NEEDS DEPLOY** — push to GitHub → Coolify auto-deploy → end-to-end verification
+
+### 2026-03-05
+- [x] SSWG Phase 2.5 complete — first successful end-to-end theme generation (17s, 1.12 MB)
+- [x] 6 pipeline bugs fixed (see `_memory/main.md` "Phase 2.5 Bug Fix Chain")
+- [x] DECISIONS.md audit — 7 outdated entries corrected, change log added
+- [x] PROJECT_ROADMAP.md restructured — SSWG is now primary work stream, old phases marked historical
+- [x] Agent prompt files archived to `Project Extras/archived-agent-prompts/`
+
+### 2026-03-04
+- [x] SSWG Phase 2 deployed — all 6 assembly engine services running in Coolify
+- [x] Phase 2 cleanup — exception extraction, temp dir fix, Http facade, unit tests
+
+### 2026-03-03
+- [x] Generator Fix Plan Phases 0/1/3/4 complete
+- [x] Hero layout rework — fullBleed transparent nav overlay, fullWidth cover with image
+- [x] P5 generation stall DEPRIORITIZED — SSWG replaces old pipeline
+
+### 2026-02-23
+- [x] Block Config Validation — BlockConfigValidator with two checkpoints (pre-write + pre-ZIP gate)
+
+### 2026-02-21
+- [x] Testimonials hardening, bypass flow hero-layout fix

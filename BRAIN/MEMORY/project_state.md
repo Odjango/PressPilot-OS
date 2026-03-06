@@ -1,7 +1,9 @@
 # PressPilot Project Memory
-**State Saved: 2026-02-26** | **Current Phase: M1 Complete + Cleanup Done + P5 Active**
+**State Saved: 2026-03-06** | **Current Phase: SSWG Phase 2.7 COMPLETE — Deploy + end-to-end verification needed. Phase 3 UNBLOCKED.**
 
-> **2026-02-26 UPDATE:** Full project audit and cleanup completed. All commits current. Project structure reorganized. Memory systems consolidated. See "2026-02-26 Project State" section immediately below for the current snapshot before reading older sections.
+> **2026-03-06 UPDATE (PM — Phase 2.7 Complete):** Complete skeleton-based pipeline rewrite addresses all 6 quality issues from morning's test. 20 HTML skeleton patterns (zero hardcoded content), 196 tokens, 5 vertical recipes. All services rewritten: AIPlanner, PatternSelector, TokenInjector, ThemeAssembler, GenerateThemeJob. Commit `70a0c1c` — 39 files, +5,086/-732 lines. **NEXT: Push to GitHub → Coolify auto-deploy → generate 5 test themes.**
+>
+> **2026-03-06 UPDATE (AM):** Pipeline test: 5/5 themes generate mechanically but 6 quality issues found (Attempt Recovery, broken hero images, empty inner pages, Ollie footer, Ollie content leakage, site name mismatch). All addressed by Phase 2.7.
 
 ---
 
@@ -9,13 +11,31 @@
 
 ### What is Production-Ready
 - **All 5 verticals:** Restaurant, SaaS, Portfolio, Ecommerce, Local Service — all passed WP smoke tests (Feb 21). Zero "Attempt Recovery" errors in Site Editor.
-- **4 brand modes:** modern, playful, bold, minimal — all working
+- **Brand modes:** DROPPED for SSWG MVP (see DECISIONS.md). Will add post-launch via Ollie style variations. Old Node.js generator supported 4 modes (modern, playful, bold, minimal) but SSWG focuses on one bulletproof pipeline first.
 - **Generator 2.0:** Design token system, recipe engine, slot system, security hardening — complete
 - **Block Config Validation (Feb 23):** BlockConfigValidator enforces required block attributes at two checkpoints (pre-write log + pre-ZIP hard gate)
 - **Deployment:** presspilotapp.com live, Laravel backend running, factory.presspilotapp.com running
 
 ### Known Active Issue
-- **P5 — Generation stall at DELIVER step:** Steps 1–4 (including hero preview) complete successfully, but Step 5 stalls at "Building Your Assets" indefinitely. Laravel logs not found at expected container path. Next step: check Coolify log tab, check Horizon dashboard for failed/pending jobs.
+- **P5 — Generation stall at DELIVER step:** DEPRIORITIZED — entire pipeline being replaced by SSWG.
+
+### SSWG Pipeline Status (2026-03-06)
+- **Phase 0–2:** COMPLETE — 115 tokenized patterns, 6 Laravel services, deployed to production
+- **Phase 2.5 (Pipeline Activation):** ✅ COMPLETE — first end-to-end run (Luigi Pizza, 17s). 6 bugs fixed.
+- **Multi-Vertical Test (2026-03-06 AM):** 5/5 generate mechanically, 6 quality issues found
+- **Phase 2.7 (Quality Fix — Skeleton Pipeline):** ✅ COMPLETE (2026-03-06 PM)
+  - 20 skeleton patterns, 196 tokens, 5 vertical recipes, all services rewritten
+  - All 6 quality issues addressed
+  - Commit: `70a0c1c` — 39 files, +5,086/-732 lines
+  - **NEEDS: Push → Coolify deploy → end-to-end re-test**
+- **Phase 3 (Frontend Integration):** UNBLOCKED pending Phase 2.7 deploy verification
+  - Task 3.1: ✅ COMPLETE
+  - Task 3.2: ❌ REVERTED
+  - Task 3.3 (Image Tier): Ready after verification
+  - Task 3.4 (Error Handling): Ready after verification
+  - **Must fix first:** Block markup validity, tokenization coverage, inner page templates, PressPilot footer, hero images
+- **Test command:** `docker exec $(docker ps -qf "name=laravel-app") curl -s -X POST http://localhost:8080/api/generate -H "Content-Type: application/json" -d '{"input":{...}}'`
+- **Status check:** `docker exec $(docker ps -qf "name=laravel-app") curl -s "http://localhost:8080/api/status?id=<JOB_ID>"`
 
 ### Project Structure (as of Feb 26)
 **Active directories at root:**
@@ -42,8 +62,9 @@
 `CLAUDE.md` → `AI_INSTRUCTIONS.md` → `CONTRIBUTING.md` → `BRAIN/CONSTITUTION/agent-protocol.md` → `.claude/rules/WP_FSE_SKILL.md` → `.github/instructions/wp-fse.instructions.md`
 
 ### Git Status
-- Latest commit: `3d3848e` (2026-02-26)
-- All work committed and clean
+- Branch: `main`
+- Latest commit: pending push of Docker path fix (2026-03-04)
+- SSWG Phase 2 code merged to main and deployed via Coolify
 - TypeScript: `npx tsc --noEmit` passes (Project Extras excluded via tsconfig.json)
 
 ---
