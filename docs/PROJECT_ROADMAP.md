@@ -56,7 +56,7 @@
 - [x] Ollie content leakage — eliminated (100% tokenized)
 - [x] Footer site name — wp:site-title + BUSINESS_NAME token
 
-**⚠️ NEEDS:** Push to GitHub → Coolify auto-deploy → generate 5 test themes to verify end-to-end
+**✅ DEPLOYED (2026-03-06):** Pushed to GitHub, backend redeployed via Coolify (manual). Needs end-to-end 5-vertical test.
 
 ### SSWG Phase 3: Frontend Integration — UNBLOCKED (pending Phase 2.7 deploy verification)
 **Goal:** Connect Next.js frontend to new engine. Full user flow from form to download.
@@ -187,7 +187,8 @@
   - 20 HTML skeleton patterns, 196 tokens, 5 vertical recipes
   - All services rewritten: AIPlanner, PatternSelector, TokenInjector, ThemeAssembler, GenerateThemeJob
   - Commit `70a0c1c` — 39 files changed, +5,086 / -732 lines
-- [ ] **NEEDS DEPLOY** — push to GitHub → Coolify auto-deploy → end-to-end verification
+- [x] **DEPLOYED (2026-03-06)** — pushed to GitHub, backend redeployed via Coolify manually
+- [ ] **NEEDS** end-to-end 5-vertical verification test
 
 ### 2026-03-05
 - [x] SSWG Phase 2.5 complete — first successful end-to-end theme generation (17s, 1.12 MB)

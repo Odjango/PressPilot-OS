@@ -6,8 +6,9 @@ Last updated: 2026-03-06
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `70a0c1c` (2026-03-06) — `feat(sswg): Phase 2.7 complete pipeline rewrite — skeleton-based theme generation`
-- Working tree: has uncommitted doc/memory updates
+- Latest commit: `b8cf373` (2026-03-06) — `docs: update all project documentation for Phase 2.7 completion`
+- Previous: `70a0c1c` — `feat(sswg): Phase 2.7 complete pipeline rewrite — skeleton-based theme generation`
+- Both commits pushed to `origin/main` and backend deployed via Coolify (2026-03-06)
 
 ### 2026-03-06 Session B — SSWG Phase 2.7 Complete Pipeline Rewrite
 
@@ -469,8 +470,9 @@ Resolution pipeline (5 layers, in order):
   - All 6 quality issues addressed: block markup, hero images, inner pages, PressPilot footer, Ollie leakage, footer site name
   - 9-step implementation plan executed via parallel Task agents
   - Commit: `70a0c1c` — 39 files changed, +5,086 / -732 lines
-  - **NEXT: Deploy (push to GitHub → Coolify auto-deploy) + end-to-end test with 5 verticals**
-- **SSWG Phase 3 (Frontend Integration):** UNBLOCKED after Phase 2.7 deploy + verification
+  - ✅ **DEPLOYED (2026-03-06)** — pushed to GitHub, backend redeployed via Coolify manually
+  - **NEXT: End-to-end test with 5 verticals to verify production pipeline**
+- **SSWG Phase 3 (Frontend Integration):** UNBLOCKED — pending end-to-end verification
   - Task 3.1 (Studio→Laravel wiring): ✅ COMPLETE
   - Task 3.2 (Playground Preview): ❌ REVERTED
   - Task 3.3 (Image Tier): Ready after Phase 2.7 verified
@@ -518,6 +520,11 @@ Resolution pipeline (5 layers, in order):
 | 6 | "Base file missing: proven-cores/ollie/functions.php" | `proven-cores/` subdirectories (718 files) were never committed to git | `git add proven-cores/` + commit + push | pushed |
 
 **All fixes are permanent and architecturally correct.** The soft validation, IMAGE_* filtering, and JSON extraction are production patterns, not workarounds.
+
+## Lessons Learned (Mar 6 — Phase 2.7 Deployment)
+- **Coolify auto-deploy only covers the frontend (Next.js)**. The backend (Laravel + Horizon Docker Compose) is a separate Coolify resource that does NOT auto-deploy on git push. Backend requires manual redeploy via Coolify UI.
+- **CodeRabbit Auto Review triggers on PRs, not direct pushes to main.** Commits pushed directly to `main` bypass CodeRabbit review. For future changes, use feature branches + PRs to get CodeRabbit reviews.
+- Consider enabling auto-deploy on the backend Coolify resource (Settings → Auto Deploy toggle) to match frontend behavior.
 
 ## Lessons Learned (Mar 6 — SSWG Pipeline Multi-Vertical Testing)
 - **Automated validation gives false confidence** — 9/9 structural checks pass but the output is visually broken and shows "Attempt Recovery" in Site Editor. Opener/closer matching is necessary but NOT sufficient.

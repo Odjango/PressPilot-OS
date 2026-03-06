@@ -1,7 +1,7 @@
 # PressPilot Project Memory
-**State Saved: 2026-03-06** | **Current Phase: SSWG Phase 2.7 COMPLETE — Deploy + end-to-end verification needed. Phase 3 UNBLOCKED.**
+**State Saved: 2026-03-06** | **Current Phase: SSWG Phase 2.7 COMPLETE + DEPLOYED — End-to-end 5-vertical verification needed. Phase 3 UNBLOCKED.**
 
-> **2026-03-06 UPDATE (PM — Phase 2.7 Complete):** Complete skeleton-based pipeline rewrite addresses all 6 quality issues from morning's test. 20 HTML skeleton patterns (zero hardcoded content), 196 tokens, 5 vertical recipes. All services rewritten: AIPlanner, PatternSelector, TokenInjector, ThemeAssembler, GenerateThemeJob. Commit `70a0c1c` — 39 files, +5,086/-732 lines. **NEXT: Push to GitHub → Coolify auto-deploy → generate 5 test themes.**
+> **2026-03-06 UPDATE (PM — Phase 2.7 Complete + Deployed):** Complete skeleton-based pipeline rewrite addresses all 6 quality issues from morning's test. 20 HTML skeleton patterns (zero hardcoded content), 196 tokens, 5 vertical recipes. All services rewritten: AIPlanner, PatternSelector, TokenInjector, ThemeAssembler, GenerateThemeJob. Commits: `70a0c1c` (code, 39 files, +5,086/-732) + `b8cf373` (docs). **Pushed to GitHub and backend redeployed via Coolify (manual — frontend auto-deploys but backend requires manual trigger).** CodeRabbit active on repo (org settings). **NEXT: Generate 5 test themes (one per vertical) to verify production pipeline.**
 >
 > **2026-03-06 UPDATE (AM):** Pipeline test: 5/5 themes generate mechanically but 6 quality issues found (Attempt Recovery, broken hero images, empty inner pages, Ollie footer, Ollie content leakage, site name mismatch). All addressed by Phase 2.7.
 
@@ -27,13 +27,14 @@
   - 20 skeleton patterns, 196 tokens, 5 vertical recipes, all services rewritten
   - All 6 quality issues addressed
   - Commit: `70a0c1c` — 39 files, +5,086/-732 lines
-  - **NEEDS: Push → Coolify deploy → end-to-end re-test**
+  - ✅ **DEPLOYED (2026-03-06):** Pushed to GitHub, backend redeployed via Coolify manually
+  - **NEEDS: End-to-end 5-vertical re-test**
 - **Phase 3 (Frontend Integration):** UNBLOCKED pending Phase 2.7 deploy verification
   - Task 3.1: ✅ COMPLETE
   - Task 3.2: ❌ REVERTED
   - Task 3.3 (Image Tier): Ready after verification
   - Task 3.4 (Error Handling): Ready after verification
-  - **Must fix first:** Block markup validity, tokenization coverage, inner page templates, PressPilot footer, hero images
+  - **All 6 quality issues addressed by Phase 2.7** — awaiting production verification
 - **Test command:** `docker exec $(docker ps -qf "name=laravel-app") curl -s -X POST http://localhost:8080/api/generate -H "Content-Type: application/json" -d '{"input":{...}}'`
 - **Status check:** `docker exec $(docker ps -qf "name=laravel-app") curl -s "http://localhost:8080/api/status?id=<JOB_ID>"`
 
@@ -63,8 +64,9 @@
 
 ### Git Status
 - Branch: `main`
-- Latest commit: pending push of Docker path fix (2026-03-04)
-- SSWG Phase 2 code merged to main and deployed via Coolify
+- Latest commit: `b8cf373` (2026-03-06) — Phase 2.7 docs update
+- Previous: `70a0c1c` — Phase 2.7 complete pipeline rewrite (39 files, +5,086/-732)
+- Both pushed to `origin/main`, backend redeployed via Coolify
 - TypeScript: `npx tsc --noEmit` passes (Project Extras excluded via tsconfig.json)
 
 ---

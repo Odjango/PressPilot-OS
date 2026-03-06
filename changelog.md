@@ -38,8 +38,13 @@
 5. ✅ Ollie content leakage — ALL skeleton text is tokenized
 6. ✅ Footer site name — uses wp:site-title block + BUSINESS_NAME token
 
+### Deployed
+- ✅ Pushed to GitHub (`70a0c1c` code + `b8cf373` docs)
+- ✅ Backend redeployed via Coolify (manual redeploy — frontend auto-deploys but backend requires manual trigger)
+- **Note:** Coolify auto-deploy only covers the frontend (Next.js). Backend (Laravel + Horizon) is a separate Coolify resource requiring manual redeploy.
+
 ### Next
-- Push to GitHub → Coolify auto-deploy → generate 5 test themes to verify end-to-end
+- Generate 5 test themes (one per vertical) to verify end-to-end pipeline in production
 
 ---
 
