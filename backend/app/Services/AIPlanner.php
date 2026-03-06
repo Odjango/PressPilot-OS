@@ -45,19 +45,32 @@ class AIPlanner
 
     private function buildSystemPrompt(): string
     {
-        // Filter out IMAGE_* tokens — those are sourced by ImageHandler, not AI.
-        $textTokens = array_values(array_filter(
+        // Build a compact token list: just names grouped by purpose.
+        // This dramatically reduces input token count vs. dumping the full schema.
+        $textTokens = array_filter(
             $this->tokenSchema,
             fn (array $t) => ! str_starts_with($t['name'] ?? '', 'IMAGE_')
-        ));
-        $tokens = json_encode($textTokens, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        );
+
+        $tokenNames = array_map(fn (array $t) => $t['name'], $textTokens);
+        $tokenList = implode(', ', $tokenNames);
 
         return <<<PROMPT
 You are generating content for a WordPress theme builder.
 Return ONLY a valid JSON object with token names as keys and plain text values.
 No HTML, no markdown, no block markup. Do not include any IMAGE_* tokens.
-Token vocabulary:
-{$tokens}
+
+Required tokens: {$tokenList}
+
+Rules:
+- HERO_TITLE, HERO_PRETITLE, HERO_TEXT: compelling hero section copy
+- ABOUT_TITLE, ABOUT_TEXT: about the business (2-3 sentences)
+- FEATURE_*: feature titles and descriptions
+- TESTIMONIAL_*: realistic customer testimonials with names and roles
+- CTA_*: call-to-action text and button labels
+- CONTACT_*: business contact info (address, phone, email, hours)
+- FOOTER_*: footer tagline and copyright text
+- All values must be plain text, specific to the business. No placeholders.
 PROMPT;
     }
 
@@ -92,21 +105,30 @@ PROMPT;
 
     private function requestWithRetry(string $systemPrompt, string $userPrompt): string
     {
-        $attempts = 0;
+        $maxAttempts = 3;
 
-        while ($attempts < 3) {
-            $attempts++;
-
+        for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
             try {
                 return $this->requestCompletion($systemPrompt, $userPrompt);
             } catch (ContentGenerationException $exception) {
-                if ($attempts >= 3) {
+                $isRateLimit = str_contains($exception->getMessage(), 'status 429')
+                    || str_contains($exception->getMessage(), 'rate limit');
+
+                if ($attempt >= $maxAttempts) {
                     throw $exception;
                 }
+
+                // Exponential backoff: 15s, 30s — longer for rate limits
+                $delay = $isRateLimit ? $attempt * 15 : $attempt * 5;
+                Log::warning("AIPlanner: Attempt {$attempt} failed, retrying in {$delay}s", [
+                    'error' => $exception->getMessage(),
+                    'is_rate_limit' => $isRateLimit,
+                ]);
+                sleep($delay);
             }
         }
 
-        throw new ContentGenerationException('AI request failed.');
+        throw new ContentGenerationException('AI request failed after retries.');
     }
 
     private function requestCompletion(string $systemPrompt, string $userPrompt): string
@@ -139,7 +161,22 @@ PROMPT;
             ->post($endpoint, $payload);
 
         if ($response->failed()) {
-            throw new ContentGenerationException('AI request failed with status '.$response->status().'.');
+            $status = $response->status();
+            $body = $response->body();
+            $errorMsg = "AI request failed with status {$status}.";
+
+            // Include rate limit detail so retry logic can detect it
+            if ($status === 429) {
+                $retryAfter = $response->header('retry-after');
+                $errorMsg = "AI rate limit hit (status 429). Retry-After: {$retryAfter}s. Body: ".mb_substr($body, 0, 200);
+                Log::warning('AIPlanner: Rate limit exceeded', [
+                    'status' => $status,
+                    'retry_after' => $retryAfter,
+                    'body' => mb_substr($body, 0, 500),
+                ]);
+            }
+
+            throw new ContentGenerationException($errorMsg);
         }
 
         $content = $response->json('content.0.text');
