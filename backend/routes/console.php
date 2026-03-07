@@ -24,3 +24,6 @@ Schedule::call(function () {
         ]);
     }
 })->everyMinute()->name('queue-depth-metric');
+
+// Delete expired theme ZIPs from Supabase daily
+Schedule::command('themes:cleanup')->daily()->name('cleanup-expired-themes');
