@@ -237,11 +237,23 @@ class TokenInjector
         foreach ($skeletonSelections as $pageType => $skeletons) {
             $pageHtml = '';
             foreach ($skeletons as $skeleton) {
-                // Validate required tokens before injection
+                // Validate required tokens before injection.
+                // IMAGE_* tokens get placeholder fallback (non-fatal) since image
+                // fetching can fail for various reasons. Text tokens are fatal.
                 $requiredTokens = $skeleton['required_tokens'] ?? [];
                 foreach ($requiredTokens as $requiredToken) {
                     if (!in_array(strtoupper($requiredToken), $normalizedKeys, true)) {
-                        $allErrors[] = "[{$pageType}/{$skeleton['id']}] Missing required token: {$requiredToken}";
+                        if (str_starts_with(strtoupper($requiredToken), 'IMAGE_')) {
+                            // Inject placeholder URL so the skeleton renders — non-fatal
+                            $tokens[$requiredToken] = 'https://placehold.co/800x600/e2e8f0/64748b?text=' . urlencode(str_replace('_', ' ', $requiredToken));
+                            $normalizedKeys[] = strtoupper($requiredToken);
+                            logger()->warning("ImageHandler did not provide {$requiredToken} — using placeholder", [
+                                'page' => $pageType,
+                                'skeleton' => $skeleton['id'],
+                            ]);
+                        } else {
+                            $allErrors[] = "[{$pageType}/{$skeleton['id']}] Missing required token: {$requiredToken}";
+                        }
                     }
                 }
 
