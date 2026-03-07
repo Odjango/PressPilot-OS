@@ -1,0 +1,28 @@
+# CodeRabbit configuration
+# Excludes archived/non-core directories to stay under the 500-file review limit
+# Focus: backend/, src/, pattern-library/, app/ (core application code)
+
+reviews:
+  path_filters:
+    - "!Project Extras/**"
+    - "!proven-cores/**"
+    - "!tests/tests/**"
+    - "!scripts/**"
+    - "!SKILLS/**"
+    - "!themes/**"
+    - "!agent-os/**"
+    - "!specs/**"
+    - "!BRAIN/**"
+    - "!lib/**"
+    - "!components/**"
+    - "!docs/**"
+    - "!public/**"
+    - "!.agent/**"
+    - "!.agent_memory/**"
+    - "!.specify/**"
+    - "!.claude/commands/**"
+    - "!.github/**"
+    - "!.husky/**"
+    - "!_memory/**"
+  auto_review:
+    enabled: true
