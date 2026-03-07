@@ -92,7 +92,8 @@ class GenerateThemeJob implements ShouldQueue
             // Step 2: PatternSelector picks skeletons by vertical recipe
             $category = $this->normalizeCategory($projectData['businessCategory'] ?? $projectData['category'] ?? 'local_service');
             $patternSelector = app(PatternSelector::class);
-            $skeletonSelections = $patternSelector->select($category);
+            $heroLayout = $projectData['heroLayout'] ?? null;
+            $skeletonSelections = $patternSelector->select($category, $heroLayout);
 
             // Step 3: ImageHandler gets Unsplash URLs and merge into tokens
             $imageHandler = new ImageHandler(new UnsplashProvider, new PlaceholderProvider);

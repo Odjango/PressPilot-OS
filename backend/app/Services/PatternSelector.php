@@ -29,10 +29,11 @@ class PatternSelector
      * Select skeletons for all pages based on the business vertical recipe.
      *
      * @param string $category Business vertical (restaurant, ecommerce, saas, portfolio, local_service)
+     * @param string|null $heroLayout User's hero layout choice (fullBleed, fullWidth, split, minimal)
      * @return array<string, array<int, array{id: string, file: string, required_tokens: array}>>
      *         Keyed by page type (home, about, services, contact), each containing skeleton entries
      */
-    public function select(string $category): array
+    public function select(string $category, ?string $heroLayout = null): array
     {
         $category = strtolower(trim($category));
         $recipe = $this->verticalRecipes[$category]
@@ -47,6 +48,22 @@ class PatternSelector
         foreach ($recipe as $pageType => $skeletonIds) {
             $result[$pageType] = [];
             foreach ($skeletonIds as $skeletonId) {
+                // Override hero skeleton on home page if heroLayout is provided
+                if ($pageType === 'home' && $skeletonId === 'hero-cover' && $heroLayout) {
+                    $heroMap = [
+                        'fullBleed' => 'hero-fullbleed',
+                        'fullWidth' => 'hero-cover',
+                        'split' => 'hero-split',
+                        'minimal' => 'hero-cover',
+                    ];
+                    $mappedSkeletonId = $heroMap[$heroLayout] ?? $skeletonId;
+                    \Illuminate\Support\Facades\Log::info(
+                        "PatternSelector: Overriding hero skeleton",
+                        ['requested' => $heroLayout, 'mapped_to' => $mappedSkeletonId]
+                    );
+                    $skeletonId = $mappedSkeletonId;
+                }
+
                 $skeleton = $this->skeletonRegistry[$skeletonId] ?? null;
                 if ($skeleton && isset($skeleton['file'])) {
                     $result[$pageType][] = [

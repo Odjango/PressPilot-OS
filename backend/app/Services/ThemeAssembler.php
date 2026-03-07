@@ -23,7 +23,7 @@ class ThemeAssembler
         $this->copyBaseFiles($themeDir);
         $this->writeStyleSheet($themeDir, $project);
         $this->writeThemeJson($themeDir, $project);
-        $this->writeTemplates($themeDir, $pageHtml);
+        $this->writeTemplates($themeDir, $pageHtml, $project);
         $this->writeParts($themeDir, $project, $tokens);
 
         $zipPath = $this->zipTheme($themeDir, $slug);
@@ -191,8 +191,9 @@ class ThemeAssembler
      * Write all template files from injected page HTML.
      *
      * @param  array<string, string>  $pageHtml  Keyed by page type
+     * @param  array<string, mixed>  $project  Project data including heroLayout
      */
-    private function writeTemplates(string $themeDir, array $pageHtml): void
+    private function writeTemplates(string $themeDir, array $pageHtml, ?array $project = null): void
     {
         $templatesDir = $themeDir.'/templates';
         if (! is_dir($templatesDir)) {
@@ -201,19 +202,20 @@ class ThemeAssembler
 
         // front-page.html — uses home page sections
         $homeContent = $pageHtml['home'] ?? '';
-        file_put_contents($templatesDir.'/front-page.html', $this->wrapTemplate($homeContent));
+        $isFullBleedHero = $project && ($project['heroLayout'] ?? null) === 'fullBleed';
+        file_put_contents($templatesDir.'/front-page.html', $this->wrapTemplate($homeContent, $isFullBleedHero));
 
         // page-about.html — uses about page sections
         $aboutContent = $pageHtml['about'] ?? '';
-        file_put_contents($templatesDir.'/page-about.html', $this->wrapTemplate($aboutContent));
+        file_put_contents($templatesDir.'/page-about.html', $this->wrapTemplate($aboutContent, false));
 
         // page-services.html — uses services page sections
         $servicesContent = $pageHtml['services'] ?? '';
-        file_put_contents($templatesDir.'/page-services.html', $this->wrapTemplate($servicesContent));
+        file_put_contents($templatesDir.'/page-services.html', $this->wrapTemplate($servicesContent, false));
 
         // page-contact.html — uses contact page sections
         $contactContent = $pageHtml['contact'] ?? '';
-        file_put_contents($templatesDir.'/page-contact.html', $this->wrapTemplate($contactContent));
+        file_put_contents($templatesDir.'/page-contact.html', $this->wrapTemplate($contactContent, false));
 
         // Generic fallback templates
         file_put_contents($templatesDir.'/page.html', $this->defaultPageTemplate());
@@ -340,9 +342,10 @@ FOOTER;
 HEADER;
     }
 
-    private function wrapTemplate(string $content): string
+    private function wrapTemplate(string $content, bool $skipHeader = false): string
     {
-        return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
+        $header = $skipHeader ? '' : "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n";
+        return $header.
             $content."\n\n".
             "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
     }

@@ -28,6 +28,21 @@
       "general"
     ]
   },
+  "hero-fullbleed": {
+    "file": "pattern-library/skeletons/hero-fullbleed.html",
+    "category": "hero",
+    "required_tokens": [
+      "HERO_PRETITLE",
+      "HERO_TITLE",
+      "HERO_TEXT",
+      "HERO_CTA",
+      "HERO_CTA_SECONDARY",
+      "IMAGE_HERO"
+    ],
+    "vertical_affinity": [
+      "general"
+    ]
+  },
   "about-story": {
     "file": "pattern-library/skeletons/about-story.html",
     "category": "about",
