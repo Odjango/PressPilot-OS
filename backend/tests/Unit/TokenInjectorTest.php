@@ -25,8 +25,8 @@ class TokenInjectorTest extends TestCase
         $output = $injector->inject($patternPath, $tokens, array_keys($tokens));
 
         $this->assertStringContainsString('Roma Pizza', $output);
-        $this->assertStringNotContainsString('{{', $output);
-        $this->assertStringNotContainsString('}}', $output);
+        // Check no unresolved {{TOKEN}} placeholders remain (but allow }} in JSON)
+        $this->assertDoesNotMatchRegularExpression('/\{\{\w+\}\}/', $output);
     }
 
     public function test_missing_required_token_throws_exception(): void
