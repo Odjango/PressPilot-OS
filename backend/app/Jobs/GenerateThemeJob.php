@@ -116,6 +116,11 @@ class GenerateThemeJob implements ShouldQueue
 
             $job->markCompleted([
                 'download_path' => $themeStoragePath,
+                'image_tokens' => $imageTokens,
+                'project_data' => [
+                    'businessName' => $projectData['name'] ?? '',
+                    'category' => $projectData['businessCategory'] ?? 'business',
+                ],
             ]);
 
             GeneratedTheme::create([
