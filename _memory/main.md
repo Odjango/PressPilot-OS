@@ -11,10 +11,56 @@ Last updated: 2026-03-07
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `9f16fef` (2026-03-07) — `fix(sswg): AIPlanner retry logic handles 529 overloaded + increased timeouts`
-- Previous: `76db1a2` — `fix(sswg): ImageHandler now covers all 18 IMAGE tokens required by skeletons`
-- Previous: `b8cf373` (2026-03-06) — `docs: update all project documentation for Phase 2.7 completion`
-- All pushed to `origin/main`, backend deployed via Coolify
+- Latest commit: `4f5b3d3` (2026-03-07) — `feat(sswg): add daily cleanup command for expired theme ZIPs`
+- Previous session commits (2026-03-07, 9 total — NOT YET PUSHED):
+  - `f69aa32` — feat(sswg): add DalleProvider for OpenAI DALL-E 3 image generation
+  - `6d66ccc` — feat(sswg): add tier column to projects table (individual/agency)
+  - `558a1c1` — feat(sswg): store image token manifest in job result for DALL-E upgrade
+  - `2be7807` — fix(sswg): extend generated theme expiry from 24h to 7 days
+  - `6eb678a` — feat(sswg): add UpgradeThemeImagesJob for DALL-E image swap after payment
+  - `f32c73c` — feat(sswg): add POST /api/upgrade-images endpoint + upgrade status in /api/status
+  - `2a49bb8` — feat(studio): add frontend proxy for /api/upgrade-images endpoint
+  - `b3f7d65` — feat(studio): adaptive polling + payment gate + DALL-E upgrade flow at Step 5
+  - `4f5b3d3` — feat(sswg): add daily cleanup command for expired theme ZIPs
+- Earlier commits pushed to `origin/main`: `9f16fef`, `76db1a2`, `b8cf373`
+- **ACTION NEEDED:** Push 9 new commits + deploy both frontend and backend via Coolify
+
+### 2026-03-07 Session B — Phase 3 Tasks 3.3 + 3.4 Implementation Complete
+
+**12-task implementation plan executed via Subagent-Driven Development (9 commits).**
+
+Phase 3 Tasks 3.3 (Image Tier Integration) and 3.4 (Error Handling & Retry Flow) implement the hybrid image tier system: Unsplash for all initial generations (fast), DALL-E hero at preview (Step 4), full DALL-E upgrade after payment (Step 5).
+
+| Task | Deliverable | Commit |
+|------|-------------|--------|
+| 1 | DalleProvider — DALL-E 3 via OpenAI API | `f69aa32` |
+| 2 | Tier column on projects (individual/agency) | `6d66ccc` |
+| 3 | Image token manifest in job result | `558a1c1` |
+| 4 | 7-day ZIP expiry (was 24h) | `2be7807` |
+| 5 | UpgradeThemeImagesJob — post-payment DALL-E swap | `6eb678a` |
+| 6+9 | POST /api/upgrade-images + status fields | `f32c73c` |
+| 8 | Frontend proxy /api/upgrade-images | `2a49bb8` |
+| 7+10 | Adaptive polling + payment gate + DALL-E upgrade UI | `b3f7d65` |
+| 11 | Daily cleanup command for expired ZIPs | `4f5b3d3` |
+| 12 | Roadmap + memory docs update | (this commit) |
+
+**Key architecture decisions:**
+- Hybrid image tier: Unsplash (free/fast) → DALL-E 3 (paid/premium) after payment
+- One-time pricing: Single Theme $29.99 (Individual/DALL-E), Agency Bundle $149.99 (future)
+- Adaptive polling: 3s for first 90s → 5s after → dynamic status messages → 600s timeout
+- 7-day ZIP retention with daily Supabase cleanup cron
+- Payment gate is currently a placeholder — LemonSqueezy integration still needed
+
+**Deployment checklist (for Omar):**
+1. `git push origin main` — push all 9 commits
+2. Add `OPENAI_API_KEY=sk-...` to Coolify env vars (both laravel-app AND laravel-horizon)
+3. Redeploy backend via Coolify UI (manual — backend doesn't auto-deploy)
+4. Frontend will auto-deploy on push
+5. Run `php artisan migrate` in laravel-app container (tier column)
+6. Smoke test: Studio flow → generate → payment gate → download
+7. Verify DALL-E upgrade path works with real API key
+
+---
 
 ### 2026-03-07 — Phase 2.7 Verified in Production (5/5 PASS)
 
@@ -500,11 +546,12 @@ Resolution pipeline (5 layers, in order):
   - Commit: `70a0c1c` — 39 files changed, +5,086 / -732 lines
   - ✅ **DEPLOYED (2026-03-06)** — pushed to GitHub, backend redeployed via Coolify manually
   - **NEXT: End-to-end test with 5 verticals to verify production pipeline**
-- **SSWG Phase 3 (Frontend Integration):** UNBLOCKED — pending end-to-end verification
+- **SSWG Phase 3 (Frontend Integration):** TASKS 3.3 + 3.4 COMPLETE (2026-03-07)
   - Task 3.1 (Studio→Laravel wiring): ✅ COMPLETE
   - Task 3.2 (Playground Preview): ❌ REVERTED
-  - Task 3.3 (Image Tier): Ready after Phase 2.7 verified
-  - Task 3.4 (Error Handling): Ready after Phase 2.7 verified
+  - Task 3.3 (Image Tier): ✅ COMPLETE — DalleProvider, UpgradeThemeImagesJob, hybrid Unsplash→DALL-E pipeline
+  - Task 3.4 (Error Handling): ✅ COMPLETE — adaptive polling, payment gate, cleanup command, 7-day retention
+  - **REMAINING:** LemonSqueezy payment integration, deploy + smoke test
 - **SSWG Phase 4:** Queued (WPaify integration)
 - Reference docs: `agent-os/sswg/` (all phase specs + Phase 2.7 step files)
 

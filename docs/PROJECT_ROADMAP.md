@@ -1,6 +1,6 @@
 # PressPilot OS — Development Roadmap
 
-> **Last updated: 2026-03-06** — SSWG Phase 2.7 COMPLETE. Skeleton-based pipeline rewrite addresses all 6 quality issues. Needs deploy + end-to-end verification. Phase 3 UNBLOCKED pending verification.
+> **Last updated: 2026-03-07** — SSWG Phase 3 Tasks 3.3 + 3.4 COMPLETE. Image tier integration (Unsplash→DALL-E hybrid), payment gate, adaptive polling, error handling, cleanup command all implemented. Needs deploy + end-to-end verification.
 > **Canonical SSWG specs:** `agent-os/sswg/PROTOCOL.md` + `agent-os/sswg/PHASE-{0-4}.md`
 > **Decisions:** `DECISIONS.md` (change log included)
 > **Current state:** `_memory/main.md`
@@ -58,16 +58,33 @@
 
 **✅ DEPLOYED (2026-03-06):** Pushed to GitHub, backend redeployed via Coolify (manual). Needs end-to-end 5-vertical test.
 
-### SSWG Phase 3: Frontend Integration — UNBLOCKED (pending Phase 2.7 deploy verification)
+### SSWG Phase 3: Frontend Integration — TASKS 3.3 + 3.4 COMPLETE (2026-03-07)
 **Goal:** Connect Next.js frontend to new engine. Full user flow from form to download.
 **Spec:** `agent-os/sswg/PHASE-3.md`
 
 - [x] **Task 3.1:** Studio form → Laravel `/api/generate` wiring. ✅ Already complete.
 - [x] **Task 3.2:** ~~Playground Preview~~ — ❌ REVERTED. See DECISIONS.md KNOWN DEAD ENDS.
-- [ ] **Task 3.3:** Image Tier integration — ready after Phase 2.7 verified
-- [ ] **Task 3.4:** Error handling & retry flow — ready after Phase 2.7 verified
+- [x] **Task 3.3:** Image Tier integration — Hybrid Unsplash→DALL-E pipeline (2026-03-07)
+- [x] **Task 3.4:** Error handling & retry flow — Adaptive polling + payment gate + cleanup (2026-03-07)
+
+**Implementation (9 commits, 2026-03-07):**
+- DalleProvider (DALL-E 3 via OpenAI API) with primary/fallback pattern
+- Project tier column (individual/agency) for future billing differentiation
+- Image token manifest stored in job result for post-payment DALL-E upgrade
+- UpgradeThemeImagesJob — downloads ZIP, swaps images with DALL-E, re-uploads
+- POST /api/upgrade-images endpoint + upgrade status in /api/status response
+- Frontend proxy + adaptive polling (3s→5s intervals, 600s timeout)
+- Payment gate UI (Single Theme $29.99) with DALL-E upgrade flow
+- Daily cleanup command for expired theme ZIPs (7-day retention)
 
 **Checkpoint:** Complete user journey: visit site → fill form → generate → preview → download. Works for 3+ business types.
+
+**Remaining for Phase 3 completion:**
+- LemonSqueezy payment integration (currently placeholder)
+- Push commits + deploy to Coolify
+- Add OPENAI_API_KEY to Coolify env vars
+- Run tier column migration
+- End-to-end smoke test on production
 
 ### SSWG Phase 4: WPaify Integration — QUEUED
 **Goal:** HTML-to-WordPress theme conversion for WPaify product.
@@ -170,7 +187,7 @@
 | Marketing assets (flagship screenshots) | MEDIUM | After pipeline produces polished themes |
 | Landing page update | MEDIUM | "Generated in 17s" value prop |
 | Playground preview validation | MEDIUM | Phase 3 Task 3.2 |
-| Image generation integration | MEDIUM | Replace placehold.co with AI-generated images |
+| Image generation integration | ~~MEDIUM~~ | ✅ DONE (2026-03-07) — DALL-E 3 integration via DalleProvider + UpgradeThemeImagesJob |
 | Brand mode support | LOW | Post-launch via Ollie style variations |
 | Style variations (High Contrast, Dark) | LOW | Post-launch |
 | WooCommerce patterns | LOW | Ecommerce vertical enhancement |
@@ -180,6 +197,14 @@
 ---
 
 ## Patch Notes
+
+### 2026-03-07
+- [x] **Phase 3 Tasks 3.3 + 3.4 complete** — Image tier integration + error handling/retry flow
+  - 9 commits implementing 12-task plan via Subagent-Driven Development
+  - DalleProvider, UpgradeThemeImagesJob, adaptive polling, payment gate UI, cleanup command
+  - Design doc: `docs/plans/2026-03-07-phase3-image-tier-and-error-handling-design.md`
+  - Implementation plan: `docs/plans/2026-03-07-phase3-implementation-plan.md`
+- [ ] **NEEDS** push to GitHub + deploy + OPENAI_API_KEY env var + migration + smoke test
 
 ### 2026-03-06
 - [x] Multi-vertical pipeline test (AM) — 5/5 themes generated mechanically, 6 quality issues found
