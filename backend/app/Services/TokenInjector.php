@@ -190,15 +190,16 @@ class TokenInjector
         }
 
         // Check 3: Basic opening/closing balance (non-self-closing blocks)
-        // Use [^-]* to match any content up to --> (handles nested JSON braces)
-        preg_match_all('/<!-- wp:(\S+)(?:\s+[^-]*?)?\s*-->/', $html, $openings);
+        // Use negative lookahead (?:(?!-->).)* to match any content up to -->
+        // This correctly handles hyphens in JSON values (URLs, CSS custom properties, slugs)
+        preg_match_all('/<!-- wp:(\S+)(?:\s+(?:(?!-->).)*?)?\s*-->/', $html, $openings);
         preg_match_all('/<!-- \/wp:(\S+)\s*-->/', $html, $closings);
 
         $openCounts = array_count_values($openings[1] ?? []);
         $closeCounts = array_count_values($closings[1] ?? []);
 
         // Self-closing blocks don't need closers
-        preg_match_all('/<!-- wp:(\S+)(?:\s+[^-]*?)?\s*\/-->/', $html, $selfClosing);
+        preg_match_all('/<!-- wp:(\S+)(?:\s+(?:(?!-->).)*?)?\s*\/-->/', $html, $selfClosing);
         $selfCloseCounts = array_count_values($selfClosing[1] ?? []);
 
         foreach ($openCounts as $block => $count) {
