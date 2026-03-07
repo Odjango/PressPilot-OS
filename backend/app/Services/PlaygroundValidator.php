@@ -70,6 +70,18 @@ class PlaygroundValidator
             ];
         }
 
+        // CLI failed with output but no usable health payload = validation failure
+        if ($result->failed()) {
+            return [
+                'valid' => false,
+                'errors' => [[
+                    'type' => 'PLAYGROUND_CLI_FAILED',
+                    'message' => 'Playground CLI exited with error. Output: '.mb_substr($output, 0, 200),
+                ]],
+                'warnings' => [],
+            ];
+        }
+
         $parsed = $this->parseOutput($output, $themeSlug);
 
         return [
@@ -114,7 +126,9 @@ class PlaygroundValidator
      */
     private function buildBlueprint(string $themeSlug, string $zipPath): array
     {
-        $phpHealthCheck = <<<PHP
+        $encodedSlug = $this->encodeForPhp($themeSlug);
+
+        $phpHealthCheck = <<<'PHP'
 <?php
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
@@ -123,7 +137,7 @@ require_once '/wordpress/wp-load.php';
 require_once ABSPATH . 'wp-admin/includes/theme.php';
 require_once ABSPATH . 'wp-includes/http.php';
 
-$slug = {$this->encodeForPhp($themeSlug)};
+$slug = __SLUG_PLACEHOLDER__;
 
 switch_theme($slug);
 $theme = wp_get_theme();
@@ -158,20 +172,20 @@ if (file_exists($template_file)) {
     $template_content = file_get_contents($template_file);
 
     // Check that block comments have valid JSON
-    preg_match_all('/<!-- wp:\\S+\\s+(\\{.+?\\})\\s*(?:\\/)?-->/s', $template_content, \$jsonMatches);
-    foreach (\$jsonMatches[1] as \$jsonStr) {
-        \$decoded = json_decode(\$jsonStr);
-        if (\$decoded === null && json_last_error() !== JSON_ERROR_NONE) {
-            \$block_errors[] = "Invalid JSON in block comment: " . substr(\$jsonStr, 0, 60);
+    preg_match_all('/<!-- wp:\\S+\\s+(\\{.+?\\})\\s*(?:\\/)?-->/s', $template_content, $jsonMatches);
+    foreach ($jsonMatches[1] as $jsonStr) {
+        $decoded = json_decode($jsonStr);
+        if ($decoded === null && json_last_error() !== JSON_ERROR_NONE) {
+            $block_errors[] = "Invalid JSON in block comment: " . substr($jsonStr, 0, 60);
         }
     }
 
     // Check for unparseable block content
-    \$parsed = parse_blocks(\$template_content);
-    foreach (\$parsed as \$block) {
-        if (!empty(\$block['innerHTML']) && \$block['blockName'] === null && trim(\$block['innerHTML']) !== '') {
-            \$snippet = substr(trim(\$block['innerHTML']), 0, 80);
-            \$block_errors[] = "Unparseable block content: {\$snippet}";
+    $parsed = parse_blocks($template_content);
+    foreach ($parsed as $block) {
+        if (!empty($block['innerHTML']) && $block['blockName'] === null && trim($block['innerHTML']) !== '') {
+            $snippet = substr(trim($block['innerHTML']), 0, 80);
+            $block_errors[] = "Unparseable block content: {$snippet}";
         }
     }
 }
@@ -190,6 +204,9 @@ $payload = [
 echo "PLAYGROUND_HEALTH::" . json_encode($payload) . "\n";
 ?>
 PHP;
+
+        // Inject the actual slug value into the nowdoc template
+        $phpHealthCheck = str_replace('__SLUG_PLACEHOLDER__', $encodedSlug, $phpHealthCheck);
 
         return [
             'landingPage' => '/',

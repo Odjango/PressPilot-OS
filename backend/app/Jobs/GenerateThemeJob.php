@@ -139,7 +139,7 @@ class GenerateThemeJob implements ShouldQueue
                 'errors' => $e->getValidationErrors(),
                 'attempt' => $this->attempts(),
             ]);
-            throw $e;
+            $this->fail($e);
         } catch (Throwable $e) {
             Log::error('GenerateThemeJob: Unexpected error', [
                 'job_id' => $this->jobId,

@@ -35,11 +35,13 @@ class TokenInjector
     public function injectTokens(string $html, array $tokens): string
     {
         // Phase 1: Replace tokens inside block comment JSON
+        // Capture the optional self-closing marker (/) to preserve it in reconstruction
         $result = preg_replace_callback(
-            '/<!-- wp:(\S+)\s+(\{[^<]*?\})\s*(?:\/)?-->/',
+            '/<!-- wp:(\S+)\s+(\{[^<]*?\})\s*(\/?)-->/',
             function ($matches) use ($tokens) {
                 $blockName = $matches[1];
                 $jsonStr = $matches[2];
+                $selfClosing = $matches[3]; // '/' or ''
 
                 // Replace tokens inside this JSON, preserving JSON validity
                 $jsonStr = preg_replace_callback('/\{\{(\w+)\}\}/', function ($tokenMatches) use ($tokens) {
@@ -64,8 +66,9 @@ class TokenInjector
                     return addcslashes((string) $value, '\\\"');
                 }, $jsonStr);
 
-                // Reconstruct block comment
-                return "<!-- wp:{$blockName} {$jsonStr} -->";
+                // Reconstruct block comment, preserving self-closing marker
+                $closing = $selfClosing ? ' /-->' : ' -->';
+                return "<!-- wp:{$blockName} {$jsonStr}{$closing}";
             },
             $html
         );
@@ -187,14 +190,15 @@ class TokenInjector
         }
 
         // Check 3: Basic opening/closing balance (non-self-closing blocks)
-        preg_match_all('/<!-- wp:(\S+)(?:\s+\{[^}]*\})?\s*-->/', $html, $openings);
+        // Use [^-]* to match any content up to --> (handles nested JSON braces)
+        preg_match_all('/<!-- wp:(\S+)(?:\s+[^-]*?)?\s*-->/', $html, $openings);
         preg_match_all('/<!-- \/wp:(\S+)\s*-->/', $html, $closings);
 
         $openCounts = array_count_values($openings[1] ?? []);
         $closeCounts = array_count_values($closings[1] ?? []);
 
         // Self-closing blocks don't need closers
-        preg_match_all('/<!-- wp:(\S+)(?:\s+\{[^}]*\})?\s*\/-->/', $html, $selfClosing);
+        preg_match_all('/<!-- wp:(\S+)(?:\s+[^-]*?)?\s*\/-->/', $html, $selfClosing);
         $selfCloseCounts = array_count_values($selfClosing[1] ?? []);
 
         foreach ($openCounts as $block => $count) {
@@ -227,10 +231,19 @@ class TokenInjector
     {
         $results = [];
         $allErrors = [];
+        $normalizedKeys = array_map('strtoupper', array_keys($tokens));
 
         foreach ($skeletonSelections as $pageType => $skeletons) {
             $pageHtml = '';
             foreach ($skeletons as $skeleton) {
+                // Validate required tokens before injection
+                $requiredTokens = $skeleton['required_tokens'] ?? [];
+                foreach ($requiredTokens as $requiredToken) {
+                    if (!in_array(strtoupper($requiredToken), $normalizedKeys, true)) {
+                        $allErrors[] = "[{$pageType}/{$skeleton['id']}] Missing required token: {$requiredToken}";
+                    }
+                }
+
                 $html = $this->loadSkeleton($skeleton['file']);
                 $injected = $this->injectTokens($html, $tokens);
                 $errors = $this->validateBlockGrammar($injected);
