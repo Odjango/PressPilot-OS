@@ -10,8 +10,8 @@ use Tests\TestCase;
  *
  * For each skeleton in skeleton-registry.json:
  *   1. Load the skeleton HTML
- *   2. Build a realistic token map from the registry's required_tokens
- *   3. Inject tokens via TokenInjector::injectTokens()
+ *   2. Build a realistic token map (including adversarial characters)
+ *   3. Inject tokens via TokenInjector::processSkeletons() (production path)
  *   4. Validate block grammar (JSON validity, balanced tags, no unresolved tokens)
  */
 class BlockGrammarIntegrationTest extends TestCase
@@ -35,9 +35,54 @@ class BlockGrammarIntegrationTest extends TestCase
     }
 
     /**
+     * Test the production code path: processSkeletons() with full token maps.
+     *
+     * This exercises the same pipeline GenerateThemeJob uses:
+     * loadSkeleton → required-token validation → injectTokens → validateBlockGrammar
+     *
      * @dataProvider skeletonProvider
      */
     public function test_skeleton_injection_produces_valid_block_grammar(string $skeletonId): void
+    {
+        $entry = $this->registry[$skeletonId];
+        $requiredTokens = $entry['required_tokens'] ?? [];
+
+        // Build realistic token values (including adversarial characters)
+        $tokens = $this->buildTokenMap($requiredTokens);
+
+        // Use processSkeletons() — the actual production path in GenerateThemeJob
+        $skeletonSelections = [
+            'front-page' => [$entry],
+        ];
+
+        $results = $this->injector->processSkeletons($skeletonSelections, $tokens);
+
+        $this->assertArrayHasKey('front-page', $results, "processSkeletons() must return front-page key for {$skeletonId}");
+
+        $output = $results['front-page'];
+        $this->assertNotEmpty($output, "processSkeletons() produced empty output for {$skeletonId}");
+
+        // No unresolved {{TOKEN}} placeholders
+        $this->assertDoesNotMatchRegularExpression(
+            '/\{\{\w+\}\}/',
+            $output,
+            "Unresolved token placeholders remain in {$skeletonId}"
+        );
+
+        // Validate block grammar
+        $errors = $this->injector->validateBlockGrammar($output);
+        $this->assertEmpty(
+            $errors,
+            "Block grammar errors in {$skeletonId}: " . implode('; ', $errors)
+        );
+    }
+
+    /**
+     * Also exercise individual helpers for finer-grained failure diagnostics.
+     *
+     * @dataProvider skeletonProvider
+     */
+    public function test_individual_helpers_produce_valid_block_grammar(string $skeletonId): void
     {
         $entry = $this->registry[$skeletonId];
         $skeletonFile = $entry['file'];
@@ -70,19 +115,26 @@ class BlockGrammarIntegrationTest extends TestCase
     }
 
     /**
+     * Provides skeleton IDs from the registry as test cases.
+     *
+     * Uses __DIR__ instead of base_path() because static data providers
+     * run before Laravel's application container is booted.
+     *
      * @return array<string, array{0: string}>
      */
     public static function skeletonProvider(): array
     {
-        // Use __DIR__ instead of base_path() because static data providers
-        // run before Laravel's application container is booted.
         // __DIR__ = tests/Feature, so we traverse up to backend/, then to pattern-library/
         $registryPath = dirname(__DIR__, 2) . '/../pattern-library/skeleton-registry.json';
         if (! file_exists($registryPath)) {
-            return [];
+            throw new \RuntimeException("skeleton-registry.json not found at {$registryPath}");
         }
 
-        $registry = json_decode(file_get_contents($registryPath), true);
+        $registry = json_decode(file_get_contents($registryPath), true, 512, JSON_THROW_ON_ERROR);
+        if (! is_array($registry) || $registry === []) {
+            throw new \RuntimeException('skeleton-registry.json is empty or invalid');
+        }
+
         $cases = [];
         foreach (array_keys($registry) as $id) {
             $cases[$id] = [$id];
@@ -93,6 +145,9 @@ class BlockGrammarIntegrationTest extends TestCase
 
     /**
      * Build a realistic token value map from a list of required token names.
+     *
+     * Includes adversarial characters (quotes, HTML entities, backslashes)
+     * to stress-test the escaping pipeline in TokenInjector.
      *
      * @param  array<int, string>  $tokenNames
      * @return array<string, string>
@@ -109,6 +164,9 @@ class BlockGrammarIntegrationTest extends TestCase
 
     /**
      * Generate a realistic value for a given token name.
+     *
+     * Values include adversarial characters (double quotes, backslashes,
+     * HTML angle brackets, ampersands) to test JSON/HTML escaping robustness.
      */
     private function generateTokenValue(string $tokenName): string
     {
@@ -132,9 +190,9 @@ class BlockGrammarIntegrationTest extends TestCase
             return 'info@example.com';
         }
 
-        // Address tokens
+        // Address tokens — includes ampersand
         if (str_contains($tokenName, '_ADDRESS')) {
-            return '123 Main Street, Anytown, USA';
+            return '123 Main Street & Suite 200, Anytown, USA';
         }
 
         // Hours tokens
@@ -152,34 +210,34 @@ class BlockGrammarIntegrationTest extends TestCase
             return '/month';
         }
 
-        // CTA tokens
+        // CTA tokens — includes quotes
         if (str_contains($tokenName, '_CTA') || str_contains($tokenName, '_BUTTON')) {
-            return 'Get Started Now';
+            return 'Get "Started" Now';
         }
 
-        // Question tokens (FAQ)
+        // Question tokens (FAQ) — includes quotes and ampersand
         if (str_ends_with($tokenName, '_Q')) {
-            return 'What makes our service unique?';
+            return 'What makes our "service" unique & reliable?';
         }
 
-        // Answer tokens (FAQ)
+        // Answer tokens (FAQ) — includes backslash and angle brackets
         if (str_ends_with($tokenName, '_A')) {
-            return 'We deliver exceptional quality with a personal touch that sets us apart.';
+            return 'We deliver exceptional quality with a personal touch \\ every time <guaranteed>.';
         }
 
-        // Title tokens
+        // Title tokens — includes ampersand
         if (str_contains($tokenName, '_TITLE') || str_contains($tokenName, '_NAME')) {
-            return 'Sample Title for ' . $tokenName;
+            return 'Sample Title & More for ' . $tokenName;
         }
 
-        // Text/description/bio tokens
+        // Text/description/bio tokens — includes quotes, backslash, angle brackets
         if (str_contains($tokenName, '_TEXT') || str_contains($tokenName, '_DESC') || str_contains($tokenName, '_BIO') || str_contains($tokenName, '_SUBTITLE') || str_contains($tokenName, '_LABEL') || str_contains($tokenName, '_ROLE')) {
-            return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.';
+            return 'Lorem ipsum "dolor" & more <details> with a \\ slash.';
         }
 
         // ALT text tokens
         if (str_contains($tokenName, '_ALT')) {
-            return 'Descriptive alt text for image';
+            return 'Descriptive alt text for "portfolio" image';
         }
 
         // Feature tokens
@@ -197,7 +255,7 @@ class BlockGrammarIntegrationTest extends TestCase
             return 'Licensed and insured since 2010';
         }
 
-        // Fallback: generic placeholder
-        return 'Sample value for ' . $tokenName;
+        // Fallback: generic placeholder with adversarial chars
+        return 'Sample "value" for ' . $tokenName;
     }
 }

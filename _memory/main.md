@@ -1,14 +1,42 @@
 # PressPilot OS — Master Roadmap & Project Memory
 
-Last updated: 2026-03-06
+Last updated: 2026-03-07
 
 ---
 
+## Omar's Local Environment
+- **Project path on Mac**: `/Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS`
+- **Terminal**: uses default macOS Terminal (ttys002)
+- **Deploy**: manual redeploy via Coolify UI
+
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `b8cf373` (2026-03-06) — `docs: update all project documentation for Phase 2.7 completion`
-- Previous: `70a0c1c` — `feat(sswg): Phase 2.7 complete pipeline rewrite — skeleton-based theme generation`
-- Both commits pushed to `origin/main` and backend deployed via Coolify (2026-03-06)
+- Latest commit: `9f16fef` (2026-03-07) — `fix(sswg): AIPlanner retry logic handles 529 overloaded + increased timeouts`
+- Previous: `76db1a2` — `fix(sswg): ImageHandler now covers all 18 IMAGE tokens required by skeletons`
+- Previous: `b8cf373` (2026-03-06) — `docs: update all project documentation for Phase 2.7 completion`
+- All pushed to `origin/main`, backend deployed via Coolify
+
+### 2026-03-07 — Phase 2.7 Verified in Production (5/5 PASS)
+
+**5-vertical end-to-end test: ALL PASS.**
+
+| Vertical | ZIP Size | Files | Tokens | Ollie | Credit | theme.json | Inner Pages |
+|----------|----------|-------|--------|-------|--------|------------|-------------|
+| Bella Trattoria (restaurant) | 19KB | 16 | 0 unresolved | No | Yes | Valid, 11 colors | about, services, contact |
+| Nexus Digital Store (ecommerce) | 18KB | 16 | 0 unresolved | No | Yes | Valid, 11 colors | about, services, contact |
+| Summit Plumbing (local_service) | 18KB | 16 | 0 unresolved | No | Yes | Valid, 11 colors | about, services, contact |
+| CloudMetrics Analytics (saas) | 18KB | 16 | 0 unresolved | No | Yes | Valid, 11 colors | about, services, contact |
+| Sarah Chen Studio (portfolio) | 18KB | 16 | 0 unresolved | No | Yes | Valid, 11 colors | about, services, contact |
+
+Each theme contains: style.css (PressPilot author), theme.json (valid), functions.php, index.php, 6 templates (front-page, index, page, single, 404, page-about/services/contact), 2 parts (header, footer with PressPilot credit). Zero `{{TOKEN}}` leaks. Zero Ollie references. 26-30KB front pages with real AI-generated content.
+
+**Bugs fixed this session:**
+1. `ImageHandler.php` — expanded from 10 to 21 known IMAGE tokens + prefix-based fallback (commit `76db1a2`)
+2. `TokenInjector.php` — IMAGE_* validation made non-fatal with placeholder URL fallback (commit `76db1a2`)
+3. `AIPlanner.php` — retry logic now handles HTTP 529 (overloaded) with 5 attempts + exponential backoff + jitter (commit `9f16fef`)
+4. `GenerateThemeJob.php` — job timeout increased 350s → 600s, backoff 30s → 60s (commit `9f16fef`)
+
+**Phase 2.7 is now VERIFIED. Phase 3 is unblocked.**
 
 ### 2026-03-06 Session B — SSWG Phase 2.7 Complete Pipeline Rewrite
 
