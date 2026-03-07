@@ -331,35 +331,48 @@ export default function StudioClient({ slug }: Props) {
   const [jobId, setJobId] = useState<string | null>(null);
   const [jobStatus, setJobStatus] = useState<string>("pending");
   const [pollCount, setPollCount] = useState(0);
+  const [paymentCompleted, setPaymentCompleted] = useState(false);
+  const [upgradeStatus, setUpgradeStatus] = useState<"idle" | "upgrading" | "done" | "failed">("idle");
 
-  // Polling logic for Step 5 (Deliver)
+  // Adaptive polling: faster initially, slower over time, with user feedback
   useEffect(() => {
-    if (currentStep === 5 && jobId && jobStatus !== "completed" && jobStatus !== "failed") {
-      const timer = setTimeout(async () => {
-        try {
-          const res = await fetch(`/api/status?id=${jobId}`);
-          if (!res.ok) return;
-          const data = await res.json();
-          setJobStatus(data.status);
+    if (currentStep !== 5 || !jobId || jobStatus === "completed" || jobStatus === "failed") return;
 
-          if (data.status === "completed") {
-            setArtifacts({
-              themeUrl: data.themeUrl,
-              staticUrl: data.staticUrl,
-              slug: data.project_id
-            });
-            toast.success("Generation complete! Your kit is ready.");
-          } else if (data.status === "failed") {
-            toast.error("Generation failed. Please try again.");
-          }
+    const elapsedMs = pollCount * 3000;
+    const interval = elapsedMs < 90_000 ? 3000 : 5000;
+    const maxPollTime = 600_000;
 
-          setPollCount(prev => prev + 1);
-        } catch (err) {
-          console.error("Polling error:", err);
-        }
-      }, 3000);
-      return () => clearTimeout(timer);
+    if (elapsedMs >= maxPollTime) {
+      setJobStatus("failed");
+      return;
     }
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/status?id=${jobId}`);
+        if (!res.ok) {
+          setPollCount((prev) => prev + 1);
+          return;
+        }
+        const data = await res.json();
+        setJobStatus(data.status);
+
+        if (data.status === "completed") {
+          setArtifacts({
+            themeUrl: data.themeUrl,
+            staticUrl: data.staticUrl,
+            slug: data.project_id,
+          });
+          toast.success("Generation complete! Your kit is ready.");
+        }
+
+        setPollCount((prev) => prev + 1);
+      } catch {
+        setPollCount((prev) => prev + 1);
+      }
+    }, interval);
+
+    return () => clearTimeout(timer);
   }, [currentStep, jobId, jobStatus, pollCount]);
 
   const steps = [
@@ -741,6 +754,60 @@ export default function StudioClient({ slug }: Props) {
     ];
   const canGenerate =
     !!variations && !!selectedVariation?.id && !assigning && !generating;
+
+  function getPollingMessage(pollCount: number, jobStatus: string): string {
+    if (jobStatus === "completed") return "Your Kit is Ready";
+    if (jobStatus === "failed") return "Generation Failed";
+
+    const elapsed = pollCount * 3;
+    if (elapsed < 90) return "Building Your Assets";
+    if (elapsed < 180) return "Taking a bit longer than usual...";
+    if (elapsed < 300) return "Still working on your theme...";
+    return "This is taking longer than expected";
+  }
+
+  async function handlePaymentSuccess() {
+    setPaymentCompleted(true);
+    setUpgradeStatus("upgrading");
+
+    try {
+      await fetch("/api/upgrade-images", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobId }),
+      });
+
+      let attempts = 0;
+      const maxAttempts = 40;
+      const pollUpgrade = setInterval(async () => {
+        attempts++;
+        try {
+          const res = await fetch(`/api/status?id=${jobId}`);
+          const data = await res.json();
+
+          if (data.images_upgraded === true) {
+            clearInterval(pollUpgrade);
+            setArtifacts({
+              themeUrl: data.themeUrl,
+              staticUrl: data.staticUrl,
+              slug: data.project_id,
+            });
+            setUpgradeStatus("done");
+          } else if (data.images_upgraded === false) {
+            clearInterval(pollUpgrade);
+            setUpgradeStatus("failed");
+          } else if (attempts >= maxAttempts) {
+            clearInterval(pollUpgrade);
+            setUpgradeStatus("failed");
+          }
+        } catch {
+          // Keep trying
+        }
+      }, 3000);
+    } catch {
+      setUpgradeStatus("failed");
+    }
+  }
 
   return (
     <div className="max-w-4xl mx-auto" dir="auto">
@@ -1491,78 +1558,157 @@ export default function StudioClient({ slug }: Props) {
         {/* STEP 5: DELIVER */}
         {currentStep === 5 && (
           <div className="mx-auto max-w-2xl space-y-12 py-12 text-center animate-in fade-in slide-in-from-bottom-8 duration-700">
-            <div className="space-y-4">
-              <div className="flex justify-center">
-                {jobStatus === "completed" ? (
-                  <div className="h-24 w-24 rounded-full bg-white text-slate-950 flex items-center justify-center shadow-2xl animate-in zoom-in duration-500">
-                    <CheckCircle2 className="h-12 w-12" />
-                  </div>
-                ) : jobStatus === "failed" ? (
-                  <div className="h-24 w-24 rounded-full bg-red-600 text-white flex items-center justify-center shadow-2xl">
-                    <X className="h-12 w-12" />
-                  </div>
-                ) : (
+
+            {/* Phase A: Generation in progress */}
+            {jobStatus !== "completed" && jobStatus !== "failed" && !paymentCompleted && (
+              <div className="space-y-4">
+                <div className="flex justify-center">
                   <div className="relative">
                     <div className="h-24 w-24 rounded-full border-4 border-slate-800 border-t-white animate-spin" />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <Sparkles className="h-8 w-8 text-white animate-pulse" />
                     </div>
                   </div>
+                </div>
+                <h2 className="text-4xl font-black text-white tracking-tight">
+                  {getPollingMessage(pollCount, jobStatus)}
+                </h2>
+                <p className="mx-auto max-w-md text-slate-400 font-medium">
+                  PressPilot is compiling your custom block theme, injecting patterns, and generating assets.
+                </p>
+                {pollCount * 3 >= 300 && (
+                  <button
+                    onClick={() => setJobStatus("failed")}
+                    className="mt-4 text-sm text-slate-500 underline hover:text-slate-300"
+                  >
+                    Not working? Try again
+                  </button>
                 )}
               </div>
-              <h2 className="text-4xl font-black text-white tracking-tight">
-                {jobStatus === "completed"
-                  ? "Your Kit is Ready"
-                  : jobStatus === "failed"
-                    ? "Generation Failed"
-                    : "Building Your Assets"}
-              </h2>
-              <p className="mx-auto max-w-md text-slate-400 font-medium">
-                {jobStatus === "completed"
-                  ? "Download your professional WordPress theme and static site bundle below."
-                  : jobStatus === "failed"
-                    ? "There was an error while generating your theme. Please try again or contact support."
-                    : "PressPilot is currently compiling your custom block theme, injecting patterns, and generating your static site."}
-              </p>
-            </div>
+            )}
 
-            <div className="flex justify-center">
-              <div className={`group relative flex flex-col items-center rounded-3xl border-2 p-8 transition-all duration-500 max-w-sm w-full ${jobStatus === "completed"
-                ? "border-white bg-slate-900 shadow-2xl hover:-translate-y-2 scale-100"
-                : "border-slate-800 bg-slate-900/50 opacity-40 scale-95"
-                }`}>
-                <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-slate-800 text-white group-hover:bg-white group-hover:text-slate-950 transition-colors duration-500">
-                  <Download className="h-10 w-10" />
+            {/* Phase A-fail: Generation failed */}
+            {jobStatus === "failed" && !paymentCompleted && (
+              <div className="space-y-4">
+                <div className="flex justify-center">
+                  <div className="h-24 w-24 rounded-full bg-red-600 text-white flex items-center justify-center shadow-2xl">
+                    <X className="h-12 w-12" />
+                  </div>
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-white">WordPress Theme</h3>
-                <p className="mb-8 text-sm text-slate-400 font-medium h-10 text-center">
-                  Standalone block theme (.zip) with all your custom styles.
+                <h2 className="text-4xl font-black text-white tracking-tight">Generation Failed</h2>
+                <p className="text-sm text-slate-400">
+                  Something went wrong during generation. This is rare — please try again.
                 </p>
                 <button
-                  disabled={jobStatus !== "completed"}
-                  onClick={() => window.open(artifacts?.themeUrl || '', "_blank")}
-                  className="w-full rounded-2xl bg-white px-6 py-4 text-sm font-black text-slate-950 transition-all hover:scale-105 active:scale-95 disabled:opacity-20 shadow-xl shadow-white/20"
-                >
-                  Download Theme
-                </button>
-              </div>
-            </div>
-
-            {jobStatus === "completed" && (
-              <div className="pt-12 fade-in animate-in duration-1000">
-                <button
-                  onClick={() => {
-                    setCurrentStep(1);
-                    setJobId(null);
+                  onClick={async () => {
                     setJobStatus("pending");
+                    setPollCount(0);
+                    try {
+                      const res = await fetch("/api/regenerate", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ projectId: artifacts?.slug || project?.slug }),
+                      });
+                      const data = await res.json();
+                      if (data.success) {
+                        setJobId(data.jobId);
+                        toast.success("Retrying generation...");
+                      }
+                    } catch {
+                      toast.error("Could not retry. Please refresh and try again.");
+                    }
                   }}
-                  className="inline-flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-white transition-colors group"
+                  className="rounded-xl bg-teal-500 px-6 py-3 text-sm font-bold text-white hover:bg-teal-400 transition-colors"
                 >
-                  <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                  Generate Another Design
+                  Try Again
                 </button>
               </div>
             )}
+
+            {/* Phase B: Generation complete, payment required */}
+            {jobStatus === "completed" && !paymentCompleted && (
+              <div className="space-y-6">
+                <div className="flex justify-center">
+                  <div className="h-24 w-24 rounded-full bg-white text-slate-950 flex items-center justify-center shadow-2xl animate-in zoom-in duration-500">
+                    <CheckCircle2 className="h-12 w-12" />
+                  </div>
+                </div>
+                <h2 className="text-4xl font-black text-white tracking-tight">Your Theme is Ready!</h2>
+                <p className="text-slate-400 font-medium">Purchase to download your custom WordPress theme with AI-generated images.</p>
+                <div className="rounded-2xl border border-slate-700 bg-slate-800/50 p-6 text-left space-y-3 max-w-sm mx-auto">
+                  <p className="text-lg font-bold text-white">Single Theme — $29.99</p>
+                  <p className="text-sm text-slate-400">One-time payment. AI-generated images. Use on unlimited sites.</p>
+                </div>
+                <button
+                  onClick={() => handlePaymentSuccess()}
+                  className="w-full max-w-sm mx-auto rounded-2xl bg-white px-6 py-4 text-sm font-black text-slate-950 hover:bg-slate-200 transition-colors shadow-xl shadow-white/20 block"
+                >
+                  Purchase &amp; Download — $29.99
+                </button>
+              </div>
+            )}
+
+            {/* Phase C: Payment done, upgrading images */}
+            {paymentCompleted && upgradeStatus === "upgrading" && (
+              <div className="space-y-4">
+                <div className="flex justify-center">
+                  <Loader2 className="h-16 w-16 animate-spin text-teal-400" />
+                </div>
+                <h2 className="text-2xl font-black text-white">Personalizing your theme images...</h2>
+                <p className="text-sm text-slate-400">Our AI is generating custom images for your theme. This takes about 30-60 seconds.</p>
+              </div>
+            )}
+
+            {/* Phase D: Ready to download */}
+            {paymentCompleted && (upgradeStatus === "done" || upgradeStatus === "failed") && (
+              <div className="space-y-6">
+                <div className="flex justify-center">
+                  <div className="h-24 w-24 rounded-full bg-white text-slate-950 flex items-center justify-center shadow-2xl animate-in zoom-in duration-500">
+                    <CheckCircle2 className="h-12 w-12" />
+                  </div>
+                </div>
+                <h2 className="text-4xl font-black text-white tracking-tight">Your Theme is Ready to Download</h2>
+                {upgradeStatus === "failed" && (
+                  <p className="text-sm text-amber-400">
+                    Custom images couldn&apos;t be generated. Your theme uses high-quality stock photos instead.
+                  </p>
+                )}
+                <div className="flex justify-center">
+                  <div className="group relative flex flex-col items-center rounded-3xl border-2 border-white bg-slate-900 shadow-2xl p-8 max-w-sm w-full">
+                    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-slate-800 text-white group-hover:bg-white group-hover:text-slate-950 transition-colors duration-500">
+                      <Download className="h-10 w-10" />
+                    </div>
+                    <h3 className="mb-2 text-xl font-bold text-white">WordPress Theme</h3>
+                    <p className="mb-8 text-sm text-slate-400 font-medium h-10 text-center">
+                      Standalone block theme (.zip) with all your custom styles.
+                    </p>
+                    <button
+                      onClick={() => window.open(artifacts?.themeUrl || '', "_blank")}
+                      className="w-full rounded-2xl bg-white px-6 py-4 text-sm font-black text-slate-950 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/20"
+                    >
+                      Download Theme
+                    </button>
+                  </div>
+                </div>
+
+                <div className="pt-12 fade-in animate-in duration-1000">
+                  <button
+                    onClick={() => {
+                      setCurrentStep(1);
+                      setJobId(null);
+                      setJobStatus("pending");
+                      setPaymentCompleted(false);
+                      setUpgradeStatus("idle");
+                    }}
+                    className="inline-flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-white transition-colors group"
+                  >
+                    <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                    Generate Another Design
+                  </button>
+                </div>
+              </div>
+            )}
+
           </div>
         )}
       </div>
