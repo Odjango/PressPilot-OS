@@ -75,6 +75,16 @@ class GenerateThemeJob implements ShouldQueue
             $projectData['businessCategory'] = $projectData['businessCategory'] ?? $project->site_type;
             $projectData['language'] = $projectData['language'] ?? $project->language;
 
+            // Map flat color keys from DataTransformer to nested 'colors' array for ThemeAssembler
+            if (! isset($projectData['colors'])) {
+                $projectData['colors'] = [];
+            }
+            foreach (['primary', 'secondary', 'accent', 'background', 'foreground'] as $colorKey) {
+                if (isset($projectData[$colorKey]) && ! isset($projectData['colors'][$colorKey])) {
+                    $projectData['colors'][$colorKey] = $projectData[$colorKey];
+                }
+            }
+
             // Step 1: AI generates content tokens
             $aiPlanner = app(AIPlanner::class);
             $tokens = $aiPlanner->generate($projectData);

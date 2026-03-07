@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use RuntimeException;
 use ZipArchive;
 
@@ -134,6 +135,31 @@ class ThemeAssembler
                 $slug = $entry['slug'] ?? null;
                 if ($slug && array_key_exists($slug, $paletteOverrides) && $paletteOverrides[$slug]) {
                     $themeJson['settings']['color']['palette'][$index]['color'] = $paletteOverrides[$slug];
+                }
+            }
+        }
+
+        // If NO colors were overridden (all null), apply PressPilot defaults
+        $anyColorSet = false;
+        foreach ($paletteOverrides as $v) {
+            if ($v) {
+                $anyColorSet = true;
+                break;
+            }
+        }
+        if (! $anyColorSet) {
+            Log::info('ThemeAssembler: No brand colors provided, applying PressPilot defaults');
+            $defaults = [
+                'primary' => '#1e3a5f',
+                'secondary' => '#4a90d9',
+                'primary-alt' => '#2ecc71',
+                'base' => '#ffffff',
+                'main' => '#1a1a2e',
+            ];
+            foreach ($themeJson['settings']['color']['palette'] as $index => $entry) {
+                $slug = $entry['slug'] ?? null;
+                if ($slug && isset($defaults[$slug])) {
+                    $themeJson['settings']['color']['palette'][$index]['color'] = $defaults[$slug];
                 }
             }
         }
