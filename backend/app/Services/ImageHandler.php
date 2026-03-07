@@ -96,11 +96,12 @@ class ImageHandler
      *
      * @param  array<string, mixed>  $context
      * @param  array<string>  $requiredTokens  IMAGE_* token names from skeleton registry
-     * @return array<string, string>  Token name → local file path
+     * @return array{urls: array<string, string>, paths: array<string, string>}  Token name → URL and local file path
      */
     public function generateImages(array $context, string $destinationDir, array $requiredTokens = []): array
     {
-        $results = [];
+        $urls = [];
+        $paths = [];
         $query = (string) ($context['category'] ?? $context['businessCategory'] ?? $context['industry'] ?? 'business');
 
         // If no required tokens specified, fall back to all known tokens
@@ -131,10 +132,14 @@ class ImageHandler
             }
 
             $path = $this->downloadImage($url, $destinationDir, $token);
-            $results[$token] = $path;
+            $urls[$token] = $url;
+            $paths[$token] = $path;
         }
 
-        return $results;
+        return [
+            'urls' => $urls,
+            'paths' => $paths,
+        ];
     }
 
     /**

@@ -87,8 +87,8 @@ class GenerateThemeJob implements ShouldQueue
             // Step 3: ImageHandler gets Unsplash URLs and merge into tokens
             $imageHandler = new ImageHandler(new UnsplashProvider, new PlaceholderProvider);
             $imageTokens = $this->extractImageTokens($skeletonSelections);
-            $imageUrls = $imageHandler->generateImages($projectData, $tempDir . '/assets/images', $imageTokens);
-            $allTokens = array_merge($tokens, $imageUrls);
+            $imageResult = $imageHandler->generateImages($projectData, $tempDir . '/assets/images', $imageTokens);
+            $allTokens = array_merge($tokens, $imageResult['urls']);
 
             // Step 4: TokenInjector processes skeletons with all tokens
             $tokenInjector = app(TokenInjector::class);
@@ -117,6 +117,7 @@ class GenerateThemeJob implements ShouldQueue
             $job->markCompleted([
                 'download_path' => $themeStoragePath,
                 'image_tokens' => $imageTokens,
+                'image_paths' => $imageResult['paths'],
                 'project_data' => [
                     'businessName' => $projectData['name'] ?? '',
                     'category' => $projectData['businessCategory'] ?? 'business',

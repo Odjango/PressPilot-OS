@@ -74,7 +74,8 @@ class UpgradeThemeImagesJob implements ShouldQueue
             ];
             $imagesDir = $tempDir . '/dalle-images';
             mkdir($imagesDir, 0755, true);
-            $newImages = $imageHandler->generateImages($context, $imagesDir, $tokensToUpgrade);
+            $imageResult = $imageHandler->generateImages($context, $imagesDir, $tokensToUpgrade);
+            $newImages = $imageResult['paths'];
 
             // Open ZIP and replace images
             $zip = new ZipArchive();
