@@ -85,6 +85,19 @@ class GenerateThemeJob implements ShouldQueue
                 }
             }
 
+            // Map fontProfile to actual Google Font family name
+            $fontMap = [
+                'cleanSans' => 'Inter',
+                'classicSerif' => 'Playfair Display',
+                'modernSlab' => 'Roboto Slab',
+                'elegantSerif' => 'Cormorant Garamond',
+                'boldDisplay' => 'Montserrat',
+            ];
+            $fontProfile = $projectData['fontProfile'] ?? 'cleanSans';
+            if (isset($fontMap[$fontProfile]) && ! isset($projectData['fontFamily'])) {
+                $projectData['fontFamily'] = $fontMap[$fontProfile];
+            }
+
             // Step 1: AI generates content tokens
             $aiPlanner = app(AIPlanner::class);
             $tokens = $aiPlanner->generate($projectData);
