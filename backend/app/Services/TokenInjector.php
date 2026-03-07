@@ -14,7 +14,7 @@ class TokenInjector
      */
     public function loadSkeleton(string $skeletonFile): string
     {
-        $basePath = base_path('../pattern-library/');
+        $basePath = base_path('../');
         $path = $basePath . $skeletonFile;
 
         if (!file_exists($path)) {
@@ -269,36 +269,13 @@ class TokenInjector
         $contents = file_get_contents($patternPath);
         $this->ensureRequiredTokens($tokens, $requiredTokens);
 
-        $search = [];
-        $replace = [];
-
+        // Normalize token keys to uppercase for backward compatibility
+        $normalizedTokens = [];
         foreach ($tokens as $key => $value) {
-            $tokenKey = strtoupper($key);
-            $search[] = '{{'.$tokenKey.'}}';
-
-            if (str_starts_with($tokenKey, 'IMAGE_')) {
-                $url = trim((string) $value);
-                if ($url === '' || ! filter_var($url, FILTER_VALIDATE_URL)) {
-                    $replace[] = 'https://placehold.co/1200x600';
-                } else {
-                    $replace[] = $url;
-                }
-            } else {
-                $replace[] = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-            }
+            $normalizedTokens[strtoupper($key)] = $value;
         }
 
-        $output = str_replace($search, $replace, $contents);
-
-        if (preg_match_all('/\{\{([A-Z0-9_]+)\}\}/', $output, $matches)) {
-            Log::warning('TokenInjector: Unresolved tokens replaced with empty', [
-                'pattern' => basename($patternPath),
-                'tokens' => $matches[1],
-            ]);
-            $output = preg_replace('/\{\{[A-Z0-9_]+\}\}/', '', $output);
-        }
-
-        return $output;
+        return $this->injectTokens($contents, $normalizedTokens);
     }
 
     /**
@@ -307,17 +284,18 @@ class TokenInjector
      */
     private function ensureRequiredTokens(array $tokens, array $requiredTokens): void
     {
+        $normalizedKeys = array_map('strtoupper', array_keys($tokens));
         $missing = [];
         foreach ($requiredTokens as $token) {
-            if (! array_key_exists($token, $tokens)) {
+            if (! in_array(strtoupper($token), $normalizedKeys, true)) {
                 $missing[] = $token;
             }
         }
 
         if (! empty($missing)) {
-            Log::warning('TokenInjector: Required tokens not in payload', [
-                'tokens' => $missing,
-            ]);
+            throw new MissingTokenException(
+                'Missing required tokens: ' . implode(', ', $missing)
+            );
         }
     }
 }

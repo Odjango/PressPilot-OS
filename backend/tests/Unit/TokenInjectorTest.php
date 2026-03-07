@@ -137,8 +137,8 @@ HTML;
         // Check HTML content is escaped
         $this->assertStringContainsString('Roma &amp; Sons &lt;Best&gt;', $result);
 
-        // Check JSON also has the value but properly escaped for JSON
-        $this->assertStringContainsString('"title":"Roma &amp; Sons &lt;Best&gt;"', $result);
+        // Check JSON has the value escaped for JSON (no HTML entities)
+        $this->assertStringContainsString('"title":"Roma & Sons <Best>"', $result);
     }
 
     public function test_nested_json_block_comment_stays_valid(): void
