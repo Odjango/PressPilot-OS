@@ -165,30 +165,50 @@ PROMPT;
 
     private function requestWithRetry(string $systemPrompt, string $userPrompt): string
     {
-        $maxAttempts = 3;
+        $maxAttempts = 5;
 
         for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
             try {
                 return $this->requestCompletion($systemPrompt, $userPrompt);
             } catch (ContentGenerationException $exception) {
-                $isRateLimit = str_contains($exception->getMessage(), 'status 429')
-                    || str_contains($exception->getMessage(), 'rate limit');
+                $message = $exception->getMessage();
+                $isRetryable = str_contains($message, 'status 429')
+                    || str_contains($message, 'status 529')
+                    || str_contains($message, 'rate limit')
+                    || str_contains($message, 'overloaded');
 
-                if ($attempt >= $maxAttempts) {
+                if ($attempt >= $maxAttempts || ! $isRetryable) {
                     throw $exception;
                 }
 
-                // Exponential backoff: 15s, 30s — longer for rate limits
-                $delay = $isRateLimit ? $attempt * 15 : $attempt * 5;
-                Log::warning("AIPlanner: Attempt {$attempt} failed, retrying in {$delay}s", [
-                    'error' => $exception->getMessage(),
+                // Exponential backoff with jitter:
+                // 429 (rate limit): 15s, 30s, 45s, 60s
+                // 529 (overloaded): 30s, 60s, 90s, 120s
+                // Other retryable:  5s, 10s, 15s, 20s
+                $isOverloaded = str_contains($message, 'status 529') || str_contains($message, 'overloaded');
+                $isRateLimit = str_contains($message, 'status 429') || str_contains($message, 'rate limit');
+
+                $baseDelay = match (true) {
+                    $isOverloaded => $attempt * 30,
+                    $isRateLimit => $attempt * 15,
+                    default => $attempt * 5,
+                };
+
+                // Add jitter (±25%) to prevent thundering herd
+                $jitter = (int) ($baseDelay * 0.25 * (mt_rand() / mt_getrandmax() * 2 - 1));
+                $delay = max(5, $baseDelay + $jitter);
+
+                Log::warning("AIPlanner: Attempt {$attempt}/{$maxAttempts} failed, retrying in {$delay}s", [
+                    'error' => mb_substr($message, 0, 200),
                     'is_rate_limit' => $isRateLimit,
+                    'is_overloaded' => $isOverloaded,
+                    'next_attempt' => $attempt + 1,
                 ]);
                 sleep($delay);
             }
         }
 
-        throw new ContentGenerationException('AI request failed after retries.');
+        throw new ContentGenerationException('AI request failed after '.$maxAttempts.' retries.');
     }
 
     private function requestCompletion(string $systemPrompt, string $userPrompt): string
@@ -217,7 +237,8 @@ PROMPT;
             'x-api-key' => $apiKey,
             'anthropic-version' => '2023-06-01',
         ])
-            ->timeout(30)
+            ->timeout(90)
+            ->connectTimeout(15)
             ->post($endpoint, $payload);
 
         if ($response->failed()) {
@@ -231,6 +252,12 @@ PROMPT;
                 Log::warning('AIPlanner: Rate limit exceeded', [
                     'status' => $status,
                     'retry_after' => $retryAfter,
+                    'body' => mb_substr($body, 0, 500),
+                ]);
+            } elseif ($status === 529) {
+                $errorMsg = "AI API overloaded (status 529). Body: ".mb_substr($body, 0, 200);
+                Log::warning('AIPlanner: API overloaded — will retry', [
+                    'status' => $status,
                     'body' => mb_substr($body, 0, 500),
                 ]);
             }

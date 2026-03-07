@@ -26,8 +26,8 @@ class GenerateThemeJob implements ShouldQueue
     use Queueable;
 
     public int $tries = 2;
-    public int $timeout = 350;
-    public array $backoff = [30];
+    public int $timeout = 600;
+    public array $backoff = [60];
 
     private string $jobId;
     private string $projectId;
