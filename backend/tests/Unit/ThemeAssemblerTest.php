@@ -95,6 +95,52 @@ class ThemeAssemblerTest extends TestCase
         $zip->close();
     }
 
+    public function test_functions_php_contains_starter_content(): void
+    {
+        [$assembler, $project, $patterns] = $this->makeAssemblerFixture('Test Business');
+
+        $result = $assembler->assemble($project, $patterns, []);
+        $this->registerCleanup($result['themeDir'], $result['zipPath']);
+
+        $functions = file_get_contents($result['themeDir'].'/functions.php');
+
+        $this->assertStringContainsString('add_theme_support', $functions);
+        $this->assertStringContainsString('starter-content', $functions);
+        $this->assertStringContainsString("'blogname' => 'Test Business'", $functions);
+        $this->assertStringContainsString('{{home}}', $functions);
+        $this->assertStringContainsString("'post_title' => 'Home'", $functions);
+        $this->assertStringContainsString("'post_title' => 'About'", $functions);
+        $this->assertStringContainsString("'post_title' => 'Services'", $functions);
+        $this->assertStringContainsString("'post_title' => 'Contact'", $functions);
+    }
+
+    public function test_functions_php_includes_menu_page_for_restaurant(): void
+    {
+        [$assembler, $project, $patterns] = $this->makeAssemblerFixture('Pizza Palace');
+        $project['vertical'] = 'restaurant';
+
+        $result = $assembler->assemble($project, $patterns, []);
+        $this->registerCleanup($result['themeDir'], $result['zipPath']);
+
+        $functions = file_get_contents($result['themeDir'].'/functions.php');
+
+        $this->assertStringContainsString("'post_title' => 'Menu'", $functions);
+        $this->assertStringContainsString("'page_menu'", $functions);
+    }
+
+    public function test_functions_php_escapes_business_name_properly(): void
+    {
+        [$assembler, $project, $patterns] = $this->makeAssemblerFixture("O'Brien's Restaurant");
+
+        $result = $assembler->assemble($project, $patterns, []);
+        $this->registerCleanup($result['themeDir'], $result['zipPath']);
+
+        $functions = file_get_contents($result['themeDir'].'/functions.php');
+
+        // Should be escaped with addslashes
+        $this->assertStringContainsString("O\\'Brien\\'s Restaurant", $functions);
+    }
+
     /**
      * @return array{0: ThemeAssembler, 1: array<string, mixed>, 2: array<string, mixed>}
      */
