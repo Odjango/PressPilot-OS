@@ -50,23 +50,23 @@ class PlaygroundValidator
 
         if ($this->isTimeoutError($result->errorOutput())) {
             return [
-                'valid' => true,
-                'errors' => [],
-                'warnings' => [[
+                'valid' => false,
+                'errors' => [[
                     'type' => 'PLAYGROUND_TIMEOUT',
-                    'message' => 'Playground CLI timed out.',
+                    'message' => 'Playground CLI timed out — theme may be causing infinite loops or fatal errors.',
                 ]],
+                'warnings' => [],
             ];
         }
 
         if ($result->failed() && $output === '') {
             return [
-                'valid' => true,
-                'errors' => [],
-                'warnings' => [[
+                'valid' => false,
+                'errors' => [[
                     'type' => 'PLAYGROUND_CLI_ERROR',
-                    'message' => 'Playground CLI failed without output.',
+                    'message' => 'Playground CLI failed without output — theme likely has fatal errors.',
                 ]],
+                'warnings' => [],
             ];
         }
 
@@ -150,6 +150,32 @@ if (is_wp_error($response)) {
 $trimmed = trim($body);
 $white_screen = (!$front_error && $trimmed === '') || (!$front_error && stripos($trimmed, '<html') === false);
 
+// Block grammar check: validate front-page template block markup
+$block_errors = [];
+$theme_dir = get_stylesheet_directory();
+$template_file = $theme_dir . '/templates/front-page.html';
+if (file_exists($template_file)) {
+    $template_content = file_get_contents($template_file);
+
+    // Check that block comments have valid JSON
+    preg_match_all('/<!-- wp:\\S+\\s+(\\{.+?\\})\\s*(?:\\/)?-->/s', $template_content, \$jsonMatches);
+    foreach (\$jsonMatches[1] as \$jsonStr) {
+        \$decoded = json_decode(\$jsonStr);
+        if (\$decoded === null && json_last_error() !== JSON_ERROR_NONE) {
+            \$block_errors[] = "Invalid JSON in block comment: " . substr(\$jsonStr, 0, 60);
+        }
+    }
+
+    // Check for unparseable block content
+    \$parsed = parse_blocks(\$template_content);
+    foreach (\$parsed as \$block) {
+        if (!empty(\$block['innerHTML']) && \$block['blockName'] === null && trim(\$block['innerHTML']) !== '') {
+            \$snippet = substr(trim(\$block['innerHTML']), 0, 80);
+            \$block_errors[] = "Unparseable block content: {\$snippet}";
+        }
+    }
+}
+
 $payload = [
     'active_theme' => $active_slug,
     'switched' => ($active_slug === $slug),
@@ -157,7 +183,8 @@ $payload = [
     'front_status' => $front_status,
     'front_error' => $front_error,
     'white_screen' => $white_screen,
-    'front_body_length' => strlen($body)
+    'front_body_length' => strlen($body),
+    'block_errors' => $block_errors
 ];
 
 echo "PLAYGROUND_HEALTH::" . json_encode($payload) . "\n";
@@ -267,6 +294,13 @@ PHP;
             $errors[] = [
                 'type' => 'WHITE_SCREEN',
                 'message' => 'Frontend render returned an empty/white screen.',
+            ];
+        }
+
+        foreach ($healthPayload['block_errors'] ?? [] as $blockError) {
+            $errors[] = [
+                'type' => 'BLOCK_GRAMMAR_ERROR',
+                'message' => $blockError,
             ];
         }
 
