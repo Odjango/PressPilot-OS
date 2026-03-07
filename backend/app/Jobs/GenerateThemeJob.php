@@ -127,7 +127,7 @@ class GenerateThemeJob implements ShouldQueue
                 'job_id' => $this->jobId,
                 'file_path' => $themeStoragePath,
                 'status' => GeneratedTheme::STATUS_ACTIVE,
-                'expires_at' => now()->addHours(24),
+                'expires_at' => now()->addDays(7),
             ]);
 
             $downloadUrl = $this->createSignedUrl($themeStoragePath, $metrics);
