@@ -27,5 +27,6 @@ Route::prefix('internal')->group(function () {
 */
 Route::post('/generate', [GenerationController::class, 'generate']);
 Route::post('/regenerate', [GenerationController::class, 'regenerate']);
+Route::post('/upgrade-images', [GenerationController::class, 'upgradeImages']);
 Route::get('/status', [GenerationController::class, 'status']);
 Route::get('/download', [GenerationController::class, 'download']);

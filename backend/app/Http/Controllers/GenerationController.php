@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\GenerateThemeJob;
+use App\Jobs\UpgradeThemeImagesJob;
 use App\Models\GeneratedTheme;
 use App\Models\GenerationJob;
 use App\Models\Project;
@@ -185,7 +186,33 @@ class GenerationController extends Controller
             'generated_theme' => $themeData,
             'themeUrl' => $themeUrl,
             'staticUrl' => $staticUrl,
+            'images_upgraded' => data_get($job->result, 'images_upgraded'),
+            'images_upgrade_error' => data_get($job->result, 'images_upgrade_error'),
         ]);
+    }
+
+    /**
+     * POST /api/upgrade-images
+     */
+    public function upgradeImages(Request $request, MetricsLogger $metrics): JsonResponse
+    {
+        $validated = $request->validate([
+            'jobId' => 'required|uuid',
+        ]);
+
+        $job = GenerationJob::find($validated['jobId']);
+        if (! $job || $job->status !== GenerationJob::STATUS_COMPLETED) {
+            return response()->json(['error' => 'Job not found or not completed'], 404);
+        }
+
+        UpgradeThemeImagesJob::dispatch($job->id);
+
+        $metrics->emit('job.upgrade_images.dispatched', [
+            'job_id' => $job->id,
+            'project_id' => $job->project_id,
+        ]);
+
+        return response()->json(['success' => true, 'jobId' => $job->id], 202);
     }
 
     /**
