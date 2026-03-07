@@ -1,6 +1,6 @@
 # PressPilot OS — Development Roadmap
 
-> **Last updated: 2026-03-07** — SSWG Phase 3 Tasks 3.3 + 3.4 COMPLETE. Image tier integration (Unsplash→DALL-E hybrid), payment gate, adaptive polling, error handling, cleanup command all implemented. Needs deploy + end-to-end verification.
+> **Last updated: 2026-03-07** — SSWG Phase 2.8 Quality Fixes COMPLETE. 10 critical theme quality issues fixed (images, brand colors, hero layout, logo, navigation, menu page, starter content, fonts). Phase 3 Tasks 3.3 + 3.4 also complete. All needs deploy + end-to-end verification.
 > **Canonical SSWG specs:** `agent-os/sswg/PROTOCOL.md` + `agent-os/sswg/PHASE-{0-4}.md`
 > **Decisions:** `DECISIONS.md` (change log included)
 > **Current state:** `_memory/main.md`
@@ -57,6 +57,27 @@
 - [x] Footer site name — wp:site-title + BUSINESS_NAME token
 
 **✅ DEPLOYED (2026-03-06):** Pushed to GitHub, backend redeployed via Coolify (manual). Needs end-to-end 5-vertical test.
+
+### SSWG Phase 2.8: Theme Quality Fix Pass — COMPLETE (2026-03-07)
+**Goal:** Fix all 10 user-reported quality issues from smoke test of generated restaurant theme.
+**Plan:** `docs/plans/2026-03-07-phase28-quality-fixes.md`
+
+All 10 issues resolved (10 commits via Subagent-Driven Development):
+
+| # | Issue | Root Cause | Fix |
+|---|-------|-----------|-----|
+| 1 | Theme only 19KB | Images not bundled (see #6) | Fixed by #6 |
+| 2 | Pages not in Admin | Expected FSE behavior | Documented (NOT A BUG) |
+| 3 | Only Homepage renders | No actual Page posts created | Starter content in functions.php |
+| 4 | Generic site title | WP default, no override | Starter content sets blogname |
+| 5 | White-on-white CTA | No explicit button bg color | Added backgroundColor/textColor attrs |
+| 6 | No images at all | ImageHandler returned local paths, not URLs | Return Unsplash URLs directly |
+| 7 | Full Bleed → Full Width | heroLayout ignored by PatternSelector | New hero-fullbleed skeleton + wired user choice |
+| 8 | Brand colors not used | Flat vs nested key mismatch | Color mapping in GenerateThemeJob |
+| 9 | No logo in header/footer | Logo URL available but unused | wp:image block + wp:navigation |
+| 10 | Attempt Recovery + no Menu page | Block markup errors + missing page | Fixed menu-2col.html + added restaurant Menu page |
+
+**Key lesson:** Pipeline rewrites need a feature parity checklist. Data flow gaps (colors, heroLayout, logo, fonts) are invisible until you trace the full path from frontend form to theme ZIP.
 
 ### SSWG Phase 3: Frontend Integration — TASKS 3.3 + 3.4 COMPLETE (2026-03-07)
 **Goal:** Connect Next.js frontend to new engine. Full user flow from form to download.
@@ -199,12 +220,16 @@
 ## Patch Notes
 
 ### 2026-03-07
+- [x] **Phase 2.8 Quality Fixes complete** — All 10 user-reported theme issues fixed
+  - 10 commits implementing 10-task plan via Subagent-Driven Development
+  - Image pipeline (Unsplash URLs), brand colors, hero layout, logo+nav, menu page, starter content, fonts
+  - Plan: `docs/plans/2026-03-07-phase28-quality-fixes.md`
 - [x] **Phase 3 Tasks 3.3 + 3.4 complete** — Image tier integration + error handling/retry flow
   - 9 commits implementing 12-task plan via Subagent-Driven Development
   - DalleProvider, UpgradeThemeImagesJob, adaptive polling, payment gate UI, cleanup command
   - Design doc: `docs/plans/2026-03-07-phase3-image-tier-and-error-handling-design.md`
   - Implementation plan: `docs/plans/2026-03-07-phase3-implementation-plan.md`
-- [ ] **NEEDS** push to GitHub + deploy + OPENAI_API_KEY env var + migration + smoke test
+- [ ] **NEEDS** push ALL commits to GitHub + deploy + OPENAI_API_KEY env var + migration + smoke test
 
 ### 2026-03-06
 - [x] Multi-vertical pipeline test (AM) — 5/5 themes generated mechanically, 6 quality issues found

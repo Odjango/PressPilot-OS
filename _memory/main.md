@@ -11,8 +11,19 @@ Last updated: 2026-03-07
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `4f5b3d3` (2026-03-07) — `feat(sswg): add daily cleanup command for expired theme ZIPs`
-- Previous session commits (2026-03-07, 9 total — NOT YET PUSHED):
+- Latest commit: `6c8a1e8` (2026-03-07) — `fix(sswg): map fontProfile selection to actual Google Font family name`
+- Phase 2.8 Quality Fix commits (2026-03-07, 10 total — NOT YET PUSHED):
+  - `bfe9bf1` — Fix: Preserve Unsplash URLs in ImageHandler for proper token injection
+  - `b0921ae` — fix(sswg): hero CTA buttons use explicit color classes to prevent white-on-white
+  - `ea3cf62` — fix(sswg): wire brand colors from DataTransformer through to theme.json palette
+  - `90c0890` — feat(sswg): add fullBleed hero skeleton + wire user heroLayout choice through pipeline
+  - `c477d09` — feat(sswg): add logo block to header/footer + replace hardcoded nav with wp:navigation
+  - `3957132` — fix(sswg): menu-2col.html block markup matches WordPress save() output
+  - `99211e8` — feat(sswg): add dedicated Menu page for restaurant vertical
+  - `1dd2411` — feat(sswg): generate functions.php with starter content (pages, site title, navigation)
+  - `bb722fc` — test: add starter content generation tests for ThemeAssembler
+  - `6c8a1e8` — fix(sswg): map fontProfile selection to actual Google Font family name
+- Phase 3 commits (2026-03-07, 9 total — NOT YET PUSHED):
   - `f69aa32` — feat(sswg): add DalleProvider for OpenAI DALL-E 3 image generation
   - `6d66ccc` — feat(sswg): add tier column to projects table (individual/agency)
   - `558a1c1` — feat(sswg): store image token manifest in job result for DALL-E upgrade
@@ -23,7 +34,35 @@ Last updated: 2026-03-07
   - `b3f7d65` — feat(studio): adaptive polling + payment gate + DALL-E upgrade flow at Step 5
   - `4f5b3d3` — feat(sswg): add daily cleanup command for expired theme ZIPs
 - Earlier commits pushed to `origin/main`: `9f16fef`, `76db1a2`, `b8cf373`
-- **ACTION NEEDED:** Push 9 new commits + deploy both frontend and backend via Coolify
+- **ACTION NEEDED:** Push ALL 19 new commits + deploy both frontend and backend via Coolify
+
+### 2026-03-07 Session C — Phase 2.8 Quality Fixes (10 Issues Fixed)
+
+**10-task fix plan executed via Subagent-Driven Development (10 commits).**
+
+Omar smoke-tested a generated restaurant theme (Mario's Pizzeria) and reported 10 critical quality issues. Root cause analysis revealed data flow gaps introduced during the Phase 2.7 skeleton pipeline rewrite — features that existed in the old Node.js generator were not carried forward.
+
+| Task | Issue Fixed | Commit |
+|------|-----------|--------|
+| 1 | Images: return Unsplash URLs, not local paths | `bfe9bf1` |
+| 4 | Hero CTA: explicit color classes | `b0921ae` |
+| 2 | Brand colors: flat→nested key mapping | `ea3cf62` |
+| 3 | Hero layout: fullBleed skeleton + user choice wired | `90c0890` |
+| 5 | Logo block + wp:navigation in header/footer | `c477d09` |
+| 6 | menu-2col.html block markup fix | `3957132` |
+| 7 | Restaurant Menu page in recipe | `99211e8` |
+| 8 | Starter content (pages, site title, nav) | `1dd2411` |
+| 8b | ThemeAssembler starter content tests | `bb722fc` |
+| 9 | Font profile → Google Font mapping | `6c8a1e8` |
+
+**Critical architectural lesson:** Pipeline rewrites need a feature parity checklist. The SSWG skeleton pipeline (Phase 2.7) was a complete rewrite that solved 6 quality issues but didn't carry forward: brand color extraction, logo pipeline, hero layout routing, font selection, Unsplash URL injection. Each rewrite loses institutional knowledge. Future rewrites must trace every data path from frontend form to theme ZIP.
+
+**Key data flow fixes:**
+- `ImageHandler.generateImages()` now returns `['urls' => [...], 'paths' => [...]]` — URLs for block markup, paths for future DALL-E upgrade
+- `GenerateThemeJob` maps flat color keys (`$projectData['primary']`) to nested `$projectData['colors']['primary']` for ThemeAssembler
+- `PatternSelector.select()` now accepts `?string $heroLayout` — overrides first home skeleton
+- `ThemeAssembler.buildHeader()` now uses `wp:navigation` block + conditional logo image
+- `functions.php` generated dynamically with WordPress starter content (pages + site title + nav menu)
 
 ### 2026-03-07 Session B — Phase 3 Tasks 3.3 + 3.4 Implementation Complete
 
