@@ -5,6 +5,37 @@
 
 ## Entries
 
+## [2026-03-07] — Generator Validation Hardening — Plan Written
+
+### Added
+- **Implementation plan** at `docs/plans/2026-03-07-generator-validation-hardening.md` — 8-task plan to eliminate "Attempt Recovery" errors
+- **3 WordPress MCP servers** installed in Claude Code CLI: `wp-rest-api` (@wpgaurav/wp-mcp), `wp-official` (@automattic/mcp-wordpress-remote), `wp-devdocs` (wp-devdocs-mcp)
+- **MCP installation guide** in `docs/plans/MCP-Install-Commands.md` with verified env variable names
+
+### Analyzed (root causes of recurring "Attempt Recovery" errors)
+1. **TokenInjector image URL escaping corrupts block JSON** — `str_replace(['\\', '"'], ['\\\\', '\\"'])` double-escapes; IMAGE_HERO tokens appear inside block comment JSON (`"url":"{{IMAGE_HERO}}"`) where `htmlspecialchars` would break JSON
+2. **Regex-based JSON validation fails on nested braces** — regex `[^}]*` in `validateBlockGrammar()` can't match cover blocks with `{"style":{"spacing":{"margin":{"top":"0"}}}}`
+3. **PlaygroundValidator returns `valid: true` on timeout/CLI failure** — broken themes that crash Playground get green-lit
+4. **Validation errors don't halt pipeline** — `processSkeletons()` logs warnings but continues, invalid HTML flows through to ZIP
+5. **No Site Editor block grammar check** — PlaygroundValidator only tests theme activation and frontend HTTP status, never opens Site Editor where "Attempt Recovery" appears
+
+### Plan Summary (8 tasks)
+1. Fix TokenInjector with context-aware injection (block JSON vs HTML content)
+2. Replace regex JSON validation with brace-counting parser
+3. Make validation failures throw `BlockGrammarException` (halt pipeline)
+4. Harden PlaygroundValidator — timeout/failure = invalid, add block grammar check
+5. Rewrite existing tests to use inline HTML fixtures (not old Ollie paths)
+6. Add integration test across all 5 verticals
+7. Improve GenerateThemeJob error metrics
+8. Fix legacy `inject()` method to delegate to new `injectTokens()`
+
+### Next
+- Execute plan (8 tasks, sequential) — user has all night available
+- Deploy + run 5-vertical integration test
+- Then proceed to Phase 3 (frontend integration)
+
+---
+
 ## [2026-03-06b] — SSWG Phase 2.7 Complete — Skeleton-Based Pipeline Rewrite
 
 ### Added

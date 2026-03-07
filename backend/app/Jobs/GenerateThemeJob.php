@@ -13,6 +13,7 @@ use App\Services\TokenInjector;
 use App\Services\UnsplashProvider;
 use App\Models\GeneratedTheme;
 use App\Models\GenerationJob;
+use App\Exceptions\BlockGrammarException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Http;
@@ -132,7 +133,20 @@ class GenerateThemeJob implements ShouldQueue
                 'job_id' => $this->jobId,
                 'duration_ms' => $totalDuration,
             ]);
+        } catch (BlockGrammarException $e) {
+            Log::error('GenerateThemeJob: Block grammar validation failed', [
+                'job_id' => $this->jobId,
+                'errors' => $e->getValidationErrors(),
+                'attempt' => $this->attempts(),
+            ]);
+            throw $e;
         } catch (Throwable $e) {
+            Log::error('GenerateThemeJob: Unexpected error', [
+                'job_id' => $this->jobId,
+                'error_class' => get_class($e),
+                'error_message' => $e->getMessage(),
+                'attempt' => $this->attempts(),
+            ]);
             throw $e;
         } finally {
             $this->cleanupTempDir($tempDir);

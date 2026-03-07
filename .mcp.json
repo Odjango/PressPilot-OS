@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+
+    "wordpress": {
+      "command": "npx",
+      "args": ["-y", "@automattic/mcp-wordpress-remote@latest"],
+      "env": {
+        "WP_API_URL": "http://wpaify-test.local/wp-json/mcp/mcp-adapter-default-server",
+        "WP_API_USERNAME": "admin",
+        "WP_API_PASSWORD": "nKpQ Wcgy tKfE hoOZ rHp1 zQUg"
+      }
+    },
+
+    "local-wp": {
+      "command": "npx",
+      "args": ["-y", "@verygoodplugins/mcp-local-wp@latest"]
+    }
+
+  }
+}

@@ -2,7 +2,15 @@
 
 > **Status:** This file is the high-level operational contract for Claude-style agents.
 > For detailed behavioral rules and conflict resolution, see [BRAIN/CONSTITUTION/agent-protocol.md](BRAIN/CONSTITUTION/agent-protocol.md), which is the source of truth for agent behavior.
-> **Last reorganized: 2026-02-26** — Project structure cleaned up. See `_memory/main.md` for current state.
+> **Last reorganized: 2026-03-05** — SSWG Phase 2.5 complete. Documentation overhauled. See `_memory/main.md` for current state.
+
+## SESSION PROTOCOLS (MANDATORY)
+
+**Session Start:** At the beginning of every session, read and execute `SKILLS/session-start/SKILL.md`. This loads project context from memory files, identifies the current phase and next task, and reads the relevant spec. The user may trigger this by saying "new session", "start session", or "pick up where we left off".
+
+**Session Closeout:** Every session MUST end with a documentation update. Before signing off, read and execute `SKILLS/session-closeout/SKILL.md`. This updates changelog.md, memory files, DECISIONS.md, and PROJECT_ROADMAP.md so the next agent starts with accurate context. The user may trigger this by saying "close session", "wrap up", "end session", or "session closeout".
+
+**Prompts for both protocols are in `SESSION-CLOSEOUT-PROMPT.md` (covers both start and closeout).**
 
 ## HIGH-LEVEL CONTEXT (READ FIRST)
 

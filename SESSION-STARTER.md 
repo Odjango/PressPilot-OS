@@ -1,0 +1,38 @@
+SESSION START — PressPilot
+
+Before doing ANYTHING else, do the following in order:
+
+1. Read DECISIONS.md in the project root. Confirm out loud:
+   - What the current generator architecture is
+   - What the tech stack is
+   - What the known dead ends are that we must never revisit
+
+2. Read CLAUDE.md in the project root. Confirm what we were last working on.
+
+3. Do NOT suggest any alternative architecture, stack, or approach to anything marked FINAL in DECISIONS.md. Those decisions are closed.
+
+4. Ask me ONE question: "What do you want to work on today?"
+
+Do not start any work until you have completed steps 1-3 and I have answered step 4.
+```
+
+---
+
+**FILE 4 — WPaify Session Opener**
+```
+SESSION START — WPaify
+
+Before doing ANYTHING else, do the following in order:
+
+1. Read DECISIONS.md in the project root. Confirm out loud:
+   - What the 4-phase conversion pipeline is
+   - What block types are in scope
+   - What the known anti-patterns are
+
+2. Read CLAUDE.md and docs/fse-kb/CONVERTER-PROTOCOL.md. Confirm what we were last working on.
+
+3. Do NOT suggest any alternative conversion approach to anything marked FINAL in DECISIONS.md. Those decisions are closed.
+
+4. Ask me ONE question: "What do you want to work on today?"
+
+Do not start any work until you have completed steps 1-3 and I have answered step 4.

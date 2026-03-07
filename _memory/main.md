@@ -1,6 +1,6 @@
 # PressPilot OS — Master Roadmap & Project Memory
 
-Last updated: 2026-03-06
+Last updated: 2026-03-07
 
 ---
 
@@ -9,6 +9,42 @@ Last updated: 2026-03-06
 - Latest commit: `b8cf373` (2026-03-06) — `docs: update all project documentation for Phase 2.7 completion`
 - Previous: `70a0c1c` — `feat(sswg): Phase 2.7 complete pipeline rewrite — skeleton-based theme generation`
 - Both commits pushed to `origin/main` and backend deployed via Coolify (2026-03-06)
+
+### 2026-03-07 Session — Generator Validation Hardening (Plan Phase)
+
+**Status:** Implementation plan written, ready for execution.
+
+**MCP Setup:**
+- 3 WordPress MCP servers installed in Claude Code CLI: `wp-rest-api`, `wp-official`, `wp-devdocs`
+- All verified connected (green checkmarks)
+- Local WP site: `https://wpaify-test.local` (WordPress 6.9.1, admin, app password configured)
+
+**Root Cause Analysis (5 findings):**
+Deep code review of TokenInjector, PlaygroundValidator, GenerateThemeJob, ThemeAssembler, PatternSelector, all 20 skeletons, and existing tests revealed:
+
+1. **TokenInjector image URL escaping corrupts block JSON** — IMAGE_HERO appears inside cover block comment JSON as `"url":"{{IMAGE_HERO}}"`. Current escaping uses `str_replace` which double-escapes backslashes and doesn't handle query param `&` correctly in JSON context vs HTML context.
+2. **Regex `[^}]*` can't parse nested JSON** — `validateBlockGrammar()` regex stops at the first `}`, missing the entire nested style/spacing object in cover blocks. These blocks are never validated.
+3. **PlaygroundValidator false positives** — Returns `valid: true` on timeout (line 51-59) and CLI failure with no output (line 62-71). Broken themes pass.
+4. **Validation doesn't halt pipeline** — `processSkeletons()` logs warnings but continues. Invalid HTML → ThemeAssembler → ZIP → upload → user gets broken theme.
+5. **No Site Editor validation** — PlaygroundValidator checks theme activation + frontend HTTP only. "Attempt Recovery" errors only appear in Site Editor template editing, which is never tested.
+
+**Implementation Plan:** `docs/plans/2026-03-07-generator-validation-hardening.md` — 8 sequential tasks:
+1. Context-aware token injection (block JSON vs HTML)
+2. Brace-counting JSON parser replaces regex
+3. BlockGrammarException halts pipeline on errors
+4. PlaygroundValidator hardened (no false positives + block grammar check)
+5. Tests rewritten to use inline HTML fixtures
+6. Integration test across all 5 verticals
+7. Structured error metrics in GenerateThemeJob
+8. Legacy `inject()` delegates to new `injectTokens()`
+
+**Key insight:** The irony noted in previous session memory — "SSWG built to fix Attempt Recovery but still has the error" — is because validation was added but was never strict enough to actually block bad output. The fix is making validation errors FATAL, not just logged.
+
+**Existing tests reference old paths:** `TokenInjectorTest` points to `pattern-library/tokenized/ollie/hero-light.php` (old system). `ThemeAssemblerTest` creates mock fixtures. Neither test validates actual skeleton patterns. The integration test (Task 6) closes this gap.
+
+**No BlockConfigValidator found:** Despite being mentioned in CLAUDE.md validation checklist and changelog entry [2026-02-23], `BlockConfigValidator` class does not exist in the backend codebase. It was likely part of the old Node.js generator that was deprecated. The new `BlockGrammarException` + hardened `validateBlockGrammar()` replaces this concept.
+
+---
 
 ### 2026-03-06 Session B — SSWG Phase 2.7 Complete Pipeline Rewrite
 

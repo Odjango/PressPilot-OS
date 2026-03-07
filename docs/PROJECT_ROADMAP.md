@@ -1,6 +1,6 @@
 # PressPilot OS — Development Roadmap
 
-> **Last updated: 2026-03-06** — SSWG Phase 2.7 COMPLETE. Skeleton-based pipeline rewrite addresses all 6 quality issues. Needs deploy + end-to-end verification. Phase 3 UNBLOCKED pending verification.
+> **Last updated: 2026-03-07** — Phase 2.8 (Validation Hardening) plan written. 5 root causes identified, 8-task fix plan ready for execution. Phase 3 BLOCKED until validation hardening deployed + verified.
 > **Canonical SSWG specs:** `agent-os/sswg/PROTOCOL.md` + `agent-os/sswg/PHASE-{0-4}.md`
 > **Decisions:** `DECISIONS.md` (change log included)
 > **Current state:** `_memory/main.md`
@@ -58,7 +58,30 @@
 
 **✅ DEPLOYED (2026-03-06):** Pushed to GitHub, backend redeployed via Coolify (manual). Needs end-to-end 5-vertical test.
 
-### SSWG Phase 3: Frontend Integration — UNBLOCKED (pending Phase 2.7 deploy verification)
+### SSWG Phase 2.8: Validation Hardening — IN PROGRESS (2026-03-07)
+**Goal:** Eliminate recurring "Attempt Recovery" errors by making validation strict enough to catch and block invalid block markup before ZIP creation.
+**Plan:** `docs/plans/2026-03-07-generator-validation-hardening.md`
+
+**Root causes identified (5):**
+1. Token injection escaping corrupts block comment JSON
+2. Regex-based validation can't parse nested braces
+3. PlaygroundValidator returns valid on timeout/failure
+4. Validation errors don't halt pipeline (log-only)
+5. No Site Editor block grammar check
+
+**Tasks (8, sequential):**
+- [ ] Task 1: Context-aware token injection (block JSON vs HTML content)
+- [ ] Task 2: Brace-counting JSON parser replaces regex
+- [ ] Task 3: BlockGrammarException halts pipeline
+- [ ] Task 4: Harden PlaygroundValidator (no false positives + block grammar check)
+- [ ] Task 5: Rewrite tests with inline HTML fixtures
+- [ ] Task 6: Integration test across all 5 verticals
+- [ ] Task 7: Structured error metrics in GenerateThemeJob
+- [ ] Task 8: Legacy inject() delegates to new injectTokens()
+
+**Checkpoint:** Run 5-vertical integration test. All pass with valid block JSON. Deploy + manual Site Editor verification on Local WP.
+
+### SSWG Phase 3: Frontend Integration — BLOCKED (pending Phase 2.8 validation hardening)
 **Goal:** Connect Next.js frontend to new engine. Full user flow from form to download.
 **Spec:** `agent-os/sswg/PHASE-3.md`
 
