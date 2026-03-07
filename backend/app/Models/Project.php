@@ -22,12 +22,14 @@ class Project extends Model
         'name',
         'site_type',
         'language',
+        'tier',
         'data',
     ];
 
     protected $attributes = [
         'site_type' => 'general',
         'language' => 'en',
+        'tier' => 'individual',
     ];
 
     protected function casts(): array
@@ -44,5 +46,10 @@ class Project extends Model
     public function generationJobs(): HasMany
     {
         return $this->hasMany(GenerationJob::class, 'project_id');
+    }
+
+    public function isAgency(): bool
+    {
+        return $this->tier === 'agency';
     }
 }
