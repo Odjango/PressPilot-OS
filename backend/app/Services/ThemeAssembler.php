@@ -172,11 +172,19 @@ class ThemeAssembler
         }
 
         // Add custom templates registration
-        $themeJson['customTemplates'] = [
+        $customTemplates = [
             ['name' => 'page-about', 'title' => 'About', 'postTypes' => ['page']],
             ['name' => 'page-services', 'title' => 'Services', 'postTypes' => ['page']],
             ['name' => 'page-contact', 'title' => 'Contact', 'postTypes' => ['page']],
         ];
+
+        // Add menu template if this is a restaurant vertical
+        $vertical = $project['vertical'] ?? null;
+        if ($vertical === 'restaurant') {
+            $customTemplates[] = ['name' => 'page-menu', 'title' => 'Menu', 'postTypes' => ['page']];
+        }
+
+        $themeJson['customTemplates'] = $customTemplates;
 
         // Ensure templateParts are registered
         $themeJson['templateParts'] = [
@@ -208,6 +216,12 @@ class ThemeAssembler
         // page-about.html — uses about page sections
         $aboutContent = $pageHtml['about'] ?? '';
         file_put_contents($templatesDir.'/page-about.html', $this->wrapTemplate($aboutContent, false));
+
+        // page-menu.html — uses menu page sections (for restaurant vertical)
+        if (isset($pageHtml['menu'])) {
+            $menuContent = $pageHtml['menu'];
+            file_put_contents($templatesDir.'/page-menu.html', $this->wrapTemplate($menuContent, false));
+        }
 
         // page-services.html — uses services page sections
         $servicesContent = $pageHtml['services'] ?? '';

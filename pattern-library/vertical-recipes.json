@@ -2,7 +2,8 @@
   "restaurant": {
     "home": ["hero-cover", "about-story", "menu-2col", "hours-location", "chef-highlight", "testimonials-3col", "reservation-cta"],
     "about": ["about-story", "chef-highlight", "team-grid"],
-    "services": ["menu-2col", "gallery-grid"],
+    "menu": ["menu-2col"],
+    "services": ["features-3col", "hours-location"],
     "contact": ["contact-info", "hours-location"]
   },
   "ecommerce": {
