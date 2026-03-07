@@ -74,7 +74,10 @@ class BlockGrammarIntegrationTest extends TestCase
      */
     public static function skeletonProvider(): array
     {
-        $registryPath = base_path('../pattern-library/skeleton-registry.json');
+        // Use __DIR__ instead of base_path() because static data providers
+        // run before Laravel's application container is booted.
+        // __DIR__ = tests/Feature, so we traverse up to backend/, then to pattern-library/
+        $registryPath = dirname(__DIR__, 2) . '/../pattern-library/skeleton-registry.json';
         if (! file_exists($registryPath)) {
             return [];
         }
