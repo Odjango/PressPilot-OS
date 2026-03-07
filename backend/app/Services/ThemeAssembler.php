@@ -247,6 +247,17 @@ class ThemeAssembler
         $footerTagline = htmlspecialchars((string) ($tokens['FOOTER_TAGLINE'] ?? "Welcome to {$businessName}"), ENT_QUOTES, 'UTF-8');
         $contactText = htmlspecialchars((string) ($tokens['CONTACT_TEXT'] ?? "Get in touch with us today."), ENT_QUOTES, 'UTF-8');
         $year = date('Y');
+        $logoUrl = $project['logo'] ?? null;
+
+        $logoBlock = '';
+        if ($logoUrl && filter_var($logoUrl, FILTER_VALIDATE_URL)) {
+            $escapedLogo = htmlspecialchars($logoUrl, ENT_QUOTES, 'UTF-8');
+            $logoBlock = <<<LOGO
+<!-- wp:image {"width":"40px","height":"40px","sizeSlug":"full","style":{"border":{"radius":"4px"}}} -->
+<figure class="wp-block-image size-full" style="width:40px;height:40px"><img src="{$escapedLogo}" alt="{$businessName} logo" style="border-radius:4px;width:40px;height:40px;object-fit:contain"/></figure>
+<!-- /wp:image -->
+LOGO;
+        }
 
         return <<<FOOTER
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|50"}}},"backgroundColor":"base-2","textColor":"contrast","layout":{"type":"constrained"}} -->
@@ -260,6 +271,7 @@ class ThemeAssembler
             <div class="wp-block-group">
                 <!-- wp:group {"layout":{"type":"flex","orientation":"vertical","justifyContent":"left"}} -->
                 <div class="wp-block-group">
+                    {$logoBlock}
                     <!-- wp:site-title {"style":{"typography":{"fontStyle":"normal","fontWeight":"700","fontSize":"1.5rem"}}} /-->
                     <!-- wp:paragraph {"fontSize":"small","textColor":"contrast-2"} -->
                     <p class="has-small-font-size has-contrast-2-color has-text-color">{$footerTagline}</p>
@@ -319,24 +331,33 @@ FOOTER;
     }
 
     /**
-     * Build a simple header with site title and nav links.
+     * Build header with logo (if available), site title, and navigation block.
      */
     private function buildHeader(array $project): string
     {
         $name = htmlspecialchars((string) ($project['name'] ?? 'PressPilot'), ENT_QUOTES, 'UTF-8');
+        $logoUrl = $project['logo'] ?? null;
+
+        $logoBlock = '';
+        if ($logoUrl && filter_var($logoUrl, FILTER_VALIDATE_URL)) {
+            $escapedLogo = htmlspecialchars($logoUrl, ENT_QUOTES, 'UTF-8');
+            $logoBlock = <<<LOGO
+<!-- wp:image {"width":"40px","height":"40px","sizeSlug":"full","style":{"border":{"radius":"4px"}}} -->
+<figure class="wp-block-image size-full" style="width:40px;height:40px"><img src="{$escapedLogo}" alt="{$name} logo" style="border-radius:4px;width:40px;height:40px;object-fit:contain"/></figure>
+<!-- /wp:image -->
+LOGO;
+        }
 
         return <<<HEADER
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
 <div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50)">
-    <!-- wp:site-title {"level":0,"style":{"typography":{"fontWeight":"700"}}} /-->
-    <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
+    <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap"}} -->
     <div class="wp-block-group">
-        <!-- wp:paragraph --><p><a href="/">Home</a></p><!-- /wp:paragraph -->
-        <!-- wp:paragraph --><p><a href="/about">About</a></p><!-- /wp:paragraph -->
-        <!-- wp:paragraph --><p><a href="/services">Services</a></p><!-- /wp:paragraph -->
-        <!-- wp:paragraph --><p><a href="/contact">Contact</a></p><!-- /wp:paragraph -->
+        {$logoBlock}
+        <!-- wp:site-title {"level":0,"style":{"typography":{"fontWeight":"700"}}} /-->
     </div>
     <!-- /wp:group -->
+    <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","justifyContent":"right"}} /-->
 </div>
 <!-- /wp:group -->
 HEADER;
