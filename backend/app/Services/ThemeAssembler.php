@@ -144,18 +144,31 @@ add_action('init', function() {
     update_option('blogname', '{$businessName}');
     update_option('blogdescription', '{$tagline}');
 
+    // Remove WordPress default content (Sample Page + Hello World post)
+    \$samplePage = get_page_by_title('Sample Page', OBJECT, 'page');
+    if (\$samplePage) {
+        wp_delete_post(\$samplePage->ID, true);
+    }
+    \$helloPost = get_page_by_title('Hello world!', OBJECT, 'post');
+    if (\$helloPost) {
+        wp_delete_post(\$helloPost->ID, true);
+    }
+
     // Define pages to create
     \$pages = {$pagesPhpArray};
 
     \$createdPages = [];
+    \$order = 0;
 
     foreach (\$pages as \$pageConfig) {
         // Check if page already exists
         \$existing = get_page_by_title(\$pageConfig['title'], OBJECT, 'page');
         if (\$existing) {
             \$createdPages[\$pageConfig['title']] = \$existing->ID;
-            // Ensure template is set
+            // Ensure template and menu order are set
             update_post_meta(\$existing->ID, '_wp_page_template', \$pageConfig['template']);
+            wp_update_post(['ID' => \$existing->ID, 'menu_order' => \$order]);
+            \$order++;
             continue;
         }
 
@@ -164,7 +177,9 @@ add_action('init', function() {
             'post_status'  => 'publish',
             'post_type'    => 'page',
             'page_template' => \$pageConfig['template'],
+            'menu_order'   => \$order,
         ]);
+        \$order++;
 
         if (\$pageId && !is_wp_error(\$pageId)) {
             update_post_meta(\$pageId, '_wp_page_template', \$pageConfig['template']);
@@ -388,7 +403,7 @@ PHP;
         $logoUrl = $project['logo'] ?? null;
 
         $logoBlock = '';
-        if ($logoUrl && filter_var($logoUrl, FILTER_VALIDATE_URL)) {
+        if ($logoUrl && $this->isValidLogoSource($logoUrl)) {
             $escapedLogo = htmlspecialchars($logoUrl, ENT_QUOTES, 'UTF-8');
             $logoBlock = <<<LOGO
 <!-- wp:image {"width":"40px","height":"40px","sizeSlug":"full","style":{"border":{"radius":"4px"}}} -->
@@ -469,8 +484,13 @@ FOOTER;
         $name = htmlspecialchars((string) ($project['name'] ?? 'PressPilot'), ENT_QUOTES, 'UTF-8');
         $logoUrl = $project['logo'] ?? null;
 
+        Log::info('ThemeAssembler::buildHeader logo check', [
+            'logo_raw' => $logoUrl ? mb_substr($logoUrl, 0, 120) : null,
+            'logo_valid' => $logoUrl ? $this->isValidLogoSource($logoUrl) : false,
+        ]);
+
         $logoBlock = '';
-        if ($logoUrl && filter_var($logoUrl, FILTER_VALIDATE_URL)) {
+        if ($logoUrl && $this->isValidLogoSource($logoUrl)) {
             $escapedLogo = htmlspecialchars($logoUrl, ENT_QUOTES, 'UTF-8');
             $logoBlock = <<<LOGO
 <!-- wp:image {"width":"40px","height":"40px","sizeSlug":"full","style":{"border":{"radius":"4px"}}} -->
@@ -610,5 +630,24 @@ HEADER;
         $zip->close();
 
         return $zipPath;
+    }
+
+    /**
+     * Check if a logo source is valid for embedding in an <img> src attribute.
+     * Accepts both http(s) URLs and data: URIs (base64 logo uploads from Studio).
+     */
+    private function isValidLogoSource(string $src): bool
+    {
+        // Accept standard http/https URLs
+        if (filter_var($src, FILTER_VALIDATE_URL)) {
+            return true;
+        }
+
+        // Accept data: URIs (base64-encoded images from Studio upload)
+        if (str_starts_with($src, 'data:image/')) {
+            return true;
+        }
+
+        return false;
     }
 }

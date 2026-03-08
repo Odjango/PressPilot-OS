@@ -265,6 +265,13 @@ PROMPT;
             throw new ContentGenerationException($errorMsg);
         }
 
+        $stopReason = $response->json('stop_reason');
+        if ($stopReason === 'max_tokens') {
+            Log::warning('AIPlanner: Response was truncated (stop_reason=max_tokens)', [
+                'max_tokens' => config('presspilot.ai.max_tokens'),
+            ]);
+        }
+
         $content = $response->json('content.0.text');
         if (! is_string($content)) {
             throw new ContentGenerationException('AI response missing content.');
