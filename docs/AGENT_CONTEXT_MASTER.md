@@ -28,7 +28,14 @@ You do not synthesize new structures. You reuse validated patterns.
 *   [`docs/pp-fse-golden-contract.md`](pp-fse-golden-contract.md) - FSE compliance rules
 *   [`BRAIN/MEMORY/project_state.md`](../BRAIN/MEMORY/project_state.md) - Learned patterns & solutions
 
-### D. Roadmap & History
+### D. Debugging Standard
+When investigating production issues, always check these sources:
+1. **Sentry** (presspilot Sentry project) — TypeScript runtime errors, stack traces, breadcrumbs
+2. **Laravel logs** — `docker exec` or Coolify Terminal → `php artisan` / log files
+3. **Browser DevTools** — Network tab for API responses, Console for JS errors
+4. **Coolify deploy logs** — Build failures, container health
+
+### E. Roadmap & History
 *   [`docs/PROJECT_ROADMAP.md`](PROJECT_ROADMAP.md) - Phase timeline
 *   [`BRAIN/MEMORY/phase-history.md`](../BRAIN/MEMORY/phase-history.md) - Development history
 

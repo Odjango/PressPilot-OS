@@ -1,9 +1,16 @@
 # PressPilot Project Memory
-**State Saved: 2026-03-06** | **Current Phase: SSWG Phase 2.7 COMPLETE + DEPLOYED — End-to-end 5-vertical verification needed. Phase 3 UNBLOCKED.**
+**State Saved: 2026-03-08** | **Current Phase: SSWG Phase 3 DEPLOYED — First successful production generation! 5 quality fixes applied, pending redeploy.**
 
-> **2026-03-06 UPDATE (PM — Phase 2.7 Complete + Deployed):** Complete skeleton-based pipeline rewrite addresses all 6 quality issues from morning's test. 20 HTML skeleton patterns (zero hardcoded content), 196 tokens, 5 vertical recipes. All services rewritten: AIPlanner, PatternSelector, TokenInjector, ThemeAssembler, GenerateThemeJob. Commits: `70a0c1c` (code, 39 files, +5,086/-732) + `b8cf373` (docs). **Pushed to GitHub and backend redeployed via Coolify (manual — frontend auto-deploys but backend requires manual trigger).** CodeRabbit active on repo (org settings). **NEXT: Generate 5 test themes (one per vertical) to verify production pipeline.**
+> **2026-03-08 UPDATE:** First end-to-end production theme generated (Memo's Pizza). Five quality bugs found and fixed:
+> 1. Brand colors: K-means clustering replaces naive averaging; wired into orchestrator pipeline
+> 2. Menu "Attempt Recovery": column width attributes added
+> 3. Content loader: init hook fallback for WordPress Playground
+> 4. Logo: removed unreliable media_sideload_image; PatternInjector handles it
+> 5. Pattern slug namespace: rewritePatternSlugs() renames base theme slugs after chassis copy
 >
-> **2026-03-06 UPDATE (AM):** Pipeline test: 5/5 themes generate mechanically but 6 quality issues found (Attempt Recovery, broken hero images, empty inner pages, Ollie footer, Ollie content leakage, site name mismatch). All addressed by Phase 2.7.
+> Also fixed: Sentry PRESSPILOT-3 (variationSet optional chaining), proxy JSON error handling, Laravel JSON exception renderer. Migration `add_tier_to_projects_table` run on production.
+>
+> **2026-03-06 UPDATE (PM — Phase 2.7 Complete + Deployed):** Complete skeleton-based pipeline rewrite addresses all 6 quality issues from morning's test. 20 HTML skeleton patterns (zero hardcoded content), 196 tokens, 5 vertical recipes. All services rewritten.
 
 ---
 
@@ -29,12 +36,15 @@
   - Commit: `70a0c1c` — 39 files, +5,086/-732 lines
   - ✅ **DEPLOYED (2026-03-06):** Pushed to GitHub, backend redeployed via Coolify manually
   - **NEEDS: End-to-end 5-vertical re-test**
-- **Phase 3 (Frontend Integration):** UNBLOCKED pending Phase 2.7 deploy verification
+- **Phase 2.8 (Quality Fixes):** ✅ COMPLETE (2026-03-07) — 10 issues fixed across 10 commits
+- **Phase 3 (Frontend Integration):** ✅ DEPLOYED (2026-03-08)
   - Task 3.1: ✅ COMPLETE
   - Task 3.2: ❌ REVERTED
-  - Task 3.3 (Image Tier): Ready after verification
-  - Task 3.4 (Error Handling): Ready after verification
-  - **All 6 quality issues addressed by Phase 2.7** — awaiting production verification
+  - Task 3.3 (Image Tier): ✅ COMPLETE — tier column, DALL-E provider, upgrade job
+  - Task 3.4 (Error Handling): ✅ COMPLETE — proxy JSON wrapping, Laravel JSON exceptions
+  - **First production generation successful (Memo's Pizza) — 5 post-generation quality fixes applied**
+- **Phase 3.5 (Post-Generation Quality):** ✅ COMPLETE (2026-03-08) — commit `ae71b0c`
+  - K-means color extraction, pattern slug rewriting, content loader init fallback, menu column widths
 - **Test command:** `docker exec $(docker ps -qf "name=laravel-app") curl -s -X POST http://localhost:8080/api/generate -H "Content-Type: application/json" -d '{"input":{...}}'`
 - **Status check:** `docker exec $(docker ps -qf "name=laravel-app") curl -s "http://localhost:8080/api/status?id=<JOB_ID>"`
 

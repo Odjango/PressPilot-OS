@@ -1,6 +1,6 @@
 # PressPilot OS — Master Roadmap & Project Memory
 
-Last updated: 2026-03-07
+Last updated: 2026-03-08
 
 ---
 
@@ -11,30 +11,37 @@ Last updated: 2026-03-07
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `6c8a1e8` (2026-03-07) — `fix(sswg): map fontProfile selection to actual Google Font family name`
-- Phase 2.8 Quality Fix commits (2026-03-07, 10 total — NOT YET PUSHED):
-  - `bfe9bf1` — Fix: Preserve Unsplash URLs in ImageHandler for proper token injection
-  - `b0921ae` — fix(sswg): hero CTA buttons use explicit color classes to prevent white-on-white
-  - `ea3cf62` — fix(sswg): wire brand colors from DataTransformer through to theme.json palette
-  - `90c0890` — feat(sswg): add fullBleed hero skeleton + wire user heroLayout choice through pipeline
-  - `c477d09` — feat(sswg): add logo block to header/footer + replace hardcoded nav with wp:navigation
-  - `3957132` — fix(sswg): menu-2col.html block markup matches WordPress save() output
-  - `99211e8` — feat(sswg): add dedicated Menu page for restaurant vertical
-  - `1dd2411` — feat(sswg): generate functions.php with starter content (pages, site title, navigation)
-  - `bb722fc` — test: add starter content generation tests for ThemeAssembler
-  - `6c8a1e8` — fix(sswg): map fontProfile selection to actual Google Font family name
-- Phase 3 commits (2026-03-07, 9 total — NOT YET PUSHED):
-  - `f69aa32` — feat(sswg): add DalleProvider for OpenAI DALL-E 3 image generation
-  - `6d66ccc` — feat(sswg): add tier column to projects table (individual/agency)
-  - `558a1c1` — feat(sswg): store image token manifest in job result for DALL-E upgrade
-  - `2be7807` — fix(sswg): extend generated theme expiry from 24h to 7 days
-  - `6eb678a` — feat(sswg): add UpgradeThemeImagesJob for DALL-E image swap after payment
-  - `f32c73c` — feat(sswg): add POST /api/upgrade-images endpoint + upgrade status in /api/status
-  - `2a49bb8` — feat(studio): add frontend proxy for /api/upgrade-images endpoint
-  - `b3f7d65` — feat(studio): adaptive polling + payment gate + DALL-E upgrade flow at Step 5
-  - `4f5b3d3` — feat(sswg): add daily cleanup command for expired theme ZIPs
-- Earlier commits pushed to `origin/main`: `9f16fef`, `76db1a2`, `b8cf373`
-- **ACTION NEEDED:** Push ALL 19 new commits + deploy both frontend and backend via Coolify
+- Latest commit: `ae71b0c` (2026-03-08) — `fix: 5 theme generation quality bugs — colors, blocks, content, logo, patterns`
+- Recent commits (2026-03-08, deployed or pending deploy):
+  - `ae71b0c` — fix: 5 theme generation quality bugs (colors, blocks, content, logo, patterns)
+  - `be844a4` — fix: guard variationSet access with optional chaining (Sentry PRESSPILOT-3)
+  - `98c9683` — fix: proxy always returns JSON errors + Laravel forces JSON for API routes
+- Phase 2.8 + Phase 3 commits: ALL PUSHED AND DEPLOYED (2026-03-08)
+- **ACTION NEEDED:** Push `ae71b0c` + redeploy Next.js app via Coolify. Also flip APP_DEBUG=false on Laravel.
+
+### 2026-03-08 Session A — Production Deploy + 5 Quality Bug Fixes
+
+**First successful end-to-end theme generation in production!** Omar deployed all Phase 2.8 + Phase 3 code and generated a Memo's Pizza theme. Five quality issues found and fixed:
+
+| Bug | Root Cause | Fix |
+|-----|-----------|-----|
+| Brand colors only red | `extractBrandColors()` averaged all pixels → muddy single color; also never called in orchestrator | K-means clustering (5 centroids, neutral filter); wired into `index.ts` before `styleBuilder.invoke()` |
+| Menu "Attempt Recovery" | `wp:column` blocks missing `{"width":"50%"}` attribute | Added required width attribute + `flex-basis:50%` style |
+| Pages not populated + generic site name | Content loader only used `after_switch_theme` hook (doesn't fire in WP Playground) | Added `init` hook fallback with one-time `_done` option flag |
+| Logo missing | Content loader used `media_sideload_image` (unreliable in Playground) | Removed; `PatternInjector.addLogoAutoSetup()` with `wp_upload_bits()` already handles it |
+| Single Post "Attempt Recovery" | Pattern slugs kept base theme namespace (e.g., `frost/comments`) after chassis copy | Added `rewritePatternSlugs()` to rename `{baseName}/` → `{safeName}/` in all pattern files + templates |
+
+**Also fixed:** Sentry PRESSPILOT-3 (`TypeError: variationSet.variations` undefined) — added optional chaining guards in `StudioClient.tsx`.
+
+**Infrastructure fixes:** Proxy now wraps non-JSON Laravel responses in JSON envelope. Laravel forces JSON responses for API routes. Migration `add_tier_to_projects_table` run on production Supabase.
+
+**Key learnings:**
+- WordPress Playground doesn't fire `after_switch_theme` — always provide `init` hook fallback
+- Pattern slugs use theme text domain as namespace — must rewrite after chassis copy
+- `extractBrandColors()` existed but was never wired into the pipeline — extraction must happen BEFORE style building
+- Always check Sentry for TypeScript runtime errors during QA
+
+**Debugging standard updated:** Include Sentry as standard debugging tool alongside console logs and network inspection.
 
 ### 2026-03-07 Session C — Phase 2.8 Quality Fixes (10 Issues Fixed)
 
