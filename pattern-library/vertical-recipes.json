@@ -2,32 +2,32 @@
   "restaurant": {
     "home": ["hero-cover", "about-story", "menu-2col", "hours-location", "chef-highlight", "testimonials-3col", "reservation-cta"],
     "about": ["about-story", "chef-highlight", "team-grid"],
-    "menu": ["menu-2col"],
-    "services": ["features-3col", "hours-location"],
-    "contact": ["contact-info", "hours-location"]
+    "menu": ["menu-2col", "reservation-cta", "testimonials-3col"],
+    "services": ["features-3col", "hours-location", "reservation-cta"],
+    "contact": ["contact-info", "hours-location", "reservation-cta"]
   },
   "ecommerce": {
     "home": ["hero-cover", "features-3col", "product-grid", "testimonials-3col", "cta-banner"],
-    "about": ["about-story", "team-grid"],
-    "services": ["product-grid", "features-3col"],
-    "contact": ["contact-info"]
+    "about": ["about-story", "team-grid", "testimonials-3col"],
+    "services": ["product-grid", "features-3col", "cta-banner"],
+    "contact": ["contact-info", "cta-banner", "newsletter-signup"]
   },
   "saas": {
     "home": ["hero-cover", "features-6col", "stats-numbers", "pricing-3col", "testimonials-3col", "faq-accordion", "cta-banner"],
     "about": ["about-story", "team-grid", "stats-numbers"],
-    "services": ["features-6col", "pricing-3col"],
-    "contact": ["contact-info", "faq-accordion"]
+    "services": ["features-6col", "pricing-3col", "cta-banner"],
+    "contact": ["contact-info", "faq-accordion", "cta-banner"]
   },
   "portfolio": {
     "home": ["hero-split", "about-story", "process-steps", "gallery-grid", "testimonials-3col", "cta-banner"],
-    "about": ["about-story", "process-steps"],
-    "services": ["gallery-grid", "features-3col"],
-    "contact": ["contact-info"]
+    "about": ["about-story", "process-steps", "testimonials-3col"],
+    "services": ["gallery-grid", "features-3col", "cta-banner"],
+    "contact": ["contact-info", "cta-banner", "newsletter-signup"]
   },
   "local_service": {
     "home": ["hero-cover", "features-3col", "service-areas", "about-story", "testimonials-3col", "hours-location", "cta-banner"],
-    "about": ["about-story", "team-grid"],
-    "services": ["features-3col", "service-areas"],
-    "contact": ["contact-info", "hours-location"]
+    "about": ["about-story", "team-grid", "testimonials-3col"],
+    "services": ["features-3col", "service-areas", "cta-banner"],
+    "contact": ["contact-info", "hours-location", "cta-banner"]
   }
 }

@@ -351,6 +351,7 @@ PHP;
         // Ensure templateParts are registered
         $themeJson['templateParts'] = [
             ['name' => 'header', 'area' => 'header', 'title' => 'Header'],
+            ['name' => 'header-transparent', 'area' => 'header', 'title' => 'Header Transparent'],
             ['name' => 'footer', 'area' => 'footer', 'title' => 'Footer'],
         ];
 
@@ -370,28 +371,27 @@ PHP;
             mkdir($templatesDir, 0755, true);
         }
 
-        // front-page.html — uses home page sections
+        // front-page.html — uses home page sections (always includes header)
         $homeContent = $pageHtml['home'] ?? '';
-        $isFullBleedHero = $project && ($project['heroLayout'] ?? null) === 'fullBleed';
-        file_put_contents($templatesDir.'/front-page.html', $this->wrapTemplate($homeContent, $isFullBleedHero));
+        file_put_contents($templatesDir.'/front-page.html', $this->wrapTemplate($homeContent));
 
         // page-about.html — uses about page sections
         $aboutContent = $pageHtml['about'] ?? '';
-        file_put_contents($templatesDir.'/page-about.html', $this->wrapTemplate($aboutContent, false));
+        file_put_contents($templatesDir.'/page-about.html', $this->wrapTemplate($aboutContent));
 
         // page-menu.html — uses menu page sections (for restaurant vertical)
         if (isset($pageHtml['menu'])) {
             $menuContent = $pageHtml['menu'];
-            file_put_contents($templatesDir.'/page-menu.html', $this->wrapTemplate($menuContent, false));
+            file_put_contents($templatesDir.'/page-menu.html', $this->wrapTemplate($menuContent));
         }
 
         // page-services.html — uses services page sections
         $servicesContent = $pageHtml['services'] ?? '';
-        file_put_contents($templatesDir.'/page-services.html', $this->wrapTemplate($servicesContent, false));
+        file_put_contents($templatesDir.'/page-services.html', $this->wrapTemplate($servicesContent));
 
         // page-contact.html — uses contact page sections
         $contactContent = $pageHtml['contact'] ?? '';
-        file_put_contents($templatesDir.'/page-contact.html', $this->wrapTemplate($contactContent, false));
+        file_put_contents($templatesDir.'/page-contact.html', $this->wrapTemplate($contactContent));
 
         // Generic fallback templates
         file_put_contents($templatesDir.'/page.html', $this->defaultPageTemplate());
@@ -411,6 +411,7 @@ PHP;
         }
 
         file_put_contents($partsDir.'/header.html', $this->buildHeader($project));
+        file_put_contents($partsDir.'/header-transparent.html', $this->buildHeaderTransparent($project));
         file_put_contents($partsDir.'/footer.html', $this->buildPressPilotFooter($project, $tokens));
     }
 
@@ -428,7 +429,7 @@ PHP;
         // Use wp:site-logo block for footer too — matches header, no block validation issues
         $logoBlock = '';
         if ($logoSaved) {
-            $logoBlock = '<!-- wp:site-logo {"width":40,"shouldSyncIcon":true} /-->';
+            $logoBlock = '<!-- wp:site-logo {"width":60,"shouldSyncIcon":true} /-->';
         }
 
         return <<<FOOTER
@@ -439,12 +440,12 @@ PHP;
     <div class="wp-block-columns alignwide">
         <!-- wp:column {"width":"33%"} -->
         <div class="wp-block-column" style="flex-basis:33%">
-            <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"top"}} -->
+            <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"}},"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
             <div class="wp-block-group">
-                <!-- wp:group {"layout":{"type":"flex","orientation":"vertical","justifyContent":"left"}} -->
+                {$logoBlock}
+                <!-- wp:group {"style":{"spacing":{"blockGap":"0.25rem"}},"layout":{"type":"flex","orientation":"vertical"}} -->
                 <div class="wp-block-group">
-                    {$logoBlock}
-                    <!-- wp:site-title {"style":{"typography":{"fontStyle":"normal","fontWeight":"700","fontSize":"1.5rem"}}} /-->
+                    <!-- wp:site-title {"style":{"typography":{"fontStyle":"normal","fontWeight":"700","fontSize":"1.25rem"}}} /-->
                     <!-- wp:paragraph {"fontSize":"small","textColor":"contrast-2"} -->
                     <p class="has-small-font-size has-contrast-2-color has-text-color">{$footerTagline}</p>
                     <!-- /wp:paragraph -->
@@ -512,13 +513,13 @@ FOOTER;
         // The actual logo image is sideloaded into the media library via functions.php.
         $logoBlock = '';
         if ($logoSaved) {
-            $logoBlock = '<!-- wp:site-logo {"width":40,"shouldSyncIcon":true} /-->';
+            $logoBlock = '<!-- wp:site-logo {"width":60,"shouldSyncIcon":true} /-->';
         }
 
         return <<<HEADER
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
 <div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50)">
-    <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap"}} -->
+    <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"}},"layout":{"type":"flex","flexWrap":"nowrap"}} -->
     <div class="wp-block-group">
         {$logoBlock}
         <!-- wp:site-title {"level":0,"style":{"typography":{"fontWeight":"700"}}} /-->
@@ -530,9 +531,47 @@ FOOTER;
 HEADER;
     }
 
+    /**
+     * Build transparent header for fullbleed hero pages with white text.
+     */
+    private function buildHeaderTransparent(array $project): string
+    {
+        $name = htmlspecialchars((string) ($project['name'] ?? 'PressPilot'), ENT_QUOTES, 'UTF-8');
+        $logoSaved = $project['_logo_saved'] ?? false;
+
+        Log::info('ThemeAssembler::buildHeaderTransparent logo check', [
+            'logo_saved' => $logoSaved,
+            'logo_filename' => $project['_logo_filename'] ?? null,
+        ]);
+
+        // Use wp:site-logo block — self-closing, no inner HTML, no block validation issues.
+        // The actual logo image is sideloaded into the media library via functions.php.
+        $logoBlock = '';
+        if ($logoSaved) {
+            $logoBlock = '<!-- wp:site-logo {"width":60,"shouldSyncIcon":true} /-->';
+        }
+
+        return <<<HEADER
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
+<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50)">
+    <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"}},"layout":{"type":"flex","flexWrap":"nowrap"}} -->
+    <div class="wp-block-group">
+        {$logoBlock}
+        <!-- wp:site-title {"level":0,"style":{"typography":{"fontWeight":"700"}},"textColor":"base"} /-->
+    </div>
+    <!-- /wp:group -->
+    <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","justifyContent":"right"},"textColor":"base"} /-->
+</div>
+<!-- /wp:group -->
+HEADER;
+    }
+
     private function wrapTemplate(string $content, bool $skipHeader = false): string
     {
-        $header = $skipHeader ? '' : "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n";
+        // Always include header — even on fullBleed hero pages.
+        // The header renders as a template part and overlays the hero naturally
+        // because the hero uses wp:cover which handles its own background.
+        $header = "<!-- wp:template-part {\"slug\":\"header-transparent\",\"tagName\":\"header\"} /-->\n\n";
         return $header.
             $content."\n\n".
             "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
