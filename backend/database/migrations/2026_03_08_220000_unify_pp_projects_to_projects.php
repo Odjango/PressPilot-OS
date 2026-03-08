@@ -32,7 +32,7 @@ return new class extends Migration
 
             -- Enforce status normalization at DB layer
             ALTER TABLE public.projects
-                DROP CONSTRAINT IF NOT EXISTS projects_status_check;
+                DROP CONSTRAINT IF EXISTS projects_status_check;
 
             ALTER TABLE public.projects
                 ADD CONSTRAINT projects_status_check
