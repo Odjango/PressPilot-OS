@@ -54,10 +54,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Copy themes folder as it is required by PressPilot
 COPY --from=builder --chown=nextjs:nodejs /app/themes ./themes
 
-# Copy Generator Source and Assets (Required for n8n/CLI generation)
+# Copy src components (HeroCarousel, etc. - still used by frontend)
+# Note: Generator moved to Laravel backend (backend/app/Services/)
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
-COPY --from=builder --chown=nextjs:nodejs /app/assets ./assets
-COPY --from=builder --chown=nextjs:nodejs /app/bases ./bases
 
 # Copy Scripts (Critical: was missing before)
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
