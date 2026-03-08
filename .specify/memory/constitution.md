@@ -1,17 +1,23 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: 1.0.0 → 1.1.0 (MINOR: Added GENERATOR_API.md reference + expanded data flow guidance)
+Version change: 1.1.0 → 2.0.0 (MAJOR: Node.js generator removed; pipeline now SSWG Laravel PHP)
 Modified Principles:
-- VI. Data Flow Pipeline: Added ContentEngine page-specific injection pattern
+- V. Hero System Contract: Removed TypeScript sync requirements, updated to PHP-only ThemeAssembler + pattern-library skeletons
+- VI. Data Flow Pipeline: Complete rewrite for SSWG Laravel pipeline (AIPlanner → PatternSelector → TokenInjector → ThemeAssembler)
+- VII. Vertical Expansion Protocol: Updated to pattern-library/vertical-recipes.json + skeletons architecture
 Added Sections:
-- docs/GENERATOR_API.md to Core Truth Documents
-Removed Sections: None
+- VIII. Template Part Architecture (transparent header system)
+- IX. Image Token Resolution (person-image overrides)
+Removed Sections:
+- All references to src/generator/, ContentBuilder.ts, ContentEngine.ts, universal-*.ts (deleted, archived to Project Extras)
 Templates Requiring Updates:
-- .specify/templates/plan-template.md: No changes needed
-- .specify/templates/spec-template.md: No changes needed
-- .specify/templates/tasks-template.md: No changes needed
-Follow-up TODOs: None
+- .specify/templates/plan-template.md: Check for src/generator references
+- .specify/templates/spec-template.md: Check for src/generator references
+- .specify/templates/tasks-template.md: Check for src/generator references
+Follow-up TODOs:
+- Verify docs/DATA_FLOW.md reflects Laravel pipeline
+- Verify docs/GENERATOR_API.md reflects Laravel pipeline
 Core Truth Documents:
 - docs/PROJECT_ROADMAP.md
 - docs/AGENT_CONTEXT_MASTER.md
@@ -19,7 +25,8 @@ Core Truth Documents:
 - docs/PRESSPILOT_QUALITY_BAR.md
 - docs/DATA_FLOW.md
 - docs/hero-system.md
-- docs/GENERATOR_API.md (NEW)
+- docs/GENERATOR_API.md
+- _memory/main.md (NEW - master project memory and session log)
 -->
 # PressPilot OS Constitution
 
@@ -94,8 +101,8 @@ Brand mode differentiation:
 
 ### V. Hero System Contract
 
-The hero system provides 4 distinct layouts that MUST be maintained in sync across
-TypeScript (build-time) and PHP (preview-time) implementations.
+The hero system provides 4 distinct layouts implemented in the SSWG Laravel pipeline
+(`backend/app/Services/ThemeAssembler.php`).
 
 | Layout | Block Type | Background | Use Case |
 |--------|-----------|------------|----------|
@@ -104,60 +111,89 @@ TypeScript (build-time) and PHP (preview-time) implementations.
 | split | wp:columns | White, 50/50 split | Professional services |
 | minimal | wp:group | White, centered text | Startups, minimalist |
 
-Sync requirements:
-- src/generator/patterns/hero-variants.ts MUST match src/preview/heroPreviewInjector.ts
-- Both MUST use identical TT4 color tokens
-- Any new layout MUST be added to both files simultaneously
-- Types in src/generator/types.ts MUST include all layout options
+Implementation:
+- Hero skeletons live in `pattern-library/skeletons/hero-*.html`
+- ThemeAssembler selects hero type based on AIPlanner output
+- fullBleed heroes MUST use `header-transparent` template part (white text on dark cover)
+- All other hero types use the regular `header` template part (dark text)
+- Hero selection logic is in `ThemeAssembler::buildFrontPage()`
 
-**Rationale**: Preview screenshots must match final theme output.
+**Rationale**: Hero layout determines header visibility; transparent header prevents
+unreadable dark-on-dark text.
 
-### VI. Data Flow Pipeline
+### VI. Data Flow Pipeline (SSWG Laravel)
 
-User data flows through a typed pipeline from Studio UI to final theme. All interfaces
-MUST be kept in sync.
+User data flows through the SSWG (Site Scaffolding & Wireframe Generation) pipeline.
+All services are in `backend/app/Services/`.
 
-Pipeline: StudioFormInput to PressPilotSaaSInput to GeneratorData to ContentJSON to Final Theme
+Pipeline: Studio UI → Laravel API → AIPlanner → PatternSelector → TokenInjector → ThemeAssembler → ZIP
 
-Pipeline interfaces:
-- StudioFormInput: UI-facing (lib/presspilot/studioAdapter.ts)
-- PressPilotSaaSInput: API contract (types/presspilot.ts)
-- GeneratorData: Internal generator (src/generator/types.ts)
-- ContentJSON: Builder output (src/generator/modules/ContentBuilder.ts)
-- PageContent: Page-level data (src/generator/types.ts)
+Pipeline stages:
+- **Studio UI** (`src/components/StudioClient.tsx`): Collects business name, logo, tagline, description, category
+- **Laravel API** (`backend/routes/api.php`): Receives form data, dispatches generation job
+- **AIPlanner** (`backend/app/Services/AIPlanner.php`): Calls Claude API to generate content tokens (headlines, bios, descriptions) per page
+- **PatternSelector** (`backend/app/Services/PatternSelector.php`): Picks skeleton patterns from `pattern-library/vertical-recipes.json` based on business category
+- **TokenInjector** (`backend/app/Services/TokenInjector.php`): Fills `{{PLACEHOLDER}}` tokens in skeleton HTML with AI-generated content
+- **ImageHandler** (`backend/app/Services/ImageHandler.php`): Fetches Unsplash images for `IMAGE_*` tokens with token-specific query overrides
+- **ThemeAssembler** (`backend/app/Services/ThemeAssembler.php`): Wraps injected sections with header/footer, writes theme.json, style.css, functions.php, creates ZIP
 
-Adding new fields requires updates to ALL interfaces plus:
-- Transform functions
-- Slot creation in ContentBuilder.ts
-- Pattern usage in universal-*.ts files
-- Tests in tests/unit/data-flow.test.ts
+Adding new fields requires updates to:
+- AIPlanner prompt (to generate the new token)
+- Skeleton HTML (to include the `{{NEW_TOKEN}}` placeholder)
+- TokenInjector (if new token type needs special handling)
+- ImageHandler `$tokenQueryOverrides` (if new image token needs specific Unsplash query)
 
-**Page-Specific Content Injection** (ContentEngine pattern):
-For fields that only apply to specific page templates, ContentEngine.generatePages() injects
-data based on the template type:
-- universal-menu: Receives menus array from ContentJSON
-- universal-about: Receives chef/team fields, about paragraphs from ContentJSON
-- Future templates: Follow the same pattern in ContentEngine.ts
-
-When adding new page-specific fields:
-1. Add field to PageContent interface in src/generator/types.ts
-2. Add injection logic in ContentEngine.generatePages() for the template
-3. Update the pattern to read from content parameter
-4. Document in docs/GENERATOR_API.md
-
-**Rationale**: Type safety across the pipeline prevents runtime errors.
+**Rationale**: Clean separation of concerns; each service has one job.
 
 ### VII. Vertical Expansion Protocol
 
-New verticals MUST follow the Generator 2.0 architecture: Tokens to Recipes to Sections.
+New verticals MUST follow the SSWG architecture: Recipes → Skeletons → Tokens.
 
 Required artifacts for a new vertical:
-1. Design tokens file: src/generator/design-system/verticals/{vertical}.ts
-2. Layout recipes: Data-driven section definitions with background slots
-3. Section patterns: 5+ patterns minimum
-4. Unit tests: Token resolution + recipe selection + section order validation
+1. Recipe entry in `pattern-library/vertical-recipes.json` with page arrays (home, about, services, contact)
+2. Skeleton HTML files in `pattern-library/skeletons/` for any new section patterns
+3. Each inner page MUST have at least 3 skeleton sections (no single-section pages)
+4. Token placeholders in skeletons MUST match AIPlanner's output token names
+5. Any new `IMAGE_*` tokens for people MUST have entries in ImageHandler `$tokenQueryOverrides`
 
-**Rationale**: Data-driven generation ensures consistency.
+Current verticals: restaurant, ecommerce, saas, portfolio, local_service
+
+**Rationale**: Data-driven generation ensures consistency. Enriched inner pages prevent
+the "bare page" problem where inner pages look unstyled.
+
+### VIII. Template Part Architecture
+
+The theme uses two header variants to handle dark/light hero backgrounds:
+
+- `parts/header.html` — Regular header with dark text (`textColor: contrast`) for light backgrounds
+- `parts/header-transparent.html` — Transparent header with white text (`textColor: base`) for dark hero covers
+
+Rules:
+- `front-page.html` MUST use `header-transparent` slug when hero is fullBleed or fullWidth with dark background
+- All other templates (page.html, single.html, 404.html) MUST use regular `header` slug
+- Both header parts MUST be registered in `writeThemeJson()` templateParts array
+- Logo size MUST be consistent across header, header-transparent, and footer (currently 60px)
+
+**Rationale**: WordPress FSE has no CSS-only way to override template part text colors.
+A separate template part is the clean solution for readable navigation on dark heroes.
+
+### IX. Image Token Resolution
+
+Image tokens are resolved by `ImageHandler.php` with token-specific Unsplash queries.
+
+| Token Prefix | Unsplash Query | Why |
+|-------------|---------------|-----|
+| IMAGE_TEAM | professional person portrait headshot | Team sections need people, not business category images |
+| IMAGE_CHEF | chef portrait professional kitchen | Chef highlight needs a person in kitchen context |
+| IMAGE_TESTIMONIAL | person portrait professional | Testimonial avatars need faces |
+| (all others) | Business category (e.g., "restaurant") | General business imagery |
+
+Rules:
+- Person-related tokens MUST use portrait queries via `$tokenQueryOverrides`
+- New person-image tokens MUST be added to the overrides map
+- The override is prefix-matched: `IMAGE_TEAM_1`, `IMAGE_TEAM_2` all match `IMAGE_TEAM`
+
+**Rationale**: Without overrides, a restaurant theme gets food images for team/chef sections.
 
 ## Quality Gates
 
@@ -176,20 +212,22 @@ Required artifacts for a new vertical:
 ### Before Writing Code
 1. Check Hard Gates: Will the change violate docs/pp-hard-gates.md?
 2. Verify FSE Compliance: Navigation, attributes, block closures
-3. Consult Style Engine: Colors, fonts, authorized pairings
-4. Reference Patterns: Reuse existing src/generator/patterns/
-5. Check GENERATOR_API.md: For field names, placeholders, and content flow
+3. Reference Skeletons: Reuse existing `pattern-library/skeletons/`
+4. Check vertical-recipes.json: Ensure new sections are wired into page recipes
+5. Verify token names: AIPlanner output tokens MUST match skeleton `{{PLACEHOLDER}}` names
+6. Check ImageHandler overrides: Any new person-image tokens need `$tokenQueryOverrides` entry
 
 ### Code Review Requirements
-- All PRs MUST verify constitution compliance
+- All changes MUST verify constitution compliance
 - Complexity MUST be justified
-- New patterns require approval
-- Breaking changes require migration plan
+- New skeletons require visual review
+- Breaking changes to ThemeAssembler require migration plan
 
 ### Testing Discipline
-- Run npm run build and npm test before committing
-- Visual regression for any pattern changes
-- Data flow tests for any interface changes
+- Run `php -l` on all modified PHP files before committing
+- Generate a test theme and visually inspect all pages
+- Verify block markup with WordPress Site Editor (no Attempt Recovery errors)
+- Test with logo and without logo scenarios
 
 ## Governance
 
@@ -211,5 +249,8 @@ These documents are authoritative sources that inform this constitution:
 - docs/DATA_FLOW.md - Data pipeline architecture
 - docs/hero-system.md - Hero layout specifications
 - docs/GENERATOR_API.md - Generator field reference, placeholders, and content flow
+- _memory/main.md - Master project memory, session log, and architecture decisions
+- pattern-library/vertical-recipes.json - Vertical-to-skeleton mapping
+- CLAUDE.md - Agent operational contract (hot cache)
 
-**Version**: 1.1.0 | **Ratified**: 2026-02-12 | **Last Amended**: 2026-02-13
+**Version**: 2.0.0 | **Ratified**: 2026-02-12 | **Last Amended**: 2026-03-08
