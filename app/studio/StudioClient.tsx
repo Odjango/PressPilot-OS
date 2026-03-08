@@ -1669,6 +1669,80 @@ export default function StudioClient({ slug }: Props) {
                   </div>
                 </div>
 
+                {/* Installation Guide */}
+                <details className="max-w-2xl mx-auto mt-8 rounded-xl border border-slate-700 bg-slate-900/60 overflow-hidden">
+                  <summary className="px-6 py-4 cursor-pointer hover:bg-slate-800/50 transition-colors flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Info className="h-5 w-5 text-emerald-400" />
+                      <span className="font-semibold text-white">How to Install Your Theme</span>
+                    </div>
+                    <span className="text-slate-500 text-sm">Click to expand</span>
+                  </summary>
+                  <div className="px-6 py-6 space-y-6 bg-slate-950/30 border-t border-slate-700">
+                    {/* Installation Steps */}
+                    <div className="space-y-4">
+                      <div className="flex gap-4">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-sm">
+                          1
+                        </div>
+                        <div>
+                          <p className="font-semibold text-white mb-1">Log into WordPress Admin</p>
+                          <p className="text-sm text-slate-400">Go to yourdomain.com/wp-admin and log in with your credentials</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-sm">
+                          2
+                        </div>
+                        <div>
+                          <p className="font-semibold text-white mb-1">Upload Your Theme</p>
+                          <p className="text-sm text-slate-400">Navigate to <strong className="text-white">Appearance → Themes → Add New → Upload Theme</strong></p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-sm">
+                          3
+                        </div>
+                        <div>
+                          <p className="font-semibold text-white mb-1">Install and Activate</p>
+                          <p className="text-sm text-slate-400">Choose the downloaded ZIP file, click <strong className="text-white">Install Now</strong>, then <strong className="text-white">Activate</strong></p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-sm">
+                          4
+                        </div>
+                        <div>
+                          <p className="font-semibold text-white mb-1">Customize Your Site</p>
+                          <p className="text-sm text-slate-400">Go to <strong className="text-white">Appearance → Editor</strong> to customize colors, content, and layout using the WordPress Site Editor</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Troubleshooting */}
+                    <div className="pt-4 border-t border-slate-800">
+                      <p className="font-semibold text-white mb-2 text-sm">Troubleshooting</p>
+                      <ul className="space-y-2 text-sm text-slate-400">
+                        <li className="flex items-start gap-2">
+                          <span className="text-emerald-400 mt-0.5">•</span>
+                          <span><strong className="text-white">Minimum Requirements:</strong> WordPress 6.0+, PHP 7.4+</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-emerald-400 mt-0.5">•</span>
+                          <span><strong className="text-white">Block Theme:</strong> This is a Full Site Editing (FSE) theme. Classic theme features are not supported.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-emerald-400 mt-0.5">•</span>
+                          <span><strong className="text-white">File Size Issues:</strong> If upload fails, increase <code className="text-slate-300 bg-slate-800 px-1 rounded">upload_max_filesize</code> in php.ini</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </details>
+
                 <div className="pt-12 fade-in animate-in duration-1000">
                   <button
                     onClick={() => {
