@@ -4,6 +4,12 @@ Last updated: 2026-03-08
 
 ---
 
+## Omar — Working Agreement
+- **Role**: Product owner & visionary. NOT a coder/engineer.
+- **What Omar can do**: Copy-paste code blocks, run terminal commands (when told exactly which terminal + exact command), click buttons in Coolify/browser UIs, grant access to services.
+- **What Claude does**: ALL coding, debugging, architecture, implementation, file edits, git operations (within this workspace). Only escalate to Omar when something physically requires his machine (git push, Coolify UI clicks, env var changes).
+- **Communication rule**: When Omar needs to act, specify EXACTLY: (1) which app/terminal, (2) the exact command or button, (3) what success looks like.
+
 ## Omar's Local Environment
 - **Project path on Mac**: `/Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS`
 - **Terminal**: uses default macOS Terminal (ttys002)
