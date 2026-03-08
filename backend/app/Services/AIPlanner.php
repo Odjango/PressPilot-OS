@@ -337,8 +337,15 @@ PROMPT;
         foreach ($tokens as $name => $value) {
             $maxLen = $schemaMap[$name]['maxLength'] ?? null;
             if ($maxLen && mb_strlen((string) $value) > $maxLen) {
-                $tokens[$name] = mb_substr((string) $value, 0, $maxLen);
-                Log::warning("AIPlanner: Token {$name} truncated to {$maxLen} chars");
+                // Truncate at word boundary to avoid cutting mid-word
+                $truncated = mb_substr((string) $value, 0, $maxLen);
+                $lastSpace = mb_strrpos($truncated, ' ');
+                if ($lastSpace !== false && $lastSpace > (int) ($maxLen * 0.7)) {
+                    // Only break at word boundary if we keep at least 70% of the content
+                    $truncated = mb_substr($truncated, 0, $lastSpace);
+                }
+                $tokens[$name] = $truncated;
+                Log::warning("AIPlanner: Token {$name} truncated to {$maxLen} chars (word-boundary)");
             }
         }
 

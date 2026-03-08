@@ -21,6 +21,7 @@ class ThemeAssembler
 
         $this->resetDirectory($themeDir);
         $this->copyBaseFiles($themeDir);
+        $this->saveLogoAsset($themeDir, $project);
         $this->writeFunctionsPhp($themeDir, $project);
         $this->writeStyleSheet($themeDir, $project);
         $this->writeThemeJson($themeDir, $project);
@@ -144,14 +145,16 @@ add_action('init', function() {
     update_option('blogname', '{$businessName}');
     update_option('blogdescription', '{$tagline}');
 
-    // Remove WordPress default content (Sample Page + Hello World post)
-    \$samplePage = get_page_by_title('Sample Page', OBJECT, 'page');
-    if (\$samplePage) {
-        wp_delete_post(\$samplePage->ID, true);
-    }
-    \$helloPost = get_page_by_title('Hello world!', OBJECT, 'post');
-    if (\$helloPost) {
-        wp_delete_post(\$helloPost->ID, true);
+    // Remove ALL existing default content (pages + posts)
+    // Covers every WordPress environment (standard "Hello world!",
+    // Playground "Hello from WordPress Playground!", "Sample Page", etc.)
+    \$defaultContent = get_posts([
+        'post_type'   => ['post', 'page'],
+        'numberposts' => -1,
+        'post_status' => 'any',
+    ]);
+    foreach (\$defaultContent as \$item) {
+        wp_delete_post(\$item->ID, true);
     }
 
     // Define pages to create
@@ -216,6 +219,26 @@ add_action('init', function() {
             \$locations = get_theme_mod('nav_menu_locations', []);
             \$locations['primary'] = \$menuId;
             set_theme_mod('nav_menu_locations', \$locations);
+        }
+    }
+
+    // Set up site logo from theme assets
+    \$logoFile = get_template_directory() . '/assets/{$this->getLogoFilename($project)}';
+    if (file_exists(\$logoFile) && !get_theme_mod('custom_logo')) {
+        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . 'wp-admin/includes/media.php');
+
+        // Copy to temp location since media_handle_sideload moves the file
+        \$tmp = wp_tempnam(\$logoFile);
+        copy(\$logoFile, \$tmp);
+        \$fileArray = [
+            'name'     => basename(\$logoFile),
+            'tmp_name' => \$tmp,
+        ];
+        \$attachmentId = media_handle_sideload(\$fileArray, 0);
+        if (!\is_wp_error(\$attachmentId)) {
+            set_theme_mod('custom_logo', \$attachmentId);
         }
     }
 
@@ -400,16 +423,12 @@ PHP;
         $footerTagline = htmlspecialchars((string) ($tokens['FOOTER_TAGLINE'] ?? "Welcome to {$businessName}"), ENT_QUOTES, 'UTF-8');
         $contactText = htmlspecialchars((string) ($tokens['CONTACT_TEXT'] ?? "Get in touch with us today."), ENT_QUOTES, 'UTF-8');
         $year = date('Y');
-        $logoUrl = $project['logo'] ?? null;
+        $logoSaved = $project['_logo_saved'] ?? false;
 
+        // Use wp:site-logo block for footer too — matches header, no block validation issues
         $logoBlock = '';
-        if ($logoUrl && $this->isValidLogoSource($logoUrl)) {
-            $escapedLogo = htmlspecialchars($logoUrl, ENT_QUOTES, 'UTF-8');
-            $logoBlock = <<<LOGO
-<!-- wp:image {"width":"40px","height":"40px","sizeSlug":"full","style":{"border":{"radius":"4px"}}} -->
-<figure class="wp-block-image size-full" style="width:40px;height:40px"><img src="{$escapedLogo}" alt="{$businessName} logo" style="border-radius:4px;width:40px;height:40px;object-fit:contain"/></figure>
-<!-- /wp:image -->
-LOGO;
+        if ($logoSaved) {
+            $logoBlock = '<!-- wp:site-logo {"width":40,"shouldSyncIcon":true} /-->';
         }
 
         return <<<FOOTER
@@ -482,21 +501,18 @@ FOOTER;
     private function buildHeader(array $project): string
     {
         $name = htmlspecialchars((string) ($project['name'] ?? 'PressPilot'), ENT_QUOTES, 'UTF-8');
-        $logoUrl = $project['logo'] ?? null;
+        $logoSaved = $project['_logo_saved'] ?? false;
 
         Log::info('ThemeAssembler::buildHeader logo check', [
-            'logo_raw' => $logoUrl ? mb_substr($logoUrl, 0, 120) : null,
-            'logo_valid' => $logoUrl ? $this->isValidLogoSource($logoUrl) : false,
+            'logo_saved' => $logoSaved,
+            'logo_filename' => $project['_logo_filename'] ?? null,
         ]);
 
+        // Use wp:site-logo block — self-closing, no inner HTML, no block validation issues.
+        // The actual logo image is sideloaded into the media library via functions.php.
         $logoBlock = '';
-        if ($logoUrl && $this->isValidLogoSource($logoUrl)) {
-            $escapedLogo = htmlspecialchars($logoUrl, ENT_QUOTES, 'UTF-8');
-            $logoBlock = <<<LOGO
-<!-- wp:image {"width":"40px","height":"40px","sizeSlug":"full","style":{"border":{"radius":"4px"}}} -->
-<figure class="wp-block-image size-full" style="width:40px;height:40px"><img src="{$escapedLogo}" alt="{$name} logo" style="border-radius:4px;width:40px;height:40px;object-fit:contain"/></figure>
-<!-- /wp:image -->
-LOGO;
+        if ($logoSaved) {
+            $logoBlock = '<!-- wp:site-logo {"width":40,"shouldSyncIcon":true} /-->';
         }
 
         return <<<HEADER
@@ -630,6 +646,83 @@ HEADER;
         $zip->close();
 
         return $zipPath;
+    }
+
+    /**
+     * Save logo from data URI or URL to theme assets directory.
+     * Sets $project['_logo_saved'] = true if successfully saved.
+     */
+    private function saveLogoAsset(string $themeDir, array &$project): void
+    {
+        $logoUrl = $project['logo'] ?? null;
+        if (! $logoUrl || ! is_string($logoUrl)) {
+            return;
+        }
+
+        $assetsDir = $themeDir.'/assets';
+        if (! is_dir($assetsDir)) {
+            mkdir($assetsDir, 0755, true);
+        }
+
+        // Handle data:image URIs (base64 from Studio upload)
+        if (str_starts_with($logoUrl, 'data:image/')) {
+            // Extract MIME type and extension
+            if (preg_match('/^data:image\/(\w+);base64,(.+)$/s', $logoUrl, $matches)) {
+                $ext = $matches[1] === 'jpeg' ? 'jpg' : $matches[1]; // normalize jpeg→jpg
+                $decoded = base64_decode($matches[2], true);
+                if ($decoded !== false) {
+                    $filename = "logo.{$ext}";
+                    file_put_contents($assetsDir.'/'.$filename, $decoded);
+                    $project['_logo_filename'] = $filename;
+                    $project['_logo_saved'] = true;
+                    Log::info("ThemeAssembler: Logo saved as assets/{$filename}", [
+                        'size' => strlen($decoded),
+                    ]);
+
+                    return;
+                }
+            }
+            Log::warning('ThemeAssembler: Failed to decode data URI logo');
+
+            return;
+        }
+
+        // Handle http(s) URLs — download the file
+        if (filter_var($logoUrl, FILTER_VALIDATE_URL)) {
+            try {
+                $imageData = @file_get_contents($logoUrl, false, stream_context_create([
+                    'http' => ['timeout' => 10],
+                ]));
+                if ($imageData !== false && strlen($imageData) > 0) {
+                    // Detect extension from content type or URL
+                    $ext = pathinfo(parse_url($logoUrl, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION) ?: 'png';
+                    $ext = strtolower($ext);
+                    if (! in_array($ext, ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'])) {
+                        $ext = 'png';
+                    }
+                    $filename = "logo.{$ext}";
+                    file_put_contents($assetsDir.'/'.$filename, $imageData);
+                    $project['_logo_filename'] = $filename;
+                    $project['_logo_saved'] = true;
+                    Log::info("ThemeAssembler: Logo downloaded and saved as assets/{$filename}");
+
+                    return;
+                }
+            } catch (\Throwable $e) {
+                Log::warning('ThemeAssembler: Failed to download logo URL', [
+                    'url' => mb_substr($logoUrl, 0, 120),
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Get the logo filename from project metadata, with a safe fallback.
+     */
+    private function getLogoFilename(array $project): string
+    {
+        return $project['_logo_filename'] ?? 'logo.png';
     }
 
     /**
