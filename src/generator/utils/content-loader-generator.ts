@@ -39,25 +39,8 @@ export const generateContentLoader = (pages: PageData[], businessName: string, t
             update_option('blogname', '${PhpEscaper.escapeSingleQuoted(businessName)}' );
             update_option('blogdescription', '${PhpEscaper.escapeSingleQuoted(tagline)}' );
 
-            // 1.2 Handle Logo (If exists in assets)
-            $logo_rel_path = '/assets/images/logo.png';
-            $logo_abs_path = get_template_directory() . $logo_rel_path;
-            
-            if ( file_exists( $logo_abs_path ) && ! get_option( 'site_logo' ) ) {
-                require_once( ABSPATH . 'wp-admin/includes/image.php' );
-                require_once( ABSPATH . 'wp-admin/includes/file.php' );
-                require_once( ABSPATH . 'wp-admin/includes/media.php' );
-
-                $url = get_template_directory_uri() . $logo_rel_path;
-                $desc = '${PhpEscaper.escapeSingleQuoted(businessName)} Logo';
-                
-                // Sideload the image
-                $id = media_sideload_image( $url, 0, $desc, 'id' );
-                
-                if ( ! is_wp_error( $id ) ) {
-                    update_option( 'site_logo', $id );
-                }
-            }
+            // 1.2 Logo: handled by PatternInjector.addLogoAutoSetup() using
+            // wp_upload_bits() which is more reliable in all WP environments.
 
             // 1.5 CLEANUP: Default Content Removal (safe — only deletes posts/pages, never template parts)
             foreach ([1, 2, 3] as $default_id) {
@@ -162,8 +145,20 @@ export const generateContentLoader = (pages: PageData[], businessName: string, t
                 }
             }
         }
+        // Mark as done so we only run once
+        update_option('${funcName}_done', true);
+        }
         $setup_func = ( __NAMESPACE__ ? __NAMESPACE__ . '\\\\' : '' ) . '${funcName}';
         add_action('after_switch_theme', $setup_func);
+
+        // Also run on init if after_switch_theme didn't fire (e.g. WordPress Playground)
+        function ${funcName}_maybe_run() {
+            if (!get_option('${funcName}_done')) {
+                ${funcName}();
+            }
+        }
+        $init_func = ( __NAMESPACE__ ? __NAMESPACE__ . '\\\\' : '' ) . '${funcName}_maybe_run';
+        add_action('init', $init_func);
     }
 `;
 };

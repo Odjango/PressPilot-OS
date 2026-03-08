@@ -16,6 +16,7 @@ import { StyleBuilder } from './modules/StyleBuilder';
 import { VariationBuilder } from './modules/VariationBuilder';
 import { prefetchImages } from './utils/ImageProvider';
 import { sanitizePath, sanitizeUserInput } from './utils/sanitize';
+import { extractBrandColors } from './utils/color-extraction';
 
 /**
  * Feature Flags
@@ -86,6 +87,22 @@ export async function generateTheme(options: GeneratorOptions = {}) {
     await prefetchImages(userData.industry || 'general');
     console.log(`[Orchestrator] Pre-fetched images for industry: ${userData.industry || 'general'}`);
 
+    // A.2 EXTRACT BRAND COLORS FROM LOGO (if user hasn't provided custom colors)
+    if (userData.logo && userData.logo.startsWith('data:image') && !userData.primary) {
+        console.log('[Orchestrator] Extracting brand colors from logo...');
+        try {
+            const extracted = await extractBrandColors(userData.logo);
+            userData.primary = extracted.primary;
+            userData.secondary = extracted.secondary;
+            if (extracted.accent) {
+                userData.accent = extracted.accent;
+            }
+            console.log(`[Orchestrator] Brand colors extracted: primary=${extracted.primary}, secondary=${extracted.secondary}, accent=${extracted.accent ?? 'none'}`);
+        } catch (e) {
+            console.warn('[Orchestrator] Color extraction failed, proceeding with defaults.', e);
+        }
+    }
+
     // B. BUILD CONTENT & STYLE JSON
     const contentJson = contentBuilder.invoke(baseName, userData);
     const styleJson = styleBuilder.invoke(baseName, userData);
@@ -137,6 +154,10 @@ export async function generateTheme(options: GeneratorOptions = {}) {
 
         // Load Chassis (Using baseName for binary files)
         await chassis.load(baseName, themeDir);
+
+        // Rewrite pattern slugs from base theme namespace to generated theme namespace
+        // e.g., "frost/comments" → "memos-pizza/comments"
+        await rewritePatternSlugs(themeDir, baseName, safeName);
 
         // Normalize block grammar (fixes legacy chassis patterns)
         await normalizeBlockGrammar(themeDir);
@@ -276,6 +297,60 @@ export async function generateTheme(options: GeneratorOptions = {}) {
     } catch (err) {
         console.error('[Orchestrator] Error:', err);
         throw err;
+    }
+}
+
+/**
+ * Rewrite pattern slugs from base theme namespace to generated theme namespace.
+ *
+ * WordPress FSE registers patterns from the `patterns/` directory using the
+ * theme's stylesheet (text domain) as the namespace. When we copy a chassis
+ * like "frost", its patterns have slugs like "frost/comments" — but the
+ * generated theme's text domain is e.g. "memos-pizza". Without renaming,
+ * template references like `<!-- wp:pattern {"slug":"frost/comments"} /-->`
+ * point to non-existent patterns, causing "Attempt Recovery" in Site Editor.
+ */
+async function rewritePatternSlugs(themeDir: string, baseName: string, newSlug: string): Promise<void> {
+    if (baseName === newSlug) return; // No-op if names match
+
+    const dirs = ['patterns', 'parts', 'templates'];
+    const extensions = ['.php', '.html'];
+    let totalFixes = 0;
+
+    for (const dir of dirs) {
+        const dirPath = path.join(themeDir, dir);
+        if (!await fs.pathExists(dirPath)) continue;
+
+        const files = await fs.readdir(dirPath);
+        for (const file of files) {
+            if (!extensions.includes(path.extname(file))) continue;
+
+            const filePath = path.join(dirPath, file);
+            let content = await fs.readFile(filePath, 'utf8');
+            const original = content;
+
+            // Replace pattern slug references in PHP headers: * Slug: frost/xxx → * Slug: newSlug/xxx
+            content = content.replace(
+                new RegExp(`\\* Slug: ${baseName}/`, 'g'),
+                `* Slug: ${newSlug}/`
+            );
+
+            // Replace pattern slug references in block markup:
+            // <!-- wp:pattern {"slug":"frost/xxx"} /--> → <!-- wp:pattern {"slug":"newSlug/xxx"} /-->
+            content = content.replace(
+                new RegExp(`"slug":"${baseName}/`, 'g'),
+                `"slug":"${newSlug}/`
+            );
+
+            if (content !== original) {
+                await fs.writeFile(filePath, content, 'utf8');
+                totalFixes++;
+            }
+        }
+    }
+
+    if (totalFixes > 0) {
+        console.log(`[Orchestrator] Rewrote pattern slugs in ${totalFixes} files: ${baseName}/ → ${newSlug}/`);
     }
 }
 

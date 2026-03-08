@@ -39,13 +39,13 @@ export const getUniversalMenuContent = (content?: PageContent) => {
         return `
             <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|50"}}}} -->
             <div class="wp-block-columns alignwide">
-                <!-- wp:column -->
-                <div class="wp-block-column">
+                <!-- wp:column {"width":"50%"} -->
+                <div class="wp-block-column" style="flex-basis:50%">
                     ${leftColItems.map(renderItem).join('')}
                 </div>
                 <!-- /wp:column -->
-                <!-- wp:column -->
-                <div class="wp-block-column">
+                <!-- wp:column {"width":"50%"} -->
+                <div class="wp-block-column" style="flex-basis:50%">
                     ${rightColItems.map(renderItem).join('')}
                 </div>
                 <!-- /wp:column -->
