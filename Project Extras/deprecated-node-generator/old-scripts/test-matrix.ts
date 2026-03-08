@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { generateTheme } from '../src/generator/index';
-import { BaseTheme, GeneratorData } from '../src/generator/types';
+import { BaseTheme, GeneratorData } from '../types/generator-legacy';
 
 // Define the Test Matrix
 interface Scenario {

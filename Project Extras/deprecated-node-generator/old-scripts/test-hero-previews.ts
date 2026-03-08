@@ -20,10 +20,11 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { generateTheme } from '../src/generator';
+// DEPRECATED: Old Node.js generator removed.
+// import { generateTheme } from '../src/generator';
 import { HeroPreviewRunner, generatePreviewSessionId, PreviewResult } from '../src/preview/HeroPreviewRunner';
 import { createSessionDir, cleanupOldPreviews } from '../src/preview/previewCleanup';
-import { GeneratorData } from '../src/generator/types';
+import { GeneratorData } from '../types/generator-legacy';
 
 // Test industry configurations
 const TEST_INDUSTRIES = [

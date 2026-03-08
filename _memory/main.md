@@ -17,13 +17,41 @@ Last updated: 2026-03-08
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `ae71b0c` (2026-03-08) — `fix: 5 theme generation quality bugs — colors, blocks, content, logo, patterns`
-- Recent commits (2026-03-08, deployed or pending deploy):
-  - `ae71b0c` — fix: 5 theme generation quality bugs (colors, blocks, content, logo, patterns)
-  - `be844a4` — fix: guard variationSet access with optional chaining (Sentry PRESSPILOT-3)
-  - `98c9683` — fix: proxy always returns JSON errors + Laravel forces JSON for API routes
-- Phase 2.8 + Phase 3 commits: ALL PUSHED AND DEPLOYED (2026-03-08)
-- **ACTION NEEDED:** Push `ae71b0c` + redeploy Next.js app via Coolify. Also flip APP_DEBUG=false on Laravel.
+- Latest commit: `c65f96c` (2026-03-08) — `fix(sswg): apply 5 quality fixes to correct (Laravel) pipeline`
+- Recent commits (2026-03-08):
+  - **PENDING COMMIT** — `chore: remove deprecated Node.js generator, archive to Project Extras`
+  - `c65f96c` — fix(sswg): apply 5 quality fixes to correct (Laravel) pipeline — **PUSHED + DEPLOYING**
+  - `0260cd9` — docs: update project memory with session A fixes
+  - `ae71b0c` — fix: 5 theme generation quality bugs (WRONG PIPELINE — Node.js, not Laravel)
+- Phase 2.8 + Phase 3 commits: ALL PUSHED AND DEPLOYED
+- **ACTION NEEDED:** Commit + push the Node.js generator cleanup. Set APP_DEBUG=false after testing confirms fixes.
+
+### CRITICAL LESSON LEARNED (2026-03-08)
+Previous session (ae71b0c) applied 5 bug fixes to the **deprecated Node.js generator** (`src/generator/`), but production runs the **SSWG Laravel pipeline** (`backend/`). Fixes had zero effect. Re-applied to correct codebase in `c65f96c`.
+
+**Rule:** ALL theme generation fixes go to `backend/app/Services/` + `pattern-library/skeletons/`. The old `src/generator/` was deleted and archived to `Project Extras/deprecated-node-generator/`.
+
+### 2026-03-08 Session B — SSWG Pipeline Fixes + Generator Cleanup
+
+**5 fixes re-applied to the correct (Laravel) pipeline:**
+
+| Fix | File | Change |
+|-----|------|--------|
+| Column widths (4 skeletons) | `pattern-library/skeletons/menu-2col.html` | Added `{"width":"50%"}` + `style="flex-basis:50%"` |
+| Column widths | `pattern-library/skeletons/hours-location.html` | Same |
+| Column widths | `pattern-library/skeletons/faq-accordion.html` | Same |
+| Column widths | `pattern-library/skeletons/hero-split.html` | Same (2nd column) |
+| Pages + site name + nav menu | `backend/app/Services/ThemeAssembler.php` | Replaced `starter-content` with `init` hook using `wp_insert_post()`, `wp_create_nav_menu()` |
+
+**Old Node.js generator deleted:**
+- `src/generator/` (160 files, 1.2MB) → archived to `Project Extras/deprecated-node-generator/`
+- Shared types preserved at `types/generator-legacy.ts`
+- All active imports updated to new location
+- Old scripts/tests/CLI that depended on generator also archived
+- Hero preview API route archived (was only production code using old generator)
+
+**Remaining bugs to fix:**
+- Logo not appearing in header/footer (pipeline passes logo URL but header/footer builders may not inject it correctly)
 
 ### 2026-03-08 Session A — Production Deploy + 5 Quality Bug Fixes
 

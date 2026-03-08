@@ -8,7 +8,7 @@
 import { chromium, Browser, Page } from 'playwright';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { HeroLayout, PageContent } from '../generator/types';
+import { HeroLayout, PageContent } from '../../types/generator-legacy';
 import { WordPressEnvironment, WordPressConfig } from './WordPressEnvironment';
 import { injectHeroPreviewSupport, removeHeroPreviewSupport } from './heroPreviewInjector';
 

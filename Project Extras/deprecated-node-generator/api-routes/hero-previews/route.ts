@@ -16,12 +16,13 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
-import { generateTheme } from '@/src/generator';
+// DEPRECATED: Old Node.js generator removed. Hero preview needs migration to SSWG pipeline.
+// import { generateTheme } from '@/src/generator';
 import { buildSaaSInputFromStudioInput, StudioFormInput } from '@/lib/presspilot/studioAdapter';
 import { transformSaaSInputToGeneratorData } from '@/lib/presspilot/dataTransformer';
 import { HeroPreviewRunner, generatePreviewSessionId, PreviewResult } from '@/src/preview/HeroPreviewRunner';
 import { cleanupOldPreviews, createSessionDir } from '@/src/preview/previewCleanup';
-import { HeroLayout } from '@/src/generator/types';
+import { HeroLayout } from '@/types/generator-legacy';
 
 // 60 second timeout for preview generation
 export const maxDuration = 60;

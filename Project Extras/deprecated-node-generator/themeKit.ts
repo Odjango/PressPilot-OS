@@ -2,7 +2,7 @@ import path from 'node:path';
 import { PressPilotNormalizedContext, PressPilotVariationManifest } from '@/types/presspilot';
 import { resolveBusinessCopy } from '@/lib/presspilot/kit';
 import { generateTheme, GeneratorOptions } from '@/src/generator/index';
-import { BaseTheme, GeneratorData } from '@/src/generator/types';
+import { BaseTheme, GeneratorData } from '@/types/generator-legacy';
 import { RecipeRegistry } from '@/src/generator/recipes/index';
 import { getSmartCopy } from '@/src/generator/copy/defaults';
 

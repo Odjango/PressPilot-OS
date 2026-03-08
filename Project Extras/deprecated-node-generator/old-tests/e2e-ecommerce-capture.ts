@@ -1,17 +1,14 @@
 /**
- * E2E WooCommerce Capture - Visual Verification for Shop & Product Pages
+ * E2E Ecommerce Capture - Phase 4 Visual Verification
  *
- * Generates branded ecommerce themes with WooCommerce templates
- * and captures screenshots of homepage, shop archive, and product pages.
+ * Generates branded ecommerce themes with Modern and Bold brand modes
+ * and captures ACTUAL WORDPRESS HOMEPAGE screenshots.
  *
  * REQUIREMENTS:
  * - Docker containers running (docker compose up -d)
  * - WordPress at localhost:8089
  *
- * Output:
- * - tests/artifacts/Gallery/home-ecommerce-modern-v3.jpg
- * - tests/artifacts/Gallery/shop-ecommerce-modern-v3.jpg
- * - tests/artifacts/Gallery/product-ecommerce-modern-v3.jpg
+ * Output: tests/artifacts/Gallery/home-ecommerce-{mode}-v3.jpg
  */
 
 // Load environment variables from .env.local BEFORE other imports
@@ -23,19 +20,19 @@ import { chromium, Page } from 'playwright';
 import { execSync } from 'child_process';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { generateTheme } from '../src/generator';
+// DEPRECATED: Old Node.js generator removed.
+// import { generateTheme } from '../src/generator';
 import { buildSaaSInputFromStudioInput, StudioFormInput } from '../lib/presspilot/studioAdapter';
 import { transformSaaSInputToGeneratorData } from '../lib/presspilot/dataTransformer';
 import type { TT4PaletteId, TT4HeroLayout, TT4BrandStyle } from '../lib/theme/palettes';
 
 const WP_URL = 'http://localhost:8089';
 const WP_CONTAINER = 'presspilot-os-wordpress-1';
-const CLI_CONTAINER = 'presspilot-os-cli';
 const DB_CONTAINER = 'presspilot-os-db-1';
 const GALLERY_DIR = path.join(process.cwd(), 'tests/artifacts/Gallery');
 
 // ============================================================================
-// WOOCOMMERCE SCENARIOS
+// ECOMMERCE SCENARIOS
 // ============================================================================
 
 interface Scenario {
@@ -46,10 +43,10 @@ interface Scenario {
     brandStyle: TT4BrandStyle;
     heroLayout: TT4HeroLayout;
     paletteId: TT4PaletteId;
-    outputPrefix: string;
+    outputFile: string;
 }
 
-const WOOCOMMERCE_SCENARIOS: Scenario[] = [
+const ECOMMERCE_SCENARIOS: Scenario[] = [
     {
         slug: 'ecommerce-modern-v3',
         name: 'Urban Threads Clothing',
@@ -58,16 +55,18 @@ const WOOCOMMERCE_SCENARIOS: Scenario[] = [
         brandStyle: 'modern',
         heroLayout: 'fullBleed',
         paletteId: 'ecommerce-bold',
-        outputPrefix: 'ecommerce-modern-v3'
+        outputFile: 'home-ecommerce-modern-v3.jpg'
+    },
+    {
+        slug: 'ecommerce-bold-v3',
+        name: 'Flash Deals Outlet',
+        category: 'ecommerce',
+        brief: 'Flash Deals Outlet is your one-stop shop for unbeatable discounts on electronics, home goods, and fashion. New deals daily, prices you won\'t find anywhere else.',
+        brandStyle: 'bold',
+        heroLayout: 'fullBleed',
+        paletteId: 'ecommerce-bold',
+        outputFile: 'home-ecommerce-bold-v3.jpg'
     }
-];
-
-// Sample products to create
-const SAMPLE_PRODUCTS = [
-    { name: 'Classic T-Shirt', price: '29.99', description: 'Premium cotton t-shirt with a relaxed fit.' },
-    { name: 'Denim Jacket', price: '89.99', description: 'Vintage-inspired denim jacket with brass buttons.' },
-    { name: 'Running Shoes', price: '119.99', description: 'Lightweight performance shoes for everyday comfort.' },
-    { name: 'Canvas Backpack', price: '49.99', description: 'Durable canvas backpack with laptop compartment.' }
 ];
 
 // ============================================================================
@@ -130,133 +129,6 @@ function clearWordPressCache(): boolean {
     }
 }
 
-function installWooCommerce(): boolean {
-    try {
-        console.log('      → Installing WooCommerce plugin...');
-
-        // Check if WooCommerce is already installed (use CLI container with WP-CLI)
-        try {
-            execSync(
-                `docker exec ${CLI_CONTAINER} wp plugin is-installed woocommerce --allow-root 2>&1`,
-                { stdio: 'pipe' }
-            );
-        } catch {
-            // Plugin not installed, install it
-            execSync(
-                `docker exec ${CLI_CONTAINER} wp plugin install woocommerce --activate --allow-root`,
-                { stdio: 'pipe', timeout: 120000 }
-            );
-            console.log('        WooCommerce installed and activated');
-            return true;
-        }
-
-        // Plugin is installed, just activate it
-        execSync(
-            `docker exec ${CLI_CONTAINER} wp plugin activate woocommerce --allow-root`,
-            { stdio: 'pipe' }
-        );
-        console.log('        WooCommerce activated');
-        return true;
-    } catch (error) {
-        console.error('  ✗ WooCommerce installation failed:', error);
-        return false;
-    }
-}
-
-function createSampleProducts(): boolean {
-    try {
-        console.log('      → Creating sample products...');
-
-        for (const product of SAMPLE_PRODUCTS) {
-            try {
-                // Check if product already exists (use CLI container)
-                const checkCmd = `docker exec ${CLI_CONTAINER} wp post list --post_type=product --name="${product.name.toLowerCase().replace(/ /g, '-')}" --format=count --allow-root`;
-                const count = execSync(checkCmd, { stdio: 'pipe' }).toString().trim();
-
-                if (count === '0') {
-                    // Create product using WP-CLI wc command
-                    const createCmd = `docker exec ${CLI_CONTAINER} wp wc product create --name="${product.name}" --type=simple --regular_price=${product.price} --description="${product.description}" --status=publish --allow-root --user=1`;
-                    execSync(createCmd, { stdio: 'pipe' });
-                    console.log(`        Created: ${product.name}`);
-                } else {
-                    console.log(`        Exists: ${product.name}`);
-                }
-            } catch (err) {
-                // Try alternative method using wp post create
-                try {
-                    const altCmd = `docker exec ${CLI_CONTAINER} wp post create --post_type=product --post_title="${product.name}" --post_status=publish --allow-root`;
-                    execSync(altCmd, { stdio: 'pipe' });
-                    console.log(`        Created (basic): ${product.name}`);
-                } catch {
-                    console.warn(`        Skipped: ${product.name} (creation failed)`);
-                }
-            }
-        }
-
-        return true;
-    } catch (error) {
-        console.error('  ✗ Product creation failed:', error);
-        return false;
-    }
-}
-
-function setupWooCommercePages(): boolean {
-    try {
-        console.log('      → Setting up WooCommerce pages...');
-
-        // Run WooCommerce page installation (use CLI container)
-        execSync(
-            `docker exec ${CLI_CONTAINER} wp wc tool run install_pages --allow-root --user=1`,
-            { stdio: 'pipe' }
-        );
-
-        console.log('        WooCommerce pages configured');
-        return true;
-    } catch (error) {
-        // Non-fatal - pages may already exist
-        console.log('        WooCommerce pages may already exist');
-        return true;
-    }
-}
-
-function setupPermalinks(): boolean {
-    try {
-        console.log('      → Setting up permalinks...');
-
-        // Set permalink structure to "post name" for pretty URLs
-        execSync(
-            `docker exec ${CLI_CONTAINER} wp rewrite structure '/%postname%/' --allow-root`,
-            { stdio: 'pipe' }
-        );
-
-        // Write .htaccess rules directly (WP-CLI can't always write to .htaccess)
-        const htaccessContent = `# BEGIN WordPress
-<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-RewriteBase /
-RewriteRule ^index\\.php$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
-</IfModule>
-# END WordPress`;
-
-        execSync(
-            `docker exec ${WP_CONTAINER} bash -c 'cat > /var/www/html/.htaccess << "HTEOF"
-${htaccessContent}
-HTEOF'`,
-            { stdio: 'pipe' }
-        );
-
-        console.log('        Permalinks configured');
-        return true;
-    } catch (error) {
-        console.error('  ✗ Permalink setup failed:', error);
-        return false;
-    }
-}
-
 async function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -298,10 +170,10 @@ async function generateThemeForScenario(scenario: Scenario): Promise<{ themeDir:
 // SCREENSHOT CAPTURE
 // ============================================================================
 
-async function capturePageScreenshot(page: Page, url: string, outputPath: string): Promise<boolean> {
+async function captureHomepage(page: Page, outputPath: string): Promise<boolean> {
     try {
-        // Navigate to URL
-        await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
+        // Navigate to WordPress homepage
+        await page.goto(WP_URL, { waitUntil: 'networkidle', timeout: 30000 });
 
         // Wait for content to settle
         await delay(2000);
@@ -316,7 +188,7 @@ async function capturePageScreenshot(page: Page, url: string, outputPath: string
 
         return true;
     } catch (error) {
-        console.error(`  ✗ Screenshot capture failed for ${url}:`, error);
+        console.error('  ✗ Screenshot capture failed:', error);
         return false;
     }
 }
@@ -327,13 +199,12 @@ async function capturePageScreenshot(page: Page, url: string, outputPath: string
 
 async function main() {
     console.log('═══════════════════════════════════════════════════════════');
-    console.log('  WooCommerce Gallery Capture - Shop & Product Pages');
+    console.log('  Ecommerce Gallery Capture - Phase 4 Visual Verification');
     console.log('═══════════════════════════════════════════════════════════');
     console.log('');
-    console.log('Pages to capture:');
-    console.log('  1. Homepage (with Shop link + cart icon)');
-    console.log('  2. Shop Archive (archive-product.html)');
-    console.log('  3. Single Product (single-product.html)');
+    console.log('Scenarios:');
+    console.log('  1. Ecommerce + Modern (clean radii, product-focused)');
+    console.log('  2. Ecommerce + Bold (sharp edges, high contrast CTAs)');
     console.log('');
 
     // Ensure gallery directory exists
@@ -351,17 +222,6 @@ async function main() {
         process.exit(1);
     }
 
-    // Setup WooCommerce
-    console.log('\n🛒 Setting up WooCommerce...');
-    const wooInstalled = installWooCommerce();
-    if (!wooInstalled) {
-        console.error('  ✗ Failed to install WooCommerce. Continuing without products...');
-    } else {
-        setupWooCommercePages();
-        setupPermalinks();
-        createSampleProducts();
-    }
-
     // Launch browser
     console.log('\n🌐 Launching browser...');
     const browser = await chromium.launch({
@@ -376,16 +236,17 @@ async function main() {
     const page = await context.newPage();
 
     let successCount = 0;
-    const total = WOOCOMMERCE_SCENARIOS.length * 3; // 3 pages per scenario
+    const total = ECOMMERCE_SCENARIOS.length;
 
-    console.log(`\n🎨 Processing ${WOOCOMMERCE_SCENARIOS.length} scenario(s)...\n`);
+    console.log(`\n🎨 Processing ${total} ecommerce scenarios...\n`);
 
-    for (let i = 0; i < WOOCOMMERCE_SCENARIOS.length; i++) {
-        const scenario = WOOCOMMERCE_SCENARIOS[i];
-        const prefix = `[${i + 1}/${WOOCOMMERCE_SCENARIOS.length}]`;
+    for (let i = 0; i < ECOMMERCE_SCENARIOS.length; i++) {
+        const scenario = ECOMMERCE_SCENARIOS[i];
+        const prefix = `[${i + 1}/${total}]`;
 
         console.log(`${prefix} ${scenario.name}`);
         console.log(`      Brand Mode: ${scenario.brandStyle}`);
+        console.log(`      Hero Layout: ${scenario.heroLayout}`);
 
         try {
             // Step 1: Generate theme
@@ -410,33 +271,23 @@ async function main() {
                 throw new Error('Theme activation failed');
             }
 
-            // Step 4: Clear WordPress caches
+            // Step 3.5: Clear WordPress caches to ensure fresh content
             console.log('      → Clearing WordPress caches...');
             clearWordPressCache();
 
             // Longer delay for WordPress to fully recognize the theme
             await delay(3000);
 
-            // Step 5: Capture screenshots
-            const pagesToCapture = [
-                { url: WP_URL, output: `home-${scenario.outputPrefix}.jpg`, label: 'Homepage' },
-                { url: `${WP_URL}/shop`, output: `shop-${scenario.outputPrefix}.jpg`, label: 'Shop Archive' },
-                { url: `${WP_URL}/?post_type=product`, output: `product-${scenario.outputPrefix}.jpg`, label: 'Product Page' }
-            ];
-
-            for (const pageConfig of pagesToCapture) {
-                console.log(`      → Capturing ${pageConfig.label}...`);
-                const outputPath = path.join(GALLERY_DIR, pageConfig.output);
-                const captured = await capturePageScreenshot(page, pageConfig.url, outputPath);
-                if (captured) {
-                    successCount++;
-                    console.log(`        ✅ Saved: ${pageConfig.output}`);
-                } else {
-                    console.log(`        ❌ Failed: ${pageConfig.output}`);
-                }
+            // Step 4: Capture screenshot
+            console.log('      → Capturing homepage...');
+            const outputPath = path.join(GALLERY_DIR, scenario.outputFile);
+            const captured = await captureHomepage(page, outputPath);
+            if (!captured) {
+                throw new Error('Screenshot capture failed');
             }
 
-            console.log('');
+            successCount++;
+            console.log(`      ✅ Saved: ${scenario.outputFile}\n`);
 
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : String(error);
@@ -448,21 +299,18 @@ async function main() {
 
     // ======== RESULTS REPORT ========
     console.log('═══════════════════════════════════════════════════════════');
-    console.log('  WOOCOMMERCE GALLERY COMPLETE');
+    console.log('  ECOMMERCE GALLERY COMPLETE');
     console.log('═══════════════════════════════════════════════════════════\n');
 
-    console.log(`✅ ${successCount}/${total} pages captured`);
+    console.log(`✅ ${successCount}/${total} WordPress homepages captured`);
     console.log(`\n📁 Gallery saved to: ${GALLERY_DIR}\n`);
 
     // List files
     try {
         const files = await fs.readdir(GALLERY_DIR);
-        const wooFiles = files.filter(f =>
-            (f.includes('ecommerce') || f.includes('shop') || f.includes('product')) &&
-            (f.endsWith('.png') || f.endsWith('.jpg'))
-        ).sort();
-        console.log('WooCommerce screenshots:');
-        for (const file of wooFiles) {
+        const ecomFiles = files.filter(f => f.includes('ecommerce') && (f.endsWith('.png') || f.endsWith('.jpg'))).sort();
+        console.log('Ecommerce files:');
+        for (const file of ecomFiles) {
             const stats = await fs.stat(path.join(GALLERY_DIR, file));
             const sizeKb = (stats.size / 1024).toFixed(0);
             console.log(`  • ${file} (${sizeKb} KB)`);
@@ -471,7 +319,7 @@ async function main() {
         console.log('  (Could not list files)');
     }
 
-    return successCount >= 1 ? 0 : 1;
+    return successCount === total ? 0 : 1;
 }
 
 main().then(code => process.exit(code)).catch(err => {

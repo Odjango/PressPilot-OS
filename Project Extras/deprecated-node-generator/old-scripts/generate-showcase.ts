@@ -1,7 +1,8 @@
 import fs from 'fs-extra';
 import path from 'node:path';
-import { generateTheme } from '../src/generator';
-import type { BrandMode, GeneratorData, PageData } from '../src/generator/types';
+// DEPRECATED: Old Node.js generator removed.
+// import { generateTheme } from '../src/generator';
+import type { BrandMode, GeneratorData, PageData } from '../types/generator-legacy';
 
 interface ShowcaseTheme {
   key: string;

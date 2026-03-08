@@ -15,7 +15,7 @@
 
 import fs from 'fs-extra';
 import path from 'path';
-import { HeroLayout, PageContent } from '../generator/types';
+import { HeroLayout, PageContent } from '../../types/generator-legacy';
 
 export interface HeroPreviewOptions {
     businessName?: string;

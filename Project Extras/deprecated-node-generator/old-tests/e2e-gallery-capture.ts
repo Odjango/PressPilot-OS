@@ -21,7 +21,8 @@ import { chromium, Browser, Page } from 'playwright';
 import { execSync } from 'child_process';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { generateTheme } from '../src/generator';
+// DEPRECATED: Old Node.js generator removed.
+// import { generateTheme } from '../src/generator';
 import { buildSaaSInputFromStudioInput, StudioFormInput } from '../lib/presspilot/studioAdapter';
 import { transformSaaSInputToGeneratorData } from '../lib/presspilot/dataTransformer';
 import type { TT4PaletteId, TT4HeroLayout, TT4BrandStyle } from '../lib/theme/palettes';

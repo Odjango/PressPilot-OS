@@ -7,7 +7,8 @@
 
 import fs from 'fs-extra';
 import path from 'path';
-import { generateTheme } from '../../src/generator';
+// DEPRECATED: Old Node.js generator removed.
+// import { generateTheme } from '../../src/generator';
 
 let passed = 0;
 let failed = 0;

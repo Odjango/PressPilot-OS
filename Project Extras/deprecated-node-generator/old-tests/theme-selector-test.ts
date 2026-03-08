@@ -1,5 +1,5 @@
 import { selectTheme } from '../../src/generator/modules/ThemeSelector';
-import { GeneratorData } from '../../src/generator/types';
+import { GeneratorData } from '../../types/generator-legacy';
 
 async function runThemeSelectorTests() {
     console.log('='.repeat(80));

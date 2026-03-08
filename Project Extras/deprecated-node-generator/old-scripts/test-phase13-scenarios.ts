@@ -9,7 +9,8 @@
 
 import { buildSaaSInputFromStudioInput, type StudioFormInput } from '../lib/presspilot/studioAdapter';
 import { transformSaaSInputToGeneratorData } from '../lib/presspilot/dataTransformer';
-import { generateTheme } from '../src/generator';
+// DEPRECATED: Old Node.js generator removed.
+// import { generateTheme } from '../src/generator';
 import fs from 'fs-extra';
 import path from 'path';
 

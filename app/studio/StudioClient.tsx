@@ -17,7 +17,7 @@ import FontStylePreview, { getFontStyles } from "./components/FontStylePreview";
 import { PALETTES, FONT_PROFILE_OPTIONS, HERO_LAYOUT_OPTIONS, BRAND_STYLE_OPTIONS, getPreviewColors, type TT4FontProfile, type TT4PaletteId, type TT4HeroLayout, type TT4BrandStyle, type PreviewColors } from "@/lib/theme/palettes";
 import MenuUploader from "./components/MenuUploader";
 import LogoUploader from "./components/LogoUploader";
-import { RestaurantMenu } from "@/src/generator/types";
+import { RestaurantMenu } from "@/types/generator-legacy";
 import StepProgress from "./components/StepProgress";
 import { ArrowLeft, ArrowRight, Wand2, Download, CheckCircle2, Sparkles, Info, X, Loader2, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";

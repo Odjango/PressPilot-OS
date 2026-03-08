@@ -1,5 +1,5 @@
 import { PressPilotSaaSInput } from '../../types/presspilot';
-import { GeneratorData } from '../../src/generator/types';
+import { GeneratorData } from '../../types/generator-legacy';
 
 /**
  * Transforms PressPilotSaaSInput (API format) to GeneratorData (internal format)
@@ -30,7 +30,7 @@ export function transformSaaSInputToGeneratorData(input: PressPilotSaaSInput): G
         logo: input.visualAssets?.logo_external_url || input.visualAssets?.logo_file_url,
     };
 
-    const pages: import('../../src/generator/types').PageData[] = [
+    const pages: import('../../types/generator-legacy').PageData[] = [
         {
             title: 'About',
             slug: 'about',

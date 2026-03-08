@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Utensils, X, Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
-import { RestaurantMenu, RestaurantMenuItem } from '@/src/generator/types';
+import { RestaurantMenu, RestaurantMenuItem } from '@/types/generator-legacy';
 import { toast } from 'sonner';
 
 interface MenuUploaderProps {
