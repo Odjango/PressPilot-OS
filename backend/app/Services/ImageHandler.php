@@ -50,6 +50,17 @@ class ImageHandler
         'IMAGE_PORTFOLIO' => [900, 600],
     ];
 
+    /**
+     * Query overrides by token prefix — ensures people-related tokens
+     * get person photos instead of generic category images.
+     * Tokens not matched here use the business category as query.
+     */
+    private array $tokenQueryOverrides = [
+        'IMAGE_TEAM' => 'professional person portrait headshot',
+        'IMAGE_CHEF' => 'chef portrait professional kitchen',
+        'IMAGE_TESTIMONIAL' => 'person portrait professional',
+    ];
+
     public function __construct(
         private ImageProviderInterface $provider,
         private ImageProviderInterface $fallbackProvider,
@@ -127,7 +138,10 @@ class ImageHandler
             }
 
             if (! $url) {
-                $result = $this->fetchImage($query, $width, $height, $context);
+                // Use token-specific query for people-related images,
+                // fall back to business category for everything else
+                $imageQuery = $this->resolveTokenQuery($token, $query);
+                $result = $this->fetchImage($imageQuery, $width, $height, $context);
                 $url = $result['url'];
             }
 
@@ -140,6 +154,22 @@ class ImageHandler
             'urls' => $urls,
             'paths' => $paths,
         ];
+    }
+
+    /**
+     * Resolve the Unsplash query for a given IMAGE token.
+     * People-related tokens (TEAM, CHEF, TESTIMONIAL) get person-specific queries
+     * instead of the generic business category to avoid food/product images in people sections.
+     */
+    private function resolveTokenQuery(string $token, string $defaultQuery): string
+    {
+        foreach ($this->tokenQueryOverrides as $prefix => $overrideQuery) {
+            if (str_starts_with($token, $prefix)) {
+                return $overrideQuery;
+            }
+        }
+
+        return $defaultQuery;
     }
 
     /**
