@@ -1,18 +1,18 @@
-# PressPilot API Documentation
+# PressPilot OS — API Documentation
 
-> **Base URL:** `https://presspilotapp.com/api`
-> **Version:** 1.0
-> **Last Updated:** 2026-03-08
+**Base URL:** `https://presspilotapp.com/api`
+
+**Version:** 1.0.0
+
+**Last Updated:** 2026-03-08
 
 ## Overview
 
-The PressPilot API enables programmatic generation of WordPress FSE themes. All endpoints return JSON responses.
-
----
+The PressPilot API allows you to programmatically generate production-ready WordPress Full Site Editing (FSE) themes using AI. All endpoints return JSON responses and require proper authentication.
 
 ## Authentication
 
-Currently, the API is open for public use. Rate limiting applies (see below).
+Currently, the API is accessed through the Studio UI. Future versions will support API keys for programmatic access.
 
 ---
 
@@ -22,217 +22,332 @@ Currently, the API is open for public use. Rate limiting applies (see below).
 
 Start a new theme generation job.
 
-```
-POST /generate
-Content-Type: application/json
-```
+**Endpoint:** `POST /api/generate`
 
-#### Request Body
+**Request Body:**
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `name` | string | Yes | Business name (1-100 chars) |
-| `tagline` | string | No | Business tagline |
-| `description` | string | No | Business description (used for content generation) |
-| `category` | string | Yes | Business vertical: `restaurant`, `ecommerce`, `saas`, `portfolio`, `local_service` |
-| `heroLayout` | string | No | Hero style: `fullBleed`, `split`, `centered`. Default: `fullBleed` |
-| `colorPrimary` | string | No | Primary brand color (hex, e.g., `#1e3a5f`) |
-| `colorSecondary` | string | No | Secondary brand color (hex) |
-| `fontProfile` | string | No | Typography preset: `modern`, `classic`, `bold`, `elegant`, `playful`. Default: `modern` |
-| `logo` | string | No | Logo image URL or base64 data URI |
-
-#### Example Request
-
-```json
+\`\`\`json
 {
-  "name": "Luigi Pizza",
-  "tagline": "Authentic Italian cuisine since 1985",
-  "description": "Family-owned pizzeria in downtown Brooklyn serving wood-fired pizza and homemade pasta.",
+  "name": "Luigi's Pizza",
+  "logo": "data:image/png;base64,...",
+  "tagline": "Authentic Italian Pizza",
+  "description": "Family-owned pizzeria serving authentic Neapolitan-style pizza with fresh ingredients",
   "category": "restaurant",
   "heroLayout": "fullBleed",
-  "colorPrimary": "#8B0000",
+  "colorPrimary": "#C8102E",
   "colorSecondary": "#FFD700",
-  "fontProfile": "classic"
+  "fontProfile": "modern"
 }
-```
+\`\`\`
 
-#### Response
+**Parameters:**
 
-```json
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| \`name\` | string | Yes | Business name (max 60 chars) |
+| \`logo\` | string | No | Base64-encoded image or URL |
+| \`tagline\` | string | No | Business tagline (max 100 chars) |
+| \`description\` | string | Yes | Business description (min 20 chars) |
+| \`category\` | string | Yes | One of: \`restaurant\`, \`ecommerce\`, \`saas\`, \`portfolio\`, \`local_service\` |
+| \`heroLayout\` | string | Yes | One of: \`fullBleed\`, \`fullWidth\`, \`split\`, \`minimal\` |
+| \`colorPrimary\` | string | No | Hex color code (e.g., \`#C8102E\`) |
+| \`colorSecondary\` | string | No | Hex color code |
+| \`fontProfile\` | string | Yes | One of: \`modern\`, \`classic\`, \`playful\`, \`elegant\` |
+
+**Response (200 OK):**
+
+\`\`\`json
 {
   "success": true,
-  "jobId": "job_abc123xyz",
+  "jobId": "abc123xyz789",
+  "status": "pending",
   "message": "Theme generation started"
 }
-```
+\`\`\`
 
-#### Status Codes
+**Response (400 Bad Request):**
 
-| Code | Description |
-|------|-------------|
-| 200 | Job created successfully |
-| 400 | Invalid request body |
-| 429 | Rate limit exceeded |
-| 500 | Server error |
+\`\`\`json
+{
+  "success": false,
+  "error": "Invalid category. Must be one of: restaurant, ecommerce, saas, portfolio, local_service"
+}
+\`\`\`
+
+**Response (500 Internal Server Error):**
+
+\`\`\`json
+{
+  "success": false,
+  "error": "Failed to start theme generation job"
+}
+\`\`\`
 
 ---
 
 ### 2. Check Generation Status
 
-Poll for job completion status.
+Poll the status of a theme generation job.
 
-```
-GET /status?id={jobId}
-```
+**Endpoint:** \`GET /api/status?id={jobId}\`
 
-#### Query Parameters
+**Query Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | string | Yes | The job ID returned from `/generate` |
+| \`id\` | string | Yes | Job ID returned from \`/api/generate\` |
 
-#### Response (In Progress)
+**Response (200 OK - In Progress):**
 
-```json
+\`\`\`json
 {
   "status": "processing",
   "progress": 45,
-  "stage": "Generating page content..."
+  "message": "Generating content patterns..."
 }
-```
+\`\`\`
 
-#### Response (Completed)
+**Response (200 OK - Completed):**
 
-```json
+\`\`\`json
 {
   "status": "completed",
-  "themeUrl": "https://presspilotapp.com/downloads/luigi-pizza.zip",
-  "staticUrl": "https://presspilotapp.com/preview/luigi-pizza",
-  "images_upgraded": false
+  "themeUrl": "https://supabase.co/storage/v1/object/signed/...",
+  "staticUrl": "https://supabase.co/storage/v1/object/signed/...",
+  "images_upgraded": false,
+  "expires_at": "2026-03-15T12:00:00Z"
 }
-```
+\`\`\`
 
-#### Response (Failed)
+**Response (200 OK - Failed):**
 
-```json
+\`\`\`json
 {
   "status": "failed",
-  "error": "Content generation failed: OpenAI API timeout"
+  "error": "AI content generation timed out. Please try again."
 }
-```
+\`\`\`
 
-#### Status Values
+**Response (404 Not Found):**
 
-| Status | Description |
-|--------|-------------|
-| `queued` | Job is waiting in queue |
-| `processing` | Generation in progress |
-| `completed` | Theme ready for download |
-| `failed` | Generation failed (see `error` field) |
+\`\`\`json
+{
+  "error": "Job not found"
+}
+\`\`\`
 
 ---
 
-### 3. Upgrade Images
+### 3. Upgrade Theme Images
 
-Trigger DALL-E image generation to replace stock photos with custom AI images.
+Trigger DALL-E image upgrade for a completed theme (post-payment).
 
-```
-POST /upgrade-images
-Content-Type: application/json
-```
+**Endpoint:** \`POST /api/upgrade-images\`
 
-#### Request Body
+**Request Body:**
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `jobId` | string | Yes | The job ID from a completed generation |
-
-#### Example Request
-
-```json
+\`\`\`json
 {
-  "jobId": "job_abc123xyz"
+  "jobId": "abc123xyz789"
 }
-```
+\`\`\`
 
-#### Response
+**Parameters:**
 
-```json
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| \`jobId\` | string | Yes | Job ID of completed theme |
+
+**Response (200 OK):**
+
+\`\`\`json
 {
   "success": true,
-  "message": "Image upgrade started",
-  "estimatedTime": 60
+  "status": "upgrading",
+  "message": "DALL-E image upgrade started. Check status with /api/status"
 }
-```
+\`\`\`
 
-#### Notes
+**Response (400 Bad Request):**
 
-- Image upgrade is a paid feature
-- Takes 30-90 seconds to complete
-- Poll `/status` to check when `images_upgraded` becomes `true`
+\`\`\`json
+{
+  "success": false,
+  "error": "Theme generation not completed yet"
+}
+\`\`\`
+
+**Response (402 Payment Required):**
+
+\`\`\`json
+{
+  "success": false,
+  "error": "Payment required to upgrade images"
+}
+\`\`\`
 
 ---
 
 ### 4. Payment Webhook (Internal)
 
-LemonSqueezy payment webhook receiver. Not for public use.
+**Endpoint:** \`POST /api/webhooks/lemonsqueezy\`
 
-```
-POST /webhooks/lemonsqueezy
-```
+**Description:** LemonSqueezy webhook receiver for payment events. This endpoint is called by LemonSqueezy when a payment is completed.
+
+**Authentication:** Webhook signature verification using \`LEMONSQUEEZY_WEBHOOK_SECRET\`
+
+**Payload Example:**
+
+\`\`\`json
+{
+  "meta": {
+    "event_name": "order_created"
+  },
+  "data": {
+    "attributes": {
+      "identifier": "abc123",
+      "custom_data": {
+        "job_id": "abc123xyz789"
+      }
+    }
+  }
+}
+\`\`\`
+
+**Response (200 OK):**
+
+\`\`\`json
+{
+  "received": true
+}
+\`\`\`
+
+---
+
+## Status Codes
+
+| Code | Meaning |
+|------|---------|
+| 200 | Success |
+| 400 | Bad Request (invalid parameters) |
+| 402 | Payment Required |
+| 404 | Resource Not Found |
+| 429 | Too Many Requests (rate limit exceeded) |
+| 500 | Internal Server Error |
 
 ---
 
 ## Rate Limits
 
-| Endpoint | Limit |
-|----------|-------|
-| `/generate` | 10 requests per hour per IP |
-| `/status` | 60 requests per minute per IP |
-| `/upgrade-images` | 5 requests per hour per IP |
+| Endpoint | Limit | Window |
+|----------|-------|--------|
+| \`POST /api/generate\` | 5 requests | 1 hour |
+| \`GET /api/status\` | 100 requests | 1 minute |
+| \`POST /api/upgrade-images\` | 3 requests | 1 hour |
 
 Rate limit headers are included in responses:
 
-```
-X-RateLimit-Limit: 10
-X-RateLimit-Remaining: 7
-X-RateLimit-Reset: 1709913600
-```
+\`\`\`
+X-RateLimit-Limit: 5
+X-RateLimit-Remaining: 3
+X-RateLimit-Reset: 1678901234
+\`\`\`
 
 ---
 
-## Error Responses
-
-All errors follow this format:
-
-```json
-{
-  "success": false,
-  "error": "Human-readable error message",
-  "code": "ERROR_CODE"
-}
-```
-
-### Common Error Codes
+## Error Codes
 
 | Code | Description |
 |------|-------------|
-| `INVALID_REQUEST` | Missing or invalid request parameters |
-| `JOB_NOT_FOUND` | The specified job ID does not exist |
-| `RATE_LIMIT_EXCEEDED` | Too many requests |
-| `GENERATION_FAILED` | Theme generation encountered an error |
-| `PAYMENT_REQUIRED` | Feature requires payment |
+| \`INVALID_CATEGORY\` | Business category must be one of the supported types |
+| \`INVALID_HERO_LAYOUT\` | Hero layout must be one of: fullBleed, fullWidth, split, minimal |
+| \`INVALID_FONT_PROFILE\` | Font profile must be one of: modern, classic, playful, elegant |
+| \`MISSING_REQUIRED_FIELD\` | Required field is missing (name, description, category) |
+| \`DESCRIPTION_TOO_SHORT\` | Business description must be at least 20 characters |
+| \`JOB_NOT_FOUND\` | No generation job found with the provided ID |
+| \`JOB_FAILED\` | Theme generation failed (check job logs for details) |
+| \`GENERATION_TIMEOUT\` | AI content generation exceeded maximum time (600s) |
+| \`PAYMENT_REQUIRED\` | Payment required to access premium features |
+| \`RATE_LIMIT_EXCEEDED\` | Too many requests (see rate limits above) |
 
 ---
 
-## Webhooks (Coming Soon)
+## Example: Complete Generation Flow
 
-Subscribe to receive webhook notifications when theme generation completes.
+### Step 1: Start Generation
+
+\`\`\`bash
+curl -X POST https://presspilotapp.com/api/generate \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "name": "Luigi Pizza",
+    "description": "Family-owned pizzeria serving authentic Neapolitan-style pizza",
+    "category": "restaurant",
+    "heroLayout": "fullBleed",
+    "fontProfile": "modern"
+  }'
+\`\`\`
+
+**Response:**
+
+\`\`\`json
+{
+  "success": true,
+  "jobId": "abc123xyz789",
+  "status": "pending"
+}
+\`\`\`
+
+### Step 2: Poll Status
+
+\`\`\`bash
+curl https://presspilotapp.com/api/status?id=abc123xyz789
+\`\`\`
+
+**Response (In Progress):**
+
+\`\`\`json
+{
+  "status": "processing",
+  "progress": 65,
+  "message": "Assembling theme files..."
+}
+\`\`\`
+
+**Response (Completed):**
+
+\`\`\`json
+{
+  "status": "completed",
+  "themeUrl": "https://supabase.co/storage/v1/object/signed/themes/abc123.zip",
+  "images_upgraded": false
+}
+\`\`\`
+
+### Step 3: Download Theme
+
+\`\`\`bash
+curl -O "https://supabase.co/storage/v1/object/signed/themes/abc123.zip"
+\`\`\`
 
 ---
 
 ## Support
 
-- **Documentation:** https://presspilotapp.com/docs
+For API support, please contact:
+
 - **Email:** support@presspilotapp.com
-- **Status:** https://status.presspilotapp.com
+- **Docs:** https://docs.presspilotapp.com
+- **GitHub Issues:** https://github.com/Odjango/PressPilot-OS/issues
+
+---
+
+## Changelog
+
+### 1.0.0 (2026-03-08)
+
+- Initial API release
+- Theme generation endpoint
+- Status polling endpoint
+- Image upgrade endpoint
+- LemonSqueezy webhook integration
