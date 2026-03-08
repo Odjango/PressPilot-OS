@@ -100,16 +100,8 @@ export default function StudioClient({ slug }: Props) {
   const [socialInstagram, setSocialInstagram] = useState<string>("");
   const [showContactFields, setShowContactFields] = useState<boolean>(false);
 
-  // Hero Preview State (Phase 10)
-  const [heroPreviewLoading, setHeroPreviewLoading] = useState(false);
-  const [heroPreviewError, setHeroPreviewError] = useState<string | null>(null);
-  const [heroPreviews, setHeroPreviews] = useState<Array<{
-    layout: TT4HeroLayout;
-    screenshotUrl: string;
-    label: string;
-    description: string;
-  }> | null>(null);
-  const [previewSessionId, setPreviewSessionId] = useState<string | null>(null);
+  // Hero Preview State (Phase 10) - DEPRECATED: hero-previews endpoint removed in commit 1577458
+  // Kept for reference but no longer used
 
   // Refs for Color Pickers
   const colorPickerRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -533,39 +525,8 @@ export default function StudioClient({ slug }: Props) {
     };
   }, [project?.name, project?.slug, brief, customHeroTitle, customPaletteId, customFontPairId, customLogoBase64, logoColors, menus, selectedBusinessCategoryId, selectedFontProfile, selectedHeroLayout, selectedBrandStyle, paletteOverrides, contactEmail, contactPhone, contactAddress, contactCity, contactState, contactZip, socialFacebook, socialInstagram]);
 
-  // Handler for generating hero previews (Phase 10)
-  const handleGeneratePreviews = useCallback(async () => {
-    setHeroPreviewLoading(true);
-    setHeroPreviewError(null);
-    setHeroPreviews(null);
-
-    try {
-      const response = await fetch('/api/studio/hero-previews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input: studioInput() })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || errorData.details || 'Preview generation failed');
-      }
-
-      const data = await response.json();
-      setHeroPreviews(data.previews);
-      setPreviewSessionId(data.sessionId);
-      setCurrentStep(4); // Advance to Hero Preview step
-      toast.success("Hero previews generated! Select your favorite layout.");
-
-    } catch (error) {
-      console.error('[StudioClient] preview generation error:', error);
-      const message = error instanceof Error ? error.message : 'Failed to generate previews';
-      setHeroPreviewError(message);
-      toast.error(message);
-    } finally {
-      setHeroPreviewLoading(false);
-    }
-  }, [studioInput]);
+  // handleGeneratePreviews - REMOVED: hero-previews endpoint deleted in commit 1577458
+  // Step 3 now advances directly to Step 4 confirmation
 
   const handleAssign = useCallback(async () => {
     setAssigning(true);
@@ -1412,40 +1373,17 @@ export default function StudioClient({ slug }: Props) {
               </button>
               <button
                 type="button"
-                disabled={heroPreviewLoading}
-                onClick={handleGeneratePreviews}
-                className="flex items-center gap-3 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 px-10 py-5 text-base font-bold text-white transition-all hover:from-emerald-400 hover:to-emerald-500 hover:scale-105 disabled:from-slate-700 disabled:to-slate-800 disabled:text-slate-500 shadow-xl shadow-emerald-500/20"
+                onClick={() => setCurrentStep(4)}
+                className="flex items-center gap-3 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 px-10 py-5 text-base font-bold text-white transition-all hover:from-emerald-400 hover:to-emerald-500 hover:scale-105 shadow-xl shadow-emerald-500/20"
               >
-                {heroPreviewLoading ? (
-                  <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    Rendering...
-                  </>
-                ) : (
-                  <>
-                    Preview with Real Content
-                    <ImageIcon className="h-5 w-5" />
-                  </>
-                )}
+                Review & Generate
+                <ArrowRight className="h-5 w-5" />
               </button>
             </div>
-            {heroPreviewError && (
-              <div className="mt-4 text-sm font-medium text-red-400 bg-red-950/50 p-4 rounded-xl border border-red-900/50 text-center space-y-3">
-                <p>{heroPreviewError}</p>
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(4)}
-                  className="inline-flex items-center gap-2 rounded-full bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/20 transition-colors"
-                >
-                  Skip Preview — Go to Generate
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            )}
           </div>
         )}
 
-        {/* STEP 4: PREVIEW WITH REAL CONTENT */}
+        {/* STEP 4: REVIEW & GENERATE */}
         {currentStep === 4 && (
           <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="text-center mb-8">
@@ -1453,74 +1391,111 @@ export default function StudioClient({ slug }: Props) {
                 Step 4
               </p>
               <h2 className="text-3xl font-bold text-white">
-                Preview with Real Content
+                Review & Generate
               </h2>
               <p className="text-slate-400 mt-2 max-w-lg mx-auto">
-                This is an actual WordPress-rendered screenshot of your theme
+                Confirm your selections and generate your WordPress theme
               </p>
             </div>
 
-            {/* Selected Layout Info */}
-            <div className="rounded-2xl border border-emerald-800 bg-emerald-950/30 p-4 max-w-2xl mx-auto">
-              <div className="flex items-center justify-center gap-3">
-                <div className="w-10 h-10 rounded-lg overflow-hidden">
-                  <HeroLayoutIcon layout={selectedHeroLayout} />
+            {/* Summary Card */}
+            <div className="rounded-3xl border border-slate-700 bg-slate-900 p-8 max-w-2xl mx-auto space-y-6">
+              {/* Layout */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl overflow-hidden border border-slate-700">
+                    <HeroLayoutIcon layout={selectedHeroLayout} />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 font-medium">Hero Layout</p>
+                    <p className="text-white font-bold">
+                      {HERO_LAYOUT_OPTIONS.find(l => l.id === selectedHeroLayout)?.label}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white font-bold">
-                    {HERO_LAYOUT_OPTIONS.find(l => l.id === selectedHeroLayout)?.label}
-                  </p>
-                  <p className="text-xs text-emerald-400">
-                    {FONT_PROFILE_OPTIONS.find(f => f.id === selectedFontProfile)?.label} typography
-                  </p>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(2)}
+                  className="text-xs text-emerald-400 hover:text-emerald-300"
+                >
+                  Change
+                </button>
               </div>
+
+              <div className="border-t border-slate-800" />
+
+              {/* Typography */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Typography</p>
+                  <p className="text-white font-bold">
+                    {FONT_PROFILE_OPTIONS.find(f => f.id === selectedFontProfile)?.label}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(3)}
+                  className="text-xs text-emerald-400 hover:text-emerald-300"
+                >
+                  Change
+                </button>
+              </div>
+
+              <div className="border-t border-slate-800" />
+
+              {/* Colors */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-1">
+                    {[previewColors.base, previewColors.accent, previewColors.contrast, previewColors.accent2].map((color, i) => (
+                      <div
+                        key={i}
+                        className="w-6 h-6 rounded-full border border-slate-600"
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 font-medium">Color Palette</p>
+                    <p className="text-white font-bold">
+                      {customPaletteId === 'brand' ? 'Brand Kit' : PALETTES.find(p => p.id === customPaletteId)?.label || 'Custom'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(3)}
+                  className="text-xs text-emerald-400 hover:text-emerald-300"
+                >
+                  Change
+                </button>
+              </div>
+
+              {customHeroTitle && (
+                <>
+                  <div className="border-t border-slate-800" />
+                  <div>
+                    <p className="text-xs text-slate-500 font-medium">Hero Headline</p>
+                    <p className="text-white font-bold">{customHeroTitle}</p>
+                  </div>
+                </>
+              )}
             </div>
 
-            {heroPreviews && heroPreviews.length > 0 ? (
-              <div className="max-w-4xl mx-auto">
-                {/* Show only the selected layout preview */}
-                {(() => {
-                  const selectedPreview = heroPreviews.find(p => p.layout === selectedHeroLayout) || heroPreviews[0];
-                  return (
-                    <div className="rounded-2xl border border-slate-700 bg-slate-900 overflow-hidden shadow-2xl">
-                      <div className="aspect-[16/9] relative">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={selectedPreview.screenshotUrl}
-                          alt={selectedPreview.label}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                  );
-                })()}
+            {/* What's included */}
+            <div className="text-center space-y-3 max-w-md mx-auto">
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-500">Your theme includes</p>
+              <div className="flex flex-wrap justify-center gap-2 text-xs">
+                <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-300">Homepage</span>
+                <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-300">About Page</span>
+                <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-300">Services Page</span>
+                <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-300">Contact Page</span>
+                {selectedBusinessCategoryId === 'restaurant_cafe' && (
+                  <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-300">Menu Page</span>
+                )}
+                <span className="px-3 py-1 rounded-full bg-emerald-900 text-emerald-300">Royalty-free Images</span>
               </div>
-            ) : (
-              <div className="flex items-center justify-center py-20">
-                <div className="text-center space-y-4">
-                  <div className="h-16 w-16 mx-auto rounded-full bg-slate-800 flex items-center justify-center">
-                    <ImageIcon className="h-8 w-8 text-slate-500" />
-                  </div>
-                  <p className="text-sm text-slate-400">No preview available</p>
-                  <button
-                    type="button"
-                    onClick={handleGeneratePreviews}
-                    disabled={heroPreviewLoading}
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-slate-950"
-                  >
-                    {heroPreviewLoading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        Generating...
-                      </>
-                    ) : (
-                      'Generate Preview'
-                    )}
-                  </button>
-                </div>
-              </div>
-            )}
+            </div>
 
             <div className="flex items-center justify-between border-t border-slate-800 pt-8">
               <button
