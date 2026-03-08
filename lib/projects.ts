@@ -8,7 +8,7 @@ export type ProjectRow = {
   id: string;
   slug: string;
   name: string;
-  owner_email: string;
+  user_id: string;
   status: string;
   created_at: string | null;
 };
@@ -36,8 +36,8 @@ export async function getProjectBySlug(
 
   try {
     const { data, error } = await supabaseAdmin
-      .from('pp_projects')
-      .select('id, slug, name, owner_email, status, created_at')
+      .from('projects')
+      .select('id, slug, name, user_id, status, created_at')
       .eq('slug', slug)
       .maybeSingle();
 

@@ -57,6 +57,51 @@ export interface Database {
         };
         Relationships: [];
       };
+      projects: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          site_type: string;
+          language: string;
+          tier: string;
+          data: any | null;
+          slug: string | null;
+          status: string | null;
+          legacy_pp_project_id: string | null;
+          created_at: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          name: string;
+          site_type?: string;
+          language?: string;
+          tier?: string;
+          data?: any | null;
+          slug?: string | null;
+          status?: string | null;
+          legacy_pp_project_id?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          name?: string;
+          site_type?: string;
+          language?: string;
+          tier?: string;
+          data?: any | null;
+          slug?: string | null;
+          status?: string | null;
+          legacy_pp_project_id?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

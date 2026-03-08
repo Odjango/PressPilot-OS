@@ -7,6 +7,8 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const TEST_EMAIL =
   process.env.DEV_TEST_EMAIL ?? `dev-test+${Date.now()}@presspilot.local`;
+// Test user_id for projects table (mock UUID for verification)
+const TEST_USER_ID = '00000000-0000-0000-0000-000000000001';
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
   console.error(
@@ -35,9 +37,9 @@ let createdProfile = false;
 
 async function checkConnection() {
   console.log('Checking Supabase connection…');
-  const { error } = await supabase.from('pp_projects').select('id').limit(1);
+  const { error } = await supabase.from('projects').select('id').limit(1);
   if (error) {
-    throw new Error(`unable to query pp_projects: ${error.message}`);
+    throw new Error(`unable to query projects: ${error.message}`);
   }
   console.log('Connection OK');
 }
@@ -79,9 +81,9 @@ async function checkProfileUpsert() {
 async function checkProjectCreateAndList() {
   console.log('Checking project create + list…');
   const { data: inserted, error: insertError } = await supabase
-    .from('pp_projects')
+    .from('projects')
     .insert({
-      owner_email: TEST_EMAIL,
+      user_id: TEST_USER_ID,
       name: TEST_PROJECT.name,
       slug: TEST_PROJECT.slug,
       status: TEST_PROJECT.status,
@@ -95,7 +97,7 @@ async function checkProjectCreateAndList() {
   createdProjectId = inserted?.[0]?.id ?? null;
 
   const { data, error: listError } = await supabase
-    .from('pp_projects')
+    .from('projects')
     .select('id,slug')
     .eq('slug', TEST_PROJECT.slug)
     .maybeSingle();
@@ -114,10 +116,10 @@ async function checkProjectCreateAndList() {
 async function cleanup() {
   try {
     if (createdProjectId) {
-      await supabase.from('pp_projects').delete().eq('id', createdProjectId);
+      await supabase.from('projects').delete().eq('id', createdProjectId);
     } else {
       await supabase
-        .from('pp_projects')
+        .from('projects')
         .delete()
         .eq('slug', TEST_PROJECT.slug);
     }

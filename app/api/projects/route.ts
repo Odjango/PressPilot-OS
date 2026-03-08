@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { getUserAuthContext } from '@/lib/auth';
 import { createServerSupabaseClient, createRouteHandlerSupabaseClient, createServiceSupabaseClient } from '@/lib/supabase-server';
 
-const TABLE_NAME = 'pp_projects';
+const TABLE_NAME = 'projects';
 
 const normalizeStatus = (status?: string | null) => {
   if (!status || typeof status !== 'string') return 'draft';
@@ -72,8 +72,8 @@ export async function GET(_request: NextRequest) {
 
   let query = dbClient
     .from(TABLE_NAME)
-    .select('id,owner_email,name,slug,status,created_at')
-    .eq('owner_email', user.email);
+    .select('id,user_id,name,slug,status,created_at')
+    .eq('user_id', user.id);
 
   if (slug) {
     query = query.eq('slug', slug).maybeSingle();
@@ -93,14 +93,14 @@ export async function GET(_request: NextRequest) {
 
   if (slug) {
     if (!data) {
-      console.warn(`[API/Projects] Project not found for slug: ${slug}, email: ${user.email}`);
-      // Debug: Check if any projects exist for this email
-      const { count } = await dbClient.from(TABLE_NAME).select('*', { count: 'exact', head: true }).eq('owner_email', user.email);
-      console.log(`[API/Projects] Total projects for ${user.email}: ${count}`);
+      console.warn(`[API/Projects] Project not found for slug: ${slug}, user_id: ${user.id}`);
+      // Debug: Check if any projects exist for this user
+      const { count } = await dbClient.from(TABLE_NAME).select('*', { count: 'exact', head: true }).eq('user_id', user.id);
+      console.log(`[API/Projects] Total projects for user ${user.id}: ${count}`);
 
       return NextResponse.json({
         error: 'Project not found',
-        debug: { ...debugInfo, email: user.email, slug, totalProjects: count }
+        debug: { ...debugInfo, user_id: user.id, slug, totalProjects: count }
       }, { status: 404 });
     }
     return NextResponse.json({ project: data });
@@ -179,12 +179,12 @@ export async function POST(request: NextRequest) {
   const { data, error } = await dbClient
     .from(TABLE_NAME)
     .insert({
-      owner_email: user.email,
+      user_id: user.id,
       name,
       slug,
       status,
     })
-    .select('id,owner_email,name,slug,status,created_at')
+    .select('id,user_id,name,slug,status,created_at')
     .single();
 
   if (error) {
@@ -193,9 +193,9 @@ export async function POST(request: NextRequest) {
       console.log(`[API/Projects] Slug conflict for ${slug}, fetching existing...`);
       const { data: existing, error: getError } = await dbClient
         .from(TABLE_NAME)
-        .select('id,owner_email,name,slug,status,created_at')
+        .select('id,user_id,name,slug,status,created_at')
         .eq('slug', slug)
-        .eq('owner_email', user.email)
+        .eq('user_id', user.id)
         .single();
 
       if (!getError && existing) {
@@ -287,8 +287,8 @@ export async function PUT(request: NextRequest) {
     .from(TABLE_NAME)
     .update(updates)
     .eq('id', id)
-    .eq('owner_email', user.email)
-    .select('id,owner_email,name,slug,status,created_at')
+    .eq('user_id', user.id)
+    .select('id,user_id,name,slug,status,created_at')
     .single();
 
   if (error) {
