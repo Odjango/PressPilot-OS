@@ -103,25 +103,13 @@ echo ""
 
 echo "--- 6. Generator Runtime ---"
 
-NODE_VERSION=$(docker exec presspilot-laravel-horizon node --version 2>/dev/null || echo "not_found")
-if echo "$NODE_VERSION" | grep -q "v2"; then
-    pass "Node.js available: $NODE_VERSION"
-else
-    fail "Node.js: $NODE_VERSION"
-fi
+# Node.js generator checks removed — SSWG pipeline is pure PHP now (2026-03-08)
 
-TSX_PATH=$(docker exec presspilot-laravel-horizon which tsx 2>/dev/null || echo "not_found")
-if [ "$TSX_PATH" != "not_found" ]; then
-    pass "tsx available at: $TSX_PATH"
+PATTERN_LIB=$(docker exec presspilot-laravel-horizon ls /pattern-library/skeletons 2>/dev/null || echo "not_found")
+if [ "$PATTERN_LIB" != "not_found" ]; then
+    pass "SSWG pattern-library mounted at /pattern-library"
 else
-    fail "tsx not found in PATH"
-fi
-
-GENERATOR=$(docker exec presspilot-laravel-horizon ls /app/generator/bin/generate.ts 2>/dev/null || echo "not_found")
-if [ "$GENERATOR" != "not_found" ]; then
-    pass "Generator script mounted at /app/generator/bin/generate.ts"
-else
-    fail "Generator script not found — check bind mount"
+    fail "pattern-library not found — check COPY in Dockerfile"
 fi
 
 echo ""

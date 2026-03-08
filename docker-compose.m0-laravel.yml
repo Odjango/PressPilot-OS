@@ -59,9 +59,8 @@ services:
       - presspilot-m0
       - coolify
 
-  # ── Laravel Horizon (queue worker + Node generator subprocess) ─────────────
-  # Processes jobs from Redis queues. Invokes the Node.js generator via
-  # `npx tsx /app/generator/bin/generate.ts` with JSON stdin/stdout.
+  # ── Laravel Horizon (queue worker — SSWG pipeline) ────────────────────────
+  # Processes jobs from Redis queues via the PHP-native SSWG pipeline.
   # No HTTP port — worker only.
   laravel-horizon:
     build:
