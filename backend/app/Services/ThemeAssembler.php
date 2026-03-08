@@ -425,14 +425,7 @@ LOGO;
             <!-- wp:heading {"level":4,"textColor":"contrast","style":{"typography":{"fontWeight":"700","textTransform":"uppercase","letterSpacing":"1px"}},"fontSize":"small"} -->
             <h4 class="wp-block-heading has-small-font-size has-contrast-color has-text-color" style="font-weight:700;text-transform:uppercase;letter-spacing:1px">Quick Links</h4>
             <!-- /wp:heading -->
-            <!-- wp:list {"style":{"spacing":{"blockGap":"0.75rem"}},"textColor":"contrast","fontSize":"small"} -->
-            <ul class="has-contrast-color has-text-color has-small-font-size">
-            <li>Home</li>
-            <li>About</li>
-            <li>Services</li>
-            <li>Contact</li>
-            </ul>
-            <!-- /wp:list -->
+            <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","orientation":"vertical"},"fontSize":"small","style":{"spacing":{"blockGap":"0.75rem"}}} /-->
         </div>
         <!-- /wp:column -->
         <!-- wp:column {"width":"33%"} -->
@@ -512,9 +505,13 @@ HEADER;
     private function defaultPageTemplate(): string
     {
         return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
-            "<!-- wp:group {\"tagName\":\"main\",\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<!-- wp:group {\"tagName\":\"main\"} -->\n".
             "<main class=\"wp-block-group\">\n".
-            "<!-- wp:post-content /-->\n".
+            "<!-- wp:group {\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<div class=\"wp-block-group\">\n".
+            "<!-- wp:post-content {\"layout\":{\"type\":\"constrained\"}} /-->\n".
+            "</div>\n".
+            "<!-- /wp:group -->\n".
             "</main>\n".
             "<!-- /wp:group -->\n\n".
             "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
@@ -523,12 +520,14 @@ HEADER;
     private function defaultSingleTemplate(): string
     {
         return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
-            "<!-- wp:group {\"tagName\":\"main\",\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<!-- wp:group {\"tagName\":\"main\"} -->\n".
             "<main class=\"wp-block-group\">\n".
-            "<!-- wp:post-title {\"level\":1} -->\n".
-            "<h1 class=\"wp-block-post-title\"></h1>\n".
-            "<!-- /wp:post-title -->\n".
-            "<!-- wp:post-content /-->\n".
+            "<!-- wp:group {\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<div class=\"wp-block-group\">\n".
+            "<!-- wp:post-title {\"level\":1} /-->\n".
+            "<!-- wp:post-content {\"layout\":{\"type\":\"constrained\"}} /-->\n".
+            "</div>\n".
+            "<!-- /wp:group -->\n".
             "</main>\n".
             "<!-- /wp:group -->\n\n".
             "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
@@ -537,14 +536,18 @@ HEADER;
     private function default404Template(): string
     {
         return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
-            "<!-- wp:group {\"tagName\":\"main\",\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<!-- wp:group {\"tagName\":\"main\"} -->\n".
             "<main class=\"wp-block-group\">\n".
+            "<!-- wp:group {\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<div class=\"wp-block-group\">\n".
             "<!-- wp:heading {\"level\":2} -->\n".
             "<h2 class=\"wp-block-heading\">Page not found</h2>\n".
             "<!-- /wp:heading -->\n".
             "<!-- wp:paragraph -->\n".
             "<p>The page you are looking for could not be found.</p>\n".
             "<!-- /wp:paragraph -->\n".
+            "</div>\n".
+            "<!-- /wp:group -->\n".
             "</main>\n".
             "<!-- /wp:group -->\n\n".
             "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
@@ -553,8 +556,10 @@ HEADER;
     private function defaultIndexTemplate(): string
     {
         return "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\"} /-->\n\n".
-            "<!-- wp:group {\"tagName\":\"main\",\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<!-- wp:group {\"tagName\":\"main\"} -->\n".
             "<main class=\"wp-block-group\">\n".
+            "<!-- wp:group {\"layout\":{\"type\":\"constrained\"}} -->\n".
+            "<div class=\"wp-block-group\">\n".
             "<!-- wp:query {\"queryId\":1,\"query\":{\"perPage\":10,\"pages\":0,\"offset\":0,\"postType\":\"post\",\"order\":\"desc\",\"orderBy\":\"date\",\"author\":\"\",\"search\":\"\",\"exclude\":[],\"sticky\":\"\",\"inherit\":true}} -->\n".
             "<!-- wp:post-template -->\n".
             "<!-- wp:post-title {\"isLink\":true} /-->\n".
@@ -566,6 +571,8 @@ HEADER;
             "<!-- wp:query-pagination-next /-->\n".
             "<!-- /wp:query-pagination -->\n".
             "<!-- /wp:query -->\n".
+            "</div>\n".
+            "<!-- /wp:group -->\n".
             "</main>\n".
             "<!-- /wp:group -->\n\n".
             "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";

@@ -75,6 +75,27 @@ class GenerateThemeJob implements ShouldQueue
             $projectData['businessCategory'] = $projectData['businessCategory'] ?? $project->site_type;
             $projectData['language'] = $projectData['language'] ?? $project->language;
 
+            // Extract logo URL — handle both flat (from DataTransformer) and nested (raw SaaS input) shapes
+            if (empty($projectData['logo'])) {
+                $projectData['logo'] = $projectData['visualAssets']['logo_external_url']
+                    ?? $projectData['visualAssets']['logo_file_url']
+                    ?? null;
+            }
+
+            // Extract vertical for ThemeAssembler (needed for restaurant menu template)
+            if (empty($projectData['vertical'])) {
+                $siteType = app(\App\Services\DataTransformer::class)
+                    ->mapBusinessCategoryToSiteType($projectData['businessCategory'] ?? 'service');
+                $projectData['vertical'] = $siteType;
+            }
+
+            // Extract tagline for ThemeAssembler
+            if (empty($projectData['tagline'])) {
+                $projectData['tagline'] = $projectData['brand']['business_tagline']
+                    ?? $projectData['hero_headline']
+                    ?? '';
+            }
+
             // Map flat color keys from DataTransformer to nested 'colors' array for ThemeAssembler
             if (! isset($projectData['colors'])) {
                 $projectData['colors'] = [];
