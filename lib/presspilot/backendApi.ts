@@ -40,18 +40,46 @@ export async function proxyJsonToBackend(
   const url = backendApiUrl(pathWithQuery);
   if (!url) return null;
 
-  const response = await fetch(url, {
-    method,
-    headers: {
-      Accept: 'application/json',
-      ...(method === 'POST' ? { 'Content-Type': 'application/json' } : {}),
-      ...forwardAuthHeaders(request),
-    },
-    body: method === 'POST' ? JSON.stringify(body ?? {}) : undefined,
-  });
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method,
+      headers: {
+        Accept: 'application/json',
+        ...(method === 'POST' ? { 'Content-Type': 'application/json' } : {}),
+        ...forwardAuthHeaders(request),
+      },
+      body: method === 'POST' ? JSON.stringify(body ?? {}) : undefined,
+    });
+  } catch (fetchError) {
+    const message = fetchError instanceof Error ? fetchError.message : 'Unknown fetch error';
+    console.error(`[backendProxy] fetch failed for ${url}:`, message);
+    return NextResponse.json(
+      { error: `Backend unreachable: ${message}`, proxy_target: url },
+      { status: 502 }
+    );
+  }
 
   const text = await response.text();
   const contentType = response.headers.get('content-type') || 'application/json';
+
+  // If upstream returned a non-JSON error (e.g. HTML error page), wrap it in JSON
+  // so the frontend always gets a parseable error message.
+  if (!response.ok && !contentType.includes('application/json')) {
+    const snippet = text.slice(0, 300).replace(/<[^>]*>/g, '').trim();
+    console.error(
+      `[backendProxy] non-JSON ${response.status} from ${url}:`,
+      snippet || '(empty body)'
+    );
+    return NextResponse.json(
+      {
+        error: `Backend error (${response.status})`,
+        details: snippet || 'Empty response from backend',
+        proxy_target: url,
+      },
+      { status: response.status }
+    );
+  }
 
   return new NextResponse(text, {
     status: response.status,

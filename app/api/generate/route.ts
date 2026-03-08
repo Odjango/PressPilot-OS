@@ -88,10 +88,13 @@ export async function POST(request: Request) {
     }
 
     // M1 feature flag: route generation to Laravel when BACKEND_URL is set.
+    console.log('[API/generate] BACKEND_URL:', process.env.BACKEND_URL ? `set (${process.env.BACKEND_URL})` : 'NOT SET — using fallback path');
     const proxied = await proxyJsonToBackend(request, '/generate', 'POST', body);
     if (proxied) {
+      console.log('[API/generate] Proxied to backend, status:', proxied.status);
       return proxied;
     }
+    console.log('[API/generate] No proxy — executing fallback Supabase path');
 
     // 1. Prepare Payload
     let payload: PressPilotSaaSInput;
