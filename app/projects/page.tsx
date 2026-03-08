@@ -28,10 +28,10 @@ export default async function ProjectsPage() {
 
     const supabase = isBypass ? createServiceSupabaseClient() : await createServerSupabaseClient();
 
-    const { data, error } = await supabase
-      .from('pp_projects')
-      .select('id,owner_email,name,slug,status,created_at')
-      .eq('owner_email', userEmail)
+    const { data, error} = await supabase
+      .from('projects')
+      .select('id,user_id,name,slug,status,created_at')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 
     if (error) {

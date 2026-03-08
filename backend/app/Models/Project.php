@@ -24,12 +24,16 @@ class Project extends Model
         'language',
         'tier',
         'data',
+        'slug',
+        'status',
+        'legacy_pp_project_id',
     ];
 
     protected $attributes = [
         'site_type' => 'general',
         'language' => 'en',
         'tier' => 'individual',
+        'status' => 'draft',
     ];
 
     protected function casts(): array
