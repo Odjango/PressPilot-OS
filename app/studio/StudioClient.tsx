@@ -595,6 +595,9 @@ export default function StudioClient({ slug }: Props) {
       }
 
       const typed = payload as VariationResponse;
+      if (!typed.variationSet?.variations?.length) {
+        throw new Error("Variations response missing variationSet.variations");
+      }
       setVariations(typed);
       setSelectedVariationId(
         typed.variationSet.variations[0]?.id ?? null,
@@ -745,10 +748,10 @@ export default function StudioClient({ slug }: Props) {
   const heroSubtitle =
     (selectedVariation as unknown as { heroSubheadline?: string })
       ?.heroSubheadline ??
-    variations?.variationSet.context.narrative.description_long ??
+    variations?.variationSet?.context?.narrative?.description_long ??
     brief;
   const heroCtas =
-    variations?.variationSet.context.visual.primary_ctas ?? [
+    variations?.variationSet?.context?.visual?.primary_ctas ?? [
       { label: "Book a call" },
       { label: "See services" },
     ];
