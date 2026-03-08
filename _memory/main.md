@@ -1,6 +1,6 @@
 # PressPilot OS — Master Roadmap & Project Memory
 
-Last updated: 2026-03-08
+Last updated: 2026-03-08 (Session C — post-deploy bug fix round 2)
 
 ---
 
@@ -17,14 +17,36 @@ Last updated: 2026-03-08
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `c65f96c` (2026-03-08) — `fix(sswg): apply 5 quality fixes to correct (Laravel) pipeline`
-- Recent commits (2026-03-08):
-  - **PENDING COMMIT** — `chore: remove deprecated Node.js generator, archive to Project Extras`
-  - `c65f96c` — fix(sswg): apply 5 quality fixes to correct (Laravel) pipeline — **PUSHED + DEPLOYING**
-  - `0260cd9` — docs: update project memory with session A fixes
-  - `ae71b0c` — fix: 5 theme generation quality bugs (WRONG PIPELINE — Node.js, not Laravel)
-- Phase 2.8 + Phase 3 commits: ALL PUSHED AND DEPLOYED
-- **ACTION NEEDED:** Commit + push the Node.js generator cleanup. Set APP_DEBUG=false after testing confirms fixes.
+- Latest commit: `5314618` (2026-03-08) — `fix: eliminate nav pollution, mid-word truncation, and block validation errors`
+- Recent commits (2026-03-08, newest first):
+  - `5314618` — fix: eliminate nav pollution, mid-word truncation, block validation errors — **PUSHED + DEPLOYED**
+  - `e6606c6` — fix: logo validation for data URIs, clean WP defaults from nav, add truncation logging — **PUSHED + DEPLOYED**
+  - `06493f1` — fix: resolve logo, Attempt Recovery, and footer link bugs — **PUSHED + DEPLOYED**
+  - `426c3fd` — fix: remove old Node.js generator from Horizon Dockerfile
+  - `1577458` — chore: remove deprecated Node.js generator, archive to Project Extras
+  - `c65f96c` — fix: apply bug fixes to SSWG Laravel pipeline
+- Phase 2.8 + Phase 3 + All bug fix commits: ALL PUSHED AND DEPLOYED
+- **ACTION NEEDED:** Test latest deploy (5314618) to verify: nav clean, no mid-word truncation, no Attempt Recovery on logo blocks. Set APP_DEBUG=false after testing confirms fixes.
+
+### Bug Fix Sessions (2026-03-08)
+
+**Session A** — Initial 5 quality fixes (commit `c65f96c`):
+- K-means color extraction, menu column widths, content loader init fallback, logo via PatternInjector, pattern slug rewriting
+
+**Session B** — Post-deploy bug fix round 1 (commits `06493f1`, `e6606c6`):
+- Footer links: changed `wp:list` to `wp:navigation` with vertical orientation
+- Attempt Recovery on templates: fixed nested group wrapper pattern
+- Logo validation: added `isValidLogoSource()` accepting data URIs (not just http URLs)
+- Nav wrong items: added deletion of WP default content ("Sample Page", "Hello world!")
+- Page ordering: added `menu_order` to page creation in functions.php
+- AI truncation logging: stop_reason=max_tokens detection in AIPlanner
+- Default max_tokens: aligned config default to 4096
+
+**Session C** — Post-deploy bug fix round 2 (commit `5314618`):
+- Nav pollution: changed targeted title deletion to bulk `get_posts()` + `wp_delete_post()` for ALL existing default content (fixes "Hello from WordPress Playground!" which was different from "Hello world!")
+- Mid-word truncation: `validateTokens()` now truncates at word boundary instead of hard `mb_substr()` at maxLength
+- Logo "Attempt Recovery": complete architecture change — logo saved as file in `assets/logo.{ext}`, sideloaded into WP media library via `media_handle_sideload()` in functions.php, header/footer use `wp:site-logo` block (self-closing, no inner HTML to validate) instead of `wp:image` with massive base64 data URI
+- **AWAITING TEST** — deployed but not yet verified by Omar
 
 ### CRITICAL LESSON LEARNED (2026-03-08)
 Previous session (ae71b0c) applied 5 bug fixes to the **deprecated Node.js generator** (`src/generator/`), but production runs the **SSWG Laravel pipeline** (`backend/`). Fixes had zero effect. Re-applied to correct codebase in `c65f96c`.

@@ -1,6 +1,6 @@
 # PressPilot OS — Development Roadmap
 
-> **Last updated: 2026-03-07** — SSWG Phase 2.8 Quality Fixes COMPLETE. 10 critical theme quality issues fixed (images, brand colors, hero layout, logo, navigation, menu page, starter content, fonts). Phase 3 Tasks 3.3 + 3.4 also complete. All needs deploy + end-to-end verification.
+> **Last updated: 2026-03-08** — SSWG Phase 3 DEPLOYED + 3 rounds of post-deploy bug fixes. All major theme quality issues resolved. Logo uses wp:site-logo block with file sideload. Nav cleanup deletes all WP defaults. Token truncation respects word boundaries. Awaiting final test verification.
 > **Canonical SSWG specs:** `agent-os/sswg/PROTOCOL.md` + `agent-os/sswg/PHASE-{0-4}.md`
 > **Decisions:** `DECISIONS.md` (change log included)
 > **Current state:** `_memory/main.md`
@@ -219,6 +219,14 @@ All 10 issues resolved (10 commits via Subagent-Driven Development):
 
 ## Patch Notes
 
+### 2026-03-08
+- [x] **Session A:** 5 quality fixes (K-means colors, menu col widths, content loader, logo, pattern slugs) — commit `c65f96c`
+- [x] **Session B:** Post-deploy fix round 1 — footer nav, Attempt Recovery, logo data URI validation, WP default deletion, page ordering, AI truncation logging — commits `06493f1`, `e6606c6`
+- [x] **Session C:** Post-deploy fix round 2 — bulk WP content deletion (fixes "Hello from WordPress Playground!"), word-boundary token truncation, logo saved as file + wp:site-logo block + media_handle_sideload — commit `5314618`
+- [x] All commits pushed and deployed to Coolify
+- [ ] **NEEDS:** Final verification test of commit `5314618` (nav clean, no truncated words, no Attempt Recovery in editor)
+- [ ] **NEEDS:** Set APP_DEBUG=false once testing confirms all fixes
+
 ### 2026-03-07
 - [x] **Phase 2.8 Quality Fixes complete** — All 10 user-reported theme issues fixed
   - 10 commits implementing 10-task plan via Subagent-Driven Development
@@ -229,7 +237,6 @@ All 10 issues resolved (10 commits via Subagent-Driven Development):
   - DalleProvider, UpgradeThemeImagesJob, adaptive polling, payment gate UI, cleanup command
   - Design doc: `docs/plans/2026-03-07-phase3-image-tier-and-error-handling-design.md`
   - Implementation plan: `docs/plans/2026-03-07-phase3-implementation-plan.md`
-- [ ] **NEEDS** push ALL commits to GitHub + deploy + OPENAI_API_KEY env var + migration + smoke test
 
 ### 2026-03-06
 - [x] Multi-vertical pipeline test (AM) — 5/5 themes generated mechanically, 6 quality issues found

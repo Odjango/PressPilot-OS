@@ -1,12 +1,18 @@
 # PressPilot Project Memory
-**State Saved: 2026-03-08** | **Current Phase: SSWG Phase 3 DEPLOYED — First successful production generation! 5 quality fixes applied, pending redeploy.**
+**State Saved: 2026-03-08** | **Current Phase: SSWG Phase 3 DEPLOYED — 3 rounds of post-deploy bug fixes applied. Logo architecture changed to file-based wp:site-logo. Awaiting final verification.**
 
-> **2026-03-08 UPDATE:** First end-to-end production theme generated (Memo's Pizza). Five quality bugs found and fixed:
-> 1. Brand colors: K-means clustering replaces naive averaging; wired into orchestrator pipeline
-> 2. Menu "Attempt Recovery": column width attributes added
-> 3. Content loader: init hook fallback for WordPress Playground
-> 4. Logo: removed unreliable media_sideload_image; PatternInjector handles it
-> 5. Pattern slug namespace: rewritePatternSlugs() renames base theme slugs after chassis copy
+> **2026-03-08 UPDATE (Session C — latest):** Three rounds of post-deploy bug fixes:
+>
+> **Round 1 (Session A):** K-means color extraction, menu column widths, content loader init fallback, logo via PatternInjector, pattern slug rewriting.
+>
+> **Round 2 (Session B):** Footer links (`wp:navigation` instead of `wp:list`), Attempt Recovery fix (nested group wrapper), logo `isValidLogoSource()` for data URIs, WP default content deletion, page ordering via `menu_order`, AI truncation logging.
+>
+> **Round 3 (Session C — CURRENT DEPLOY):**
+> - **Nav pollution fix:** Bulk `get_posts()` + `wp_delete_post()` for ALL default content (handles "Hello from WordPress Playground!" which had a different title than expected)
+> - **Token truncation:** Word-boundary-aware truncation in `validateTokens()` — no more mid-word cuts like "smok", "thre", "kit"
+> - **Logo architecture overhaul:** Complete redesign — logo decoded from base64, saved as `assets/logo.{ext}` in theme ZIP, sideloaded into WP media library via `media_handle_sideload()` in generated functions.php, header/footer use `wp:site-logo` block (self-closing, zero inner HTML) instead of `wp:image` with base64 data URI. Eliminates "Attempt Recovery" in block editor.
+>
+> **Key architecture decision:** `wp:site-logo` > `wp:image` for logos. The `wp:image` block embeds the URL in both the block comment JSON and the inner HTML `<img src>`. With a 200KB+ base64 data URI, this creates a multi-hundred-KB HTML comment that breaks WordPress's block parser. `wp:site-logo` is self-closing (`/-->`) — no inner HTML at all, no validation surface.
 >
 > Also fixed: Sentry PRESSPILOT-3 (variationSet optional chaining), proxy JSON error handling, Laravel JSON exception renderer. Migration `add_tier_to_projects_table` run on production.
 >
