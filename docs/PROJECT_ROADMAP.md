@@ -1,6 +1,6 @@
 # PressPilot OS — Development Roadmap
 
-> **Last updated: 2026-03-08** — SSWG Phase 3 DEPLOYED + 3 rounds of post-deploy bug fixes. All major theme quality issues resolved. Logo uses wp:site-logo block with file sideload. Nav cleanup deletes all WP defaults. Token truncation respects word boundaries. Awaiting final test verification.
+> **Last updated: 2026-03-08 (Session E)** — Next-Phase Implementation Plan executed. Phase B tasks B2-B4 complete. Phase C tasks C1-C4 complete. Projects table unification migration ran successfully on production. Remaining: Phase A manual testing (A1, A2, A3) + B1 LemonSqueezy (on hold — bank account pending).
 > **Canonical SSWG specs:** `agent-os/sswg/PROTOCOL.md` + `agent-os/sswg/PHASE-{0-4}.md`
 > **Decisions:** `DECISIONS.md` (change log included)
 > **Current state:** `_memory/main.md`
@@ -101,11 +101,11 @@ All 10 issues resolved (10 commits via Subagent-Driven Development):
 **Checkpoint:** Complete user journey: visit site → fill form → generate → preview → download. Works for 3+ business types.
 
 **Remaining for Phase 3 completion:**
-- LemonSqueezy payment integration (currently placeholder)
-- Push commits + deploy to Coolify
-- Add OPENAI_API_KEY to Coolify env vars
-- Run tier column migration
-- End-to-end smoke test on production
+- LemonSqueezy payment integration (currently placeholder — on hold, bank account pending)
+- ~~Push commits + deploy to Coolify~~ ✅ DONE
+- ~~Add OPENAI_API_KEY to Coolify env vars~~ ✅ DONE
+- ~~Run tier column migration~~ ✅ DONE
+- End-to-end smoke test on production (Phase A — pending manual testing)
 
 ### SSWG Phase 4: WPaify Integration — QUEUED
 **Goal:** HTML-to-WordPress theme conversion for WPaify product.
@@ -131,8 +131,8 @@ All 10 issues resolved (10 commits via Subagent-Driven Development):
 | PHP data transformer | DONE (SSWG) | `DataTransformer.php` handles payload transformation |
 | Public API endpoints | DONE (SSWG) | `POST /api/generate`, `GET /api/status` exist |
 | `BACKEND_URL` feature flag | DONE | Already set in Coolify production. `proxyJsonToBackend()` active. Confirmed 2026-03-05. |
-| Node worker shutdown | NEEDED | After Phase 3 confirms Laravel handles all generation |
-| `pp_projects` → `projects` unification | NEEDED | Migration DDL still pending |
+| Node worker shutdown | DONE | Commit `1109182` — removed deprecated Node.js generator scripts |
+| `pp_projects` → `projects` unification | DONE | Migration `2026_03_08_220000` ran successfully on production. Orphan table + compat view created. 4 fix iterations for PgBouncer compatibility. |
 | BrandStyle 4→2 mapping | SUPERSEDED | Brand modes dropped for SSWG MVP (see DECISIONS.md) |
 | Logo download pipeline | NEEDED | ColorThief integration for brand color extraction |
 
@@ -203,10 +203,10 @@ All 10 issues resolved (10 commits via Subagent-Driven Development):
 | Item | Priority | Notes |
 |------|----------|-------|
 | Multi-vertical end-to-end test | HIGH | ✅ DONE (2026-03-06) — 5/5 verticals pass mechanically. Phase 2.7 addresses all 6 quality issues. Needs post-deploy re-test. |
-| User guides (install ZIP, Site Editor) | HIGH | Needed for launch |
-| API documentation (`POST /api/generate`) | HIGH | Needed for launch |
-| Marketing assets (flagship screenshots) | MEDIUM | After pipeline produces polished themes |
-| Landing page update | MEDIUM | "Generated in 17s" value prop |
+| User guides (install ZIP, Site Editor) | ~~HIGH~~ | ✅ DONE (2026-03-08) — Inline guide in Studio Step 5 UI (commit `7c04ac9`) |
+| API documentation (`POST /api/generate`) | ~~HIGH~~ | ✅ DONE (2026-03-08) — `docs/API.md` (commit `d5308fc`) |
+| Marketing assets (flagship screenshots) | ~~MEDIUM~~ | ✅ DONE (2026-03-08) — Placeholder PNGs in `public/marketing/` (commit `315789c`) |
+| Landing page update | ~~MEDIUM~~ | ✅ DONE (2026-03-08) — Real examples + pricing section (commit `315789c`) |
 | Playground preview validation | MEDIUM | Phase 3 Task 3.2 |
 | Image generation integration | ~~MEDIUM~~ | ✅ DONE (2026-03-07) — DALL-E 3 integration via DalleProvider + UpgradeThemeImagesJob |
 | Brand mode support | LOW | Post-launch via Ollie style variations |
@@ -220,6 +220,12 @@ All 10 issues resolved (10 commits via Subagent-Driven Development):
 ## Patch Notes
 
 ### 2026-03-08
+- [x] **Session E:** Next-Phase Implementation Plan execution (commits `9755819` → `63d753f`)
+  - Phase B: B2 (dead preview button removed), B3 (install guide), B4 (API docs) — all complete
+  - Phase C: C1 (Node shutdown), C2 (table unification), C3 (marketing screenshots), C4 (landing page) — all complete
+  - Projects unification migration: 4 fix iterations for PgBouncer/Supabase compatibility, then successful run
+  - **Key lesson:** Supabase PgBouncer transaction pooling blocks multi-statement prepared statements. Each SQL command must be a separate `DB::statement()` call. Anonymous migrations don't have `$this->command`.
+- [x] **Session D:** UX/UI quality fixes — transparent header, footer composition, person images, inner page CTAs (commit `ec67554`)
 - [x] **Session A:** 5 quality fixes (K-means colors, menu col widths, content loader, logo, pattern slugs) — commit `c65f96c`
 - [x] **Session B:** Post-deploy fix round 1 — footer nav, Attempt Recovery, logo data URI validation, WP default deletion, page ordering, AI truncation logging — commits `06493f1`, `e6606c6`
 - [x] **Session C:** Post-deploy fix round 2 — bulk WP content deletion (fixes "Hello from WordPress Playground!"), word-boundary token truncation, logo saved as file + wp:site-logo block + media_handle_sideload — commit `5314618`

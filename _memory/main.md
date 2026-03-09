@@ -1,6 +1,6 @@
 # PressPilot OS — Master Roadmap & Project Memory
 
-Last updated: 2026-03-08 (Session D — UX/UI quality fixes: header, footer, images, inner pages)
+Last updated: 2026-03-08 (Session E — Next-Phase plan execution: Phase B + C tasks complete, projects table unification migration landed)
 
 ---
 
@@ -17,17 +17,27 @@ Last updated: 2026-03-08 (Session D — UX/UI quality fixes: header, footer, ima
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `ec67554` (2026-03-08) — `fix: transparent header, footer composition, person images, inner page CTAs`
-- Recent commits (2026-03-08, newest first):
-  - `ec67554` — fix: transparent header, footer composition, person images, inner page CTAs — **COMMITTED, AWAITING PUSH + DEPLOY**
-  - `5314618` — fix: eliminate nav pollution, mid-word truncation, block validation errors — **PUSHED + DEPLOYED**
-  - `e6606c6` — fix: logo validation for data URIs, clean WP defaults from nav, add truncation logging — **PUSHED + DEPLOYED**
-  - `06493f1` — fix: resolve logo, Attempt Recovery, and footer link bugs — **PUSHED + DEPLOYED**
-  - `426c3fd` — fix: remove old Node.js generator from Horizon Dockerfile
-  - `1577458` — chore: remove deprecated Node.js generator, archive to Project Extras
-  - `c65f96c` — fix: apply bug fixes to SSWG Laravel pipeline
-- Phase 2.8 + Phase 3 + All bug fix commits: ALL PUSHED AND DEPLOYED
-- **ACTION NEEDED:** Push `ec67554`, redeploy via Coolify, then test new Luigi Pizza theme. Set APP_DEBUG=false after testing confirms fixes.
+- Latest commit: `63d753f` (2026-03-08) — `fix: replace $this->command with logger() in anonymous migration`
+- All commits PUSHED AND DEPLOYED to production via Coolify
+- Recent commits (2026-03-08, newest first — Session E / Next-Phase execution):
+  - `63d753f` — fix: replace $this->command with logger() in anonymous migration
+  - `655b81c` — fix: add updated_at column in projects unification migration
+  - `ad62639` — fix: rewrite migration for PgBouncer compatibility
+  - `3de22f8` — fix: correct PostgreSQL syntax in projects unification migration
+  - `0cbee75` — refactor: Task C2 - projects unification (part 2 - API routes, types)
+  - `2b61c35` — refactor: Task C2 - projects unification (partial - backend + frontend pages)
+  - `0ce99c0` — docs: Task A1 - add verification tools for Session D fixes
+  - `d5308fc` — docs: Task B4 - add REST API documentation
+  - `7c04ac9` — feat(studio): Task B3 - add inline installation guide
+  - `e190962` — docs: add next-phase implementation plan for post-deploy work
+  - `3c4cea2` — docs: update memory files with Session D and task status
+  - `4750e85` — fix: add person-image query overrides to ImageHandler (Session D Fix #5)
+  - `315789c` — feat(landing): Task C4 - update landing page with real examples and pricing
+  - `1109182` — chore: remove deprecated Node.js generator scripts (C1)
+  - `9755819` — feat: Phase B launch prep - remove dead preview, add docs
+  - `ec67554` — fix: transparent header, footer composition, person images, inner page CTAs
+- **Migration `2026_03_08_220000_unify_pp_projects_to_projects.php` successfully ran on production**
+- **REMAINING:** Phase A manual testing (A1, A2, A3) + B1 LemonSqueezy (on hold — bank account pending)
 
 ### Bug Fix Sessions (2026-03-08)
 
@@ -48,6 +58,24 @@ Last updated: 2026-03-08 (Session D — UX/UI quality fixes: header, footer, ima
 - Mid-word truncation: `validateTokens()` now truncates at word boundary instead of hard `mb_substr()` at maxLength
 - Logo "Attempt Recovery": complete architecture change — logo saved as file in `assets/logo.{ext}`, sideloaded into WP media library via `media_handle_sideload()` in functions.php, header/footer use `wp:site-logo` block (self-closing, no inner HTML to validate) instead of `wp:image` with massive base64 data URI
 - **AWAITING TEST** — deployed but not yet verified by Omar
+
+**Session E** — Next-Phase Implementation Plan execution (commits `9755819` through `63d753f`, via Claude Code CLI + Cowork):
+- **Task B2:** Removed dead "Generate Preview" button calling deleted `/api/studio/hero-previews` endpoint (commit `9755819`)
+- **Task B3:** Added inline installation guide to Studio Step 5 UI (commit `7c04ac9`)
+- **Task B4:** Created REST API documentation at `docs/API.md` (commit `d5308fc`)
+- **Task C1:** Removed deprecated Node.js generator scripts from package.json (commit `1109182`)
+- **Task C2:** Projects table unification — merged `pp_projects` into canonical `projects` table:
+  - Part 1 (commit `2b61c35`): Backend models, controllers, frontend pages updated to use `projects`
+  - Part 2 (commit `0cbee75`): API routes, TypeScript types updated
+  - Migration (commit `3de22f8` → `ad62639` → `655b81c` → `63d753f`): 4 fix iterations to get migration running on production:
+    1. PostgreSQL syntax: `DROP CONSTRAINT IF NOT EXISTS` → `IF EXISTS`
+    2. PgBouncer: Rewrote from single monolithic SQL to separate `DB::statement()` calls (Supabase PgBouncer blocks multi-statement prepared statements)
+    3. Missing column: Added `updated_at timestamptz` to projects schema extension (Supabase table didn't have it)
+    4. Anonymous migration: `$this->command` not available → replaced with `logger()`
+  - **Migration successfully ran on production** — data migrated from `pp_projects`, orphans captured, compatibility view created
+- **Task C3:** Placeholder marketing screenshots generated (commit `315789c`)
+- **Task C4:** Landing page updated with real examples and pricing (commit `315789c`)
+- **Remaining:** Phase A manual testing (A1, A2, A3) + B1 LemonSqueezy (on hold — bank account pending)
 
 **Session D** — UX/UI quality fixes (commit `ec67554`, via Claude Code CLI):
 - **Fix #1 — Transparent header**: Created `parts/header-transparent.html` with white text (`textColor: base`) + transparent background for fullBleed hero pages. `front-page.html` uses `header-transparent` slug. All other pages use regular `header`. New `buildHeaderTransparent()` method in ThemeAssembler. Registered in `writeThemeJson()` templateParts array.

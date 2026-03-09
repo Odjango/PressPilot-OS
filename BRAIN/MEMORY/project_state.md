@@ -1,7 +1,26 @@
 # PressPilot Project Memory
-**State Saved: 2026-03-08** | **Current Phase: SSWG Phase 3 DEPLOYED — 3 rounds of post-deploy bug fixes applied. Logo architecture changed to file-based wp:site-logo. Awaiting final verification.**
+**State Saved: 2026-03-08** | **Current Phase: SSWG Phase 3 DEPLOYED — Next-Phase Plan executed (Phase B2-B4 + Phase C1-C4 complete). Projects table unification migration ran on production. Awaiting Phase A manual testing + B1 LemonSqueezy (on hold).**
 
-> **2026-03-08 UPDATE (Session C — latest):** Three rounds of post-deploy bug fixes:
+> **2026-03-08 UPDATE (Session E — latest):** Next-Phase Implementation Plan execution:
+>
+> **Completed tasks:**
+> - B2: Dead preview button removed (commit `9755819`)
+> - B3: Inline installation guide added to Studio Step 5 (commit `7c04ac9`)
+> - B4: REST API documentation at `docs/API.md` (commit `d5308fc`)
+> - C1: Node.js worker shutdown — deprecated scripts removed (commit `1109182`)
+> - C2: `pp_projects` → `projects` table unification — migration `2026_03_08_220000` ran on production after 4 fix iterations:
+>   1. PostgreSQL syntax fix (`DROP CONSTRAINT IF EXISTS`)
+>   2. PgBouncer compatibility (separate `DB::statement()` calls — Supabase blocks multi-statement prepared statements)
+>   3. Missing `updated_at` column (Supabase table didn't match Laravel migration definition)
+>   4. Anonymous migration fix (`logger()` instead of `$this->command`)
+> - C3: Placeholder marketing screenshots (commit `315789c`)
+> - C4: Landing page updated with real examples + pricing (commit `315789c`)
+>
+> **Key architecture lesson:** Supabase uses PgBouncer in transaction pooling mode. Each SQL statement MUST be a separate `DB::statement()` call. No `BEGIN;...COMMIT;` wrapping, no multi-statement strings. Anonymous class migrations don't have `$this->command` — use `logger()` instead.
+>
+> **Remaining:** Phase A manual testing (A1: verify Session D fixes, A2: multi-vertical smoke test, A3: disable debug mode) + B1 LemonSqueezy (on hold — bank account pending).
+
+> **2026-03-08 UPDATE (Session C):** Three rounds of post-deploy bug fixes:
 >
 > **Round 1 (Session A):** K-means color extraction, menu column widths, content loader init fallback, logo via PatternInjector, pattern slug rewriting.
 >

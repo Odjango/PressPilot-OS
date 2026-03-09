@@ -1,6 +1,6 @@
 # PressPilot Agent Context Master
 
-**Last Updated:** 2026-02-26 | **Current Phase:** All 5 verticals production-ready; project reorganized; P5 diagnosis is next priority
+**Last Updated:** 2026-03-08 (Session E) | **Current Phase:** SSWG Phase 3 deployed. Next-Phase Plan executed (B2-B4, C1-C4 complete). Projects table unified. Awaiting Phase A manual testing + B1 LemonSqueezy (on hold).
 
 ## 1. WHO YOU ARE
 
@@ -58,13 +58,13 @@ Before writing a single line of code, you must:
 
 ---
 
-## 4. CURRENT MISSION: Production Hardening Complete
+## 4. CURRENT MISSION: Pre-Launch Verification
 
-- P1–P4: Resolved (Feb 21)
-- P5: OPEN — pending Laravel/Horizon diagnosis
-- Generator Fix Plan: Complete (4 phases)
-- Validation pipeline: InputValidator → BlockConfigValidator → PlaygroundValidator → AccessibilityValidator
-- All 5 verticals production-ready with automated WordPress validation
+- SSWG Phase 3: DEPLOYED and running on production
+- Next-Phase Implementation Plan: Phase B (B2-B4) + Phase C (C1-C4) COMPLETE
+- Projects table unification: Migration ran successfully on production
+- B1 LemonSqueezy: ON HOLD (bank account pending)
+- **IMMEDIATE:** Phase A manual testing (A1, A2, A3) then launch
 
 Key learnings are in `BRAIN/MEMORY/project_state.md`. OneContext mirrors key state in `_memory/main.md`.
 
@@ -72,13 +72,13 @@ Key learnings are in `BRAIN/MEMORY/project_state.md`. OneContext mirrors key sta
 
 ## 5. IMMEDIATE NEXT STEPS (The Roadmap)
 
-Refer to [`docs/PROJECT_ROADMAP.md`](PROJECT_ROADMAP.md) for the step-by-step plan.
+Refer to [`docs/PROJECT_ROADMAP.md`](PROJECT_ROADMAP.md) and [`docs/plans/2026-03-08-next-phase-implementation-plan.md`](plans/2026-03-08-next-phase-implementation-plan.md) for details.
 
-1.  **P5 Diagnosis**: Check Coolify log tab for Laravel container output (NOT `/app/storage/logs/` — that path doesn't exist). Check Horizon dashboard for failed/pending jobs. Check Supabase storage for upload errors.
-2.  **KNOWN_ISSUES.md**: Update `docs/KNOWN_ISSUES.md` to mark P1–P4 as resolved (currently stale).
-3.  **User Guides**: Complete "Getting Started" docs for end-users (installing ZIP, using Site Editor)
-4.  **Developer Docs**: Finalize API documentation for `POST /api/generate`
-5.  **Marketing Assets**: Generate screenshots of 5 flagship themes for landing page
+1.  **Phase A1 — Verify Session D Fixes**: Generate test theme on production, verify 5 UX fixes (transparent header, footer composition, person images, inner pages, logo)
+2.  **Phase A2 — Multi-Vertical Smoke Test**: Generate 1 theme per vertical (5 total), verify all produce valid themes
+3.  **Phase A3 — Disable Debug Mode**: Set `APP_DEBUG=false` in Coolify, redeploy
+4.  **Phase B1 — LemonSqueezy Payment**: ON HOLD — waiting for bank account info. Wire up real checkout when ready.
+5.  **Phase 4 — WPaify Integration**: Next major phase after launch (HTML→WP theme conversion)
 
 ---
 
