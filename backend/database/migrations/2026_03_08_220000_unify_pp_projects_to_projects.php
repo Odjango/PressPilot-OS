@@ -198,16 +198,10 @@ return new class extends Migration
                 WHERE p.legacy_pp_project_id IS NOT NULL
             ');
 
-            $this->command->info('Projects unification complete — data migrated from pp_projects.');
+            logger()->info('Projects unification complete — data migrated from pp_projects.');
         } else {
-            $this->command->info('pp_projects table not found — skipping data migration (fresh install).');
+            logger()->info('pp_projects table not found — skipping data migration (fresh install).');
         }
-
-        // Log verification info
-        $this->command->info('Schema changes applied. Run verification queries:');
-        $this->command->info('  SELECT COUNT(*) AS pp_projects_total FROM public.pp_projects;');
-        $this->command->info('  SELECT COUNT(*) AS mapped_into_projects FROM public.projects WHERE legacy_pp_project_id IS NOT NULL;');
-        $this->command->info('  SELECT COUNT(*) AS orphan_count FROM public.projects_unification_orphans;');
     }
 
     public function down(): void
@@ -218,6 +212,6 @@ return new class extends Migration
         // 2. DROP VIEW IF EXISTS v_pp_projects_unified;
         // 3. DROP TABLE IF EXISTS projects_unification_orphans;
         // 4. ALTER TABLE projects DROP COLUMN IF EXISTS slug, status, legacy_pp_project_id;
-        $this->command->warn('Manual rollback required. See migration comments.');
+        logger()->warning('Manual rollback required. See migration comments.');
     }
 };
