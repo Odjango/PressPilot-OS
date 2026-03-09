@@ -519,5 +519,47 @@
     "vertical_affinity": [
       "general"
     ]
+  },
+  "specials-highlight": {
+    "file": "pattern-library/skeletons/specials-highlight.html",
+    "category": "specials",
+    "required_tokens": [
+      "SPECIALS_TITLE",
+      "SPECIALS_SUBTITLE",
+      "SPECIAL_1_NAME",
+      "SPECIAL_1_DESC",
+      "SPECIAL_1_PRICE",
+      "SPECIAL_2_NAME",
+      "SPECIAL_2_DESC",
+      "SPECIAL_2_PRICE",
+      "SPECIAL_3_NAME",
+      "SPECIAL_3_DESC",
+      "SPECIAL_3_PRICE"
+    ],
+    "vertical_affinity": [
+      "restaurant"
+    ]
+  },
+  "gallery-featured": {
+    "file": "pattern-library/skeletons/gallery-featured.html",
+    "category": "gallery",
+    "required_tokens": [
+      "GALLERY_TITLE",
+      "GALLERY_SUBTITLE",
+      "IMAGE_GALLERY_1",
+      "IMAGE_GALLERY_2",
+      "IMAGE_GALLERY_3",
+      "IMAGE_GALLERY_4",
+      "IMAGE_GALLERY_5",
+      "GALLERY_ALT_1",
+      "GALLERY_ALT_2",
+      "GALLERY_ALT_3",
+      "GALLERY_ALT_4",
+      "GALLERY_ALT_5"
+    ],
+    "vertical_affinity": [
+      "restaurant",
+      "portfolio"
+    ]
   }
 }
