@@ -68,10 +68,19 @@ class AIPlanner
         $requiredTokens = [];
 
         foreach ($recipe as $page => $skeletonIds) {
-            foreach ($skeletonIds as $skeletonId) {
-                $skeleton = $this->skeletonRegistry[$skeletonId] ?? null;
-                if ($skeleton && isset($skeleton['required_tokens'])) {
-                    $requiredTokens = array_merge($requiredTokens, $skeleton['required_tokens']);
+            foreach ($skeletonIds as $skeletonEntry) {
+                // Support pipe-delimited alternatives: "hero-cover | hero-split | hero-minimal"
+                // Collect required tokens from ALL alternatives so the AI generates
+                // tokens that satisfy whichever variant PatternSelector picks at random.
+                $alternatives = str_contains($skeletonEntry, '|')
+                    ? array_map('trim', explode('|', $skeletonEntry))
+                    : [trim($skeletonEntry)];
+
+                foreach ($alternatives as $skeletonId) {
+                    $skeleton = $this->skeletonRegistry[$skeletonId] ?? null;
+                    if ($skeleton && isset($skeleton['required_tokens'])) {
+                        $requiredTokens = array_merge($requiredTokens, $skeleton['required_tokens']);
+                    }
                 }
             }
         }
