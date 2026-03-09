@@ -96,6 +96,12 @@ class GenerateThemeJob implements ShouldQueue
                     ?? '';
             }
 
+            // Extract heroLayout from nested visualControls (set by GenerationController)
+            // or keep flat key (set by DataTransformer in fallback path)
+            if (empty($projectData['heroLayout'])) {
+                $projectData['heroLayout'] = $projectData['visualControls']['heroLayout'] ?? null;
+            }
+
             // Map flat color keys from DataTransformer to nested 'colors' array for ThemeAssembler
             if (! isset($projectData['colors'])) {
                 $projectData['colors'] = [];

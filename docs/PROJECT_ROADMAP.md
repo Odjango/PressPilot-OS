@@ -1,9 +1,9 @@
 # PressPilot OS — Development Roadmap
 
-> **Last updated: 2026-03-08 (Session E)** — Next-Phase Implementation Plan executed. Phase B tasks B2-B4 complete. Phase C tasks C1-C4 complete. Projects table unification migration ran successfully on production. Remaining: Phase A manual testing (A1, A2, A3) + B1 LemonSqueezy (on hold — bank account pending).
+> **Last updated: 2026-03-09 (Session F)** — Phase A2 smoke tests COMPLETE (all 5 verticals passed). Site_type defaults fix deployed. Production-ready for A3 (disable debug) and launch. B1 LemonSqueezy on hold (bank account pending) but can launch with free downloads first.
 > **Canonical SSWG specs:** `agent-os/sswg/PROTOCOL.md` + `agent-os/sswg/PHASE-{0-4}.md`
 > **Decisions:** `DECISIONS.md` (change log included)
-> **Current state:** `_memory/main.md`
+> **Current state:** `_memory/main.md` | **Test results:** `docs/plans/phase-a-results.md`
 
 ---
 
@@ -79,14 +79,14 @@ All 10 issues resolved (10 commits via Subagent-Driven Development):
 
 **Key lesson:** Pipeline rewrites need a feature parity checklist. Data flow gaps (colors, heroLayout, logo, fonts) are invisible until you trace the full path from frontend form to theme ZIP.
 
-### SSWG Phase 3: Frontend Integration — TASKS 3.3 + 3.4 COMPLETE (2026-03-07)
+### SSWG Phase 3: Frontend Integration — ✅ COMPLETE (2026-03-07)
 **Goal:** Connect Next.js frontend to new engine. Full user flow from form to download.
 **Spec:** `agent-os/sswg/PHASE-3.md`
 
-- [x] **Task 3.1:** Studio form → Laravel `/api/generate` wiring. ✅ Already complete.
+- [x] **Task 3.1:** Studio form → Laravel `/api/generate` wiring. ✅ Complete.
 - [x] **Task 3.2:** ~~Playground Preview~~ — ❌ REVERTED. See DECISIONS.md KNOWN DEAD ENDS.
-- [x] **Task 3.3:** Image Tier integration — Hybrid Unsplash→DALL-E pipeline (2026-03-07)
-- [x] **Task 3.4:** Error handling & retry flow — Adaptive polling + payment gate + cleanup (2026-03-07)
+- [x] **Task 3.3:** Image Tier integration — Hybrid Unsplash→DALL-E pipeline ✅ Complete.
+- [x] **Task 3.4:** Error handling & retry flow — Adaptive polling + payment gate + cleanup ✅ Complete.
 
 **Implementation (9 commits, 2026-03-07):**
 - DalleProvider (DALL-E 3 via OpenAI API) with primary/fallback pattern
@@ -98,14 +98,42 @@ All 10 issues resolved (10 commits via Subagent-Driven Development):
 - Payment gate UI (Single Theme $29.99) with DALL-E upgrade flow
 - Daily cleanup command for expired theme ZIPs (7-day retention)
 
-**Checkpoint:** Complete user journey: visit site → fill form → generate → preview → download. Works for 3+ business types.
+**Post-Phase-3 Tasks (Next-Phase Plan executed 2026-03-08):**
+- [x] B2: Dead preview button removed ✅ commit `9755819`
+- [x] B3: Inline installation guide ✅ commit `7c04ac9`
+- [x] B4: REST API documentation ✅ commit `d5308fc`
+- [x] C1: Node.js worker shutdown ✅ commit `1109182`
+- [x] C2: Projects table unification ✅ migration `2026_03_08_220000` (4 fix iterations for PgBouncer)
+- [x] C3: Marketing screenshots ✅ commit `315789c`
+- [x] C4: Landing page update ✅ commit `315789c`
 
-**Remaining for Phase 3 completion:**
-- LemonSqueezy payment integration (currently placeholder — on hold, bank account pending)
-- ~~Push commits + deploy to Coolify~~ ✅ DONE
-- ~~Add OPENAI_API_KEY to Coolify env vars~~ ✅ DONE
-- ~~Run tier column migration~~ ✅ DONE
-- End-to-end smoke test on production (Phase A — pending manual testing)
+### Phase A: Production Verification & Launch Readiness — ✅ A1-A2 COMPLETE, A3 PENDING
+
+**Phase A1:** Verification tools created
+- Created `scripts/verify-session-d-fixes.js` — automated ZIP analysis for Session D fixes
+- Created `docs/TASK-A1-INSTRUCTIONS.md` — manual verification instructions
+- ✅ commit `0ce99c0`
+
+**Phase A2:** Multi-vertical smoke test — ✅ COMPLETE (2026-03-09)
+- Dispatched 5 parallel subagent tasks to test production API
+- All 5 verticals PASSED: restaurant (22s), SaaS (42s), portfolio (26s), ecommerce (26s), local_service (18s)
+- Average generation time: 27.2 seconds
+- 100% success rate — all themes verified with proper structure and PressPilot branding
+- Full results: `docs/plans/phase-a-results.md`
+- ✅ commit `5d45393`
+
+**Phase A3:** Disable debug mode — ⏳ PENDING
+- Set `APP_DEBUG=false` in Coolify environment variables
+- Redeploy backend
+- Verify error pages show user-friendly messages (not stack traces)
+
+**Production bug fix (2026-03-09):**
+- Site_type NOT NULL constraint violation when Studio wizard creates project
+- Two-layer fix: API defaults + database DEFAULT values
+- Migration `2026_03_09_010000_add_defaults_to_projects_columns.php` created
+- ✅ commit `8ab5331`
+
+**Checkpoint:** Production API verified with all 5 verticals. Ready for public launch after A3 (disable debug).
 
 ### SSWG Phase 4: WPaify Integration — QUEUED
 **Goal:** HTML-to-WordPress theme conversion for WPaify product.

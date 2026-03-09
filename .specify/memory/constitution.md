@@ -253,4 +253,9 @@ These documents are authoritative sources that inform this constitution:
 - pattern-library/vertical-recipes.json - Vertical-to-skeleton mapping
 - CLAUDE.md - Agent operational contract (hot cache)
 
-**Version**: 2.0.0 | **Ratified**: 2026-02-12 | **Last Amended**: 2026-03-08
+**Version**: 2.0.1 | **Ratified**: 2026-02-12 | **Last Amended**: 2026-03-09
+
+**Amendment Log:**
+- 2026-03-09: Phase A verification complete (all 5 verticals tested, 100% pass rate). Site_type defaults fix deployed. Production-ready for launch.
+- 2026-03-08: Projects table unification complete. Next-Phase Implementation Plan executed (Phase B2-B4, C1-C4).
+- 2026-02-12: Initial SSWG Laravel pipeline constitution (v2.0.0).

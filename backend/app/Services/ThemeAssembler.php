@@ -378,6 +378,12 @@ PHP;
         $homeContent = $pageHtml['home'] ?? '';
         $heroLayout  = $project['heroLayout'] ?? $project['hero_layout'] ?? null;
         $skipHeader  = ($heroLayout === 'fullBleed');
+
+        Log::info('ThemeAssembler::writeTemplates heroLayout decision', [
+            'heroLayout' => $heroLayout,
+            'skipHeader' => $skipHeader,
+        ]);
+
         file_put_contents($templatesDir.'/front-page.html', $this->wrapTemplate($homeContent, $skipHeader));
 
         // Inner pages use the standard (opaque) header since page-banner provides

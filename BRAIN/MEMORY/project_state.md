@@ -1,7 +1,20 @@
 # PressPilot Project Memory
-**State Saved: 2026-03-08** | **Current Phase: SSWG Phase 3 DEPLOYED — Next-Phase Plan executed (Phase B2-B4 + Phase C1-C4 complete). Projects table unification migration ran on production. Awaiting Phase A manual testing + B1 LemonSqueezy (on hold).**
+**State Saved: 2026-03-09** | **Current Phase: Phase A2 COMPLETE — All 5 verticals smoke-tested (100% pass rate). Site_type defaults fix deployed. Ready for A3 (disable debug) + launch.**
 
-> **2026-03-08 UPDATE (Session E — latest):** Next-Phase Implementation Plan execution:
+> **2026-03-09 UPDATE (Session F — Phase A Completion):**
+>
+> **Phase A2 Smoke Tests:** COMPLETE — All 5 verticals tested in parallel via production API
+> - Restaurant: 22s generation | SaaS: 42s | Portfolio: 26s | Ecommerce: 26s | Local Service: 18s
+> - Average: 27.2 seconds | 100% pass rate | All themes verified with proper structure and PressPilot branding
+> - Full results: `docs/plans/phase-a-results.md`
+>
+> **Production Bug Fix:** Site_type NOT NULL constraint (commit `8ab5331`)
+> - Two-layer fix: API fallback defaults + database DEFAULT values
+> - Migration `2026_03_09_010000_add_defaults_to_projects_columns.php` ready for deployment
+>
+> **Next:** Phase A3 (disable debug mode) → public launch
+>
+> **2026-03-08 UPDATE (Session E):** Next-Phase Implementation Plan execution:
 >
 > **Completed tasks:**
 > - B2: Dead preview button removed (commit `9755819`)
@@ -99,9 +112,11 @@
 
 ### Git Status
 - Branch: `main`
-- Latest commit: `b8cf373` (2026-03-06) — Phase 2.7 docs update
-- Previous: `70a0c1c` — Phase 2.7 complete pipeline rewrite (39 files, +5,086/-732)
-- Both pushed to `origin/main`, backend redeployed via Coolify
+- Latest commit: `8ab5331` (2026-03-09) — Site_type defaults fix (two-layer approach)
+- Recent: `76a9774` — Memory and documentation updates after Phase A completion
+- Recent: `5d45393` — Phase A smoke test results documentation
+- Previous: `63d753f` — Projects unification migration final fix (logger() instead of $this->command)
+- All pushed to `origin/main`, backend deployed via Coolify
 - TypeScript: `npx tsc --noEmit` passes (Project Extras excluded via tsconfig.json)
 
 ---

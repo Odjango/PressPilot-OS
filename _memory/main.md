@@ -1,6 +1,6 @@
 # PressPilot OS — Master Roadmap & Project Memory
 
-Last updated: 2026-03-08 (Session E — Next-Phase plan execution: Phase B + C tasks complete, projects table unification migration landed)
+Last updated: 2026-03-09 (Phase A smoke tests complete — all 5 verticals PASSED. Site_type defaults fix deployed. Production-ready for A3 debug disable.)
 
 ---
 
@@ -17,9 +17,12 @@ Last updated: 2026-03-08 (Session E — Next-Phase plan execution: Phase B + C t
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `63d753f` (2026-03-08) — `fix: replace $this->command with logger() in anonymous migration`
+- Latest commit: `8ab5331` (2026-03-09) — `fix: add default site_type/language to project creation (fixes NOT NULL constraint error)`
 - All commits PUSHED AND DEPLOYED to production via Coolify
-- Recent commits (2026-03-08, newest first — Session E / Next-Phase execution):
+- Recent commits (2026-03-08 through 2026-03-09, newest first):
+  - `8ab5331` — fix: add default site_type/language to project creation (fixes NOT NULL constraint error)
+  - `76a9774` — Update project memory and documentation after Phase A completion
+  - `5d45393` — Add Phase A smoke test results documentation
   - `63d753f` — fix: replace $this->command with logger() in anonymous migration
   - `655b81c` — fix: add updated_at column in projects unification migration
   - `ad62639` — fix: rewrite migration for PgBouncer compatibility
@@ -37,7 +40,9 @@ Last updated: 2026-03-08 (Session E — Next-Phase plan execution: Phase B + C t
   - `9755819` — feat: Phase B launch prep - remove dead preview, add docs
   - `ec67554` — fix: transparent header, footer composition, person images, inner page CTAs
 - **Migration `2026_03_08_220000_unify_pp_projects_to_projects.php` successfully ran on production**
-- **REMAINING:** Phase A manual testing (A1, A2, A3) + B1 LemonSqueezy (on hold — bank account pending)
+- **Migration `2026_03_09_010000_add_defaults_to_projects_columns.php` ready for deployment**
+- **Phase A2 COMPLETE:** All 5 verticals tested in parallel via production API — 100% pass rate
+- **REMAINING:** Phase A3 (disable debug mode) + B1 LemonSqueezy (on hold — bank account pending)
 
 ### Bug Fix Sessions (2026-03-08)
 
@@ -75,7 +80,21 @@ Last updated: 2026-03-08 (Session E — Next-Phase plan execution: Phase B + C t
   - **Migration successfully ran on production** — data migrated from `pp_projects`, orphans captured, compatibility view created
 - **Task C3:** Placeholder marketing screenshots generated (commit `315789c`)
 - **Task C4:** Landing page updated with real examples and pricing (commit `315789c`)
-- **Remaining:** Phase A manual testing (A1, A2, A3) + B1 LemonSqueezy (on hold — bank account pending)
+
+**Session F** — Phase A Smoke Tests + Production Bug Fix (commits `5d45393`, `76a9774`, `8ab5331`):
+- **Phase A2 COMPLETE:** Multi-vertical smoke test execution (commit `5d45393`)
+  - Dispatched 5 concurrent subagent tasks to test production API
+  - All 5 verticals PASSED: restaurant (22s), SaaS (42s), portfolio (26s), ecommerce (26s), local_service (18s)
+  - Average generation time: 27.2 seconds
+  - All themes verified with valid theme.json, templates/index.html, and PressPilot branding
+  - Results documented in `docs/plans/phase-a-results.md`
+- **Bug Fix:** Site_type NOT NULL constraint violation (commit `8ab5331`)
+  - Root cause: Studio wizard creates project with only name/slug in Step 1, but site_type/language/data columns have NOT NULL constraints with no defaults
+  - API layer fix: Added fallback defaults in `app/api/projects/route.ts` (site_type='general', language='en', data={})
+  - Database layer fix: Migration `2026_03_09_010000_add_defaults_to_projects_columns.php` sets PostgreSQL DEFAULT values
+  - Two-layer approach ensures backwards compatibility at both application and database levels
+- **Memory update:** Project state and documentation updated (commit `76a9774`)
+- **Remaining:** Phase A3 (disable debug mode) + B1 LemonSqueezy (on hold — bank account pending)
 
 **Session D** — UX/UI quality fixes (commit `ec67554`, via Claude Code CLI):
 - **Fix #1 — Transparent header**: Created `parts/header-transparent.html` with white text (`textColor: base`) + transparent background for fullBleed hero pages. `front-page.html` uses `header-transparent` slug. All other pages use regular `header`. New `buildHeaderTransparent()` method in ThemeAssembler. Registered in `writeThemeJson()` templateParts array.

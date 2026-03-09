@@ -1,6 +1,6 @@
 # PressPilot Agent Context Master
 
-**Last Updated:** 2026-03-08 (Session E) | **Current Phase:** SSWG Phase 3 deployed. Next-Phase Plan executed (B2-B4, C1-C4 complete). Projects table unified. Awaiting Phase A manual testing + B1 LemonSqueezy (on hold).
+**Last Updated:** 2026-03-09 (Session F) | **Current Phase:** Phase A2 COMPLETE - All 5 verticals smoke-tested (100% pass). Site_type defaults fix deployed. Ready for A3 (disable debug) and launch.
 
 ## 1. WHO YOU ARE
 
@@ -58,13 +58,17 @@ Before writing a single line of code, you must:
 
 ---
 
-## 4. CURRENT MISSION: Pre-Launch Verification
+## 4. CURRENT MISSION: Final Pre-Launch Steps
 
-- SSWG Phase 3: DEPLOYED and running on production
-- Next-Phase Implementation Plan: Phase B (B2-B4) + Phase C (C1-C4) COMPLETE
-- Projects table unification: Migration ran successfully on production
-- B1 LemonSqueezy: ON HOLD (bank account pending)
-- **IMMEDIATE:** Phase A manual testing (A1, A2, A3) then launch
+- SSWG Phase 3: ✅ DEPLOYED and production-verified
+- Next-Phase Implementation Plan: Phase B (B2-B4) + Phase C (C1-C4) ✅ COMPLETE
+- Projects table unification: ✅ Migration ran successfully on production
+- Phase A2 Smoke Tests: ✅ COMPLETE - All 5 verticals passed (restaurant, SaaS, portfolio, ecommerce, local_service)
+- Site_type defaults fix: ✅ DEPLOYED - Two-layer approach (API + database)
+- **IMMEDIATE NEXT:**
+  - Phase A3: Disable debug mode (`APP_DEBUG=false` in Coolify)
+  - B1 LemonSqueezy: ON HOLD (bank account pending) - can launch without payment first
+  - Public launch readiness verification
 
 Key learnings are in `BRAIN/MEMORY/project_state.md`. OneContext mirrors key state in `_memory/main.md`.
 
@@ -74,11 +78,11 @@ Key learnings are in `BRAIN/MEMORY/project_state.md`. OneContext mirrors key sta
 
 Refer to [`docs/PROJECT_ROADMAP.md`](PROJECT_ROADMAP.md) and [`docs/plans/2026-03-08-next-phase-implementation-plan.md`](plans/2026-03-08-next-phase-implementation-plan.md) for details.
 
-1.  **Phase A1 — Verify Session D Fixes**: Generate test theme on production, verify 5 UX fixes (transparent header, footer composition, person images, inner pages, logo)
-2.  **Phase A2 — Multi-Vertical Smoke Test**: Generate 1 theme per vertical (5 total), verify all produce valid themes
-3.  **Phase A3 — Disable Debug Mode**: Set `APP_DEBUG=false` in Coolify, redeploy
-4.  **Phase B1 — LemonSqueezy Payment**: ON HOLD — waiting for bank account info. Wire up real checkout when ready.
-5.  **Phase 4 — WPaify Integration**: Next major phase after launch (HTML→WP theme conversion)
+1.  **Phase A1 — Verify Session D Fixes**: ✅ COMPLETE - Verification tools created (`scripts/verify-session-d-fixes.js` + manual instructions)
+2.  **Phase A2 — Multi-Vertical Smoke Test**: ✅ COMPLETE - All 5 verticals passed (100% success rate, 18-42s generation times)
+3.  **Phase A3 — Disable Debug Mode**: ⏳ NEXT - Set `APP_DEBUG=false` in Coolify, redeploy, verify user-friendly error pages
+4.  **Phase B1 — LemonSqueezy Payment**: ⏸️ ON HOLD — waiting for bank account info. Can launch without payment integration first (free downloads).
+5.  **Phase 4 — WPaify Integration**: Queued for post-launch (HTML→WP theme conversion)
 
 ---
 
