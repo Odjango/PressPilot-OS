@@ -183,8 +183,11 @@ export async function POST(request: NextRequest) {
       name,
       slug,
       status,
+      site_type: body.site_type || 'general',
+      language: body.language || 'en',
+      data: body.data || {},
     })
-    .select('id,user_id,name,slug,status,created_at')
+    .select('id,user_id,name,slug,status,site_type,language,created_at')
     .single();
 
   if (error) {
