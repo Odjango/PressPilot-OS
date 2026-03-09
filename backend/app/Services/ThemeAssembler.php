@@ -371,27 +371,30 @@ PHP;
             mkdir($templatesDir, 0755, true);
         }
 
-        // front-page.html — uses home page sections (always includes header)
+        // front-page.html — uses home page sections
+        // For fullBleed hero layout, the hero skeleton already contains its own
+        // header (site-title + navigation) inside the wp:cover block, so we must
+        // skip the external header-transparent template part to avoid TWO headers.
         $homeContent = $pageHtml['home'] ?? '';
-        file_put_contents($templatesDir.'/front-page.html', $this->wrapTemplate($homeContent));
+        $heroLayout  = $project['heroLayout'] ?? $project['hero_layout'] ?? null;
+        $skipHeader  = ($heroLayout === 'fullBleed');
+        file_put_contents($templatesDir.'/front-page.html', $this->wrapTemplate($homeContent, $skipHeader));
 
-        // page-about.html — uses about page sections
+        // Inner pages use the standard (opaque) header since page-banner provides
+        // the visual impact. This gives a clean white header → colored banner flow.
         $aboutContent = $pageHtml['about'] ?? '';
-        file_put_contents($templatesDir.'/page-about.html', $this->wrapTemplate($aboutContent));
+        file_put_contents($templatesDir.'/page-about.html', $this->wrapTemplate($aboutContent, false, 'header'));
 
-        // page-menu.html — uses menu page sections (for restaurant vertical)
         if (isset($pageHtml['menu'])) {
             $menuContent = $pageHtml['menu'];
-            file_put_contents($templatesDir.'/page-menu.html', $this->wrapTemplate($menuContent));
+            file_put_contents($templatesDir.'/page-menu.html', $this->wrapTemplate($menuContent, false, 'header'));
         }
 
-        // page-services.html — uses services page sections
         $servicesContent = $pageHtml['services'] ?? '';
-        file_put_contents($templatesDir.'/page-services.html', $this->wrapTemplate($servicesContent));
+        file_put_contents($templatesDir.'/page-services.html', $this->wrapTemplate($servicesContent, false, 'header'));
 
-        // page-contact.html — uses contact page sections
         $contactContent = $pageHtml['contact'] ?? '';
-        file_put_contents($templatesDir.'/page-contact.html', $this->wrapTemplate($contactContent));
+        file_put_contents($templatesDir.'/page-contact.html', $this->wrapTemplate($contactContent, false, 'header'));
 
         // Generic fallback templates
         file_put_contents($templatesDir.'/page.html', $this->defaultPageTemplate());
@@ -566,15 +569,23 @@ HEADER;
 HEADER;
     }
 
-    private function wrapTemplate(string $content, bool $skipHeader = false): string
+    private function wrapTemplate(string $content, bool $skipHeader = false, string $headerSlug = 'header-transparent'): string
     {
-        // Always include header — even on fullBleed hero pages.
-        // The header renders as a template part and overlays the hero naturally
-        // because the hero uses wp:cover which handles its own background.
-        $header = "<!-- wp:template-part {\"slug\":\"header-transparent\",\"tagName\":\"header\"} /-->\n\n";
-        return $header.
-            $content."\n\n".
+        $parts = '';
+
+        if (! $skipHeader) {
+            // Add header template part.
+            // - 'header-transparent': white text, for pages with dark hero/cover backgrounds
+            // - 'header': standard opaque header, for inner pages with page-banner
+            // Skipped entirely for fullBleed hero because hero-fullbleed.html
+            // already contains its own site-title + navigation inside wp:cover.
+            $parts .= "<!-- wp:template-part {\"slug\":\"{$headerSlug}\",\"tagName\":\"header\"} /-->\n\n";
+        }
+
+        $parts .= $content."\n\n".
             "<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\"} /-->\n";
+
+        return $parts;
     }
 
     private function defaultPageTemplate(): string

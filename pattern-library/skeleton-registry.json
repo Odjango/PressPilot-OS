@@ -403,5 +403,16 @@
     "vertical_affinity": [
       "restaurant"
     ]
+  },
+  "page-banner": {
+    "file": "pattern-library/skeletons/page-banner.html",
+    "category": "intro",
+    "required_tokens": [
+      "PAGE_BANNER_TITLE",
+      "PAGE_BANNER_TEXT"
+    ],
+    "vertical_affinity": [
+      "general"
+    ]
   }
 }

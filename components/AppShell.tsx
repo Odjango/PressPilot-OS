@@ -57,13 +57,11 @@ export default function AppShell({ children }: { children: ReactNode }) {
                                 >
                                     Pricing
                                 </Link>
-                                <Link
-                                    href="/docs"
-                                    className={`text-sm font-medium transition-colors hover:text-white ${pathname?.startsWith("/docs") ? "text-white" : "text-slate-400"}`}
-                                    suppressHydrationWarning
+                                <span
+                                    className="text-sm font-medium text-slate-600 cursor-default"
                                 >
                                     Documentation
-                                </Link>
+                                </span>
                             </nav>
                         </div>
 
@@ -105,10 +103,10 @@ export default function AppShell({ children }: { children: ReactNode }) {
                             <span className="text-sm font-bold tracking-tight text-white uppercase">PressPilot OS</span>
                         </div>
                         <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-xs font-medium text-slate-500">
-                            <Link href="/faq" className="hover:text-white transition-colors">FAQ</Link>
-                            <Link href="/docs" className="hover:text-white transition-colors">Documentation</Link>
-                            <Link href="/support" className="hover:text-white transition-colors">Support</Link>
-                            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+                            <span className="cursor-default opacity-50">FAQ</span>
+                            <span className="cursor-default opacity-50">Documentation</span>
+                            <a href="mailto:support@presspilotapp.com" className="hover:text-white transition-colors">Support</a>
+                            <span className="cursor-default opacity-50">Terms</span>
                         </div>
                         <p className="text-xs font-mono text-slate-600">
                             v2.0.4-stable

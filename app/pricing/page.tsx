@@ -15,9 +15,9 @@ export default function PricingPage() {
                             <Link href="/pricing" className="text-gray-900 font-medium">
                                 Pricing
                             </Link>
-                            <Link href="/docs" className="text-gray-600 hover:text-gray-900 font-medium">
+                            <span className="text-gray-400 font-medium cursor-default">
                                 Docs
-                            </Link>
+                            </span>
                             <Link
                                 href="/studio"
                                 className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-medium"
@@ -238,9 +238,9 @@ export default function PricingPage() {
                             © 2026 PressPilot. All rights reserved.
                         </p>
                         <div className="flex gap-6 text-sm text-gray-600">
-                            <Link href="/faq" className="hover:text-gray-900">FAQ</Link>
-                            <Link href="/docs" className="hover:text-gray-900">Documentation</Link>
-                            <Link href="/support" className="hover:text-gray-900">Support</Link>
+                            <span className="opacity-50">FAQ</span>
+                            <span className="opacity-50">Documentation</span>
+                            <a href="mailto:support@presspilotapp.com" className="hover:text-gray-900">Support</a>
                         </div>
                     </div>
                 </div>

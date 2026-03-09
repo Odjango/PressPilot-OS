@@ -46,13 +46,11 @@ export default function GlobalHeader() {
                             >
                                 Pricing
                             </Link>
-                            <Link
-                                href="/docs"
-                                className={`text-sm font-medium transition-colors hover:text-black ${pathname?.startsWith("/docs") ? "text-black" : "text-gray-500"}`}
-                                suppressHydrationWarning
+                            <span
+                                className="text-sm font-medium text-gray-300 cursor-default"
                             >
                                 Documentation
-                            </Link>
+                            </span>
                         </nav>
                     </div>
 

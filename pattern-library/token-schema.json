@@ -1373,6 +1373,20 @@
       "maxLength": 80,
       "group": "footer",
       "vertical": "general"
+    },
+    {
+      "name": "PAGE_BANNER_TITLE",
+      "description": "Inner page banner headline (used on services, contact, menu pages)",
+      "maxLength": 60,
+      "group": "page-banner",
+      "vertical": "general"
+    },
+    {
+      "name": "PAGE_BANNER_TEXT",
+      "description": "Inner page banner supporting text (1-2 sentences)",
+      "maxLength": 150,
+      "group": "page-banner",
+      "vertical": "general"
     }
   ]
 }

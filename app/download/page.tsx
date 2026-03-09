@@ -196,7 +196,7 @@ function DownloadPageContent() {
                     <div className="mt-8 p-4 bg-gray-50 rounded-lg">
                         <p className="text-sm text-gray-700">
                             <strong>Need help?</strong> Visit our{' '}
-                            <a href="/faq" className="text-black underline">FAQ page</a>
+                            <a href="mailto:support@presspilotapp.com" className="text-black underline">support team</a>
                             {' '}or contact support
                         </p>
                     </div>

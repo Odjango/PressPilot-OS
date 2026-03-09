@@ -129,6 +129,8 @@ Content rules:
 - FOOTER_TAGLINE: short business tagline for footer
 - BUSINESS_NAME: exact business name
 - FAQ_*_Q, FAQ_*_A: real frequently asked questions and detailed answers
+- PAGE_BANNER_TITLE: a compelling page title for inner pages (e.g., "Explore Our Services" or "Get In Touch")
+- PAGE_BANNER_TEXT: a short supporting sentence for the inner page banner
 {$categoryHints}
 - All values must be plain text only. No HTML.
 PROMPT;
