@@ -28,7 +28,8 @@ return new class extends Migration
             ALTER TABLE public.projects
                 ADD COLUMN IF NOT EXISTS slug text,
                 ADD COLUMN IF NOT EXISTS status text DEFAULT \'draft\',
-                ADD COLUMN IF NOT EXISTS legacy_pp_project_id uuid
+                ADD COLUMN IF NOT EXISTS legacy_pp_project_id uuid,
+                ADD COLUMN IF NOT EXISTS updated_at timestamptz
         ');
 
         DB::statement('
