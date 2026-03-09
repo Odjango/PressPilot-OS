@@ -1,9 +1,9 @@
 {
   "restaurant": {
-    "home": ["hero-cover", "about-story", "menu-2col", "hours-location", "chef-highlight", "testimonials-3col", "reservation-cta"],
+    "home": ["hero-cover", "about-story", "menu-2col", "hours-location", "chef-highlight", "testimonials-3col | testimonials-single-featured | testimonials-with-rating", "reservation-cta"],
     "about": ["page-banner", "about-story", "chef-highlight", "team-grid"],
-    "menu": ["page-banner", "menu-2col", "reservation-cta", "testimonials-3col"],
-    "services": ["page-banner", "features-3col", "testimonials-3col", "hours-location", "reservation-cta"],
+    "menu": ["page-banner", "menu-2col", "reservation-cta", "testimonials-3col | testimonials-single-featured | testimonials-with-rating"],
+    "services": ["page-banner", "features-3col | features-alternating", "testimonials-3col | testimonials-single-featured | testimonials-with-rating", "hours-location", "reservation-cta"],
     "contact": ["page-banner", "contact-info", "hours-location", "reservation-cta"]
   },
   "ecommerce": {

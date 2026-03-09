@@ -43,6 +43,50 @@
       "general"
     ]
   },
+  "hero-minimal": {
+    "file": "pattern-library/skeletons/hero-minimal.html",
+    "category": "hero",
+    "required_tokens": [
+      "HERO_TITLE",
+      "HERO_TEXT",
+      "HERO_CTA"
+    ],
+    "vertical_affinity": [
+      "general"
+    ]
+  },
+  "hero-centered": {
+    "file": "pattern-library/skeletons/hero-centered.html",
+    "category": "hero",
+    "required_tokens": [
+      "HERO_PRETITLE",
+      "HERO_TITLE",
+      "HERO_TEXT",
+      "HERO_CTA",
+      "HERO_CTA_SECONDARY"
+    ],
+    "vertical_affinity": [
+      "general"
+    ]
+  },
+  "hero-image-grid": {
+    "file": "pattern-library/skeletons/hero-image-grid.html",
+    "category": "hero",
+    "required_tokens": [
+      "HERO_PRETITLE",
+      "HERO_TITLE",
+      "HERO_TEXT",
+      "HERO_CTA",
+      "IMAGE_HERO",
+      "IMAGE_ABOUT",
+      "IMAGE_GALLERY_1",
+      "IMAGE_GALLERY_2"
+    ],
+    "vertical_affinity": [
+      "restaurant",
+      "portfolio"
+    ]
+  },
   "about-story": {
     "file": "pattern-library/skeletons/about-story.html",
     "category": "about",
@@ -410,6 +454,67 @@
     "required_tokens": [
       "PAGE_BANNER_TITLE",
       "PAGE_BANNER_TEXT"
+    ],
+    "vertical_affinity": [
+      "general"
+    ]
+  },
+  "cta-split": {
+    "file": "pattern-library/skeletons/cta-split.html",
+    "category": "cta",
+    "required_tokens": [
+      "CTA_TITLE",
+      "CTA_TEXT",
+      "CTA_BUTTON",
+      "IMAGE_HERO"
+    ],
+    "vertical_affinity": [
+      "general"
+    ]
+  },
+  "features-alternating": {
+    "file": "pattern-library/skeletons/features-alternating.html",
+    "category": "features",
+    "required_tokens": [
+      "FEATURES_TITLE",
+      "FEATURE_1_TITLE",
+      "FEATURE_1_TEXT",
+      "FEATURE_2_TITLE",
+      "FEATURE_2_TEXT",
+      "IMAGE_ABOUT",
+      "IMAGE_GALLERY_1"
+    ],
+    "vertical_affinity": [
+      "general"
+    ]
+  },
+  "testimonials-single-featured": {
+    "file": "pattern-library/skeletons/testimonials-single-featured.html",
+    "category": "testimonials",
+    "required_tokens": [
+      "TESTIMONIALS_TITLE",
+      "TESTIMONIAL_1_TEXT",
+      "TESTIMONIAL_1_NAME",
+      "TESTIMONIAL_1_ROLE"
+    ],
+    "vertical_affinity": [
+      "general"
+    ]
+  },
+  "testimonials-with-rating": {
+    "file": "pattern-library/skeletons/testimonials-with-rating.html",
+    "category": "testimonials",
+    "required_tokens": [
+      "TESTIMONIALS_TITLE",
+      "TESTIMONIAL_1_TEXT",
+      "TESTIMONIAL_1_NAME",
+      "TESTIMONIAL_1_ROLE",
+      "TESTIMONIAL_2_TEXT",
+      "TESTIMONIAL_2_NAME",
+      "TESTIMONIAL_2_ROLE",
+      "TESTIMONIAL_3_TEXT",
+      "TESTIMONIAL_3_NAME",
+      "TESTIMONIAL_3_ROLE"
     ],
     "vertical_affinity": [
       "general"
