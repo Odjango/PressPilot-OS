@@ -154,3 +154,6 @@ tests/wordpress/.env
 tests/wordpress/.env
 tests/wordpress/playwright-report/
 tests/wordpress/test-results/
+
+# Git worktrees (isolated development branches)
+.worktrees/
