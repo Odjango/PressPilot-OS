@@ -1,0 +1,27 @@
+{
+  "restaurant": {
+    "heading": "Playfair Display",
+    "body": "Source Sans 3",
+    "personality": "Warm, inviting, classic"
+  },
+  "ecommerce": {
+    "heading": "Inter",
+    "body": "Inter",
+    "personality": "Clean, modern, trustworthy"
+  },
+  "saas": {
+    "heading": "Plus Jakarta Sans",
+    "body": "Inter",
+    "personality": "Tech-forward, professional"
+  },
+  "portfolio": {
+    "heading": "Space Grotesk",
+    "body": "DM Sans",
+    "personality": "Creative, bold"
+  },
+  "local_service": {
+    "heading": "Nunito",
+    "body": "Open Sans",
+    "personality": "Friendly, trustworthy"
+  }
+}

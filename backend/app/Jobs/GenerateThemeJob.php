@@ -112,7 +112,8 @@ class GenerateThemeJob implements ShouldQueue
                 }
             }
 
-            // Map fontProfile to actual Google Font family name
+            // Map fontProfile to actual Google Font family names
+            // Legacy single-font profiles (backward compatible)
             $fontMap = [
                 'cleanSans' => 'Inter',
                 'classicSerif' => 'Playfair Display',
@@ -123,6 +124,20 @@ class GenerateThemeJob implements ShouldQueue
             $fontProfile = $projectData['fontProfile'] ?? 'cleanSans';
             if (isset($fontMap[$fontProfile]) && ! isset($projectData['fontFamily'])) {
                 $projectData['fontFamily'] = $fontMap[$fontProfile];
+            }
+
+            // NEW: Load vertical-aware font pairings (heading + body)
+            $fontPairingsPath = base_path('../pattern-library/font-pairings.json');
+            if (file_exists($fontPairingsPath) && ! isset($projectData['fontPairing'])) {
+                $fontPairings = json_decode(file_get_contents($fontPairingsPath), true) ?? [];
+                $vertical = $this->normalizeCategory($projectData['businessCategory'] ?? $projectData['category'] ?? 'local_service');
+                if (isset($fontPairings[$vertical])) {
+                    $projectData['fontPairing'] = $fontPairings[$vertical];
+                    // Override fontFamily with heading font (backward compatible)
+                    if (! isset($projectData['fontFamily'])) {
+                        $projectData['fontFamily'] = $fontPairings[$vertical]['heading'];
+                    }
+                }
             }
 
             // Step 1: AI generates content tokens

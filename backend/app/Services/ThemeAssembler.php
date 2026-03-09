@@ -326,10 +326,44 @@ PHP;
             }
         }
 
-        // Override font family
+        // Override font families (heading + body pairing if available, else single font)
+        $fontPairing = $project['fontPairing'] ?? null;
         $fontFamily = $project['fontFamily'] ?? ($project['fonts']['primary'] ?? null);
-        if ($fontFamily && isset($themeJson['settings']['typography']['fontFamilies'][0])) {
-            $themeJson['settings']['typography']['fontFamilies'][0]['fontFamily'] = $fontFamily.', system-ui, sans-serif';
+
+        if ($fontPairing && isset($themeJson['settings']['typography']['fontFamilies'])) {
+            // Replace first font family with heading font
+            $themeJson['settings']['typography']['fontFamilies'][0] = [
+                'fontFamily' => $fontPairing['heading'] . ', system-ui, sans-serif',
+                'name' => $fontPairing['heading'],
+                'slug' => 'heading',
+            ];
+
+            // Add body font as second family (or update existing)
+            $bodyEntry = [
+                'fontFamily' => $fontPairing['body'] . ', system-ui, sans-serif',
+                'name' => $fontPairing['body'],
+                'slug' => 'body',
+            ];
+
+            // If heading and body are same font, just use one entry with slug "primary"
+            if ($fontPairing['heading'] === $fontPairing['body']) {
+                $themeJson['settings']['typography']['fontFamilies'][0]['slug'] = 'primary';
+            } else {
+                // Ensure body font is second entry, replacing or adding
+                if (isset($themeJson['settings']['typography']['fontFamilies'][1])) {
+                    $themeJson['settings']['typography']['fontFamilies'][1] = $bodyEntry;
+                } else {
+                    $themeJson['settings']['typography']['fontFamilies'][] = $bodyEntry;
+                }
+            }
+
+            Log::info('ThemeAssembler: Applied font pairing', [
+                'heading' => $fontPairing['heading'],
+                'body' => $fontPairing['body'],
+            ]);
+        } elseif ($fontFamily && isset($themeJson['settings']['typography']['fontFamilies'][0])) {
+            // Legacy: single font override (backward compatible)
+            $themeJson['settings']['typography']['fontFamilies'][0]['fontFamily'] = $fontFamily . ', system-ui, sans-serif';
             $themeJson['settings']['typography']['fontFamilies'][0]['name'] = $fontFamily;
         }
 
