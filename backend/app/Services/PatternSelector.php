@@ -47,14 +47,17 @@ class PatternSelector
         $result = [];
         foreach ($recipe as $pageType => $skeletonIds) {
             $result[$pageType] = [];
-            foreach ($skeletonIds as $skeletonId) {
+            foreach ($skeletonIds as $skeletonEntry) {
+                // Support pipe-delimited alternatives: "hero-cover | hero-split | hero-minimal"
+                $skeletonId = $this->resolveSkeletonId($skeletonEntry);
+
                 // Override hero skeleton on home page if heroLayout is provided
-                if ($pageType === 'home' && $skeletonId === 'hero-cover' && $heroLayout) {
+                if ($pageType === 'home' && $this->isHeroSkeleton($skeletonId) && $heroLayout) {
                     $heroMap = [
                         'fullBleed' => 'hero-fullbleed',
                         'fullWidth' => 'hero-cover',
                         'split' => 'hero-split',
-                        'minimal' => 'hero-cover',
+                        'minimal' => 'hero-minimal',
                     ];
                     $mappedSkeletonId = $heroMap[$heroLayout] ?? $skeletonId;
                     \Illuminate\Support\Facades\Log::info(
@@ -72,7 +75,6 @@ class PatternSelector
                         'required_tokens' => $skeleton['required_tokens'] ?? [],
                     ];
                 } else {
-                    // Log missing skeleton but don't fail — allows partial generation
                     \Illuminate\Support\Facades\Log::warning(
                         "PatternSelector: Skeleton '{$skeletonId}' not found in registry",
                         ['category' => $category, 'page' => $pageType]
@@ -82,6 +84,37 @@ class PatternSelector
         }
 
         return $result;
+    }
+
+    /**
+     * Resolve a skeleton entry that may contain pipe-delimited alternatives.
+     * "hero-cover | hero-split | hero-minimal" → picks one randomly.
+     * "hero-cover" → returns as-is.
+     */
+    private function resolveSkeletonId(string $entry): string
+    {
+        if (! str_contains($entry, '|')) {
+            return trim($entry);
+        }
+
+        $alternatives = array_map('trim', explode('|', $entry));
+        // Filter to only alternatives that exist in the registry
+        $valid = array_filter($alternatives, fn ($id) => isset($this->skeletonRegistry[$id]));
+
+        if (empty($valid)) {
+            // Fallback: return first alternative even if not in registry (will log warning later)
+            return $alternatives[0];
+        }
+
+        return $valid[array_rand($valid)];
+    }
+
+    /**
+     * Check if a skeleton ID is a hero variant.
+     */
+    private function isHeroSkeleton(string $skeletonId): bool
+    {
+        return str_starts_with($skeletonId, 'hero-');
     }
 
     /**
