@@ -857,6 +857,83 @@
       "vertical": "restaurant"
     },
     {
+      "name": "SPECIALS_TITLE",
+      "description": "Specials section heading",
+      "maxLength": 60,
+      "group": "specials",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "SPECIALS_SUBTITLE",
+      "description": "Specials section subtext",
+      "maxLength": 120,
+      "group": "specials",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "SPECIAL_1_NAME",
+      "description": "First special item name",
+      "maxLength": 60,
+      "group": "specials",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "SPECIAL_1_DESC",
+      "description": "First special item description",
+      "maxLength": 150,
+      "group": "specials",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "SPECIAL_1_PRICE",
+      "description": "First special item price",
+      "maxLength": 20,
+      "group": "specials",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "SPECIAL_2_NAME",
+      "description": "Second special item name",
+      "maxLength": 60,
+      "group": "specials",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "SPECIAL_2_DESC",
+      "description": "Second special item description",
+      "maxLength": 150,
+      "group": "specials",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "SPECIAL_2_PRICE",
+      "description": "Second special item price",
+      "maxLength": 20,
+      "group": "specials",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "SPECIAL_3_NAME",
+      "description": "Third special item name",
+      "maxLength": 60,
+      "group": "specials",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "SPECIAL_3_DESC",
+      "description": "Third special item description",
+      "maxLength": 150,
+      "group": "specials",
+      "vertical": "restaurant"
+    },
+    {
+      "name": "SPECIAL_3_PRICE",
+      "description": "Third special item price",
+      "maxLength": 20,
+      "group": "specials",
+      "vertical": "restaurant"
+    },
+    {
       "name": "PRODUCTS_TITLE",
       "description": "Products section heading",
       "maxLength": 80,

@@ -97,7 +97,7 @@ class AIPlanner
 
         // Build category-specific hints
         $categoryHints = match ($category) {
-            'restaurant' => "- MENU_ITEM_*: real dish names with descriptions and realistic prices\n- CHEF_*: chef/owner name, title, and compelling bio\n- RESERVATION_*: compelling reservation call-to-action\n- HOURS_*: realistic business hours",
+            'restaurant' => "- MENU_ITEM_*: real dish names with descriptions and realistic prices\n- SPECIAL_*: featured daily/seasonal specials with descriptions and prices\n- CHEF_*: chef/owner name, title, and compelling bio\n- RESERVATION_*: compelling reservation call-to-action\n- HOURS_*: realistic business hours",
             'ecommerce' => "- PRODUCT_*: real product names with descriptions and realistic prices\n- PRODUCT_CTA: shopping call-to-action like 'Shop Now' or 'Add to Cart'",
             'saas' => "- PLAN_*: realistic SaaS pricing tiers (free/starter, pro, enterprise)\n- STATS_*: impressive but believable metrics (e.g., '99.9%' uptime, '10K+' users)\n- PRICING_CTA: action-oriented like 'Start Free Trial'",
             'portfolio' => "- PROCESS_*: creative workflow steps (e.g., Discovery, Design, Deliver)\n- GALLERY_ALT_*: descriptive alt text for portfolio pieces",
