@@ -7,27 +7,27 @@
     "contact": ["page-banner", "contact-info", "hours-location", "reservation-cta"]
   },
   "ecommerce": {
-    "home": ["hero-cover", "features-3col", "product-grid", "testimonials-3col", "cta-banner"],
+    "home": ["hero-cover", "features-3col", "product-grid", "testimonials-3col", "cta-banner | cta-split"],
     "about": ["page-banner", "about-story", "team-grid", "testimonials-3col"],
-    "services": ["page-banner", "product-grid", "features-3col", "cta-banner"],
-    "contact": ["page-banner", "contact-info", "cta-banner", "testimonials-3col"]
+    "services": ["page-banner", "product-grid", "features-3col", "cta-banner | cta-split"],
+    "contact": ["page-banner", "contact-info", "cta-banner | cta-split", "testimonials-3col"]
   },
   "saas": {
-    "home": ["hero-cover", "features-6col", "stats-numbers", "pricing-3col", "testimonials-3col", "faq-accordion", "cta-banner"],
+    "home": ["hero-cover", "features-6col", "stats-numbers", "pricing-3col", "testimonials-3col", "faq-accordion", "cta-banner | cta-split"],
     "about": ["page-banner", "about-story", "team-grid", "stats-numbers"],
-    "services": ["page-banner", "features-6col", "pricing-3col", "cta-banner"],
-    "contact": ["page-banner", "contact-info", "faq-accordion", "cta-banner"]
+    "services": ["page-banner", "features-6col", "pricing-3col", "cta-banner | cta-split"],
+    "contact": ["page-banner", "contact-info", "faq-accordion", "cta-banner | cta-split"]
   },
   "portfolio": {
-    "home": ["hero-split", "about-story", "process-steps", "gallery-grid", "testimonials-3col", "cta-banner"],
+    "home": ["hero-split", "about-story", "process-steps", "gallery-grid", "testimonials-3col", "cta-banner | cta-split"],
     "about": ["page-banner", "about-story", "process-steps", "testimonials-3col"],
-    "services": ["page-banner", "gallery-grid", "features-3col", "cta-banner"],
-    "contact": ["page-banner", "contact-info", "cta-banner", "testimonials-3col"]
+    "services": ["page-banner", "gallery-grid", "features-3col", "cta-banner | cta-split"],
+    "contact": ["page-banner", "contact-info", "cta-banner | cta-split", "testimonials-3col"]
   },
   "local_service": {
-    "home": ["hero-cover", "features-3col", "service-areas", "about-story", "testimonials-3col", "hours-location", "cta-banner"],
+    "home": ["hero-cover", "features-3col", "service-areas", "about-story", "testimonials-3col", "hours-location", "cta-banner | cta-split"],
     "about": ["page-banner", "about-story", "team-grid", "testimonials-3col"],
-    "services": ["page-banner", "features-3col", "service-areas", "cta-banner"],
-    "contact": ["page-banner", "contact-info", "hours-location", "cta-banner"]
+    "services": ["page-banner", "features-3col", "service-areas", "cta-banner | cta-split"],
+    "contact": ["page-banner", "contact-info", "hours-location", "cta-banner | cta-split"]
   }
 }
