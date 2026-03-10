@@ -113,7 +113,32 @@
       "Skill(speckit.constitution)",
       "Skill(speckit.specify)",
       "Bash(.specify/scripts/bash/create-new-feature.sh:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Skill(superpowers:executing-plans)",
+      "Skill(superpowers:using-git-worktrees)",
+      "Bash(git worktree add:*)",
+      "Bash(composer install:*)",
+      "Bash(php artisan test:*)",
+      "Bash(vendor/bin/phpunit:*)",
+      "Skill(superpowers:dispatching-parallel-agents)",
+      "Bash(php -r:*)",
+      "Bash(/Users/soluwrx/Downloads/PressPilot-OS/PressPilot-OS/.worktrees/phase1-restaurant-design-quality/backend/vendor/bin/phpunit:*)",
+      "Bash(git stash:*)",
+      "Bash(hero-split)",
+      "Bash(hero-minimal\"\\) to enable visual variation in generated themes.\n\nChanges:\n- Add resolveSkeletonId\\(\\) method to parse pipe syntax and randomly select from valid alternatives\n- Add isHeroSkeleton\\(\\) helper to check if a skeleton ID is a hero variant\n- Update select\\(\\) method to use new helper methods\n- Update hero override logic to use isHeroSkeleton\\(\\) instead of hardcoded check\n- Add hero-minimal to heroLayout mapping \\(was using hero-cover as fallback\\)\n- Rewrite all tests to use current select\\(\\) API \\(removed stale selectForPage references\\)\n- Add 3 new tests for pipe-delimited functionality\n\nAll 7 tests pass.\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(features-alternating\"\n  - Home page reservation-cta unchanged \\(different token schema\\)\n  - All other pages unchanged\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git checkout:*)",
+      "Bash(git reset:*)",
+      "Skill(superpowers:finishing-a-development-branch)",
+      "Bash(git pull:*)",
+      "Bash(git merge:*)",
+      "Bash(git branch:*)",
+      "Bash(./vendor/bin/phpunit:*)",
+      "Bash(for core in ollie frost tove spectra-one twentytwentyfour)",
+      "Bash(do)",
+      "Bash(if [ -f \"proven-cores/$core/theme.json\" ])",
+      "Bash(then)",
+      "Bash(else)"
     ]
   }
 }
