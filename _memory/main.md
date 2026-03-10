@@ -1,6 +1,6 @@
 # PressPilot OS — Master Roadmap & Project Memory
 
-Last updated: 2026-03-09 (Phase A smoke tests complete — all 5 verticals PASSED. Site_type defaults fix deployed. Production-ready for A3 debug disable.)
+Last updated: 2026-03-10 (Phase 1: Restaurant Design Quality COMPLETE — 9 new skeletons, font pairings, spacing standardization. All tasks executed via parallel agents.)
 
 ---
 
@@ -17,8 +17,18 @@ Last updated: 2026-03-09 (Phase A smoke tests complete — all 5 verticals PASSE
 
 ## Current Repo State
 - Branch: `main`
-- Latest commit: `8ab5331` (2026-03-09) — `fix: add default site_type/language to project creation (fixes NOT NULL constraint error)`
-- All commits PUSHED AND DEPLOYED to production via Coolify
+- Latest commits (2026-03-10):
+  - `5350465` — chore: update auto-approvals from Phase 1 implementation session
+  - `1641d37` — docs: add Phase 1 implementation plan and design research artifacts
+  - `5d187a7` — feat: wire cta-split as cta-banner alternative across all verticals
+  - `6cdc50f` — refactor: standardize spacing to 8px grid across all skeletons
+  - `f3f4523` — feat: add restaurant-specific specials-highlight and gallery-featured skeletons
+  - `36bd64f` — fix: add missing has-alpha-channel-opacity to separator blocks
+  - `e8c81f1` — fix: parse pipe-delimited skeleton IDs in AIPlanner token collection
+  - `454e23b` — feat: multi-core palette resolver + fix all skeleton color slugs
+  - `0653755` — test: add CorePaletteResolverTest
+- Previous commit: `8ab5331` (2026-03-09) — fix: add default site_type/language to project creation
+- All commits PUSHED to origin/main (deployment pending)
 - Recent commits (2026-03-08 through 2026-03-09, newest first):
   - `8ab5331` — fix: add default site_type/language to project creation (fixes NOT NULL constraint error)
   - `76a9774` — Update project memory and documentation after Phase A completion
@@ -95,6 +105,62 @@ Last updated: 2026-03-09 (Phase A smoke tests complete — all 5 verticals PASSE
   - Two-layer approach ensures backwards compatibility at both application and database levels
 - **Memory update:** Project state and documentation updated (commit `76a9774`)
 - **Remaining:** Phase A3 (disable debug mode) + B1 LemonSqueezy (on hold — bank account pending)
+
+**Session G** — Phase 1: Restaurant Design Quality Implementation (commits `0653755` through `1641d37`, 2026-03-10):
+- **Implementation Strategy:** Executed 9-task plan using parallel subagent dispatch via superpowers:executing-plans + dispatching-parallel-agents skills
+- **Wave 1 (Parallel):** Tasks 1-3 (PatternSelector pipe support, font pairing system, spacing standardization)
+- **Wave 2 (Parallel):** Tasks 4-7 (new hero/testimonial/CTA/features skeletons, restaurant-specific skeletons)
+- **Wave 3 (Sequential):** Tasks 8-9 (wire complete recipes, integration tests)
+
+**What was delivered:**
+- **9 new skeleton patterns:**
+  - 3 hero variants: hero-minimal.html, hero-centered.html, hero-image-grid.html
+  - 2 testimonial variants: testimonials-single-featured.html, testimonials-with-rating.html
+  - 2 general variants: cta-split.html, features-alternating.html
+  - 2 restaurant-specific: specials-highlight.html, gallery-featured.html
+- **Total skeleton count:** 31 (up from 22)
+- **Font pairing system:** pattern-library/font-pairings.json with vertical-aware heading + body fonts
+  - Restaurant: Playfair Display (heading) + Source Sans 3 (body)
+  - All 5 verticals configured with curated font pairs
+- **Spacing standardization:** All 31 skeletons follow 8px rhythm (spacing|70/60/50/40/30)
+- **Pipe-delimited alternatives:** PatternSelector now supports "hero-cover | hero-split | hero-minimal" syntax for visual variation
+- **11 new SPECIALS tokens:** Added to token-schema.json for restaurant-specific daily specials section
+- **AIPlanner update:** Now generates SPECIALS_* tokens for restaurant vertical
+
+**Files modified:** 80+ files across backend/, pattern-library/, docs/plans/
+**Total changes:** +2,799 insertions (plan docs), +228 insertions (skeletons + config)
+
+**Verification results:**
+- ✅ PatternSelector tests: 7/7 passing
+- ✅ JSON validation: All 4 config files valid
+- ✅ Skeleton count: 31 total
+- ✅ Non-restaurant verticals: Minimal changes (only cta-split added as general alternative)
+- ✅ Restaurant recipes: All pipe alternatives configured per plan
+
+**Restaurant recipe now includes:**
+- Home page: 5 hero variants + 3 testimonial variants + specials-highlight section
+- About page: 2 gallery variants
+- Menu page: specials-highlight + 3 testimonial variants
+- Services page: 2 features variants + 3 testimonial variants
+
+**Key architecture decisions:**
+- Pipe-delimited alternatives enable visual variation without breaking deterministic pattern selection
+- Font pairing system separates heading vs body fonts for better typography hierarchy
+- Spacing tokens enforce consistent 8px rhythm across all skeletons
+- Restaurant-specific tokens (SPECIALS_*) don't leak into other verticals
+
+**Commits:**
+1. `0653755` — test: add CorePaletteResolverTest
+2. `454e23b` — feat: multi-core palette resolver + fix all skeleton color slugs
+3. `e8c81f1` — fix: add missing has-alpha-channel-opacity to separator blocks
+4. `36bd64f` — fix: parse pipe-delimited skeleton IDs in AIPlanner token collection
+5. `f3f4523` — feat: add restaurant-specific specials-highlight and gallery-featured skeletons
+6. `6cdc50f` — refactor: standardize spacing to 8px grid across all skeletons
+7. `5d187a7` — feat: wire cta-split as cta-banner alternative across all verticals
+8. `1641d37` — docs: add Phase 1 implementation plan and design research artifacts
+9. `5350465` — chore: update auto-approvals from Phase 1 implementation session
+
+**Next steps:** Deploy to production, test restaurant theme generation with new visual variation
 
 **Session D** — UX/UI quality fixes (commit `ec67554`, via Claude Code CLI):
 - **Fix #1 — Transparent header**: Created `parts/header-transparent.html` with white text (`textColor: base`) + transparent background for fullBleed hero pages. `front-page.html` uses `header-transparent` slug. All other pages use regular `header`. New `buildHeaderTransparent()` method in ThemeAssembler. Registered in `writeThemeJson()` templateParts array.

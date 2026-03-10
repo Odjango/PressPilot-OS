@@ -1,6 +1,21 @@
 # PressPilot Project Memory
-**State Saved: 2026-03-09** | **Current Phase: Phase A2 COMPLETE — All 5 verticals smoke-tested (100% pass rate). Site_type defaults fix deployed. Ready for A3 (disable debug) + launch.**
+**State Saved: 2026-03-10** | **Current Phase: Phase 1 COMPLETE — Restaurant Design Quality upgrade with 9 new skeletons, font pairings, spacing standardization. Visual variation system operational.**
 
+> **2026-03-10 UPDATE (Session G — Phase 1: Restaurant Design Quality):**
+>
+> **Phase 1 Implementation:** COMPLETE — Executed 9-task plan via parallel subagent dispatch
+> - **9 new skeletons:** 3 hero variants, 2 testimonial variants, 2 general variants, 2 restaurant-specific
+> - **Total skeleton count:** 31 (up from 22)
+> - **Font pairing system:** Vertical-aware heading + body fonts (e.g., Restaurant: Playfair Display + Source Sans 3)
+> - **Spacing standardization:** All 31 skeletons follow 8px rhythm
+> - **Pipe-delimited alternatives:** PatternSelector supports visual variation (e.g., "hero-cover | hero-split | hero-minimal")
+> - **11 new SPECIALS tokens:** Restaurant-specific daily specials section
+> - **Verification:** 7/7 PatternSelector tests passing, all JSON files valid
+>
+> **Key commits:** `0653755` through `5350465` (10 commits total)
+>
+> **Next:** Deploy to production, test restaurant theme generation with new visual variation
+>
 > **2026-03-09 UPDATE (Session F — Phase A Completion):**
 >
 > **Phase A2 Smoke Tests:** COMPLETE — All 5 verticals tested in parallel via production API
@@ -12,7 +27,7 @@
 > - Two-layer fix: API fallback defaults + database DEFAULT values
 > - Migration `2026_03_09_010000_add_defaults_to_projects_columns.php` ready for deployment
 >
-> **Next:** Phase A3 (disable debug mode) → public launch
+> **Remaining:** Phase A3 (disable debug mode) → public launch
 >
 > **2026-03-08 UPDATE (Session E):** Next-Phase Implementation Plan execution:
 >

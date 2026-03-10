@@ -1,9 +1,10 @@
 # PressPilot OS — Development Roadmap
 
-> **Last updated: 2026-03-09 (Session F)** — Phase A2 smoke tests COMPLETE (all 5 verticals passed). Site_type defaults fix deployed. Production-ready for A3 (disable debug) and launch. B1 LemonSqueezy on hold (bank account pending) but can launch with free downloads first.
+> **Last updated: 2026-03-10 (Session G)** — Phase 1 Restaurant Design Quality COMPLETE. 9 new skeletons added, font pairing system operational, spacing standardized. Visual variation system ready for deployment.
 > **Canonical SSWG specs:** `agent-os/sswg/PROTOCOL.md` + `agent-os/sswg/PHASE-{0-4}.md`
 > **Decisions:** `DECISIONS.md` (change log included)
 > **Current state:** `_memory/main.md` | **Test results:** `docs/plans/phase-a-results.md`
+> **Phase 1 Plan:** `docs/plans/2026-03-09-phase1-implementation-plan.md`
 
 ---
 
@@ -134,6 +135,54 @@ All 10 issues resolved (10 commits via Subagent-Driven Development):
 - ✅ commit `8ab5331`
 
 **Checkpoint:** Production API verified with all 5 verticals. Ready for public launch after A3 (disable debug).
+
+### Phase 1: Restaurant Design Quality — ✅ COMPLETE (2026-03-10)
+**Goal:** Upgrade restaurant vertical to premium-quality, visually varied themes.
+**Plan:** `docs/plans/2026-03-09-phase1-implementation-plan.md`
+
+**Implementation (9 tasks executed via parallel subagents):**
+
+**Wave 1 (Parallel):**
+- [x] Task 1: PatternSelector pipe-delimited alternatives support (commit `2196edd`)
+- [x] Task 2: Font pairing system with vertical-aware heading + body fonts (commit `db6b731`)
+- [x] Task 3: Spacing standardization to 8px grid across all skeletons (commit `6cdc50f`)
+
+**Wave 2 (Parallel):**
+- [x] Task 4: 3 new hero skeletons (minimal, centered, image-grid) (commit `273218a`)
+- [x] Task 5: 2 new testimonial skeletons (single-featured, with-rating) (commit `01c1d3a`)
+- [x] Task 6: CTA + features skeletons (cta-split, features-alternating) (commits `5eb240f`, `5d187a7`)
+- [x] Task 7: Restaurant-specific skeletons (specials-highlight, gallery-featured) (commit `f3f4523`)
+
+**Wave 3 (Sequential):**
+- [x] Task 8: Wire complete restaurant recipes with all skeleton alternatives
+- [x] Task 9: Integration tests and verification (7/7 PatternSelector tests passing)
+
+**What was delivered:**
+- **9 new skeleton patterns** (total: 31, up from 22)
+- **Font pairing system:** `pattern-library/font-pairings.json` with curated heading + body fonts for all 5 verticals
+- **11 new SPECIALS tokens** for restaurant-specific daily specials section
+- **Pipe-delimited alternatives:** Visual variation without breaking deterministic selection
+- **Spacing standardization:** 8px rhythm across all skeletons (spacing|70/60/50/40/30)
+
+**Restaurant recipe enhancements:**
+- Home page: 5 hero variants + 3 testimonial variants + specials-highlight
+- About page: 2 gallery variants (gallery-grid | gallery-featured)
+- Menu page: specials-highlight + 3 testimonial variants
+- Services page: 2 features variants + 3 testimonial variants
+
+**Verification:**
+- ✅ PatternSelector tests: 7/7 passing
+- ✅ JSON validation: All 4 config files valid
+- ✅ Non-restaurant verticals: Minimal changes (only cta-split added as general alternative)
+- ✅ Skeleton count: 31 total
+
+**Key architecture decisions:**
+- Pipe-delimited alternatives enable visual variation without losing pattern selection determinism
+- Font pairing system separates heading vs body fonts for better typography hierarchy
+- Spacing tokens enforce consistent 8px rhythm for visual polish
+- Restaurant-specific tokens don't leak into other verticals (vertical_affinity system)
+
+**Next:** Deploy to production, verify restaurant theme generation with new visual variation
 
 ### SSWG Phase 4: WPaify Integration — QUEUED
 **Goal:** HTML-to-WordPress theme conversion for WPaify product.
