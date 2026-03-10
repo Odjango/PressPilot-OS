@@ -156,12 +156,20 @@ class GenerateThemeJob implements ShouldQueue
             $imageResult = $imageHandler->generateImages($projectData, $tempDir . '/assets/images', $imageTokens);
             $allTokens = array_merge($tokens, $imageResult['urls']);
 
+            // Resolve which proven-core to use (defaults to 'ollie')
+            $coreSlug = $projectData['core'] ?? 'ollie';
+            Log::info('GenerateThemeJob: Using proven-core', ['core' => $coreSlug]);
+
             // Step 4: TokenInjector processes skeletons with all tokens
+            // Set the core so color slugs are rewritten from canonical (Ollie) to target core
             $tokenInjector = app(TokenInjector::class);
+            $tokenInjector->setCore($coreSlug);
             $pageHtml = $tokenInjector->processSkeletons($skeletonSelections, $allTokens);
 
             // Step 5: ThemeAssembler builds the theme ZIP
+            // Set the core so the correct theme.json is loaded and footer uses correct slugs
             $themeAssembler = app(ThemeAssembler::class);
+            $themeAssembler->setCore($coreSlug);
             $assembled = $themeAssembler->assemble($projectData, $allTokens, $pageHtml);
 
             // Step 6: Validate assembled theme

@@ -9,6 +9,24 @@ use ZipArchive;
 class ThemeAssembler
 {
     /**
+     * The active proven-core slug. Defaults to 'ollie'.
+     * Determines which core's theme.json is loaded and which base files are copied.
+     */
+    private string $coreSlug = 'ollie';
+
+    /**
+     * Set the target proven-core for theme assembly.
+     * Must be called before assemble() when using a non-Ollie core.
+     */
+    public function setCore(string $coreSlug): self
+    {
+        $this->coreSlug = $coreSlug;
+        Log::info('ThemeAssembler: Core set', ['core' => $coreSlug]);
+
+        return $this;
+    }
+
+    /**
      * @param  array<string, mixed>  $project
      * @param  array<string, string>  $tokens  All tokens (text + image)
      * @param  array<string, string>  $pageHtml  Injected HTML keyed by page type (home, about, services, contact)
@@ -75,7 +93,7 @@ class ThemeAssembler
 
     private function copyBaseFiles(string $themeDir): void
     {
-        $baseDir = base_path('../proven-cores/ollie');
+        $baseDir = base_path('../proven-cores/' . $this->coreSlug);
         $baseFiles = ['index.php'];
 
         foreach ($baseFiles as $file) {
@@ -275,22 +293,41 @@ PHP;
 
     private function writeThemeJson(string $themeDir, array $project): void
     {
-        $basePath = base_path('../proven-cores/ollie/theme.json');
+        $basePath = base_path('../proven-cores/' . $this->coreSlug . '/theme.json');
+
+        // Fall back to Ollie if the target core has no theme.json (e.g., blockbase)
+        if (! file_exists($basePath)) {
+            Log::info('ThemeAssembler: No theme.json for core, falling back to Ollie', ['core' => $this->coreSlug]);
+            $basePath = base_path('../proven-cores/ollie/theme.json');
+        }
+
         if (! file_exists($basePath)) {
             throw new RuntimeException('Base theme.json not found.');
         }
 
         $themeJson = json_decode(file_get_contents($basePath), true, 512, JSON_THROW_ON_ERROR);
 
-        // Override colors from project
+        // Override colors from project.
+        // Map semantic color roles (primary, secondary, accent, background, foreground)
+        // to the correct palette slugs for the active core using CorePaletteResolver.
         $colors = $project['colors'] ?? [];
-        $paletteOverrides = [
-            'primary' => $colors['primary'] ?? null,
-            'secondary' => $colors['secondary'] ?? null,
+        $resolver = app(CorePaletteResolver::class);
+
+        // Canonical (Ollie) slug → project color value
+        $canonicalOverrides = [
+            'primary'     => $colors['primary'] ?? null,
+            'secondary'   => $colors['secondary'] ?? null,
             'primary-alt' => $colors['accent'] ?? null,
-            'base' => $colors['background'] ?? null,
-            'main' => $colors['foreground'] ?? null,
+            'base'        => $colors['background'] ?? null,
+            'main'        => $colors['foreground'] ?? null,
         ];
+
+        // Resolve canonical slugs to the target core's actual slugs
+        $paletteOverrides = [];
+        foreach ($canonicalOverrides as $canonicalSlug => $colorValue) {
+            $targetSlug = $resolver->resolve($canonicalSlug, $this->coreSlug);
+            $paletteOverrides[$targetSlug] = $colorValue;
+        }
 
         if (isset($themeJson['settings']['color']['palette'])) {
             foreach ($themeJson['settings']['color']['palette'] as $index => $entry) {
@@ -311,13 +348,18 @@ PHP;
         }
         if (! $anyColorSet) {
             Log::info('ThemeAssembler: No brand colors provided, applying PressPilot defaults');
-            $defaults = [
-                'primary' => '#1e3a5f',
-                'secondary' => '#4a90d9',
+            // Defaults use canonical (Ollie) slugs, resolved to target core
+            $canonicalDefaults = [
+                'primary'     => '#1e3a5f',
+                'secondary'   => '#4a90d9',
                 'primary-alt' => '#2ecc71',
-                'base' => '#ffffff',
-                'main' => '#1a1a2e',
+                'base'        => '#ffffff',
+                'main'        => '#1a1a2e',
             ];
+            $defaults = [];
+            foreach ($canonicalDefaults as $canonicalSlug => $hex) {
+                $defaults[$resolver->resolve($canonicalSlug, $this->coreSlug)] = $hex;
+            }
             foreach ($themeJson['settings']['color']['palette'] as $index => $entry) {
                 $slug = $entry['slug'] ?? null;
                 if ($slug && isset($defaults[$slug])) {
@@ -460,6 +502,7 @@ PHP;
 
     /**
      * Build the PressPilot branded 3-column footer.
+     * Uses CorePaletteResolver to emit correct color slugs for the active core.
      */
     private function buildPressPilotFooter(array $project, array $tokens): string
     {
@@ -475,9 +518,15 @@ PHP;
             $logoBlock = '<!-- wp:site-logo {"width":60,"shouldSyncIcon":true} /-->';
         }
 
+        // Resolve color slugs for the active core
+        $resolver = app(CorePaletteResolver::class);
+        $bgColor     = $resolver->resolve('tertiary', $this->coreSlug);
+        $darkText    = $resolver->resolve('main', $this->coreSlug);
+        $mutedText   = $resolver->resolve('secondary', $this->coreSlug);
+
         return <<<FOOTER
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|50"}}},"backgroundColor":"base-2","textColor":"contrast","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-contrast-color has-base-2-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--50)">
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|50"}}},"backgroundColor":"{$bgColor}","textColor":"{$darkText}","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-{$darkText}-color has-{$bgColor}-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--50)">
 
     <!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|70"}}}} -->
     <div class="wp-block-columns alignwide">
@@ -489,8 +538,8 @@ PHP;
                 <!-- wp:group {"style":{"spacing":{"blockGap":"0.25rem"}},"layout":{"type":"flex","orientation":"vertical"}} -->
                 <div class="wp-block-group">
                     <!-- wp:site-title {"style":{"typography":{"fontStyle":"normal","fontWeight":"700","fontSize":"1.25rem"}}} /-->
-                    <!-- wp:paragraph {"fontSize":"small","textColor":"contrast-2"} -->
-                    <p class="has-small-font-size has-contrast-2-color has-text-color">{$footerTagline}</p>
+                    <!-- wp:paragraph {"fontSize":"small","textColor":"{$mutedText}"} -->
+                    <p class="has-small-font-size has-{$mutedText}-color has-text-color">{$footerTagline}</p>
                     <!-- /wp:paragraph -->
                 </div>
                 <!-- /wp:group -->
@@ -500,21 +549,21 @@ PHP;
         <!-- /wp:column -->
         <!-- wp:column {"width":"33%"} -->
         <div class="wp-block-column" style="flex-basis:33%">
-            <!-- wp:heading {"level":4,"textColor":"contrast","style":{"typography":{"fontWeight":"700","textTransform":"uppercase","letterSpacing":"1px"}},"fontSize":"small"} -->
-            <h4 class="wp-block-heading has-small-font-size has-contrast-color has-text-color" style="font-weight:700;text-transform:uppercase;letter-spacing:1px">Quick Links</h4>
+            <!-- wp:heading {"level":4,"textColor":"{$darkText}","style":{"typography":{"fontWeight":"700","textTransform":"uppercase","letterSpacing":"1px"}},"fontSize":"small"} -->
+            <h4 class="wp-block-heading has-small-font-size has-{$darkText}-color has-text-color" style="font-weight:700;text-transform:uppercase;letter-spacing:1px">Quick Links</h4>
             <!-- /wp:heading -->
             <!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","orientation":"vertical"},"fontSize":"small","style":{"spacing":{"blockGap":"0.75rem"}}} /-->
         </div>
         <!-- /wp:column -->
         <!-- wp:column {"width":"33%"} -->
         <div class="wp-block-column" style="flex-basis:33%">
-            <!-- wp:heading {"level":4,"textColor":"contrast","style":{"typography":{"fontWeight":"700","textTransform":"uppercase","letterSpacing":"1px"}},"fontSize":"small"} -->
-            <h4 class="wp-block-heading has-small-font-size has-contrast-color has-text-color" style="font-weight:700;text-transform:uppercase;letter-spacing:1px">Get In Touch</h4>
+            <!-- wp:heading {"level":4,"textColor":"{$darkText}","style":{"typography":{"fontWeight":"700","textTransform":"uppercase","letterSpacing":"1px"}},"fontSize":"small"} -->
+            <h4 class="wp-block-heading has-small-font-size has-{$darkText}-color has-text-color" style="font-weight:700;text-transform:uppercase;letter-spacing:1px">Get In Touch</h4>
             <!-- /wp:heading -->
-            <!-- wp:paragraph {"fontSize":"small","textColor":"contrast-2"} -->
-            <p class="has-small-font-size has-contrast-2-color has-text-color">{$contactText}</p>
+            <!-- wp:paragraph {"fontSize":"small","textColor":"{$mutedText}"} -->
+            <p class="has-small-font-size has-{$mutedText}-color has-text-color">{$contactText}</p>
             <!-- /wp:paragraph -->
-            <!-- wp:social-links {"iconColor":"contrast","iconColorValue":"currentColor","size":"has-normal-icon-size","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}},"className":"is-style-logos-only"} -->
+            <!-- wp:social-links {"iconColor":"{$darkText}","iconColorValue":"currentColor","size":"has-normal-icon-size","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}},"className":"is-style-logos-only"} -->
             <ul class="wp-block-social-links has-normal-icon-size has-icon-color is-style-logos-only">
                 <!-- wp:social-link {"url":"#","service":"facebook"} /-->
                 <!-- wp:social-link {"url":"#","service":"x"} /-->
@@ -530,8 +579,8 @@ PHP;
     <div style="height:var(--wp--preset--spacing--50)" aria-hidden="true" class="wp-block-spacer"></div>
     <!-- /wp:spacer -->
 
-    <!-- wp:paragraph {"align":"center","fontSize":"small","textColor":"contrast-2"} -->
-    <p class="has-text-align-center has-small-font-size has-contrast-2-color has-text-color">&copy; {$year} {$businessName}. All rights reserved. Powered by <a href="https://www.presspilotapp.com" target="_blank" rel="noopener noreferrer" style="color:inherit">PressPilot</a>.</p>
+    <!-- wp:paragraph {"align":"center","fontSize":"small","textColor":"{$mutedText}"} -->
+    <p class="has-text-align-center has-small-font-size has-{$mutedText}-color has-text-color">&copy; {$year} {$businessName}. All rights reserved. Powered by <a href="https://www.presspilotapp.com" target="_blank" rel="noopener noreferrer" style="color:inherit">PressPilot</a>.</p>
     <!-- /wp:paragraph -->
 
 </div>

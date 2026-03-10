@@ -10,6 +10,23 @@ use RuntimeException;
 class TokenInjector
 {
     /**
+     * The active proven-core slug (defaults to 'ollie').
+     * Set via setCore() before processSkeletons() to enable cross-core color rewriting.
+     */
+    private string $coreSlug = 'ollie';
+
+    /**
+     * Set the target proven-core for color slug rewriting.
+     * Must be called before processSkeletons() when using a non-Ollie core.
+     */
+    public function setCore(string $coreSlug): self
+    {
+        $this->coreSlug = $coreSlug;
+
+        return $this;
+    }
+
+    /**
      * Load a skeleton HTML file directly (no PHP stripping needed).
      */
     public function loadSkeleton(string $skeletonFile): string
@@ -259,6 +276,13 @@ class TokenInjector
 
                 $html = $this->loadSkeleton($skeleton['file']);
                 $injected = $this->injectTokens($html, $tokens);
+
+                // Rewrite color slugs from canonical (Ollie) to the target core
+                if ($this->coreSlug !== 'ollie') {
+                    $resolver = app(CorePaletteResolver::class);
+                    $injected = $resolver->rewriteHtml($injected, $this->coreSlug);
+                }
+
                 $errors = $this->validateBlockGrammar($injected);
 
                 if (!empty($errors)) {
