@@ -5,6 +5,79 @@
 
 ## Entries
 
+## [2026-03-10] — Phase 1: Restaurant Design Quality — Visual Variation System Complete
+
+### Added
+- **9 new skeleton patterns** in `pattern-library/skeletons/`:
+  - 3 hero variants: `hero-minimal.html`, `hero-centered.html`, `hero-image-grid.html`
+  - 2 testimonial variants: `testimonials-single-featured.html`, `testimonials-with-rating.html`
+  - 2 general variants: `cta-split.html`, `features-alternating.html`
+  - 2 restaurant-specific: `specials-highlight.html`, `gallery-featured.html`
+- **Total skeleton count:** 31 (up from 22)
+- **Font pairing system** in `pattern-library/font-pairings.json` — vertical-aware heading + body font combinations for all 5 verticals (e.g., Restaurant: Playfair Display + Source Sans 3)
+- **11 new SPECIALS tokens** in `token-schema.json` for restaurant daily specials section (SPECIALS_TITLE, SPECIALS_SUBTITLE, SPECIAL_1-3_NAME/DESC/PRICE)
+- **Pipe-delimited alternatives** in PatternSelector — supports visual variation syntax (e.g., `"hero-cover | hero-split | hero-minimal"`) for random selection from valid alternatives
+- **CorePaletteResolverTest** — 18 tests, 111 assertions for multi-core palette resolution
+
+### Changed
+- **Spacing standardization** — all 31 skeletons follow 8px rhythm (spacing|70 top/bottom, spacing|50 left/right, spacing|60 column gap, spacing|40-30 internal gaps)
+- **PatternSelector.php** — new `resolveSkeletonId()` method parses pipe-delimited alternatives, filters to valid registry entries, randomly selects one
+- **GenerateThemeJob.php** — loads font pairings from `font-pairings.json` based on vertical, passes heading + body fonts to ThemeAssembler
+- **ThemeAssembler.php** — injects font pairs into theme.json (first entry: heading font with slug "heading", second entry: body font with slug "body")
+- **AIPlanner.php** — restaurant category hints updated to include SPECIALS_* token generation
+- **vertical-recipes.json** — restaurant recipes enhanced:
+  - Home: 5 hero variants + 3 testimonial variants + specials-highlight section
+  - About: 2 gallery variants (gallery-grid | gallery-featured)
+  - Menu: specials-highlight + 3 testimonial variants
+  - Services: 2 features variants + 3 testimonial variants
+- **skeleton-registry.json** — all 9 new skeletons registered with proper vertical_affinity, required_tokens, and category metadata
+
+### Fixed
+- **5 skeletons spacing normalized** — cta-split, menu-2col, process-steps, product-grid, hero-fullbleed corrected to follow 8px grid
+- **Separator blocks** — added missing `has-alpha-channel-opacity` class (fixes "Attempt Recovery" errors in Site Editor)
+- **AIPlanner token collection** — now parses pipe-delimited skeleton IDs correctly to extract all required tokens
+- **Multi-core palette resolver** — fixed all skeleton color slugs to use correct preset color names
+
+### Verification
+- ✅ PatternSelector tests: 7/7 passing (24 assertions)
+- ✅ JSON validation: All 4 config files valid (no trailing commas)
+- ✅ Non-restaurant verticals: Minimal changes (only cta-split added as general alternative to cta-banner across all verticals)
+- ✅ Skeleton count: 31 total
+- ✅ Restaurant recipes: All pipe alternatives configured per implementation plan
+
+### Implementation Strategy
+- Executed 9-task plan via parallel subagent dispatch using superpowers:executing-plans + dispatching-parallel-agents skills
+- **Wave 1 (Parallel):** Tasks 1-3 (PatternSelector pipe support, font pairing system, spacing standardization)
+- **Wave 2 (Parallel):** Tasks 4-7 (new hero/testimonial/CTA/features skeletons, restaurant-specific skeletons)
+- **Wave 3 (Sequential):** Tasks 8-9 (wire complete recipes, integration tests)
+
+### Key Architecture Decisions
+- Pipe-delimited alternatives enable visual variation without breaking deterministic pattern selection
+- Font pairing system separates heading vs body fonts for better typography hierarchy
+- Spacing tokens enforce consistent 8px rhythm for visual polish
+- Restaurant-specific tokens (SPECIALS_*) don't leak into other verticals via vertical_affinity system
+- Inline styles preserved in all skeletons (required by WordPress FSE block validation)
+
+### Commits
+1. `0653755` — test: add CorePaletteResolverTest
+2. `454e23b` — feat: multi-core palette resolver + fix all skeleton color slugs
+3. `e8c81f1` — fix: add missing has-alpha-channel-opacity to separator blocks
+4. `36bd64f` — fix: parse pipe-delimited skeleton IDs in AIPlanner token collection
+5. `f3f4523` — feat: add restaurant-specific specials-highlight and gallery-featured skeletons
+6. `6cdc50f` — refactor: standardize spacing to 8px grid across all skeletons
+7. `5d187a7` — feat: wire cta-split as cta-banner alternative across all verticals
+8. `1641d37` — docs: add Phase 1 implementation plan and design research artifacts
+9. `5350465` — chore: update auto-approvals from Phase 1 implementation session
+10. `2d6bfe6` — docs: update project memory and roadmap for Phase 1 completion
+
+### Next
+- Deploy to production (backend redeploy via Coolify UI)
+- Test restaurant theme generation with new visual variation
+- Verify SPECIALS tokens generate correctly for restaurant vertical
+- Monitor for any pipe-delimited alternative selection issues
+
+---
+
 ## [2026-03-06b] — SSWG Phase 2.7 Complete — Skeleton-Based Pipeline Rewrite
 
 ### Added
