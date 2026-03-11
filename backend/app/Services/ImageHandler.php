@@ -33,6 +33,7 @@ class ImageHandler
         'IMAGE_PRODUCT_5' => [800, 800],
         'IMAGE_PRODUCT_6' => [800, 800],
         'IMAGE_CHEF' => [800, 800],
+        'IMAGE_PAGE_BANNER' => [1920, 600],
     ];
 
     /**
@@ -48,6 +49,7 @@ class ImageHandler
         'IMAGE_PRODUCT' => [800, 800],
         'IMAGE_CHEF' => [800, 800],
         'IMAGE_PORTFOLIO' => [900, 600],
+        'IMAGE_PAGE_BANNER' => [1920, 600],
     ];
 
     /**

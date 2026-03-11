@@ -341,12 +341,13 @@
     "file": "pattern-library/skeletons/hours-location.html",
     "category": "hours",
     "required_tokens": [
-      "HOURS_TITLE",
-      "HOURS_WEEKDAY",
-      "HOURS_WEEKEND",
+      "HOURS_WEEKDAY_LABEL",
+      "HOURS_WEEKDAY_TIMES",
+      "HOURS_WEEKEND_LABEL",
+      "HOURS_WEEKEND_TIMES",
       "LOCATION_ADDRESS",
       "LOCATION_PHONE",
-      "LOCATION_TEXT"
+      "LOCATION_NOTE"
     ],
     "vertical_affinity": [
       "restaurant",
@@ -453,7 +454,9 @@
     "category": "intro",
     "required_tokens": [
       "PAGE_BANNER_TITLE",
-      "PAGE_BANNER_TEXT"
+      "PAGE_BANNER_TEXT",
+      "PAGE_BANNER_EYEBROW",
+      "IMAGE_PAGE_BANNER"
     ],
     "vertical_affinity": [
       "general"

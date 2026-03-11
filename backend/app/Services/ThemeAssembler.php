@@ -263,6 +263,13 @@ add_action('init', function() {
     // Mark as done so this only runs once
     update_option('_presspilot_content_loaded', true);
 }, 1);
+
+// Enqueue AOS.js scroll animations library
+add_action('wp_enqueue_scripts', function() {
+    wp_enqueue_style('aos-css', 'https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css', [], '2.3.4');
+    wp_enqueue_script('aos-js', 'https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js', [], '2.3.4', true);
+    wp_add_inline_script('aos-js', 'document.addEventListener("DOMContentLoaded", function(){ AOS.init({ duration: 700, once: true, offset: 80 }); });');
+});
 PHP;
 
         file_put_contents($themeDir.'/functions.php', $functionsContent);
@@ -524,7 +531,7 @@ PHP;
         $darkText    = $resolver->resolve('main', $this->coreSlug);
         $mutedText   = $resolver->resolve('secondary', $this->coreSlug);
 
-        return <<<FOOTER
+        $footer = <<<FOOTER
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|50"}}},"backgroundColor":"{$bgColor}","textColor":"{$darkText}","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull has-{$darkText}-color has-{$bgColor}-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--50)">
 
@@ -586,6 +593,10 @@ PHP;
 </div>
 <!-- /wp:group -->
 FOOTER;
+
+        // Apply text color enforcement rules
+        $tokenInjector = app(TokenInjector::class);
+        return $tokenInjector->enforceTextColorRules($footer);
     }
 
     /**

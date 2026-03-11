@@ -301,7 +301,153 @@ class TokenInjector
             throw new BlockGrammarException($allErrors, 'processSkeletons');
         }
 
+        // Enforce text color rules on all assembled HTML
+        foreach ($results as $pageType => $html) {
+            $results[$pageType] = $this->enforceTextColorRules($html);
+        }
+
         return $results;
+    }
+
+    /**
+     * Enforce text color rules on assembled HTML.
+     * Prevents brand colors from being applied to body text paragraphs.
+     *
+     * Rules:
+     * - wp:paragraph blocks with textColor other than base/foreground → remove textColor
+     * - <p> tags with has-*-color classes (except base/foreground) → remove class
+     * - Exception: Price paragraphs (contains $ or price-like pattern) MAY keep brand color
+     * - Exception: Small eyebrow/label paragraphs (fontSize small, first in group) MAY keep brand color
+     *
+     * @param  string  $html  Assembled HTML with all tokens injected
+     * @return string  HTML with text color rules enforced
+     */
+    public function enforceTextColorRules(string $html): string
+    {
+        // Process each wp:paragraph block
+        // Match both {attributes} and {} (empty attributes)
+        $html = preg_replace_callback(
+            '/<!-- wp:paragraph\s+(\{[^}]*\})\s*-->(.*?)<!-- \/wp:paragraph -->/s',
+            function ($matches) {
+                $jsonStr = $matches[1];
+                $content = $matches[2];
+
+                // Decode block attributes
+                $attrs = json_decode($jsonStr, true);
+                if ($attrs === null) {
+                    // Malformed JSON, skip this block
+                    return $matches[0];
+                }
+
+                // Check if this is a price paragraph (exception)
+                if ($this->isPriceParagraph($content)) {
+                    return $matches[0]; // Keep original
+                }
+
+                // Check if this is a small eyebrow/label paragraph (exception)
+                if ($this->isEyebrowParagraph($attrs)) {
+                    return $matches[0]; // Keep original
+                }
+
+                // Check if textColor is set to something other than base/foreground
+                if (isset($attrs['textColor'])) {
+                    $color = $attrs['textColor'];
+                    if (!in_array($color, ['base', 'foreground'], true)) {
+                        // Remove textColor attribute
+                        unset($attrs['textColor']);
+                        Log::info('TokenInjector: Removed brand textColor from paragraph', [
+                            'removed_color' => $color,
+                        ]);
+                    }
+                }
+
+                // Remove brand color classes from <p> tag
+                $content = $this->removeBrandColorClasses($content);
+
+                // Reconstruct block
+                $newJsonStr = empty($attrs) ? '{}' : json_encode($attrs, JSON_UNESCAPED_SLASHES);
+                return "<!-- wp:paragraph {$newJsonStr} -->{$content}<!-- /wp:paragraph -->";
+            },
+            $html
+        );
+
+        return $html;
+    }
+
+    /**
+     * Check if paragraph content represents a price.
+     */
+    private function isPriceParagraph(string $content): bool
+    {
+        // Strip HTML tags to get text content
+        $text = strip_tags($content);
+        $text = trim($text);
+
+        // Check for price patterns: starts with $, ends with currency symbol, contains price-like numbers
+        if (preg_match('/^\$[\d,]+(?:\.\d{2})?/', $text)) {
+            return true;
+        }
+        if (preg_match('/[\d,]+(?:\.\d{2})?\s*(?:\$|USD|EUR|GBP)$/i', $text)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if paragraph is a small eyebrow/label (fontSize small/x-small).
+     */
+    private function isEyebrowParagraph(array $attrs): bool
+    {
+        $fontSize = $attrs['fontSize'] ?? null;
+        return in_array($fontSize, ['small', 'x-small'], true);
+    }
+
+    /**
+     * Remove brand color classes from <p> tag (keep only base/foreground).
+     * Keeps utility classes like has-text-color, has-text-align-center, etc.
+     */
+    private function removeBrandColorClasses(string $content): string
+    {
+        // Match <p> tags with class attribute
+        $content = preg_replace_callback(
+            '/<p\s+class="([^"]+)"/',
+            function ($matches) {
+                $classes = explode(' ', $matches[1]);
+                $filtered = [];
+
+                foreach ($classes as $class) {
+                    $class = trim($class);
+                    if (empty($class)) {
+                        continue;
+                    }
+
+                    // Pattern: has-{colorSlug}-color
+                    // We want to REMOVE brand colors (primary, secondary, accent, etc.)
+                    // We want to KEEP base/foreground colors AND utility classes
+                    if (preg_match('/^has-([^-]+)-color$/', $class, $colorMatch)) {
+                        $colorSlug = $colorMatch[1];
+                        // Only keep base and foreground color classes, remove all others
+                        if (in_array($colorSlug, ['base', 'foreground', 'text'], true)) {
+                            $filtered[] = $class; // Keep base/foreground/text colors
+                        }
+                        // Else: skip brand color classes (primary, secondary, accent, etc.)
+                    } else {
+                        // Keep all non-color classes (has-text-color, has-small-font-size, etc.)
+                        $filtered[] = $class;
+                    }
+                }
+
+                if (empty($filtered)) {
+                    return '<p'; // No classes remain
+                }
+
+                return '<p class="' . implode(' ', $filtered) . '"';
+            },
+            $content
+        );
+
+        return $content;
     }
 
     /**

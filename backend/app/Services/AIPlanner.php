@@ -140,6 +140,7 @@ Content rules:
 - FAQ_*_Q, FAQ_*_A: real frequently asked questions and detailed answers
 - PAGE_BANNER_TITLE: a compelling page title for inner pages (e.g., "Explore Our Services" or "Get In Touch")
 - PAGE_BANNER_TEXT: a short supporting sentence for the inner page banner
+- PAGE_BANNER_EYEBROW: short 2-3 word label for page banner (e.g., "Our Story", "The Menu", "Get In Touch"). Max 4 words, no punctuation
 {$categoryHints}
 - All values must be plain text only. No HTML.
 PROMPT;
@@ -391,8 +392,13 @@ PROMPT;
             str_contains($tokenName, '_LABEL') => 'Metric',
             str_contains($tokenName, '_Q') => "What makes {$businessName} different?",
             str_contains($tokenName, '_A') => "We pride ourselves on quality and customer satisfaction.",
+            str_contains($tokenName, 'HOURS_WEEKDAY_LABEL') => 'Monday - Friday',
+            str_contains($tokenName, 'HOURS_WEEKDAY_TIMES') => '9:00 AM - 6:00 PM',
+            str_contains($tokenName, 'HOURS_WEEKEND_LABEL') => 'Saturday - Sunday',
+            str_contains($tokenName, 'HOURS_WEEKEND_TIMES') => '10:00 AM - 4:00 PM',
             str_contains($tokenName, 'HOURS_WEEKDAY') => 'Monday - Friday: 9:00 AM - 6:00 PM',
             str_contains($tokenName, 'HOURS_WEEKEND') => 'Saturday - Sunday: 10:00 AM - 4:00 PM',
+            str_contains($tokenName, 'LOCATION_NOTE') => 'Call ahead for reservations',
             str_contains($tokenName, 'LOCATION_') => $businessName,
             str_contains($tokenName, 'SERVICE_AREA_') => 'Local Area',
             str_contains($tokenName, 'LICENSE_TEXT') => 'Licensed and Insured',
