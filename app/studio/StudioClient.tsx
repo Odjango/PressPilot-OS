@@ -1398,6 +1398,23 @@ export default function StudioClient({ slug }: Props) {
               </p>
             </div>
 
+            {/* Hero Preview */}
+            <div className="max-w-2xl mx-auto">
+              <div className="text-center mb-4">
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-500">Preview with Real Content</p>
+                <p className="text-slate-500 text-sm mt-1">This reflects your selected layout, colors, and typography</p>
+              </div>
+              <div className="rounded-2xl overflow-hidden border border-slate-700" style={{ height: '340px' }}>
+                {renderHeroPreview(
+                  selectedHeroLayout === 'fullBleed' ? 'variation_a' :
+                  selectedHeroLayout === 'fullWidth' ? 'variation_b' :
+                  selectedHeroLayout === 'split' ? 'variation_c' : 'variation_a',
+                  customHeroTitle || project.name,
+                  heroSubtitle
+                )}
+              </div>
+            </div>
+
             {/* Summary Card */}
             <div className="rounded-3xl border border-slate-700 bg-slate-900 p-8 max-w-2xl mx-auto space-y-6">
               {/* Layout */}
