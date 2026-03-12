@@ -120,6 +120,21 @@ foreach ($files as $filePath) {
             'message' => "wp:navigation block contains 'ref' attribute (violates PressPilot hard rule)"
         ];
     }
+
+    // CHECK F: Block tag balance
+    $opens = substr_count($content, '<!-- wp:');
+    $closes = substr_count($content, '<!-- /wp:');
+    $selfClosing = substr_count($content, '/-->');
+    $expectedCloses = $opens - $selfClosing;
+
+    if ($closes !== $expectedCloses) {
+        $errors[] = [
+            'file' => $filename,
+            'check' => 'CHECK F',
+            'severity' => 'ERROR',
+            'message' => "Block tag mismatch — {$opens} opens, {$selfClosing} self-closing, {$closes} closes (expected {$expectedCloses} closes)"
+        ];
+    }
 }
 
 // Output results

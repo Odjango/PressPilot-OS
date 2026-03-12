@@ -164,15 +164,48 @@ PROMPT;
         }, $rawPages);
         $pageList = implode(', ', $pages);
 
-        return <<<PROMPT
+        $prompt = <<<PROMPT
 Business Name: {$name}
 Description: {$description}
 Category: {$category}
 Language: {$language}
 Pages: {$pageList}
-
-Generate ALL required tokens with content specific to "{$name}". Make it sound professional and authentic.
 PROMPT;
+
+        // Include user-provided menu data if available
+        if (!empty($project['menus']) && is_array($project['menus'])) {
+            $prompt .= "\n\nMENU DATA (use this exact content — do not fabricate menu items):\n";
+            foreach ($project['menus'] as $menuSection) {
+                $sectionName = $menuSection['name'] ?? $menuSection['title'] ?? 'Menu';
+                $prompt .= "\n{$sectionName}:\n";
+                if (!empty($menuSection['items']) && is_array($menuSection['items'])) {
+                    foreach ($menuSection['items'] as $item) {
+                        $itemName = $item['name'] ?? '';
+                        $price = $item['price'] ?? '';
+                        $desc = $item['description'] ?? '';
+                        $prompt .= "- {$itemName}";
+                        if ($price) {
+                            $prompt .= " ({$price})";
+                        }
+                        if ($desc) {
+                            $prompt .= ": {$desc}";
+                        }
+                        $prompt .= "\n";
+                    }
+                }
+            }
+            $prompt .= "\nIMPORTANT: Use only the menu items listed above. Do not invent or add any menu items not in this list.\n";
+        }
+
+        // Include additional business context if provided
+        $additionalContext = $project['additionalContext'] ?? $project['additional_info'] ?? null;
+        if (!empty($additionalContext) && is_string($additionalContext)) {
+            $prompt .= "\n\nAdditional Business Context:\n{$additionalContext}\n";
+        }
+
+        $prompt .= "\nGenerate ALL required tokens with content specific to \"{$name}\". Make it sound professional and authentic.";
+
+        return $prompt;
     }
 
     private function requestWithRetry(string $systemPrompt, string $userPrompt): string
