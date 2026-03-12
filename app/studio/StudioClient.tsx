@@ -249,6 +249,153 @@ export default function StudioClient({ slug }: Props) {
     );
   };
 
+  // Step 4 Hero Preview - Real food photo rendering
+  const renderStep4HeroPreview = () => {
+    const heroTitle = customHeroTitle || project?.name || 'Your Restaurant';
+    const heroSub = heroSubtitle || 'Welcome to our restaurant';
+    const primary = logoColors[0] || '#c0392b';
+    const fontHeading = getFontStyles(selectedFontProfile).heading;
+    const fontBody = getFontStyles(selectedFontProfile).body;
+
+    // Restaurant food photos by layout context
+    const photoMap: Record<string, string> = {
+      fullBleed: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80',
+      fullWidth: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80',
+      split: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80',
+      minimal: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80',
+    };
+
+    const photo = photoMap[selectedHeroLayout] || photoMap.fullBleed;
+
+    // Full-Bleed layout: photo background with dark overlay, centered content
+    if (selectedHeroLayout === 'fullBleed' || selectedHeroLayout === 'fullWidth') {
+      return (
+        <div className="w-full h-full relative overflow-hidden flex flex-col">
+          {/* Photo background */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={photo}
+            alt="Hero background"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* Dark overlay with brand color tint */}
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: primary, opacity: 0.55 }}
+          />
+          {/* Nav bar */}
+          <div className="relative z-10 flex items-center justify-between px-8 py-4">
+            {customLogoBase64 ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={customLogoBase64} alt="Logo" className="h-8 w-auto object-contain" />
+            ) : (
+              <span className="text-white font-black text-lg" style={{ fontFamily: fontHeading }}>{heroTitle}</span>
+            )}
+            <div className="flex gap-6 text-white text-xs font-semibold opacity-80">
+              <span>About</span><span>Menu</span><span>Contact</span>
+            </div>
+          </div>
+          {/* Hero content */}
+          <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-8 pb-8">
+            <p className="text-white text-xs font-bold uppercase tracking-widest mb-3 opacity-80" style={{ fontFamily: fontBody }}>
+              AUTHENTIC CUISINE
+            </p>
+            <h2 className="text-white font-black mb-4 leading-tight" style={{ fontFamily: fontHeading, fontSize: 'clamp(1.8rem, 4vw, 2.8rem)' }}>
+              {heroTitle}
+            </h2>
+            <p className="text-white opacity-80 text-sm mb-6 max-w-md" style={{ fontFamily: fontBody }}>
+              {heroSub}
+            </p>
+            <div className="flex gap-3">
+              <div className="px-6 py-2.5 rounded-full text-sm font-bold text-white" style={{ backgroundColor: primary, border: '2px solid white' }}>
+                Reserve a Table
+              </div>
+              <div className="px-6 py-2.5 rounded-full text-sm font-bold border-2 border-white text-white bg-transparent">
+                View Menu
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Split layout: left content, right photo
+    if (selectedHeroLayout === 'split') {
+      return (
+        <div className="w-full h-full flex overflow-hidden">
+          {/* Left content */}
+          <div className="w-1/2 flex flex-col justify-center px-10 py-8 bg-white">
+            {customLogoBase64 ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={customLogoBase64} alt="Logo" className="h-10 w-auto object-contain mb-6 max-w-[160px]" />
+            ) : (
+              <div className="text-xs font-black uppercase tracking-widest mb-6 opacity-40" style={{ color: primary }}>
+                {heroTitle}
+              </div>
+            )}
+            <h2 className="font-black leading-tight mb-3 text-gray-900" style={{ fontFamily: fontHeading, fontSize: '1.8rem' }}>
+              {heroTitle}
+            </h2>
+            <p className="text-gray-500 text-sm mb-6 leading-relaxed" style={{ fontFamily: fontBody }}>
+              {heroSub}
+            </p>
+            <div className="flex gap-3">
+              <div className="px-5 py-2 rounded-full text-sm font-bold text-white" style={{ backgroundColor: primary }}>
+                Get Started
+              </div>
+              <div className="px-5 py-2 rounded-full text-sm font-bold border-2" style={{ borderColor: primary, color: primary }}>
+                Learn More
+              </div>
+            </div>
+          </div>
+          {/* Right photo */}
+          <div className="w-1/2 relative">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={photo} alt="Restaurant" className="absolute inset-0 w-full h-full object-cover" />
+          </div>
+        </div>
+      );
+    }
+
+    // Minimal layout: white background, centered, large typography
+    return (
+      <div className="w-full h-full bg-white flex flex-col overflow-hidden">
+        {/* Top accent bar */}
+        <div className="h-1 w-full" style={{ backgroundColor: primary }} />
+        {/* Nav */}
+        <div className="flex items-center justify-between px-8 py-3 border-b border-gray-100">
+          {customLogoBase64 ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={customLogoBase64} alt="Logo" className="h-7 w-auto object-contain max-w-[140px]" />
+          ) : (
+            <span className="font-black text-base text-gray-900" style={{ fontFamily: fontHeading }}>{heroTitle}</span>
+          )}
+          <div className="flex gap-5 text-gray-400 text-xs font-semibold">
+            <span>About</span><span>Menu</span><span>Contact</span>
+          </div>
+        </div>
+        {/* Hero content + photo side by side */}
+        <div className="flex flex-1 overflow-hidden">
+          <div className="flex-1 flex flex-col justify-center px-10 py-6">
+            <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: primary }}>Fine Dining</p>
+            <h2 className="font-black leading-none text-gray-900 mb-3" style={{ fontFamily: fontHeading, fontSize: '2.2rem' }}>
+              {heroTitle}
+            </h2>
+            <p className="text-gray-400 text-sm mb-5" style={{ fontFamily: fontBody }}>{heroSub}</p>
+            <div className="flex gap-3">
+              <div className="px-5 py-2 rounded text-sm font-bold text-white" style={{ backgroundColor: primary }}>Reserve</div>
+              <div className="px-5 py-2 rounded text-sm font-bold text-gray-700 border border-gray-200">Menu</div>
+            </div>
+          </div>
+          <div className="w-2/5 relative">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={photo} alt="Food" className="absolute inset-0 w-full h-full object-cover" />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Helper for text contrast
   const isLight = (color: string) => {
     const hex = color.replace('#', '');
@@ -1404,14 +1551,8 @@ export default function StudioClient({ slug }: Props) {
                 <p className="text-xs font-bold uppercase tracking-widest text-slate-500">Preview with Real Content</p>
                 <p className="text-slate-500 text-sm mt-1">This reflects your selected layout, colors, and typography</p>
               </div>
-              <div className="rounded-2xl overflow-hidden border border-slate-700" style={{ height: '340px' }}>
-                {renderHeroPreview(
-                  selectedHeroLayout === 'fullBleed' ? 'variation_a' :
-                  selectedHeroLayout === 'fullWidth' ? 'variation_b' :
-                  selectedHeroLayout === 'split' ? 'variation_c' : 'variation_a',
-                  customHeroTitle || project.name,
-                  heroSubtitle
-                )}
+              <div className="rounded-2xl overflow-hidden border border-slate-700 shadow-2xl" style={{ height: '340px' }}>
+                {renderStep4HeroPreview()}
               </div>
             </div>
 
