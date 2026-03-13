@@ -315,11 +315,12 @@ PHP;
 
         // Canonical (Ollie) slug → project color value
         $canonicalOverrides = [
-            'primary'     => $colors['primary'] ?? null,
-            'secondary'   => $colors['secondary'] ?? null,
-            'primary-alt' => $colors['accent'] ?? null,
-            'base'        => $colors['background'] ?? null,
-            'main'        => $colors['foreground'] ?? null,
+            'primary'   => $colors['primary'] ?? null,
+            'secondary' => $colors['secondary'] ?? null,
+            'accent'    => $colors['accent'] ?? null,
+            'tertiary'  => $colors['accent'] ?? null,
+            'base'      => $colors['background'] ?? null,
+            'main'      => $colors['foreground'] ?? null,
         ];
 
         // Resolve canonical slugs to the target core's actual slugs

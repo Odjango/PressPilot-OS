@@ -43,7 +43,8 @@ class CorePaletteResolver
         'frost' => [
             'primary'        => 'primary',
             'primary-accent' => 'neutral',       // no exact match, use neutral as light tint
-            'primary-alt'    => 'secondary',
+            'primary-alt'    => 'secondary',     // backwards compatibility
+            'accent'         => 'secondary',     // canonical accent slug
             'main'           => 'contrast',
             'main-accent'    => 'contrast',       // frost has no mid-gray, use contrast
             'base'           => 'base',
@@ -56,7 +57,8 @@ class CorePaletteResolver
         'tove' => [
             'primary'        => 'foreground',     // tove uses "foreground" as brand color
             'primary-accent' => 'primary',        // pink tint
-            'primary-alt'    => 'secondary',      // yellow accent
+            'primary-alt'    => 'secondary',      // backwards compatibility (yellow accent)
+            'accent'         => 'secondary',      // canonical accent slug (yellow accent)
             'main'           => 'quinary',        // #000000
             'main-accent'    => 'quinary',
             'base'           => 'senary',         // #FFFFFF
@@ -69,7 +71,8 @@ class CorePaletteResolver
         'spectra-one' => [
             'primary'        => 'primary',
             'primary-accent' => 'tertiary',       // #F6EBFE light purple
-            'primary-alt'    => 'secondary',
+            'primary-alt'    => 'secondary',      // backwards compatibility
+            'accent'         => 'secondary',      // canonical accent slug
             'main'           => 'heading',         // #1F2937
             'main-accent'    => 'neutral',         // #6E7787
             'base'           => 'background',      // #FFFFFF
@@ -82,7 +85,8 @@ class CorePaletteResolver
         'twentytwentyfour' => [
             'primary'        => 'accent-3',        // #d8613c (orange-red)
             'primary-accent' => 'accent',          // #cfcabe
-            'primary-alt'    => 'accent-2',        // #c2a990
+            'primary-alt'    => 'accent-2',        // backwards compatibility (#c2a990)
+            'accent'         => 'accent-2',        // canonical accent slug (#c2a990)
             'main'           => 'contrast',        // #111111
             'main-accent'    => 'contrast-3',      // #A4A4A4
             'base'           => 'base',            // #f9f9f9
