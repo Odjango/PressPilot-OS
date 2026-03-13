@@ -308,64 +308,64 @@ PHP;
         $themeJson = json_decode(file_get_contents($basePath), true, 512, JSON_THROW_ON_ERROR);
 
         // Override colors from project.
-        // Map semantic color roles (primary, secondary, accent, background, foreground)
-        // to the correct palette slugs for the active core using CorePaletteResolver.
+        // Build a COMPLETE palette with all necessary slugs to prevent "Attempt Recovery" errors.
         $colors = $project['colors'] ?? [];
         $resolver = app(CorePaletteResolver::class);
 
-        // Canonical (Ollie) slug → project color value
-        $canonicalOverrides = [
-            'primary'   => $colors['primary'] ?? null,
-            'secondary' => $colors['secondary'] ?? null,
-            'accent'    => $colors['accent'] ?? null,
-            'tertiary'  => $colors['accent'] ?? null,
-            'base'      => $colors['background'] ?? null,
-            'main'      => $colors['foreground'] ?? null,
+        // User brand colors (use provided values or defaults)
+        $brandPrimary   = $colors['primary'] ?? '#1e3a5f';
+        $brandSecondary = $colors['secondary'] ?? '#4a90d9';
+        $brandAccent    = $colors['accent'] ?? '#2ecc71';
+        $brandBackground = $colors['background'] ?? '#ffffff';
+        $brandForeground = $colors['foreground'] ?? '#333333';
+
+        // Generate derived colors
+        // Tertiary: light tint of primary (15% opacity equivalent)
+        $tertiary = $this->lightenColor($brandPrimary, 0.85);
+
+        // Complete canonical palette (Ollie-style slugs) with ALL necessary entries
+        $canonicalPalette = [
+            'primary'     => $brandPrimary,
+            'secondary'   => $brandSecondary,
+            'accent'      => $brandAccent,
+            'primary-alt' => $brandAccent,      // backwards compatibility
+            'tertiary'    => $tertiary,
+            'base'        => $brandBackground,
+            'main'        => $brandForeground,
+            'foreground'  => $brandForeground,
+            'contrast'    => '#1a1a1a',          // near black for headings
+            'background'  => $brandBackground,
         ];
 
-        // Resolve canonical slugs to the target core's actual slugs
+        // Build the complete palette array with slug-to-color mapping
         $paletteOverrides = [];
-        foreach ($canonicalOverrides as $canonicalSlug => $colorValue) {
+        foreach ($canonicalPalette as $canonicalSlug => $colorValue) {
             $targetSlug = $resolver->resolve($canonicalSlug, $this->coreSlug);
             $paletteOverrides[$targetSlug] = $colorValue;
         }
 
+        // Update existing palette entries from base theme.json
         if (isset($themeJson['settings']['color']['palette'])) {
             foreach ($themeJson['settings']['color']['palette'] as $index => $entry) {
                 $slug = $entry['slug'] ?? null;
-                if ($slug && array_key_exists($slug, $paletteOverrides) && $paletteOverrides[$slug]) {
+                if ($slug && array_key_exists($slug, $paletteOverrides)) {
                     $themeJson['settings']['color']['palette'][$index]['color'] = $paletteOverrides[$slug];
                 }
             }
         }
 
-        // If NO colors were overridden (all null), apply PressPilot defaults
-        $anyColorSet = false;
-        foreach ($paletteOverrides as $v) {
-            if ($v) {
-                $anyColorSet = true;
-                break;
-            }
-        }
-        if (! $anyColorSet) {
-            Log::info('ThemeAssembler: No brand colors provided, applying PressPilot defaults');
-            // Defaults use canonical (Ollie) slugs, resolved to target core
-            $canonicalDefaults = [
-                'primary'     => '#1e3a5f',
-                'secondary'   => '#4a90d9',
-                'primary-alt' => '#2ecc71',
-                'base'        => '#ffffff',
-                'main'        => '#1a1a2e',
-            ];
-            $defaults = [];
-            foreach ($canonicalDefaults as $canonicalSlug => $hex) {
-                $defaults[$resolver->resolve($canonicalSlug, $this->coreSlug)] = $hex;
-            }
-            foreach ($themeJson['settings']['color']['palette'] as $index => $entry) {
-                $slug = $entry['slug'] ?? null;
-                if ($slug && isset($defaults[$slug])) {
-                    $themeJson['settings']['color']['palette'][$index]['color'] = $defaults[$slug];
-                }
+        // CRITICAL: Add missing slugs that templates reference but aren't in base theme.json
+        // This ensures slugs like 'foreground', 'contrast', 'background', 'tertiary' exist
+        $existingSlugs = array_column($themeJson['settings']['color']['palette'] ?? [], 'slug');
+        foreach ($paletteOverrides as $slug => $color) {
+            if (!in_array($slug, $existingSlugs, true)) {
+                // Slug is missing from base theme.json — add it
+                $themeJson['settings']['color']['palette'][] = [
+                    'slug'  => $slug,
+                    'color' => $color,
+                    'name'  => ucfirst(str_replace('-', ' ', $slug)),
+                ];
+                Log::info("ThemeAssembler: Added missing palette slug '{$slug}' = {$color}");
             }
         }
 
@@ -431,6 +431,13 @@ PHP;
             ['name' => 'header-transparent', 'area' => 'header', 'title' => 'Header Transparent'],
             ['name' => 'footer', 'area' => 'footer', 'title' => 'Footer'],
         ];
+
+        // Add layout settings (contentSize and wideSize)
+        if (!isset($themeJson['settings']['layout'])) {
+            $themeJson['settings']['layout'] = [];
+        }
+        $themeJson['settings']['layout']['contentSize'] = '1200px';
+        $themeJson['settings']['layout']['wideSize'] = '1400px';
 
         file_put_contents($themeDir.'/theme.json', json_encode($themeJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
@@ -886,5 +893,36 @@ HEADER;
         }
 
         return false;
+    }
+
+    /**
+     * Lighten a hex color by blending it with white.
+     * Used to generate tertiary color (light tint of primary).
+     *
+     * @param  string  $hex    Hex color (with or without #)
+     * @param  float   $amount Amount to lighten (0.0 = original, 1.0 = white)
+     * @return string  Lightened hex color with #
+     */
+    private function lightenColor(string $hex, float $amount): string
+    {
+        // Remove # if present
+        $hex = ltrim($hex, '#');
+
+        // Convert to RGB
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+        }
+
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        // Blend with white (255, 255, 255)
+        $r = (int) round($r + ($amount * (255 - $r)));
+        $g = (int) round($g + ($amount * (255 - $g)));
+        $b = (int) round($b + ($amount * (255 - $b)));
+
+        // Convert back to hex
+        return sprintf('#%02x%02x%02x', $r, $g, $b);
     }
 }
