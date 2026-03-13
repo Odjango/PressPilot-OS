@@ -20,6 +20,61 @@ These higher-level files override anything in this document if there is a confli
 
 > **Project Extras note:** A `Project Extras/` folder exists at root containing archived clutter (debug logs, old scripts, test ZIPs, legacy folders, retired memory systems). These are NOT part of the active codebase. Do not reference or modify files inside `Project Extras/` unless explicitly asked.
 
+---
+
+## PATTERN LIBRARY STATUS (STABLE - March 2026)
+
+**Current State:** All pattern files are STABLE and linting-clean as of March 2026.
+
+### Pattern Inventory
+- **Total Patterns:** 362 (31 skeletons + 331 proven-cores)
+  - Skeleton patterns: `pattern-library/skeletons/` (31 files)
+  - Proven-cores: `proven-cores/` (331 files across 5 themes)
+    - Ollie: 98 patterns
+    - Frost: 50 patterns
+    - Spectra-One: 85 patterns
+    - Tove: 42 patterns
+    - TwentyTwentyFour: 56 patterns
+
+### Stabilization Results (0 violations)
+- ✅ All hardcoded hex colors removed and replaced with theme.json tokens
+- ✅ All banned `wp:navigation` ref attributes removed
+- ✅ All Ollie px widths audited and confirmed safe (77 instances: 54 border-widths + 23 image sizes)
+- ✅ All iconColorValue/iconBackgroundColorValue redundant attributes removed
+
+### Pattern Quality Standards
+
+**BANNED PATTERNS (Must Not Appear in ANY Pattern File):**
+1. ❌ Hardcoded hex colors (e.g., `#E3E3F0`, `#ffffff`) — use theme.json tokens instead
+2. ❌ `wp:navigation` blocks with `ref` attribute — causes broken menu references
+3. ❌ `iconColorValue` or `iconBackgroundColorValue` attributes — use semantic slugs only
+4. ❌ Dangerous fixed px widths on layout blocks (safe: border-width, image dimensions)
+
+**REQUIRED TOKEN STANDARDS:**
+- Border colors: Use `var:preset|color|tertiary` (JSON) or `var(--wp--preset--color--tertiary)` (inline)
+- Social-links: Use semantic slugs (`iconColor`, `iconBackgroundColor`) without `*Value` duplicates
+- All color references must map to theme.json palette tokens
+
+### Linter Integration (REQUIRED)
+
+**Before ANY commit touching pattern files:**
+```bash
+tools/lint-patterns.sh
+```
+
+- **Exit code 0:** All checks passed, safe to commit
+- **Exit code 1:** Violations detected, DO NOT PROCEED until fixed
+- Runs automatically in git pre-commit hook
+- Scans all 362 patterns for banned patterns
+
+**Proven-Cores Status:**
+- Frost: 0 violations
+- Spectra-One: 0 violations
+- Tove: 0 violations (nav refs fixed)
+- Ollie: 0 violations
+- TwentyTwentyFour: was already clean
+
+---
 
 ## ROLE
 You are the "WP Factory Architect" - an engine for a SaaS that generates production-ready WordPress FSE themes from business data.

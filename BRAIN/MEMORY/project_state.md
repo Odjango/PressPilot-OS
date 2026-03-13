@@ -16,6 +16,31 @@
 >
 > **Next:** Deploy to production, test restaurant theme generation with new visual variation
 >
+> **2026-03-13 UPDATE (Pattern Library Stabilization):**
+>
+> **Pattern Library Status:** STABLE — All 362 patterns are linting-clean
+> - **SESSION 1:** Fixed 2 Tove nav ref violations, created `tools/lint-patterns.sh` linter
+> - **SESSION 2:** Fixed 5 skeleton hardcoded colors (16 instances of #e2e2ef → tertiary token)
+> - **SESSION 4:** Fixed all proven-cores (Frost, Spectra-One, Tove, Ollie) — 41 hex color violations → 0
+>   - Removed redundant iconColorValue/iconBackgroundColorValue attributes from social-links
+>   - Replaced hardcoded hex colors with theme.json tokens (borders → tertiary)
+> - **SESSION 5:** Audited all 77 Ollie px widths — all confirmed safe (54 border-widths + 23 image sizes)
+> - **Git commit:** `63c18af` — fix(patterns): stabilize pattern library - remove banned nav refs, hardcoded hex colors (68 files changed, 993 insertions, 1,112 deletions)
+>
+> **Pattern Inventory:** 362 total (31 skeletons + 331 proven-cores across 5 themes)
+>
+> **Quality Enforcement:** `tools/lint-patterns.sh` MUST be run before any pattern commit
+>
+> **Banned Patterns (never use):**
+> 1. Hardcoded hex colors — use theme.json tokens
+> 2. `wp:navigation` with `ref` attribute — causes broken menus
+> 3. `iconColorValue`/`iconBackgroundColorValue` — use semantic slugs only
+> 4. Dangerous fixed px widths on layout blocks
+>
+> **Token Standards:**
+> - Border colors: `var:preset|color|tertiary` (JSON) or `var(--wp--preset--color--tertiary)` (inline)
+> - Social-links: Use `iconColor`/`iconBackgroundColor` semantic slugs without `*Value` duplicates
+>
 > **2026-03-09 UPDATE (Session F — Phase A Completion):**
 >
 > **Phase A2 Smoke Tests:** COMPLETE — All 5 verticals tested in parallel via production API

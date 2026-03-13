@@ -75,6 +75,39 @@ const logo = gen.generate('site-logo', { width: 120 });
 
 The FSE KB automatically adds required defaults like `isLink:true`.
 
+## Pattern Library (STABLE - March 2026)
+
+PressPilot's pattern library is **production-ready** and passes all quality gates.
+
+### Pattern Inventory
+- **362 total patterns** (31 skeletons + 331 proven-cores)
+- **0 linting violations** across all files
+- **Proven-cores:** 5 themes (Frost, Ollie, Spectra-One, Tove, TwentyTwentyFour)
+
+### Stabilization Achievements
+- ✅ All hardcoded hex colors replaced with theme.json tokens
+- ✅ All banned `wp:navigation` ref attributes removed
+- ✅ All redundant iconColorValue/iconBackgroundColorValue attributes cleaned
+- ✅ All Ollie px widths audited and confirmed safe (77 instances)
+
+### Pattern Quality Standards
+
+**Run linter before committing pattern changes:**
+```bash
+tools/lint-patterns.sh
+```
+
+**Banned Patterns:**
+- ❌ Hardcoded hex colors (e.g., `#E3E3F0`) — use theme.json tokens
+- ❌ `wp:navigation` with `ref` attribute — causes broken menus
+- ❌ `iconColorValue`/`iconBackgroundColorValue` — use semantic slugs only
+- ❌ Dangerous fixed px widths on layout blocks
+
+**Token Standards:**
+- Border colors: `var:preset|color|tertiary` (JSON) or `var(--wp--preset--color--tertiary)` (inline)
+- Social-links: Use semantic slugs without `*Value` duplicates
+- All color references must map to theme.json palette
+
 ## 🛠 Tech Stack
 
 - **Frontend:** Next.js 16 (App Router), TailwindCSS, Framer Motion.

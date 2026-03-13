@@ -58,7 +58,51 @@ Before writing a single line of code, you must:
 
 ---
 
-## 4. CURRENT MISSION: Final Pre-Launch Steps
+## 4. PATTERN LIBRARY STATUS (STABLE - March 2026)
+
+**All pattern files are production-ready and linting-clean.**
+
+### Pattern Inventory
+- **362 total patterns** (31 skeletons + 331 proven-cores)
+  - Skeletons: `pattern-library/skeletons/`
+  - Proven-cores: `proven-cores/` (Frost, Ollie, Spectra-One, Tove, TwentyTwentyFour)
+
+### Stabilization Complete (0 violations)
+- ✅ All hardcoded hex colors replaced with theme.json tokens
+- ✅ All banned `wp:navigation` ref attributes removed
+- ✅ All iconColorValue/iconBackgroundColorValue redundant attributes cleaned
+- ✅ All Ollie px widths audited and confirmed safe (77 instances: 54 border-widths + 23 image sizes)
+
+### Quality Enforcement
+
+**REQUIRED: Run linter before committing pattern changes**
+```bash
+tools/lint-patterns.sh
+```
+- Exit code 0 = safe to commit
+- Exit code 1 = violations detected, DO NOT PROCEED
+
+**Banned Patterns (NEVER use in pattern files):**
+1. ❌ Hardcoded hex colors (e.g., `#E3E3F0`, `#ffffff`) — use theme.json tokens
+2. ❌ `wp:navigation` with `ref` attribute — causes broken menu references
+3. ❌ `iconColorValue` or `iconBackgroundColorValue` — use semantic slugs only
+4. ❌ Dangerous fixed px widths on layout blocks (safe: border-width, image sizes)
+
+**Token Standards:**
+- Border colors: `var:preset|color|tertiary` (JSON) or `var(--wp--preset--color--tertiary)` (inline)
+- Social-links: Use `iconColor`/`iconBackgroundColor` semantic slugs without `*Value` duplicates
+- All color references must map to theme.json palette
+
+**Proven-Cores Status:**
+- Frost: 0 violations
+- Spectra-One: 0 violations
+- Tove: 0 violations (nav refs fixed)
+- Ollie: 0 violations
+- TwentyTwentyFour: was already clean
+
+---
+
+## 5. CURRENT MISSION: Final Pre-Launch Steps
 
 - SSWG Phase 3: ✅ DEPLOYED and production-verified
 - Next-Phase Implementation Plan: Phase B (B2-B4) + Phase C (C1-C4) ✅ COMPLETE
@@ -74,7 +118,7 @@ Key learnings are in `BRAIN/MEMORY/project_state.md`. OneContext mirrors key sta
 
 ---
 
-## 5. IMMEDIATE NEXT STEPS (The Roadmap)
+## 6. IMMEDIATE NEXT STEPS (The Roadmap)
 
 Refer to [`docs/PROJECT_ROADMAP.md`](PROJECT_ROADMAP.md) and [`docs/plans/2026-03-08-next-phase-implementation-plan.md`](plans/2026-03-08-next-phase-implementation-plan.md) for details.
 
@@ -86,7 +130,7 @@ Refer to [`docs/PROJECT_ROADMAP.md`](PROJECT_ROADMAP.md) and [`docs/plans/2026-0
 
 ---
 
-## 6. HOW TO START A SESSION
+## 7. HOW TO START A SESSION
 
 Copy and paste this prompt at the start of every session:
 
@@ -94,7 +138,7 @@ Copy and paste this prompt at the start of every session:
 
 ---
 
-## 7. DEPRECATED REFERENCES
+## 8. DEPRECATED REFERENCES
 
 The following files have been archived and should NOT be referenced:
 -   `PRD.md` → Use `BRAIN/VISION/project-vision.md`

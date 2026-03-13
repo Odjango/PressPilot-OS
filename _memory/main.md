@@ -162,6 +162,61 @@ Last updated: 2026-03-10 (Phase 1: Restaurant Design Quality COMPLETE — 9 new 
 
 **Next steps:** Deploy to production, test restaurant theme generation with new visual variation
 
+---
+
+## Pattern Library Stabilization (COMPLETE - March 2026)
+
+**Status:** All 362 pattern files are STABLE and linting-clean.
+
+### Stabilization Work Completed (2026-03-13)
+- **SESSION 1:** Fixed 2 Tove nav ref violations, created `tools/lint-patterns.sh`
+- **SESSION 2:** Fixed 5 skeleton hardcoded colors (16 instances of #e2e2ef → tertiary token)
+- **SESSION 4:** Fixed all proven-cores hardcoded colors in order (Frost → Spectra-One → Tove → Ollie):
+  - Frost: 2 violations → 0 (removed redundant iconColorValue/iconBackgroundColorValue)
+  - Spectra-One: 4 violations → 0 (removed redundant iconColorValue)
+  - Tove: 10 violations → 0 (removed redundant icon*Value attributes)
+  - Ollie: 25 violations → 0 (10 unique hex colors → theme.json tokens)
+- **SESSION 5:** Audited all 77 Ollie px widths — all confirmed safe (54 border-widths + 23 image sizes)
+- **Git commit:** `63c18af` — fix(patterns): stabilize pattern library - remove banned nav refs, hardcoded hex colors
+
+### Pattern Inventory
+- **Total:** 362 patterns (31 skeletons + 331 proven-cores)
+  - Skeletons: `pattern-library/skeletons/` (31 files)
+  - Proven-cores: `proven-cores/` (331 files across 5 themes)
+    - Ollie: 98 patterns
+    - Frost: 50 patterns
+    - Spectra-One: 85 patterns
+    - Tove: 42 patterns
+    - TwentyTwentyFour: 56 patterns (was already clean)
+
+### Quality Gates (0 violations)
+- ✅ All hardcoded hex colors replaced with theme.json tokens
+- ✅ All banned `wp:navigation` ref attributes removed
+- ✅ All redundant iconColorValue/iconBackgroundColorValue attributes removed
+- ✅ All px widths audited (no dangerous fixed layout widths)
+
+### Linter Integration
+**REQUIRED before any pattern commit:**
+```bash
+tools/lint-patterns.sh
+```
+- Exit code 0 = safe to commit
+- Exit code 1 = violations detected, DO NOT PROCEED
+- Auto-runs in git pre-commit hook
+
+### Banned Patterns (NEVER use)
+1. ❌ Hardcoded hex colors (e.g., `#E3E3F0`) — use theme.json tokens
+2. ❌ `wp:navigation` with `ref` attribute — causes broken menus
+3. ❌ `iconColorValue`/`iconBackgroundColorValue` — use semantic slugs only
+4. ❌ Dangerous fixed px widths on layout blocks
+
+### Token Standards
+- Border colors: `var:preset|color|tertiary` (JSON) or `var(--wp--preset--color--tertiary)` (inline)
+- Social-links: Use `iconColor`/`iconBackgroundColor` semantic slugs without `*Value` duplicates
+- All colors map to theme.json palette
+
+---
+
 **Session D** — UX/UI quality fixes (commit `ec67554`, via Claude Code CLI):
 - **Fix #1 — Transparent header**: Created `parts/header-transparent.html` with white text (`textColor: base`) + transparent background for fullBleed hero pages. `front-page.html` uses `header-transparent` slug. All other pages use regular `header`. New `buildHeaderTransparent()` method in ThemeAssembler. Registered in `writeThemeJson()` templateParts array.
 - **Fix #2 — Logo size + spacing**: Logo width 40→60px in header, header-transparent, and footer. Added `blockGap:var:preset|spacing|30` to flex group containing logo + site-title.

@@ -184,6 +184,48 @@ All 10 issues resolved (10 commits via Subagent-Driven Development):
 
 **Next:** Deploy to production, verify restaurant theme generation with new visual variation
 
+### Pattern Library Stabilization — ✅ COMPLETE (2026-03-13)
+**Goal:** Ensure all 362 pattern files are production-ready with zero linting violations.
+
+**Implementation (5 sessions):**
+- [x] **SESSION 1:** Fixed 2 Tove nav ref violations + created `tools/lint-patterns.sh` linter
+- [x] **SESSION 2:** Fixed 5 skeleton patterns — 16 instances of #e2e2ef → tertiary token
+- [x] **SESSION 4:** Fixed all proven-cores hardcoded colors (Frost → Spectra-One → Tove → Ollie)
+  - Frost: 2 violations → 0 (removed redundant iconColorValue/iconBackgroundColorValue)
+  - Spectra-One: 4 violations → 0 (removed iconColorValue)
+  - Tove: 10 violations → 0 (removed icon*Value attributes + nav refs)
+  - Ollie: 25 violations → 0 (10 unique hex colors → theme.json tokens)
+- [x] **SESSION 5:** Audited all 77 Ollie px widths — all confirmed safe (54 border-widths + 23 image sizes)
+
+**Results:**
+- ✅ **362 total patterns** stabilized (31 skeletons + 331 proven-cores)
+- ✅ **0 linting violations** across all files
+- ✅ **Git commit:** `63c18af` — 68 files changed, 993 insertions, 1,112 deletions
+
+**Pattern Inventory:**
+- Skeletons: 31 files in `pattern-library/skeletons/`
+- Proven-cores: 331 files across 5 themes
+  - Ollie: 98 patterns
+  - Frost: 50 patterns
+  - Spectra-One: 85 patterns
+  - Tove: 42 patterns
+  - TwentyTwentyFour: 56 patterns (was already clean)
+
+**Quality Enforcement:**
+- **Linter:** `tools/lint-patterns.sh` MUST be run before any pattern commit
+  - Exit code 0 = safe to commit
+  - Exit code 1 = violations detected, DO NOT PROCEED
+- **Banned Patterns:**
+  1. Hardcoded hex colors — use theme.json tokens
+  2. `wp:navigation` with `ref` attribute — causes broken menus
+  3. `iconColorValue`/`iconBackgroundColorValue` — use semantic slugs only
+  4. Dangerous fixed px widths on layout blocks
+- **Token Standards:**
+  - Border colors: `var:preset|color|tertiary` (JSON) or `var(--wp--preset--color--tertiary)` (inline)
+  - Social-links: Use `iconColor`/`iconBackgroundColor` semantic slugs without `*Value` duplicates
+
+**Key achievement:** All pattern files now follow strict theme.json token system. Generator can safely use any pattern from any core without quality regressions.
+
 ### SSWG Phase 4: WPaify Integration — QUEUED
 **Goal:** HTML-to-WordPress theme conversion for WPaify product.
 **Spec:** `agent-os/sswg/PHASE-4.md`
