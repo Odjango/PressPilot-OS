@@ -33,7 +33,7 @@
 <p class="has-text-align-center has-secondary-color has-text-color">Use this profile box as a LinkTree alternative. Link your social media accounts to this page so your followers can find all of your important links.</p>
 <!-- /wp:paragraph -->
 
-<!-- wp:social-links {"iconColor":"base","iconColorValue":"#fff","iconBackgroundColor":"main","iconBackgroundColorValue":"#1E1E26","align":"center","className":"is-style-default","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|small","left":"var:preset|spacing|small"},"margin":{"top":"var:preset|spacing|medium"}}}} -->
+<!-- wp:social-links {"iconColor":"base","iconBackgroundColor":"main","align":"center","className":"is-style-default","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|small","left":"var:preset|spacing|small"},"margin":{"top":"var:preset|spacing|medium"}}}} -->
 <ul class="wp-block-social-links aligncenter has-icon-color has-icon-background-color is-style-default" style="margin-top:var(--wp--preset--spacing--medium)"><!-- wp:social-link {"url":"#","service":"twitter"} /-->
 
 <!-- wp:social-link {"url":"#","service":"dribbble"} /-->

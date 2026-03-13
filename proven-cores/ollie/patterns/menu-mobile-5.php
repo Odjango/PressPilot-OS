@@ -97,7 +97,7 @@
 <!-- /wp:buttons -->
 
 <!-- wp:group {"metadata":{"name":"Section"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:social-links {"iconColor":"base","iconColorValue":"#fff","iconBackgroundColor":"main","iconBackgroundColorValue":"#0E0E0E","className":"is-style-pill-shape","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|small"}}}} -->
+<div class="wp-block-group"><!-- wp:social-links {"iconColor":"base","iconBackgroundColor":"main","className":"is-style-pill-shape","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|small"}}}} -->
 <ul class="wp-block-social-links has-icon-color has-icon-background-color is-style-pill-shape"><!-- wp:social-link {"url":"#","service":"youtube"} /-->
 
 <!-- wp:social-link {"url":"#","service":"x"} /-->

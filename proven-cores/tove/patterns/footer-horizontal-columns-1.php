@@ -31,7 +31,12 @@
 				<h6 style="margin-bottom:var(--wp--preset--spacing--30)">Navigation</h6>
 				<!-- /wp:heading -->
 
-				<!-- wp:navigation {"ref":25660,"overlayMenu":"never","__unstableLocation":"primary","className":"no-margin-top","layout":{"type":"flex","setCascadingProperties":"true","orientation":"vertical","justifyContent":"left","flexWrap":"wrap"},"style":{"spacing":{"blockGap":"0.5em"}}} /-->
+				<!-- wp:navigation {"overlayMenu":"never","className":"no-margin-top","layout":{"type":"flex","setCascadingProperties":"true","orientation":"vertical","justifyContent":"left","flexWrap":"wrap"},"style":{"spacing":{"blockGap":"0.5em"}}} -->
+				<!-- wp:navigation-link {"label":"Home","url":"/"} /-->
+				<!-- wp:navigation-link {"label":"About","url":"/about"} /-->
+				<!-- wp:navigation-link {"label":"Services","url":"/services"} /-->
+				<!-- wp:navigation-link {"label":"Contact","url":"/contact"} /-->
+			<!-- /wp:navigation -->
 			</div>
 			<!-- /wp:column -->
 

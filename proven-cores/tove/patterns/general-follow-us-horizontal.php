@@ -19,7 +19,7 @@
 
 		<!-- wp:column {"verticalAlignment":"center"} -->
 		<div class="wp-block-column is-vertically-aligned-center">
-			<!-- wp:social-links {"iconColor":"foreground","iconColorValue":"#374AC8","iconBackgroundColor":"primary","iconBackgroundColorValue":"#FFC3CF","size":"has-normal-icon-size","className":"items-justified-center is-style-pill-shape"} -->
+			<!-- wp:social-links {"iconColor":"foreground","iconBackgroundColor":"primary","size":"has-normal-icon-size","className":"items-justified-center is-style-pill-shape"} -->
 			<ul class="wp-block-social-links has-normal-icon-size has-icon-color has-icon-background-color items-justified-right items-justified-center is-style-pill-shape">
 				<!-- wp:social-link {"url":"https://facebook.com","service":"facebook"} /-->
 

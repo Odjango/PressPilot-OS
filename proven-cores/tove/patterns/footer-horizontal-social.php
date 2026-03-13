@@ -43,7 +43,7 @@
 			<!-- wp:column {"verticalAlignment":"center"} -->
 			<div class="wp-block-column is-vertically-aligned-center">
 
-				<!-- wp:social-links {"iconColor":"foreground","iconColorValue":"#374AC8","className":"is-style-logos-only"} -->
+				<!-- wp:social-links {"iconColor":"foreground","className":"is-style-logos-only"} -->
 				<ul class="wp-block-social-links has-icon-color items-justified-right is-style-logos-only">
 					<!-- wp:social-link {"url":"https://facebook.com","service":"facebook"} /-->
 					<!-- wp:social-link {"url":"https://twitter.com","service":"twitter"} /-->

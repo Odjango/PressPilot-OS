@@ -33,7 +33,12 @@
 						<h6 style="margin-bottom:var(--wp--preset--spacing--30)">Navigation</h6>
 						<!-- /wp:heading -->
 
-						<!-- wp:navigation {"ref":25660,"overlayMenu":"never","__unstableLocation":"primary","className":"no-margin-top","layout":{"type":"flex","setCascadingProperties":"true","orientation":"vertical","justifyContent":"left","flexWrap":"wrap"},"style":{"spacing":{"blockGap":"0.5em"}}} /-->
+						<!-- wp:navigation {"overlayMenu":"never","className":"no-margin-top","layout":{"type":"flex","setCascadingProperties":"true","orientation":"vertical","justifyContent":"left","flexWrap":"wrap"},"style":{"spacing":{"blockGap":"0.5em"}}} -->
+						<!-- wp:navigation-link {"label":"Home","url":"/"} /-->
+						<!-- wp:navigation-link {"label":"About","url":"/about"} /-->
+						<!-- wp:navigation-link {"label":"Services","url":"/services"} /-->
+						<!-- wp:navigation-link {"label":"Contact","url":"/contact"} /-->
+					<!-- /wp:navigation -->
 					</div>
 					<!-- /wp:column -->
 
@@ -88,7 +93,7 @@
 						<h6 style="margin-bottom:var(--wp--preset--spacing--30)">Follow Us</h6>
 						<!-- /wp:heading -->
 
-						<!-- wp:social-links {"iconColor":"foreground","iconColorValue":"#374AC8","className":"items-justified-left is-style-logos-only no-margin-top"} -->
+						<!-- wp:social-links {"iconColor":"foreground","className":"items-justified-left is-style-logos-only no-margin-top"} -->
 						<ul
 							class="wp-block-social-links has-icon-color items-justified-left is-style-logos-only no-margin-top">
 							<!-- wp:social-link {"url":"https://facebook.com","service":"facebook"} /-->

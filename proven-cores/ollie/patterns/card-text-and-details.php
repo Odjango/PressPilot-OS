@@ -68,7 +68,7 @@
 <p class="has-base-color has-text-color has-medium-font-size" style="font-style:normal;font-weight:600">Theme Details</p>
 <!-- /wp:paragraph -->
 
-<!-- wp:social-links {"iconColor":"base","iconColorValue":"#fff","showLabels":true,"size":"has-normal-icon-size","className":"is-style-logos-only"} -->
+<!-- wp:social-links {"iconColor":"base","showLabels":true,"size":"has-normal-icon-size","className":"is-style-logos-only"} -->
 <ul class="wp-block-social-links has-normal-icon-size has-visible-labels has-icon-color is-style-logos-only"><!-- wp:social-link {"url":"https://wordpress.org","service":"wordpress"} /--></ul>
 <!-- /wp:social-links --></div>
 <!-- /wp:group -->

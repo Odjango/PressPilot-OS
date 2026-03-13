@@ -138,7 +138,22 @@
       "Bash(do)",
       "Bash(if [ -f \"proven-cores/$core/theme.json\" ])",
       "Bash(then)",
-      "Bash(else)"
+      "Bash(else)",
+      "Bash(plutil:*)",
+      "Bash(defaults read:*)",
+      "Bash(cat:*)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "typescript-sdk",
+    "github",
+    "puppeteer",
+    "slack",
+    "filesystem",
+    "memory-bank",
+    "sequential-thinking",
+    "brave-search",
+    "google-maps",
+    "deep-graph"
+  ]
 }

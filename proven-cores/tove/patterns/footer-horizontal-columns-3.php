@@ -95,7 +95,7 @@
 			<!-- wp:column -->
 			<div class="wp-block-column">
 
-				<!-- wp:social-links {"iconColor":"foreground","iconColorValue":"#374AC8","className":"items-justified-left is-style-logos-only"} -->
+				<!-- wp:social-links {"iconColor":"foreground","className":"items-justified-left is-style-logos-only"} -->
 				<ul class="wp-block-social-links has-icon-color items-justified-left is-style-logos-only">
 					<!-- wp:social-link {"url":"https://facebook.com","service":"facebook"} /-->
 					<!-- wp:social-link {"url":"https://twitter.com","service":"twitter"} /-->

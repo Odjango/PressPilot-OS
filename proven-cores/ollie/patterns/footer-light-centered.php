@@ -49,7 +49,7 @@
                 href="https://presspilot.com">PressPilot OS</a></p>
         <!-- /wp:paragraph -->
 
-        <!-- wp:social-links {"iconColor":"base","iconColorValue":"#fff","iconBackgroundColor":"main","iconBackgroundColorValue":"#14111f","className":"is-style-default","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|small","left":"var:preset|spacing|small"}}},"layout":{"type":"flex","justifyContent":"center"}} -->
+        <!-- wp:social-links {"iconColor":"base","iconBackgroundColor":"main","className":"is-style-default","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|small","left":"var:preset|spacing|small"}}},"layout":{"type":"flex","justifyContent":"center"}} -->
         <ul class="wp-block-social-links has-icon-color has-icon-background-color is-style-default">
             <!-- wp:social-link {"url":"#","service":"twitter"} /-->
 

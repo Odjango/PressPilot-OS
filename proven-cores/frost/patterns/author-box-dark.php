@@ -10,7 +10,7 @@
 	<!-- wp:avatar {"size":100,"align":"center","style":{"border":{"radius":"50px"}}} /-->
 	<!-- wp:post-author-name {"textAlign":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"},"spacing":{"margin":{"top":"10px"}}},"fontSize":"large"} /-->
 	<!-- wp:post-author-biography {"textAlign":"center","style":{"spacing":{"margin":{"top":"0px"}},"typography":{"lineHeight":"1.5"}}} /-->
-	<!-- wp:social-links {"iconColor":"contrast","iconColorValue":"#000000","iconBackgroundColor":"base","iconBackgroundColorValue":"#ffffff","align":"center"} -->
+	<!-- wp:social-links {"iconColor":"contrast","iconBackgroundColor":"base","align":"center"} -->
 	<ul class="wp-block-social-links aligncenter has-icon-color has-icon-background-color">
 		<!-- wp:social-link {"url":"#","service":"x"} /-->
 		<!-- wp:social-link {"url":"#","service":"linkedin"} /-->
