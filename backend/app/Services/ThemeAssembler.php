@@ -643,7 +643,7 @@ PHP;
             <!-- wp:paragraph {"fontSize":"small","textColor":"{$mutedText}"} -->
             <p class="has-small-font-size has-{$mutedText}-color has-text-color">{$contactText}</p>
             <!-- /wp:paragraph -->
-            <!-- wp:social-links {"iconColor":"{$darkText}","iconColorValue":"currentColor","size":"has-normal-icon-size","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}},"className":"is-style-logos-only"} -->
+            <!-- wp:social-links {"iconColor":"{$darkText}","size":"has-normal-icon-size","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}},"className":"is-style-logos-only"} -->
             <ul class="wp-block-social-links has-normal-icon-size has-icon-color is-style-logos-only">
                 <!-- wp:social-link {"url":"#","service":"facebook"} /-->
                 <!-- wp:social-link {"url":"#","service":"x"} /-->
@@ -857,7 +857,7 @@ HEADER;
                 continue;
             }
 
-            $relativePath = substr($filePath, strlen($themeDir) + 1);
+            $relativePath = $slug . '/' . substr($filePath, strlen($themeDir) + 1);
 
             if ($file->isDir()) {
                 $zip->addEmptyDir($relativePath);

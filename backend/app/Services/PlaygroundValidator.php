@@ -164,28 +164,40 @@ if (is_wp_error($response)) {
 $trimmed = trim($body);
 $white_screen = (!$front_error && $trimmed === '') || (!$front_error && stripos($trimmed, '<html') === false);
 
-// Block grammar check: validate front-page template block markup
+// Block grammar check: validate ALL template and part HTML files
 $block_errors = [];
 $theme_dir = get_stylesheet_directory();
-$template_file = $theme_dir . '/templates/front-page.html';
-if (file_exists($template_file)) {
-    $template_content = file_get_contents($template_file);
 
-    // Check that block comments have valid JSON
-    preg_match_all('/<!-- wp:\\S+\\s+(\\{.+?\\})\\s*(?:\\/)?-->/s', $template_content, $jsonMatches);
-    foreach ($jsonMatches[1] as $jsonStr) {
-        $decoded = json_decode($jsonStr);
-        if ($decoded === null && json_last_error() !== JSON_ERROR_NONE) {
-            $block_errors[] = "Invalid JSON in block comment: " . substr($jsonStr, 0, 60);
+$scan_dirs = [
+    $theme_dir . '/templates',
+    $theme_dir . '/parts',
+];
+
+foreach ($scan_dirs as $scan_dir) {
+    if (!is_dir($scan_dir)) continue;
+    $html_files = glob($scan_dir . '/*.html');
+    if (!$html_files) continue;
+
+    foreach ($html_files as $template_file) {
+        $rel_name = str_replace($theme_dir . '/', '', $template_file);
+        $template_content = file_get_contents($template_file);
+
+        // Check that block comments have valid JSON
+        preg_match_all('/<!-- wp:\\S+\\s+(\\{.+?\\})\\s*(?:\\/)?-->/s', $template_content, $jsonMatches);
+        foreach ($jsonMatches[1] as $jsonStr) {
+            $decoded = json_decode($jsonStr);
+            if ($decoded === null && json_last_error() !== JSON_ERROR_NONE) {
+                $block_errors[] = "[{$rel_name}] Invalid JSON in block comment: " . substr($jsonStr, 0, 60);
+            }
         }
-    }
 
-    // Check for unparseable block content
-    $parsed = parse_blocks($template_content);
-    foreach ($parsed as $block) {
-        if (!empty($block['innerHTML']) && $block['blockName'] === null && trim($block['innerHTML']) !== '') {
-            $snippet = substr(trim($block['innerHTML']), 0, 80);
-            $block_errors[] = "Unparseable block content: {$snippet}";
+        // Check for unparseable block content
+        $parsed = parse_blocks($template_content);
+        foreach ($parsed as $block) {
+            if (!empty($block['innerHTML']) && $block['blockName'] === null && trim($block['innerHTML']) !== '') {
+                $snippet = substr(trim($block['innerHTML']), 0, 80);
+                $block_errors[] = "[{$rel_name}] Unparseable block content: {$snippet}";
+            }
         }
     }
 }

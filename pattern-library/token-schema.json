@@ -1452,6 +1452,13 @@
       "vertical": "general"
     },
     {
+      "name": "PAGE_BANNER_EYEBROW",
+      "description": "Page banner eyebrow/pre-title text",
+      "maxLength": 40,
+      "group": "page-banner",
+      "vertical": "general"
+    },
+    {
       "name": "PAGE_BANNER_TITLE",
       "description": "Inner page banner headline (used on services, contact, menu pages)",
       "maxLength": 60,
