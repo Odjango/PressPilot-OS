@@ -308,7 +308,8 @@ PHP;
         $themeJson = json_decode(file_get_contents($basePath), true, 512, JSON_THROW_ON_ERROR);
 
         // Override colors from project.
-        // Build a COMPLETE palette with all necessary slugs to prevent "Attempt Recovery" errors.
+        // CRITICAL: Preserve ALL existing palette entries from proven-core theme.json
+        // and only override the brand color values. Ollie patterns reference 24+ color slugs.
         $colors = $project['colors'] ?? [];
         $resolver = app(CorePaletteResolver::class);
 
@@ -320,53 +321,90 @@ PHP;
         $brandForeground = $colors['foreground'] ?? '#333333';
 
         // Generate derived colors
-        // Tertiary: light tint of primary (15% opacity equivalent)
-        $tertiary = $this->lightenColor($brandPrimary, 0.85);
+        $tertiary = $this->lightenColor($brandPrimary, 0.85);  // Light tint of primary
+        $borderLight = $this->lightenColor($brandPrimary, 0.90); // Very light tint
+        $borderDark = $this->lightenColor($brandPrimary, 0.70);  // Medium tint
+        $primaryAccent = $this->lightenColor($brandPrimary, 0.80); // Light accent
+        $mainAccent = $this->lightenColor($brandForeground, 0.40); // Lighter text
 
-        // Complete canonical palette (Ollie-style slugs) with ALL necessary entries
-        $canonicalPalette = [
-            'primary'     => $brandPrimary,
-            'secondary'   => $brandSecondary,
-            'accent'      => $brandAccent,
-            'primary-alt' => $brandAccent,      // backwards compatibility
-            'tertiary'    => $tertiary,
-            'base'        => $brandBackground,
-            'main'        => $brandForeground,
-            'foreground'  => $brandForeground,
-            'contrast'    => '#1a1a1a',          // near black for headings
-            'background'  => $brandBackground,
+        // Build COMPLETE Ollie-compatible palette with all slugs that patterns reference
+        // This ensures no "Attempt Recovery" errors from missing color variables
+        $fullPalette = [
+            // Core brand colors (user-provided)
+            'primary'               => $brandPrimary,
+            'secondary'             => $brandSecondary,
+            'primary-alt'           => $brandAccent,
+            'accent'                => $brandAccent,
+            'base'                  => $brandBackground,
+            'main'                  => $brandForeground,
+
+            // Additional brand variants (auto-generated)
+            'tertiary'              => $tertiary,
+            'foreground'            => $brandForeground,
+            'background'            => $brandBackground,
+            'contrast'              => '#1a1a1a',
+
+            // Border colors (derived from primary)
+            'border'                => $borderLight,
+            'border-light'          => $borderLight,
+            'border-dark'           => $borderDark,
+
+            // Accent variants (derived)
+            'primary-accent'        => $primaryAccent,
+            'main-accent'           => $mainAccent,
+
+            // Background variants (for has-*-background-color classes)
+            'primary-background'    => $this->lightenColor($brandPrimary, 0.95),
+            'secondary-background'  => $this->lightenColor($brandSecondary, 0.95),
+            'tertiary-background'   => $this->lightenColor($tertiary, 0.50),
+            'base-background'       => $brandBackground,
+            'main-background'       => $this->lightenColor($brandForeground, 0.95),
+            'border-light-background' => $this->lightenColor($borderLight, 0.50),
+            'border-dark-background'  => $this->lightenColor($borderDark, 0.50),
+
+            // Border variants for has-*-border-color classes
+            'tertiary-border'       => $tertiary,
+            'border-light-border'   => $borderLight,
+            'primary-border'        => $brandPrimary,
+            'base-border'           => $this->lightenColor($brandBackground, 0.90),
+
+            // Icon and utility colors
+            'icon'                  => $brandPrimary,
+            'icon-background'       => $this->lightenColor($brandPrimary, 0.95),
+            'link'                  => $brandPrimary,
+            'text'                  => $brandForeground,
+            'inline'                => $brandForeground,
         ];
 
-        // Build the complete palette array with slug-to-color mapping
+        // Resolve canonical slugs to target core slugs
         $paletteOverrides = [];
-        foreach ($canonicalPalette as $canonicalSlug => $colorValue) {
+        foreach ($fullPalette as $canonicalSlug => $colorValue) {
             $targetSlug = $resolver->resolve($canonicalSlug, $this->coreSlug);
             $paletteOverrides[$targetSlug] = $colorValue;
         }
 
-        // Update existing palette entries from base theme.json
+        // Step 1: Update existing palette entries from base theme.json with brand colors
         if (isset($themeJson['settings']['color']['palette'])) {
             foreach ($themeJson['settings']['color']['palette'] as $index => $entry) {
                 $slug = $entry['slug'] ?? null;
                 if ($slug && array_key_exists($slug, $paletteOverrides)) {
+                    // Override this color with user brand value
                     $themeJson['settings']['color']['palette'][$index]['color'] = $paletteOverrides[$slug];
+                    unset($paletteOverrides[$slug]); // Mark as processed
                 }
             }
+        } else {
+            $themeJson['settings']['color']['palette'] = [];
         }
 
-        // CRITICAL: Add missing slugs that templates reference but aren't in base theme.json
-        // This ensures slugs like 'foreground', 'contrast', 'background', 'tertiary' exist
-        $existingSlugs = array_column($themeJson['settings']['color']['palette'] ?? [], 'slug');
+        // Step 2: Add any missing slugs that patterns reference but aren't in base theme.json
         foreach ($paletteOverrides as $slug => $color) {
-            if (!in_array($slug, $existingSlugs, true)) {
-                // Slug is missing from base theme.json — add it
-                $themeJson['settings']['color']['palette'][] = [
-                    'slug'  => $slug,
-                    'color' => $color,
-                    'name'  => ucfirst(str_replace('-', ' ', $slug)),
-                ];
-                Log::info("ThemeAssembler: Added missing palette slug '{$slug}' = {$color}");
-            }
+            $themeJson['settings']['color']['palette'][] = [
+                'slug'  => $slug,
+                'color' => $color,
+                'name'  => ucfirst(str_replace('-', ' ', $slug)),
+            ];
+            Log::info("ThemeAssembler: Added missing palette slug '{$slug}' = {$color}");
         }
 
         // Override font families (heading + body pairing if available, else single font)
