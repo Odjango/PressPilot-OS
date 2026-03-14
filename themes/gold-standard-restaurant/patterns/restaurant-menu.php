@@ -23,8 +23,8 @@
 	<div class="wp-block-columns">
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:heading {"textAlign":"left","level":6,"backgroundColor":"secondary"} -->
-			<h6 class="has-text-align-left has-secondary-background-color has-background">Coffee</h6>
+			<!-- wp:heading {"textAlign":"left","level":6,"backgroundColor":"secondary","textColor":"base"} -->
+			<h6 class="wp-block-heading has-text-align-left has-secondary-background-color has-base-color has-text-color has-background">Coffee</h6>
 			<!-- /wp:heading -->
 
 			<!-- wp:table {"className":"is-style-stripes no-margin-top"} -->
@@ -68,8 +68,8 @@
 
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:heading {"textAlign":"left","level":6,"backgroundColor":"secondary"} -->
-			<h6 class="has-text-align-left has-secondary-background-color has-background">Snacks</h6>
+			<!-- wp:heading {"textAlign":"left","level":6,"backgroundColor":"secondary","textColor":"base"} -->
+			<h6 class="wp-block-heading has-text-align-left has-secondary-background-color has-base-color has-text-color has-background">Snacks</h6>
 			<!-- /wp:heading -->
 
 			<!-- wp:table {"className":"is-style-stripes  no-margin-top"} -->
@@ -105,8 +105,8 @@
 
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:heading {"textAlign":"left","level":6,"backgroundColor":"secondary"} -->
-			<h6 class="has-text-align-left has-secondary-background-color has-background">Food</h6>
+			<!-- wp:heading {"textAlign":"left","level":6,"backgroundColor":"secondary","textColor":"base"} -->
+			<h6 class="wp-block-heading has-text-align-left has-secondary-background-color has-base-color has-text-color has-background">Food</h6>
 			<!-- /wp:heading -->
 
 			<!-- wp:table {"className":"is-style-stripes  no-margin-top"} -->

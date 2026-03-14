@@ -28,8 +28,8 @@
 	<div class="wp-block-group alignwide">
 		<!-- wp:group {"metadata":{"name":"Testimonial"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|large","bottom":"var:preset|spacing|large","left":"var:preset|spacing|large","right":"var:preset|spacing|large"}},"border":{"radius":"5px","width":"1px"}},"backgroundColor":"base","borderColor":"border-light","layout":{"type":"flex","orientation":"vertical","justifyContent":"stretch","verticalAlignment":"space-between"}} -->
 		<div class="wp-block-group has-border-color has-border-light-border-color has-base-background-color has-background" style="border-width:1px;border-radius:5px;padding-top:var(--wp--preset--spacing--large);padding-right:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--large);padding-left:var(--wp--preset--spacing--large)">
-			<!-- wp:paragraph {"fontSize":"small"} -->
-			<p class="has-small-font-size">"Every course was delicious and beautifully presented. We'll be back for the chef's tasting menu."</p>
+			<!-- wp:paragraph {"fontSize":"small","textColor":"contrast"} -->
+			<p class="has-contrast-color has-text-color has-small-font-size">"Every course was delicious and beautifully presented. We'll be back for the chef's tasting menu."</p>
 			<!-- /wp:paragraph -->
 			<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"flex","flexWrap":"nowrap"}} -->
 			<div class="wp-block-group">
@@ -38,8 +38,8 @@
 				<!-- /wp:image -->
 				<!-- wp:group {"style":{"spacing":{"blockGap":"0px"}},"layout":{"type":"flex","orientation":"vertical"}} -->
 				<div class="wp-block-group">
-					<!-- wp:paragraph -->
-					<p><strong>Sarah M.</strong></p>
+					<!-- wp:paragraph {"textColor":"contrast"} -->
+					<p class="has-contrast-color has-text-color"><strong>Sarah M.</strong></p>
 					<!-- /wp:paragraph -->
 					<!-- wp:paragraph {"textColor":"secondary","fontSize":"small"} -->
 					<p class="has-secondary-color has-text-color has-small-font-size">Local Guide</p>
@@ -53,8 +53,8 @@
 
 		<!-- wp:group {"metadata":{"name":"Testimonial"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|large","bottom":"var:preset|spacing|large","left":"var:preset|spacing|large","right":"var:preset|spacing|large"}},"border":{"radius":"5px","width":"1px"}},"backgroundColor":"base","borderColor":"border-light","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between","justifyContent":"stretch"}} -->
 		<div class="wp-block-group has-border-color has-border-light-border-color has-base-background-color has-background" style="border-width:1px;border-radius:5px;padding-top:var(--wp--preset--spacing--large);padding-right:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--large);padding-left:var(--wp--preset--spacing--large)">
-			<!-- wp:paragraph {"fontSize":"small"} -->
-			<p class="has-small-font-size">"Wonderful ambiance, attentive staff, and a wine list that pairs perfectly with the menu."</p>
+			<!-- wp:paragraph {"fontSize":"small","textColor":"contrast"} -->
+			<p class="has-contrast-color has-text-color has-small-font-size">"Wonderful ambiance, attentive staff, and a wine list that pairs perfectly with the menu."</p>
 			<!-- /wp:paragraph -->
 			<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"flex","flexWrap":"nowrap"}} -->
 			<div class="wp-block-group">
@@ -63,8 +63,8 @@
 				<!-- /wp:image -->
 				<!-- wp:group {"style":{"spacing":{"blockGap":"0px"}},"layout":{"type":"flex","orientation":"vertical"}} -->
 				<div class="wp-block-group">
-					<!-- wp:paragraph -->
-					<p><strong>James L.</strong></p>
+					<!-- wp:paragraph {"textColor":"contrast"} -->
+					<p class="has-contrast-color has-text-color"><strong>James L.</strong></p>
 					<!-- /wp:paragraph -->
 					<!-- wp:paragraph {"textColor":"secondary","fontSize":"small"} -->
 					<p class="has-secondary-color has-text-color has-small-font-size">Food Critic</p>
@@ -78,8 +78,8 @@
 
 		<!-- wp:group {"metadata":{"name":"Testimonial"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|large","bottom":"var:preset|spacing|large","left":"var:preset|spacing|large","right":"var:preset|spacing|large"}},"border":{"radius":"5px","width":"1px"}},"backgroundColor":"base","borderColor":"border-light","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between","justifyContent":"stretch"}} -->
 		<div class="wp-block-group has-border-color has-border-light-border-color has-base-background-color has-background" style="border-width:1px;border-radius:5px;padding-top:var(--wp--preset--spacing--large);padding-right:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--large);padding-left:var(--wp--preset--spacing--large)">
-			<!-- wp:paragraph {"fontSize":"small"} -->
-			<p class="has-small-font-size">"Perfect place for celebrations. The private dining room was elegant and the menu was outstanding."</p>
+			<!-- wp:paragraph {"fontSize":"small","textColor":"contrast"} -->
+			<p class="has-contrast-color has-text-color has-small-font-size">"Perfect place for celebrations. The private dining room was elegant and the menu was outstanding."</p>
 			<!-- /wp:paragraph -->
 			<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"flex","flexWrap":"nowrap"}} -->
 			<div class="wp-block-group">
@@ -88,8 +88,8 @@
 				<!-- /wp:image -->
 				<!-- wp:group {"style":{"spacing":{"blockGap":"0px"}},"layout":{"type":"flex","orientation":"vertical"}} -->
 				<div class="wp-block-group">
-					<!-- wp:paragraph -->
-					<p><strong>Emily R.</strong></p>
+					<!-- wp:paragraph {"textColor":"contrast"} -->
+					<p class="has-contrast-color has-text-color"><strong>Emily R.</strong></p>
 					<!-- /wp:paragraph -->
 					<!-- wp:paragraph {"textColor":"secondary","fontSize":"small"} -->
 					<p class="has-secondary-color has-text-color has-small-font-size">Event Planner</p>
@@ -103,8 +103,8 @@
 
 		<!-- wp:group {"metadata":{"name":"Testimonial"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|large","bottom":"var:preset|spacing|large","left":"var:preset|spacing|large","right":"var:preset|spacing|large"}},"border":{"radius":"5px","width":"1px"}},"backgroundColor":"base","borderColor":"border-light","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between","justifyContent":"stretch"}} -->
 		<div class="wp-block-group has-border-color has-border-light-border-color has-base-background-color has-background" style="border-width:1px;border-radius:5px;padding-top:var(--wp--preset--spacing--large);padding-right:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--large);padding-left:var(--wp--preset--spacing--large)">
-			<!-- wp:paragraph {"fontSize":"small"} -->
-			<p class="has-small-font-size">"An unforgettable evening. The chef stopped by our table, and every dish was a delight."</p>
+			<!-- wp:paragraph {"fontSize":"small","textColor":"contrast"} -->
+			<p class="has-contrast-color has-text-color has-small-font-size">"An unforgettable evening. The chef stopped by our table, and every dish was a delight."</p>
 			<!-- /wp:paragraph -->
 			<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"flex","flexWrap":"nowrap"}} -->
 			<div class="wp-block-group">
@@ -113,8 +113,8 @@
 				<!-- /wp:image -->
 				<!-- wp:group {"style":{"spacing":{"blockGap":"0px"}},"layout":{"type":"flex","orientation":"vertical"}} -->
 				<div class="wp-block-group">
-					<!-- wp:paragraph -->
-					<p><strong>Michael T.</strong></p>
+					<!-- wp:paragraph {"textColor":"contrast"} -->
+					<p class="has-contrast-color has-text-color"><strong>Michael T.</strong></p>
 					<!-- /wp:paragraph -->
 					<!-- wp:paragraph {"textColor":"secondary","fontSize":"small"} -->
 					<p class="has-secondary-color has-text-color has-small-font-size">Frequent Diner</p>

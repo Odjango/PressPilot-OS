@@ -36,8 +36,8 @@
 				<!-- wp:paragraph {"style":{"typography":{"fontStyle":"normal","fontWeight":"600"},"elements":{"link":{"color":{"text":"var:preset|color|base"}}}},"textColor":"base"} -->
 				<p class="has-base-color has-text-color has-link-color" style="font-style:normal;font-weight:600">Seasonal menu</p>
 				<!-- /wp:paragraph -->
-				<!-- wp:paragraph {"fontSize":"small"} -->
-				<p class="has-small-font-size">Our chefs craft menus around local, seasonal ingredients to highlight the best flavors of the region.</p>
+				<!-- wp:paragraph {"textColor":"border-light","fontSize":"small"} -->
+				<p class="has-border-light-color has-text-color has-small-font-size">Our chefs craft menus around local, seasonal ingredients to highlight the best flavors of the region.</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
@@ -54,8 +54,8 @@
 				<!-- wp:paragraph {"style":{"typography":{"fontStyle":"normal","fontWeight":"600"},"elements":{"link":{"color":{"text":"var:preset|color|base"}}}},"textColor":"base"} -->
 				<p class="has-base-color has-text-color has-link-color" style="font-style:normal;font-weight:600">Chef-led experience</p>
 				<!-- /wp:paragraph -->
-				<!-- wp:paragraph {"fontSize":"small"} -->
-				<p class="has-small-font-size">From kitchen to table, our team delivers attentive service and a culinary journey for every guest.</p>
+				<!-- wp:paragraph {"textColor":"border-light","fontSize":"small"} -->
+				<p class="has-border-light-color has-text-color has-small-font-size">From kitchen to table, our team delivers attentive service and a culinary journey for every guest.</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
@@ -72,8 +72,8 @@
 				<!-- wp:paragraph {"style":{"typography":{"fontStyle":"normal","fontWeight":"600"},"elements":{"link":{"color":{"text":"var:preset|color|base"}}}},"textColor":"base"} -->
 				<p class="has-base-color has-text-color has-link-color" style="font-style:normal;font-weight:600">Signature cocktails</p>
 				<!-- /wp:paragraph -->
-				<!-- wp:paragraph {"fontSize":"small"} -->
-				<p class="has-small-font-size">House-crafted cocktails and curated wine pairings elevate every course.</p>
+				<!-- wp:paragraph {"textColor":"border-light","fontSize":"small"} -->
+				<p class="has-border-light-color has-text-color has-small-font-size">House-crafted cocktails and curated wine pairings elevate every course.</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
@@ -90,8 +90,8 @@
 				<!-- wp:paragraph {"style":{"typography":{"fontStyle":"normal","fontWeight":"600"},"elements":{"link":{"color":{"text":"var:preset|color|base"}}}},"textColor":"base"} -->
 				<p class="has-base-color has-text-color has-link-color" style="font-style:normal;font-weight:600">Private events</p>
 				<!-- /wp:paragraph -->
-				<!-- wp:paragraph {"fontSize":"small"} -->
-				<p class="has-small-font-size">Celebrate special moments in our private dining spaces with custom menus and attentive service.</p>
+				<!-- wp:paragraph {"textColor":"border-light","fontSize":"small"} -->
+				<p class="has-border-light-color has-text-color has-small-font-size">Celebrate special moments in our private dining spaces with custom menus and attentive service.</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->

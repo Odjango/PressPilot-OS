@@ -11,21 +11,21 @@
  * Inserter: true
  */
 ?>
-<!-- wp:cover {"dimRatio":90,"overlayColor":"base","isUserOverlayColor":true,"isDark":false,"metadata":{"name":"Hero Light"},"align":"full","className":"is-style-blur-image-less","style":{"spacing":{"margin":{"top":"0","bottom":"0"},"padding":{"top":"0","right":"0","bottom":"0","left":"0"}}}} -->
-<div class="wp-block-cover alignfull is-light is-style-blur-image-less" style="margin-top:0;margin-bottom:0;padding-top:0;padding-right:0;padding-bottom:0;padding-left:0"><span aria-hidden="true" class="wp-block-cover__background has-base-background-color has-background-dim-90 has-background-dim"></span><div class="wp-block-cover__inner-container"><!-- wp:group {"metadata":{"name":"Hero Light Wrap"},"align":"full","style":{"spacing":{"margin":{"top":"0px","bottom":"0px"},"padding":{"top":"var:preset|spacing|xx-large","bottom":"0px","right":"var:preset|spacing|medium","left":"var:preset|spacing|medium"},"blockGap":"0"}},"textColor":"main","layout":{"inherit":true,"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-main-color has-text-color" style="margin-top:0px;margin-bottom:0px;padding-top:var(--wp--preset--spacing--xx-large);padding-right:var(--wp--preset--spacing--medium);padding-bottom:0px;padding-left:var(--wp--preset--spacing--medium)"><!-- wp:group {"metadata":{"name":"Text and Buttons"},"style":{"spacing":{"padding":{"bottom":"var:preset|spacing|xx-large"}}}} -->
+<!-- wp:cover {"dimRatio":85,"overlayColor":"main","isUserOverlayColor":true,"isDark":true,"metadata":{"name":"Hero Light"},"align":"full","className":"is-style-blur-image-less","style":{"spacing":{"margin":{"top":"0","bottom":"0"},"padding":{"top":"0","right":"0","bottom":"0","left":"0"}}}} -->
+<div class="wp-block-cover alignfull is-style-blur-image-less" style="margin-top:0;margin-bottom:0;padding-top:0;padding-right:0;padding-bottom:0;padding-left:0"><span aria-hidden="true" class="wp-block-cover__background has-main-background-color has-background-dim-80 has-background-dim"></span><div class="wp-block-cover__inner-container"><!-- wp:group {"metadata":{"name":"Hero Light Wrap"},"align":"full","style":{"spacing":{"margin":{"top":"0px","bottom":"0px"},"padding":{"top":"var:preset|spacing|xx-large","bottom":"0px","right":"var:preset|spacing|medium","left":"var:preset|spacing|medium"},"blockGap":"0"}},"textColor":"base","layout":{"inherit":true,"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-base-color has-text-color" style="margin-top:0px;margin-bottom:0px;padding-top:var(--wp--preset--spacing--xx-large);padding-right:var(--wp--preset--spacing--medium);padding-bottom:0px;padding-left:var(--wp--preset--spacing--medium)"><!-- wp:group {"metadata":{"name":"Text and Buttons"},"style":{"spacing":{"padding":{"bottom":"var:preset|spacing|xx-large"}}}} -->
 <div class="wp-block-group" style="padding-bottom:var(--wp--preset--spacing--xx-large)"><!-- wp:group {"metadata":{"name":"Titles"},"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:paragraph {"align":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"textColor":"primary","fontSize":"small"} -->
-<p class="has-text-align-center has-primary-color has-text-color has-small-font-size" style="font-style:normal;font-weight:500">Welcome to</p>
+<div class="wp-block-group"><!-- wp:paragraph {"align":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"textColor":"base","fontSize":"small"} -->
+<p class="has-text-align-center has-base-color has-text-color has-small-font-size" style="font-style:normal;font-weight:500">Welcome to</p>
 <!-- /wp:paragraph -->
 
-<!-- wp:heading {"textAlign":"center","level":1,"className":"has-secondary-font-family","style":{"typography":{"fontSize":"4rem"}}} -->
-<h1 class="wp-block-heading has-text-align-center has-secondary-font-family" style="font-size:4rem">Gold Standard Restaurant</h1>
+<!-- wp:heading {"textAlign":"center","level":1,"className":"has-secondary-font-family has-base-color","style":{"typography":{"fontSize":"4rem"}},"textColor":"base"} -->
+<h1 class="wp-block-heading has-text-align-center has-secondary-font-family has-base-color" style="font-size:4rem">Gold Standard Restaurant</h1>
 <!-- /wp:heading --></div>
 <!-- /wp:group -->
 
-<!-- wp:paragraph {"align":"center","textColor":"secondary"} -->
-<p class="has-text-align-center has-secondary-color has-text-color">Join us for seasonal menus, warm hospitality, and unforgettable dining moments.</p>
+<!-- wp:paragraph {"align":"center","textColor":"base"} -->
+<p class="has-text-align-center has-base-color has-text-color">Join us for seasonal menus, warm hospitality, and unforgettable dining moments.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"flex","justifyContent":"center"}} -->
