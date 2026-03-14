@@ -99,12 +99,12 @@ jobs:
           fi
 
           # 1. Deploy Theme to WP Content Dir (Idempotent)
-          docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli bash -c "rm -rf /var/www/html/wp-content/themes/$THEME_SLUG && cp -r /presspilot/themes/$THEME_SLUG /var/www/html/wp-content/themes/"
-          
+          docker compose -f docker-compose.wp-qa.yml run --rm -T wpqa-cli sh -c "rm -rf /var/www/html/wp-content/themes/$THEME_SLUG && cp -r /presspilot/themes/$THEME_SLUG /var/www/html/wp-content/themes/"
+
           # 2. Check Install / Install
-          if ! docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp core is-installed; then
+          if ! docker compose -f docker-compose.wp-qa.yml run --rm -T wpqa-cli wp core is-installed; then
             echo "📦 Installing WordPress..."
-            docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp core install \
+            docker compose -f docker-compose.wp-qa.yml run --rm -T wpqa-cli wp core install \
               --url=http://localhost:8089 \
               --title="CI Gate" \
               --admin_user=admin \
@@ -114,10 +114,10 @@ jobs:
           else
              echo "ℹ️ WordPress already installed."
           fi
-          
+
           # 3. Activate Theme (Fail loudly if fails)
           echo "🎨 Activating Theme..."
-          docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp theme activate $THEME_SLUG
+          docker compose -f docker-compose.wp-qa.yml run --rm -T wpqa-cli wp theme activate $THEME_SLUG
 
       - name: Export Dynamic Template IDs
         run: |
@@ -126,7 +126,7 @@ jobs:
             THEME_SLUG="gold-standard-restaurant"
           fi
           
-          docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp eval '
+          docker compose -f docker-compose.wp-qa.yml run --rm -T wpqa-cli wp eval '
             $theme = "'"$THEME_SLUG"'";
             $t = get_posts(["post_type"=>"wp_template","numberposts"=>100]);
             $p = get_posts(["post_type"=>"wp_template_part","numberposts"=>100]);
