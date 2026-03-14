@@ -19,13 +19,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+      - name: Run theme structure validation
+        run: bash scripts/validate-theme-structure.sh themes/gold-standard-restaurant
 
-      - name: Run PressPilot theme smoke tests
-        run: npm run test:themes
+      - name: Run pattern linter
+        run: bash tools/lint-patterns.sh
