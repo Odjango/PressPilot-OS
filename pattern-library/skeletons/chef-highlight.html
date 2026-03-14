@@ -1,12 +1,10 @@
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","right":"var:preset|spacing|50","left":"var:preset|spacing|50"},"margin":{"top":"0","bottom":"0"}}},"backgroundColor":"tertiary","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull has-tertiary-background-color has-background" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--70);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--50)">
 
-    <!-- wp:media-text {"mediaPosition":"left","mediaId":0,"mediaLink":"","mediaType":"image","mediaWidth":42,"verticalAlignment":"center","imageFill":true,"style":{"media":{"aspectRatio":"4/3"}}} -->
+    <!-- wp:media-text {"mediaPosition":"left","mediaId":0,"mediaUrl":"{{IMAGE_CHEF}}","mediaType":"image","mediaWidth":42,"verticalAlignment":"center","imageFill":true,"style":{"media":{"aspectRatio":"4/3"}}} -->
     <div class="wp-block-media-text is-stacked-on-mobile is-vertically-aligned-center has-media-on-the-left is-image-fill" style="grid-template-columns:42% auto">
-        <figure class="wp-block-media-text__media" style="aspect-ratio:4/3">
-            <!-- wp:image {"sizeSlug":"large","linkDestination":"none","style":{"border":{"radius":"8px"},"aspectRatio":"4/3"}} -->
-            <img src="{{IMAGE_CHEF}}" alt="{{CHEF_NAME}}" style="border-radius:8px;aspect-ratio:4/3;object-fit:cover;width:100%"/>
-            <!-- /wp:image -->
+        <figure class="wp-block-media-text__media" style="background-image:url({{IMAGE_CHEF}});background-position:50% 50%">
+            <img src="{{IMAGE_CHEF}}" alt="{{CHEF_NAME}}" class="size-full"/>
         </figure>
         <div class="wp-block-media-text__content">
             <!-- wp:paragraph {"style":{"typography":{"textTransform":"uppercase","letterSpacing":"2px","fontWeight":"600"}},"textColor":"primary","fontSize":"small"} -->
@@ -15,7 +13,7 @@
             <!-- wp:heading {"style":{"typography":{"fontWeight":"700"}},"fontSize":"x-large"} -->
             <h2 class="wp-block-heading has-x-large-font-size" style="font-weight:700">{{CHEF_NAME}}</h2>
             <!-- /wp:heading -->
-            <!-- wp:paragraph {"textColor":"secondary","fontSize":"medium"} -->
+            <!-- wp:paragraph {"textColor":"foreground","fontSize":"medium"} -->
             <p class="has-foreground-color has-text-color has-medium-font-size">{{CHEF_BIO}}</p>
             <!-- /wp:paragraph -->
         </div>
