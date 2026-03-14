@@ -99,7 +99,8 @@ jobs:
           fi
 
           # 1. Deploy Theme to WP Content Dir (Idempotent)
-          docker compose -f docker-compose.wp-qa.yml run --rm -T wpqa-cli sh -c "rm -rf /var/www/html/wp-content/themes/$THEME_SLUG && cp -r /presspilot/themes/$THEME_SLUG /var/www/html/wp-content/themes/"
+          # CLI image runs as www-data (non-root) — use --user root for file operations
+          docker compose -f docker-compose.wp-qa.yml run --rm -T --user root wpqa-cli sh -c "rm -rf /var/www/html/wp-content/themes/$THEME_SLUG && cp -r /presspilot/themes/$THEME_SLUG /var/www/html/wp-content/themes/ && chown -R www-data:www-data /var/www/html/wp-content/themes/$THEME_SLUG"
 
           # 2. Check Install / Install
           if ! docker compose -f docker-compose.wp-qa.yml run --rm -T wpqa-cli wp core is-installed; then
