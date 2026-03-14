@@ -12,8 +12,10 @@ services:
   # NOT publicly routed. Access via: ssh -L 8080:localhost:8080 user@vps
   laravel-app:
     build:
-      context: ./backend
-      dockerfile: docker/app/Dockerfile
+      # Context is repo root (NOT backend/) so the Dockerfile can COPY
+      # pattern-library/ and proven-cores/ needed by the SSWG pipeline.
+      context: .
+      dockerfile: backend/docker/app/Dockerfile
     container_name: presspilot-laravel-app
     restart: unless-stopped
     expose:
