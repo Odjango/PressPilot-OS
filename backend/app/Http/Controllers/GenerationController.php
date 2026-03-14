@@ -361,7 +361,7 @@ class GenerationController extends Controller
             'fr' => 'fr',
             'it' => 'it',
             'ar' => 'ar',
-            'de' => 'en',
+            'de' => 'de',
             default => 'en',
         };
     }

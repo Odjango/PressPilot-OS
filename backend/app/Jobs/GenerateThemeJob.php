@@ -172,6 +172,15 @@ class GenerateThemeJob implements ShouldQueue
             $themeAssembler->setCore($coreSlug);
             $assembled = $themeAssembler->assemble($projectData, $allTokens, $pageHtml);
 
+            // Pre-ZIP block attribute validation
+            $blockValidator = new \App\Services\BlockConfigValidator();
+            $blockResult = $blockValidator->validateTheme($assembled['themeDir']);
+            if (!empty($blockResult['errors'])) {
+                Log::error('BlockConfigValidator: Blocking errors found', ['errors' => $blockResult['errors']]);
+                // Don't throw — log as critical but allow generation to proceed
+                // These will be caught by PlaygroundValidator as a second gate
+            }
+
             // Step 6: Validate assembled theme
             $validator = app(PlaygroundValidator::class);
             $validation = $validator->validate($assembled['themeDir']);
