@@ -477,6 +477,36 @@ PHP;
         $themeJson['settings']['layout']['contentSize'] = '1200px';
         $themeJson['settings']['layout']['wideSize'] = '1400px';
 
+        // Add spacing sizes
+        if (!isset($themeJson['settings']['spacing'])) {
+            $themeJson['settings']['spacing'] = [];
+        }
+        $themeJson['settings']['spacing']['spacingSizes'] = [
+            ['name' => 'X-Small',  'slug' => '20', 'size' => '0.5rem'],
+            ['name' => 'Small',    'slug' => '30', 'size' => '1rem'],
+            ['name' => 'Medium',   'slug' => '40', 'size' => '1.5rem'],
+            ['name' => 'Large',    'slug' => '50', 'size' => '2rem'],
+            ['name' => 'X-Large',  'slug' => '60', 'size' => '3rem'],
+            ['name' => '2X-Large', 'slug' => '70', 'size' => '4rem'],
+        ];
+        $themeJson['settings']['spacing']['units'] = ['px', 'em', 'rem', 'vh', 'vw', '%'];
+
+        // Add font sizes
+        if (!isset($themeJson['settings']['typography'])) {
+            $themeJson['settings']['typography'] = [];
+        }
+        $themeJson['settings']['typography']['fontSizes'] = [
+            ['name' => 'X-Small',  'slug' => 'x-small',  'size' => '0.75rem'],
+            ['name' => 'Small',    'slug' => 'small',    'size' => '0.875rem'],
+            ['name' => 'Base',     'slug' => 'base',     'size' => '1rem'],
+            ['name' => 'Medium',   'slug' => 'medium',   'size' => '1.125rem'],
+            ['name' => 'Large',    'slug' => 'large',    'size' => '1.25rem'],
+            ['name' => 'X-Large',  'slug' => 'x-large',  'size' => '1.5rem'],
+            ['name' => '2X-Large', 'slug' => '2x-large', 'size' => '2rem'],
+            ['name' => '3X-Large', 'slug' => '3x-large', 'size' => '2.5rem'],
+            ['name' => 'Huge',     'slug' => 'huge',     'size' => '3rem'],
+        ];
+
         file_put_contents($themeDir.'/theme.json', json_encode($themeJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 
@@ -621,8 +651,8 @@ PHP;
     </div>
     <!-- /wp:columns -->
 
-    <!-- wp:spacer {"height":"var:preset|spacing|50"} -->
-    <div style="height:var(--wp--preset--spacing--50)" aria-hidden="true" class="wp-block-spacer"></div>
+    <!-- wp:spacer {"height":"48px","style":{"layout":{}}} -->
+    <div style="height:48px" aria-hidden="true" class="wp-block-spacer"></div>
     <!-- /wp:spacer -->
 
     <!-- wp:paragraph {"align":"center","fontSize":"small","textColor":"{$mutedText}"} -->
