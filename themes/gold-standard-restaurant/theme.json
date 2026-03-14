@@ -16,19 +16,9 @@
 					"color": "#D9381E"
 				},
 				{
-					"name": "Brand Accent",
-					"slug": "primary-accent",
-					"color": "#FFF4F0"
-				},
-				{
 					"name": "Brand Alt",
 					"slug": "primary-alt",
 					"color": "#FF6B35"
-				},
-				{
-					"name": "Brand Alt Accent",
-					"slug": "primary-alt-accent",
-					"color": "#1A0A05"
 				},
 				{
 					"name": "Contrast",
@@ -64,6 +54,21 @@
 					"name": "Border Contrast",
 					"slug": "border-dark",
 					"color": "#4E4E60"
+				},
+				{
+					"name": "Contrast Text",
+					"slug": "contrast",
+					"color": "#1E1E26"
+				},
+				{
+					"name": "Foreground",
+					"slug": "foreground",
+					"color": "#1E1E26"
+				},
+				{
+					"name": "Senary",
+					"slug": "senary",
+					"color": "#f5f0eb"
 				}
 			],
 			"link": true
@@ -358,7 +363,7 @@
 					}
 				},
 				"typography": {
-					"fontFamily": "var:preset|font-family|monospace)",
+					"fontFamily": "var:preset|font-family|monospace",
 					"fontSize": "var:preset|font-size|small"
 				}
 			},
@@ -432,8 +437,8 @@
 					"link": {
 						"spacing": {
 							"margin": {
-								"top": "200px",
-								"bottom": "200px"
+								"top": "20px",
+								"bottom": "20px"
 							}
 						}
 					}
@@ -505,7 +510,7 @@
 					}
 				},
 				"typography": {
-					"fontFamily": "var:preset|font-family|monospace)",
+					"fontFamily": "var:preset|font-family|monospace",
 					"fontSize": "var:preset|font-size|small"
 				}
 			},

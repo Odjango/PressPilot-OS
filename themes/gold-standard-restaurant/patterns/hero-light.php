@@ -37,5 +37,6 @@
 <div class="wp-block-button is-style-secondary-button"><a class="wp-block-button__link wp-element-button" href="/contact">Reserve a Table</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
+<!-- /wp:group --></div>
 <!-- /wp:group --></div></div>
 <!-- /wp:cover -->

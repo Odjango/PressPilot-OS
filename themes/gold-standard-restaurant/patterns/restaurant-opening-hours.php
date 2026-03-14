@@ -1,8 +1,8 @@
 <?php
 /**
  * Title: A table with opening hours.
- * Slug: tove/restaurant-opening-hours
- * Categories: tove-restaurant
+ * Slug: gold-standard-restaurant/restaurant-opening-hours
+ * Categories: gold-standard-restaurant/restaurant
  */
 ?>
 <!-- wp:group -->
@@ -12,8 +12,8 @@
 	<h6>Our Opening Hours</h6>
 	<!-- /wp:heading -->
 
-	<!-- wp:table {"hasFixedLayout":true,"borderColor":"foreground","className":"is-style-tove-vertical-borders"} -->
-	<figure class="wp-block-table is-style-tove-vertical-borders">
+	<!-- wp:table {"hasFixedLayout":true,"borderColor":"foreground"} -->
+	<figure class="wp-block-table">
 		<table class="has-foreground-border-color has-border-color has-fixed-layout">
 			<tbody>
 				<tr>
