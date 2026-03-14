@@ -395,12 +395,24 @@ class TokenInjector
     }
 
     /**
-     * Check if paragraph is a small eyebrow/label (fontSize small/x-small).
+     * Check if paragraph is a small eyebrow/label.
+     * Must be small/x-small font AND have uppercase styling (textTransform or letterSpacing).
+     * This prevents menu descriptions, testimonial subtitles, etc. from being exempted.
      */
     private function isEyebrowParagraph(array $attrs): bool
     {
         $fontSize = $attrs['fontSize'] ?? null;
-        return in_array($fontSize, ['small', 'x-small'], true);
+        if (!in_array($fontSize, ['small', 'x-small'], true)) {
+            return false;
+        }
+
+        // True eyebrows have uppercase or letter-spacing styling
+        $style = $attrs['style'] ?? [];
+        $typography = $style['typography'] ?? [];
+        $hasUppercase = ($typography['textTransform'] ?? '') === 'uppercase';
+        $hasLetterSpacing = !empty($typography['letterSpacing']);
+
+        return $hasUppercase || $hasLetterSpacing;
     }
 
     /**
@@ -422,18 +434,24 @@ class TokenInjector
                         continue;
                     }
 
-                    // Pattern: has-{colorSlug}-color
-                    // We want to REMOVE brand colors (primary, secondary, accent, etc.)
+                    // Skip the utility class 'has-text-color' — it's not a color slug class
+                    if ($class === 'has-text-color') {
+                        $filtered[] = $class;
+                        continue;
+                    }
+
+                    // Pattern: has-{colorSlug}-color (slug can contain hyphens, e.g. primary-accent)
+                    // We want to REMOVE brand colors (primary, secondary, accent, primary-accent, etc.)
                     // We want to KEEP base/foreground colors AND utility classes
-                    if (preg_match('/^has-([^-]+)-color$/', $class, $colorMatch)) {
+                    if (preg_match('/^has-([a-z0-9]+(?:-[a-z0-9]+)*)-color$/', $class, $colorMatch)) {
                         $colorSlug = $colorMatch[1];
                         // Only keep base and foreground color classes, remove all others
-                        if (in_array($colorSlug, ['base', 'foreground', 'text'], true)) {
-                            $filtered[] = $class; // Keep base/foreground/text colors
+                        if (in_array($colorSlug, ['base', 'foreground'], true)) {
+                            $filtered[] = $class; // Keep base/foreground colors
                         }
-                        // Else: skip brand color classes (primary, secondary, accent, etc.)
+                        // Else: skip brand color classes (primary, secondary, accent, primary-accent, etc.)
                     } else {
-                        // Keep all non-color classes (has-text-color, has-small-font-size, etc.)
+                        // Keep all non-color classes (has-small-font-size, has-text-align-center, etc.)
                         $filtered[] = $class;
                     }
                 }

@@ -249,23 +249,52 @@ export default function StudioClient({ slug }: Props) {
     );
   };
 
-  // Step 4 Hero Preview - Real food photo rendering
+  // Step 4 Hero Preview - Category-aware photo rendering
   const renderStep4HeroPreview = () => {
-    const heroTitle = customHeroTitle || project?.name || 'Your Restaurant';
-    const heroSub = heroSubtitle || 'Welcome to our restaurant';
+    const heroTitle = customHeroTitle || project?.name || 'Your Business';
+    const heroSub = heroSubtitle || 'Welcome to our business';
     const primary = logoColors[0] || '#c0392b';
     const fontHeading = getFontStyles(selectedFontProfile).heading;
     const fontBody = getFontStyles(selectedFontProfile).body;
 
-    // Restaurant food photos by layout context
-    const photoMap: Record<string, string> = {
-      fullBleed: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80',
-      fullWidth: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80',
-      split: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80',
-      minimal: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80',
+    // Category-aware hero photos — matches actual theme output quality
+    const categoryPhotoMap: Record<string, Record<string, string>> = {
+      restaurant_cafe: {
+        fullBleed: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80',
+        fullWidth: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80',
+        split: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80',
+        minimal: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80',
+      },
+      ecommerce_store: {
+        fullBleed: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&q=80',
+        fullWidth: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=1200&q=80',
+        split: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=80',
+        minimal: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80',
+      },
+      saas_product: {
+        fullBleed: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&q=80',
+        fullWidth: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80',
+        split: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&q=80',
+        minimal: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=80',
+      },
+      online_coach: {
+        fullBleed: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&q=80',
+        fullWidth: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=1200&q=80',
+        split: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200&q=80',
+        minimal: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=80',
+      },
+      local_service: {
+        fullBleed: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=80',
+        fullWidth: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80',
+        split: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&q=80',
+        minimal: 'https://images.unsplash.com/photo-1560472355-536de3962603?w=1200&q=80',
+      },
     };
 
-    const photo = photoMap[selectedHeroLayout] || photoMap.fullBleed;
+    // Map category ID to photo set, fallback to local_service
+    const catKey = selectedBusinessCategoryId || 'local_service';
+    const photoSet = categoryPhotoMap[catKey] || categoryPhotoMap.local_service;
+    const photo = photoSet[selectedHeroLayout] || photoSet.fullBleed;
 
     // Full-Bleed layout: photo background with dark overlay, centered content
     if (selectedHeroLayout === 'fullBleed' || selectedHeroLayout === 'fullWidth') {
@@ -281,7 +310,7 @@ export default function StudioClient({ slug }: Props) {
           {/* Dark overlay with brand color tint */}
           <div
             className="absolute inset-0"
-            style={{ backgroundColor: primary, opacity: 0.55 }}
+            style={{ backgroundColor: primary, opacity: 0.7 }}
           />
           {/* Nav bar */}
           <div className="relative z-10 flex items-center justify-between px-8 py-4">
@@ -298,7 +327,7 @@ export default function StudioClient({ slug }: Props) {
           {/* Hero content */}
           <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-8 pb-8">
             <p className="text-white text-xs font-bold uppercase tracking-widest mb-3 opacity-80" style={{ fontFamily: fontBody }}>
-              AUTHENTIC CUISINE
+              {catKey === 'restaurant_cafe' ? 'AUTHENTIC CUISINE' : catKey === 'saas_product' ? 'POWERFUL SOFTWARE' : catKey === 'ecommerce_store' ? 'SHOP NOW' : catKey === 'online_coach' ? 'TRANSFORM YOUR LIFE' : 'PROFESSIONAL SERVICE'}
             </p>
             <h2 className="text-white font-black mb-4 leading-tight" style={{ fontFamily: fontHeading, fontSize: 'clamp(1.8rem, 4vw, 2.8rem)' }}>
               {heroTitle}
@@ -377,7 +406,7 @@ export default function StudioClient({ slug }: Props) {
         {/* Hero content + photo side by side */}
         <div className="flex flex-1 overflow-hidden">
           <div className="flex-1 flex flex-col justify-center px-10 py-6">
-            <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: primary }}>Fine Dining</p>
+            <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: primary }}>{catKey === 'restaurant_cafe' ? 'Fine Dining' : catKey === 'saas_product' ? 'Software' : catKey === 'ecommerce_store' ? 'Shop' : catKey === 'online_coach' ? 'Coaching' : 'Services'}</p>
             <h2 className="font-black leading-none text-gray-900 mb-3" style={{ fontFamily: fontHeading, fontSize: '2.2rem' }}>
               {heroTitle}
             </h2>

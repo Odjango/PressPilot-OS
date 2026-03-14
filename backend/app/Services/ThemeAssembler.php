@@ -32,8 +32,19 @@ class ThemeAssembler
      * @param  array<string, string>  $pageHtml  Injected HTML keyed by page type (home, about, services, contact)
      * @return array{themeDir: string, zipPath: string}
      */
+    /**
+     * Code version stamp — logged on every generation to verify deployment.
+     * If this doesn't appear in logs after deploy, the new code isn't running.
+     */
+    private const CODE_VERSION = '2026-03-14-v3';
+
     public function assemble(array $project, array $tokens, array $pageHtml): array
     {
+        Log::info('ThemeAssembler::assemble START', [
+            'code_version' => self::CODE_VERSION,
+            'core' => $this->coreSlug,
+        ]);
+
         $slug = $this->resolveSlug($project);
         $themeDir = sys_get_temp_dir()."/pp-themes/{$slug}";
 
