@@ -470,6 +470,10 @@ PHP;
             ['name' => 'footer', 'area' => 'footer', 'title' => 'Footer'],
         ];
 
+        // Enable root padding aware alignments (prevents alignfull horizontal scroll)
+        $themeJson['settings']['useRootPaddingAwareAlignments'] = true;
+        $themeJson['settings']['appearanceTools'] = true;
+
         // Add layout settings (contentSize and wideSize)
         if (!isset($themeJson['settings']['layout'])) {
             $themeJson['settings']['layout'] = [];
