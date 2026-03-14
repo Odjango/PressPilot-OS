@@ -36,7 +36,7 @@ class ThemeAssembler
      * Code version stamp — logged on every generation to verify deployment.
      * If this doesn't appear in logs after deploy, the new code isn't running.
      */
-    private const CODE_VERSION = '2026-03-14-v3';
+    private const CODE_VERSION = '2026-03-14-v4';
 
     public function assemble(array $project, array $tokens, array $pageHtml): array
     {
