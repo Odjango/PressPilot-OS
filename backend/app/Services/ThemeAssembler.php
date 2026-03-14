@@ -528,19 +528,19 @@ PHP;
         }
 
         // front-page.html — uses home page sections
-        // For fullBleed hero layout, the hero skeleton already contains its own
-        // header (site-title + navigation) inside the wp:cover block, so we must
-        // skip the external header-transparent template part to avoid TWO headers.
+        // Always include the header template part. The hero skeletons do NOT contain
+        // embedded navigation — they are pure cover blocks. Use header-transparent
+        // for fullBleed/fullWidth heroes (white text on dark hero), standard header otherwise.
         $homeContent = $pageHtml['home'] ?? '';
         $heroLayout  = $project['heroLayout'] ?? $project['hero_layout'] ?? null;
-        $skipHeader  = ($heroLayout === 'fullBleed');
+        $headerSlug  = in_array($heroLayout, ['fullBleed', 'fullWidth', 'cover']) ? 'header-transparent' : 'header';
 
         Log::info('ThemeAssembler::writeTemplates heroLayout decision', [
             'heroLayout' => $heroLayout,
-            'skipHeader' => $skipHeader,
+            'headerSlug' => $headerSlug,
         ]);
 
-        file_put_contents($templatesDir.'/front-page.html', $this->wrapTemplate($homeContent, $skipHeader));
+        file_put_contents($templatesDir.'/front-page.html', $this->wrapTemplate($homeContent, false, $headerSlug));
 
         // Inner pages use the standard (opaque) header since page-banner provides
         // the visual impact. This gives a clean white header → colored banner flow.
@@ -748,10 +748,8 @@ HEADER;
 
         if (! $skipHeader) {
             // Add header template part.
-            // - 'header-transparent': white text, for pages with dark hero/cover backgrounds
+            // - 'header-transparent': white text overlay, for pages with dark hero/cover backgrounds
             // - 'header': standard opaque header, for inner pages with page-banner
-            // Skipped entirely for fullBleed hero because hero-fullbleed.html
-            // already contains its own site-title + navigation inside wp:cover.
             $parts .= "<!-- wp:template-part {\"slug\":\"{$headerSlug}\",\"tagName\":\"header\"} /-->\n\n";
         }
 
