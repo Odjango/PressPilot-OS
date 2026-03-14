@@ -39,8 +39,8 @@
 			<!-- /wp:columns -->
 			<!-- /wp:post-template -->
 
-			<!-- wp:spacer {"height":"var:preset|spacing|30"} -->
-			<div style="height:var(--wp--preset--spacing--30)" aria-hidden="true" class="wp-block-spacer"></div>
+			<!-- wp:spacer {"height":"24px","style":{"layout":{}}} -->
+			<div style="height:24px" aria-hidden="true" class="wp-block-spacer"></div>
 			<!-- /wp:spacer -->
 
 			<!-- wp:query-pagination {"paginationArrow":"arrow","layout":{"type":"flex","justifyContent":"space-between"}} -->

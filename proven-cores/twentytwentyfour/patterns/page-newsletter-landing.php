@@ -20,16 +20,16 @@
 		</figure>
 		<!-- /wp:image -->
 
-		<!-- wp:spacer {"height":"var:preset|spacing|10"} -->
-		<div style="height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer"></div>
+		<!-- wp:spacer {"height":"8px","style":{"layout":{}}} -->
+		<div style="height:8px" aria-hidden="true" class="wp-block-spacer"></div>
 		<!-- /wp:spacer -->
 
 		<!-- wp:heading {"textAlign":"center","style":{"spacing":{"margin":{"right":"0","left":"0"},"padding":{"right":"0","left":"0"}},"elements":{"link":{"color":{"text":"var:preset|color|contrast"}}}},"textColor":"contrast","fontSize":"x-large"} -->
 		<h2 class="wp-block-heading has-text-align-center has-contrast-color has-text-color has-link-color has-x-large-font-size" style="margin-right:0;margin-left:0;padding-right:0;padding-left:0">Subscribe to the newsletter and stay connected with our community</h2>
 		<!-- /wp:heading -->
 
-		<!-- wp:spacer {"height":"var:preset|spacing|10"} -->
-		<div style="height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer"></div>
+		<!-- wp:spacer {"height":"8px","style":{"layout":{}}} -->
+		<div style="height:8px" aria-hidden="true" class="wp-block-spacer"></div>
 		<!-- /wp:spacer -->
 
 		<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->

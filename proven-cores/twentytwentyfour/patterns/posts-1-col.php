@@ -22,14 +22,14 @@
 			<!-- wp:post-title {"isLink":true,"style":{"spacing":{"margin":{"bottom":"0"}}},"fontSize":"x-large"} /-->
 			<!-- wp:template-part {"slug":"post-meta"} /-->
 			<!-- wp:post-excerpt {"fontSize":"small"} /-->
-			<!-- wp:spacer {"height":"var:preset|spacing|30"} -->
-			<div style="height:var(--wp--preset--spacing--30)" aria-hidden="true" class="wp-block-spacer">
+			<!-- wp:spacer {"height":"24px","style":{"layout":{}}} -->
+			<div style="height:24px" aria-hidden="true" class="wp-block-spacer">
 			</div>
 			<!-- /wp:spacer -->
 		</div>
 		<!-- /wp:group -->
 		<!-- /wp:post-template -->
-		<!-- wp:spacer {"height":"var:preset|spacing|50","style":{"spacing":{"margin":{"top":"0","bottom":"0"}}}} -->
+		<!-- wp:spacer {"height":"48px","style":{"spacing":{"margin":{"top":"0","bottom":"0"}}}} -->
 		<div style="margin-top:0;margin-bottom:0;height:var(--wp--preset--spacing--50)" aria-hidden="true" class="wp-block-spacer"></div>
 		<!-- /wp:spacer -->
 		<!-- wp:query-pagination {"paginationArrow":"arrow","layout":{"type":"flex","justifyContent":"space-between"}} -->

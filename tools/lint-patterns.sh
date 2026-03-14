@@ -9,6 +9,7 @@
 # Violations:
 # 1. wp:navigation blocks with ref attribute (causes broken menus in generated themes)
 # 2. Hardcoded hex colors (#RRGGBB) instead of theme.json tokens
+# 3. wp:spacer blocks with var:preset|spacing|* in height attribute (invalid block grammar)
 #
 # Exit codes:
 # 0 - All patterns pass
@@ -33,6 +34,7 @@ echo ""
 # Arrays to store violations
 declare -a NAV_REF_VIOLATIONS=()
 declare -a HEX_COLOR_VIOLATIONS=()
+declare -a SPACER_VIOLATIONS=()
 
 # Counter for total files scanned
 TOTAL_FILES=0
@@ -55,6 +57,13 @@ scan_file() {
         # Get the hex colors found
         local hex_colors=$(grep -o '#[0-9a-fA-F]\{6\}' "$file" | sort -u | tr '\n' ' ')
         HEX_COLOR_VIOLATIONS+=("$relative_path (colors: $hex_colors)")
+    fi
+
+    # Check for invalid wp:spacer blocks using var:preset|spacing|* in height attribute
+    if grep -n 'wp:spacer.*"height":"var:preset|spacing|' "$file" 2>/dev/null | head -1 | grep -q .; then
+        # Get the line number of the first occurrence
+        local line_number=$(grep -n 'wp:spacer.*"height":"var:preset|spacing|' "$file" | head -1 | cut -d: -f1)
+        SPACER_VIOLATIONS+=("$relative_path:$line_number")
     fi
 }
 
@@ -112,8 +121,19 @@ else
     echo -e "${GREEN}✓ No hardcoded hex colors${NC}"
 fi
 
+# Report spacer violations
+if [ ${#SPACER_VIOLATIONS[@]} -gt 0 ]; then
+    echo -e "${RED}❌ Invalid wp:spacer blocks found (${#SPACER_VIOLATIONS[@]} files):${NC}"
+    for violation in "${SPACER_VIOLATIONS[@]}"; do
+        echo "   $violation"
+    done
+    echo ""
+else
+    echo -e "${GREEN}✓ No invalid spacer blocks${NC}"
+fi
+
 # Exit with error if any violations found
-TOTAL_VIOLATIONS=$((${#NAV_REF_VIOLATIONS[@]} + ${#HEX_COLOR_VIOLATIONS[@]}))
+TOTAL_VIOLATIONS=$((${#NAV_REF_VIOLATIONS[@]} + ${#HEX_COLOR_VIOLATIONS[@]} + ${#SPACER_VIOLATIONS[@]}))
 
 echo ""
 if [ $TOTAL_VIOLATIONS -eq 0 ]; then
@@ -125,5 +145,6 @@ else
     echo "Fix violations:"
     echo "1. Navigation ref: Remove 'ref' attribute and add inline navigation-link blocks"
     echo "2. Hex colors: Replace with theme.json color tokens (e.g., var:preset|color|primary)"
+    echo "3. Invalid spacer: Use px values in height attribute (e.g., {\"height\":\"48px\",\"style\":{\"layout\":{}}})"
     exit 1
 fi

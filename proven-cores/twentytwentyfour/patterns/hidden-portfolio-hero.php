@@ -6,8 +6,8 @@
  */
 ?>
 
-<!-- wp:spacer {"height":"var:preset|spacing|50","style":{"layout":{}}} -->
-<div style="height:var(--wp--preset--spacing--50)" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- wp:spacer {"height":"48px","style":{"layout":{}}} -->
+<div style="height:48px" aria-hidden="true" class="wp-block-spacer"></div>
 <!-- /wp:spacer -->
 
 <!-- wp:group {"align":"wide","layout":{"type":"constrained"}} -->

@@ -37,8 +37,8 @@
 				<p class="has-large-font-size" style="font-style:normal;font-weight:500;line-height:1.2">Our comprehensive suite of professional services caters to a diverse clientele, ranging from homeowners to commercial developers. With a commitment to innovation and sustainability, Études is the bridge that transforms architectural dreams into remarkable built realities.</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:spacer {"height":"var:preset|spacing|40","style":{"layout":{}}} -->
-				<div style="height:var(--wp--preset--spacing--40)" aria-hidden="true" class="wp-block-spacer">
+				<!-- wp:spacer {"height":"32px","style":{"layout":{}}} -->
+				<div style="height:32px" aria-hidden="true" class="wp-block-spacer">
 				</div>
 				<!-- /wp:spacer -->
 

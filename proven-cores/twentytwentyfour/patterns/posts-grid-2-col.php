@@ -13,7 +13,7 @@
 	<h2 class="wp-block-heading alignwide has-x-large-font-size" style="margin-top:0;line-height:1">Watch, Read, Listen</h2>
 	<!-- /wp:heading -->
 
-	<!-- wp:spacer {"height":"var:preset|spacing|10","style":{"spacing":{"margin":{"top":"0","bottom":"0"}}}} -->
+	<!-- wp:spacer {"height":"8px","style":{"spacing":{"margin":{"top":"0","bottom":"0"}}}} -->
 	<div style="margin-top:0;margin-bottom:0;height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer">
 	</div>
 	<!-- /wp:spacer -->
@@ -27,8 +27,8 @@
 				<!-- wp:post-template {"style":{"spacing":{"blockGap":"0"}}} -->
 				<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"3/4"} /-->
 
-				<!-- wp:spacer {"height":"var:preset|spacing|10"} -->
-				<div style="height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer">
+				<!-- wp:spacer {"height":"8px","style":{"layout":{}}} -->
+				<div style="height:8px" aria-hidden="true" class="wp-block-spacer">
 				</div>
 				<!-- /wp:spacer -->
 

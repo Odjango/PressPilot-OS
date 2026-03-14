@@ -56,7 +56,7 @@
 		</details>
 		<!-- /wp:details -->
 
-		<!-- wp:spacer {"height":"var:preset|spacing|10","style":{"spacing":{"margin":{"top":"var:preset|spacing|10","bottom":"0"}}}} -->
+		<!-- wp:spacer {"height":"8px","style":{"spacing":{"margin":{"top":"var:preset|spacing|10","bottom":"0"}}}} -->
 		<div style="margin-top:var(--wp--preset--spacing--10);margin-bottom:0;height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer"></div>
 		<!-- /wp:spacer -->
 	</div>

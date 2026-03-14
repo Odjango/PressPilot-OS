@@ -23,8 +23,8 @@
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:spacer {"height":"var:preset|spacing|30"} -->
-		<div style="height:var(--wp--preset--spacing--30)" aria-hidden="true" class="wp-block-spacer"></div>
+		<!-- wp:spacer {"height":"24px","style":{"layout":{}}} -->
+		<div style="height:24px" aria-hidden="true" class="wp-block-spacer"></div>
 		<!-- /wp:spacer -->
 
 		<!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|50","left":"var:preset|spacing|20"}}}} -->
@@ -41,8 +41,8 @@
 				<h5 class="wp-block-heading has-text-align-center has-x-large-font-size">$0</h5>
 				<!-- /wp:heading -->
 
-				<!-- wp:spacer {"height":"var:preset|spacing|10"} -->
-				<div style="height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer">
+				<!-- wp:spacer {"height":"8px","style":{"layout":{}}} -->
+				<div style="height:8px" aria-hidden="true" class="wp-block-spacer">
 				</div>
 				<!-- /wp:spacer -->
 
@@ -74,8 +74,8 @@
 				</div>
 				<!-- /wp:group -->
 
-				<!-- wp:spacer {"height":"var:preset|spacing|10"} -->
-				<div style="height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer">
+				<!-- wp:spacer {"height":"8px","style":{"layout":{}}} -->
+				<div style="height:8px" aria-hidden="true" class="wp-block-spacer">
 				</div>
 				<!-- /wp:spacer -->
 
@@ -103,8 +103,8 @@
 				<h5 class="wp-block-heading has-text-align-center has-x-large-font-size">$12</h5>
 				<!-- /wp:heading -->
 
-				<!-- wp:spacer {"height":"var:preset|spacing|10"} -->
-				<div style="height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer">
+				<!-- wp:spacer {"height":"8px","style":{"layout":{}}} -->
+				<div style="height:8px" aria-hidden="true" class="wp-block-spacer">
 				</div>
 				<!-- /wp:spacer -->
 
@@ -132,8 +132,8 @@
 				</div>
 				<!-- /wp:group -->
 
-				<!-- wp:spacer {"height":"var:preset|spacing|10"} -->
-				<div style="height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer">
+				<!-- wp:spacer {"height":"8px","style":{"layout":{}}} -->
+				<div style="height:8px" aria-hidden="true" class="wp-block-spacer">
 				</div>
 				<!-- /wp:spacer -->
 
@@ -161,8 +161,8 @@
 				<h5 class="wp-block-heading has-text-align-center has-x-large-font-size">$28</h5>
 				<!-- /wp:heading -->
 
-				<!-- wp:spacer {"height":"var:preset|spacing|10"} -->
-				<div style="height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer">
+				<!-- wp:spacer {"height":"8px","style":{"layout":{}}} -->
+				<div style="height:8px" aria-hidden="true" class="wp-block-spacer">
 				</div>
 				<!-- /wp:spacer -->
 
@@ -190,8 +190,8 @@
 				</div>
 				<!-- /wp:group -->
 
-				<!-- wp:spacer {"height":"var:preset|spacing|10"} -->
-				<div style="height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer">
+				<!-- wp:spacer {"height":"8px","style":{"layout":{}}} -->
+				<div style="height:8px" aria-hidden="true" class="wp-block-spacer">
 				</div>
 				<!-- /wp:spacer -->
 

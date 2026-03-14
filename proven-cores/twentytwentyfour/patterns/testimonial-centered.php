@@ -18,8 +18,8 @@
 		</p>
 		<!-- /wp:paragraph -->
 
-		<!-- wp:spacer {"height":"var:preset|spacing|10"} -->
-		<div style="height:var(--wp--preset--spacing--10)" aria-hidden="true" class="wp-block-spacer"></div>
+		<!-- wp:spacer {"height":"8px","style":{"layout":{}}} -->
+		<div style="height:8px" aria-hidden="true" class="wp-block-spacer"></div>
 		<!-- /wp:spacer -->
 
 		<!-- wp:group {"metadata":{"name":"Testimonial source"},"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"flex","orientation":"vertical","justifyContent":"center","flexWrap":"nowrap"}} -->

@@ -12,8 +12,8 @@
 
 <!-- wp:group {"tagName":"main","align":"full","layout":{"type":"constrained"}} -->
 <main class="wp-block-group alignfull">
-	<!-- wp:spacer {"height":"var:preset|spacing|40"} -->
-	<div style="height:var(--wp--preset--spacing--40)" aria-hidden="true" class="wp-block-spacer">
+	<!-- wp:spacer {"height":"32px","style":{"layout":{}}} -->
+	<div style="height:32px" aria-hidden="true" class="wp-block-spacer">
 	</div>
 	<!-- /wp:spacer -->
 
@@ -25,8 +25,8 @@
 	</div>
 	<!-- /wp:group -->
 
-	<!-- wp:spacer {"height":"var:preset|spacing|40"} -->
-	<div style="height:var(--wp--preset--spacing--40)" aria-hidden="true" class="wp-block-spacer">
+	<!-- wp:spacer {"height":"32px","style":{"layout":{}}} -->
+	<div style="height:32px" aria-hidden="true" class="wp-block-spacer">
 	</div>
 	<!-- /wp:spacer -->
 

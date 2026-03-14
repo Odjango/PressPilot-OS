@@ -24,8 +24,8 @@
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:spacer {"height":"var:preset|spacing|40"} -->
-		<div style="height:var(--wp--preset--spacing--40)" aria-hidden="true" class="wp-block-spacer"></div>
+		<!-- wp:spacer {"height":"32px","style":{"layout":{}}} -->
+		<div style="height:32px" aria-hidden="true" class="wp-block-spacer"></div>
 		<!-- /wp:spacer -->
 
 		<!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|50","left":"var:preset|spacing|60"}}}} -->
@@ -68,8 +68,8 @@
 		</div>
 		<!-- /wp:columns -->
 
-		<!-- wp:spacer {"height":"var:preset|spacing|40"} -->
-		<div style="height:var(--wp--preset--spacing--40)" aria-hidden="true" class="wp-block-spacer"></div>
+		<!-- wp:spacer {"height":"32px","style":{"layout":{}}} -->
+		<div style="height:32px" aria-hidden="true" class="wp-block-spacer"></div>
 		<!-- /wp:spacer -->
 
 		<!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|50","left":"var:preset|spacing|60"}}}} -->
