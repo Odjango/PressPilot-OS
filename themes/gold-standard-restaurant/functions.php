@@ -60,6 +60,18 @@ function gold_standard_restaurant_pattern_categories() {
 		'gold-standard-restaurant/restaurant' => array(
 			'label' => __( 'Restaurant', 'gold-standard-restaurant' ),
 		),
+		'gold-standard-restaurant/call-to-action' => array(
+			'label' => __( 'Call to Action', 'gold-standard-restaurant' ),
+		),
+		'gold-standard-restaurant/card' => array(
+			'label' => __( 'Cards', 'gold-standard-restaurant' ),
+		),
+		'gold-standard-restaurant/posts' => array(
+			'label' => __( 'Posts', 'gold-standard-restaurant' ),
+		),
+		'gold-standard-restaurant/testimonial' => array(
+			'label' => __( 'Testimonials', 'gold-standard-restaurant' ),
+		),
 	);
 
 	foreach ( $block_pattern_categories as $name => $properties ) {

@@ -50,9 +50,16 @@ jobs:
           # Ensure unzipped direct into themes/slug or themes/slug/slug depending on zip structure
           ls -R themes/
 
-      - name: Build WP Theme (Dev Mode)
+      - name: Verify Gold Standard Theme (Dev Mode)
         if: ${{ inputs.artifactUrl == '' }}
-        run: npm run build-wp-theme
+        run: |
+          echo "📦 Using gold-standard-restaurant theme from repo..."
+          if [ ! -d "themes/gold-standard-restaurant" ]; then
+            echo "❌ Gold standard theme not found in themes/"
+            exit 1
+          fi
+          echo "✅ Gold standard theme found:"
+          ls themes/gold-standard-restaurant/
 
       - name: Start WP-QA Stack
         run: |
@@ -70,7 +77,7 @@ jobs:
         run: |
           THEME_SLUG="${{ inputs.themeSlug }}"
           if [ -z "$THEME_SLUG" ]; then
-            THEME_SLUG="presspilot-heavy-content-v3"
+            THEME_SLUG="gold-standard-restaurant"
           fi
           echo "🚀 Using Theme Slug: $THEME_SLUG"
 
@@ -116,7 +123,7 @@ jobs:
         run: |
           THEME_SLUG="${{ inputs.themeSlug }}"
           if [ -z "$THEME_SLUG" ]; then
-            THEME_SLUG="presspilot-heavy-content-v3"
+            THEME_SLUG="gold-standard-restaurant"
           fi
           
           docker compose -f docker-compose.wp-qa.yml exec -T wpqa-cli wp eval '

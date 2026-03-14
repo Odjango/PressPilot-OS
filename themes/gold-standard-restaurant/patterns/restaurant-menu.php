@@ -1,12 +1,12 @@
 <?php
 /**
  * Title: Restaurant menu with columns for three different menu sections.
- * Slug: tove/restaurant-menu
- * Categories: tove-restaurant
+ * Slug: gold-standard-restaurant/restaurant-menu
+ * Categories: gold-standard-restaurant/restaurant
  */
 ?>
-<!-- wp:group {"align":"wide","backgroundColor":"senary","className":"is-style-tove-shaded","layout":{"inherit":false}} -->
-<div class="wp-block-group alignwide is-style-tove-shaded has-senary-background-color has-background">
+<!-- wp:group {"align":"wide","backgroundColor":"senary","layout":{"inherit":false}} -->
+<div class="wp-block-group alignwide has-senary-background-color has-background">
 	<!-- wp:heading {"textAlign":"center"} -->
 	<h2 class="has-text-align-center">Our Menu</h2>
 	<!-- /wp:heading -->
@@ -27,8 +27,8 @@
 			<h6 class="has-text-align-left has-secondary-background-color has-background">Coffee</h6>
 			<!-- /wp:heading -->
 
-			<!-- wp:table {"className":"is-style-tove-vertical-borders no-margin-top"} -->
-			<figure class="wp-block-table is-style-tove-vertical-borders no-margin-top">
+			<!-- wp:table {"className":"is-style-stripes no-margin-top"} -->
+			<figure class="wp-block-table is-style-stripes no-margin-top">
 				<table>
 					<tbody>
 						<tr>
@@ -72,8 +72,8 @@
 			<h6 class="has-text-align-left has-secondary-background-color has-background">Snacks</h6>
 			<!-- /wp:heading -->
 
-			<!-- wp:table {"className":"is-style-tove-vertical-borders  no-margin-top"} -->
-			<figure class="wp-block-table is-style-tove-vertical-borders  no-margin-top">
+			<!-- wp:table {"className":"is-style-stripes  no-margin-top"} -->
+			<figure class="wp-block-table is-style-stripes  no-margin-top">
 				<table>
 					<tbody>
 						<tr>
@@ -109,8 +109,8 @@
 			<h6 class="has-text-align-left has-secondary-background-color has-background">Food</h6>
 			<!-- /wp:heading -->
 
-			<!-- wp:table {"className":"is-style-tove-vertical-borders  no-margin-top"} -->
-			<figure class="wp-block-table is-style-tove-vertical-borders  no-margin-top">
+			<!-- wp:table {"className":"is-style-stripes  no-margin-top"} -->
+			<figure class="wp-block-table is-style-stripes  no-margin-top">
 				<table>
 					<tbody>
 						<tr>

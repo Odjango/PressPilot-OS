@@ -22,6 +22,7 @@
     "validate:theme": "tsx scripts/playground/validate-theme.ts",
     "validate:all-cores": "tsx scripts/playground/validate-all-cores.ts",
     "validate:gold-standard": "tsx scripts/playground/validate-theme.ts themes/gold-standard-restaurant",
+    "test:themes": "bash scripts/validate-theme-structure.sh themes/gold-standard-restaurant && bash tools/lint-patterns.sh",
     "showcase:generate": "npx tsx showcase/scripts/generate-all.ts",
     "showcase:screenshots": "npx tsx showcase/scripts/capture-screenshots.ts",
     "showcase:all": "npm run showcase:generate && npm run showcase:screenshots",
