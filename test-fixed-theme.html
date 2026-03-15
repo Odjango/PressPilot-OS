@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Fixed Theme - WordPress Playground</title>
+    <script type="module">
+        import { startPlaygroundWeb } from 'https://playground.wordpress.net/client/index.js';
+
+        async function initPlayground() {
+            const client = await startPlaygroundWeb({
+                iframe: document.getElementById('wp'),
+                remoteUrl: 'https://playground.wordpress.net/remote.html',
+                blueprint: {
+                    preferredVersions: {
+                        php: '8.0',
+                        wp: 'latest'
+                    },
+                    steps: [
+                        {
+                            step: 'login',
+                            username: 'admin',
+                            password: 'password'
+                        },
+                        {
+                            step: 'installTheme',
+                            themeZipFile: {
+                                resource: 'url',
+                                url: 'file:///tmp/test-theme.zip'
+                            }
+                        },
+                        {
+                            step: 'activateTheme',
+                            themeFolderName: 'gold-standard-restaurant'
+                        }
+                    ]
+                }
+            });
+
+            console.log('WordPress Playground loaded! Theme should be activated.');
+            document.getElementById('status').textContent = 'WordPress Playground loaded! Check the hero section for readable white text on dark overlay.';
+        }
+
+        window.addEventListener('load', initPlayground);
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        #status {
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        #wp {
+            width: 100%;
+            height: calc(100vh - 100px);
+            border: 2px solid #3a3a3a;
+            border-radius: 8px;
+        }
+        h1 {
+            margin: 0 0 20px 0;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gold Standard Restaurant - Fixed Theme Test</h1>
+    <div id="status">Loading WordPress Playground...</div>
+    <iframe id="wp"></iframe>
+</body>
+</html>

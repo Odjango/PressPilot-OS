@@ -425,14 +425,23 @@ export default function StudioClient({ slug }: Props) {
     );
   };
 
-  // Helper for text contrast
+  // Helper for text contrast using WCAG luminance calculation
   const isLight = (color: string) => {
     const hex = color.replace('#', '');
-    const r = parseInt(hex.substr(0, 2), 16);
-    const g = parseInt(hex.substr(2, 2), 16);
-    const b = parseInt(hex.substr(4, 2), 16);
-    const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-    return brightness > 155;
+    const r = parseInt(hex.substr(0, 2), 16) / 255;
+    const g = parseInt(hex.substr(2, 2), 16) / 255;
+    const b = parseInt(hex.substr(4, 2), 16) / 255;
+
+    // Apply gamma correction (WCAG formula)
+    const rsRGB = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+    const gsRGB = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+    const bsRGB = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+
+    // Calculate relative luminance
+    const luminance = 0.2126 * rsRGB + 0.7152 * gsRGB + 0.0722 * bsRGB;
+
+    // Threshold at 0.5 (colors with luminance > 0.5 are "light")
+    return luminance > 0.5;
   };
 
   // Geometric SVG icon for hero layout selection - matches user's design
