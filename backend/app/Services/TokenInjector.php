@@ -349,10 +349,10 @@ class TokenInjector
                     return $matches[0]; // Keep original
                 }
 
-                // Check if textColor is set to something other than base/foreground
+                // Check if textColor is set to something other than base/foreground/contrast
                 if (isset($attrs['textColor'])) {
                     $color = $attrs['textColor'];
-                    if (!in_array($color, ['base', 'foreground'], true)) {
+                    if (!in_array($color, ['base', 'foreground', 'contrast'], true)) {
                         // Remove textColor attribute
                         unset($attrs['textColor']);
                         Log::info('TokenInjector: Removed brand textColor from paragraph', [
@@ -416,7 +416,7 @@ class TokenInjector
     }
 
     /**
-     * Remove brand color classes from <p> tag (keep only base/foreground).
+     * Remove brand color classes from <p> tag (keep only base/foreground/contrast).
      * Keeps utility classes like has-text-color, has-text-align-center, etc.
      */
     private function removeBrandColorClasses(string $content): string
@@ -442,12 +442,12 @@ class TokenInjector
 
                     // Pattern: has-{colorSlug}-color (slug can contain hyphens, e.g. primary-accent)
                     // We want to REMOVE brand colors (primary, secondary, accent, primary-accent, etc.)
-                    // We want to KEEP base/foreground colors AND utility classes
+                    // We want to KEEP base/foreground/contrast colors AND utility classes
                     if (preg_match('/^has-([a-z0-9]+(?:-[a-z0-9]+)*)-color$/', $class, $colorMatch)) {
                         $colorSlug = $colorMatch[1];
-                        // Only keep base and foreground color classes, remove all others
-                        if (in_array($colorSlug, ['base', 'foreground'], true)) {
-                            $filtered[] = $class; // Keep base/foreground colors
+                        // Only keep base, foreground, and contrast color classes, remove all others
+                        if (in_array($colorSlug, ['base', 'foreground', 'contrast'], true)) {
+                            $filtered[] = $class; // Keep base/foreground/contrast colors
                         }
                         // Else: skip brand color classes (primary, secondary, accent, primary-accent, etc.)
                     } else {
