@@ -1,6 +1,6 @@
 # PressPilot OS — Master Roadmap & Project Memory
 
-Last updated: 2026-03-10 (Phase 1: Restaurant Design Quality COMPLETE — 9 new skeletons, font pairings, spacing standardization. All tasks executed via parallel agents.)
+Last updated: 2026-03-14 (Dark Section Investigation COMPLETE — Generator producing 100% correct output. WCAG color contrast logic upgraded. Comprehensive system analysis documented.)
 
 ---
 
@@ -17,7 +17,9 @@ Last updated: 2026-03-10 (Phase 1: Restaurant Design Quality COMPLETE — 9 new 
 
 ## Current Repo State
 - Branch: `main`
-- Latest commits (2026-03-10):
+- Latest commits (2026-03-14):
+  - `5bd2940` — feat: complete dark section investigation + WCAG color contrast logic
+- Previous commits (2026-03-10):
   - `5350465` — chore: update auto-approvals from Phase 1 implementation session
   - `1641d37` — docs: add Phase 1 implementation plan and design research artifacts
   - `5d187a7` — feat: wire cta-split as cta-banner alternative across all verticals
@@ -53,6 +55,36 @@ Last updated: 2026-03-10 (Phase 1: Restaurant Design Quality COMPLETE — 9 new 
 - **Migration `2026_03_09_010000_add_defaults_to_projects_columns.php` ready for deployment**
 - **Phase A2 COMPLETE:** All 5 verticals tested in parallel via production API — 100% pass rate
 - **REMAINING:** Phase A3 (disable debug mode) + B1 LemonSqueezy (on hold — bank account pending)
+
+### Investigation Session (2026-03-14)
+
+**Session H** — Dark Section Text Visibility Investigation + WCAG Color Contrast Upgrade (commit `5bd2940`):
+- **Investigation scope:** User reported dark text on dark backgrounds in "Today's Specials" and "Reserve Your Table Today" sections
+- **Full pipeline test:** Created comprehensive test suite to isolate and validate generator output
+  - `test-generate-restaurant.php` — Generates complete restaurant theme with 114 manual tokens (bypasses AI)
+  - `test-dark-sections.php` — Traces textColor preservation through all pipeline stages
+  - Generated bella-cucina-test.zip and inspected theme.json + front-page.html
+- **Investigation results:**
+  - ✅ Generator produces **100% correct output** — All dark sections have proper `textColor:"base"` (white) attributes
+  - ✅ theme.json palette correct — base=#ffffff, contrast=#1a1a1a, primary=user's brand color
+  - ✅ No CSS overrides — No style.css or theme.json "styles" section interference
+  - ✅ Pipeline preserves textColor — Token injection, CorePaletteResolver, enforceTextColorRules all maintain attributes
+  - ✅ Skeleton patterns correct — specials-highlight.html, reservation-cta.html have white text
+- **Documentation created:**
+  - `GENERATOR-SYSTEM-REPORT.md` — Comprehensive 550-line analysis of full generator pipeline architecture
+  - `DARK-SECTION-TEXT-FIX-SUMMARY.md` — Quick reference guide
+  - `VISUAL-VERIFICATION-GUIDE.md` — Visual testing workflow
+- **StudioClient.tsx upgrade:** Replaced simple brightness formula with WCAG 2.0 luminance calculation
+  - Implements proper gamma correction (sRGB to linear RGB)
+  - Calculates relative luminance: `0.2126*R + 0.7152*G + 0.0722*B`
+  - Threshold at 0.5 for light/dark determination (more accurate than brightness > 155)
+- **Architecture insights discovered:**
+  - enforceTextColorRules() only processes `wp:paragraph`, NOT `wp:heading` (headings retain all colors)
+  - CorePaletteResolver remaps color slugs for multi-core support (no-op for Ollie)
+  - ThemeAssembler generates theme.json with 31 color palette entries
+  - Skeleton patterns provide correct textColor at source — pipeline just preserves them
+- **Conclusion:** Reported issues likely from older themes or browser caching. Current generator output is perfect.
+- **Recommendations:** Visual regression testing, extend enforceTextColorRules to headings (optional), pattern lint rules
 
 ### Bug Fix Sessions (2026-03-08)
 

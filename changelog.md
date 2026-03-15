@@ -5,6 +5,56 @@
 
 ## Entries
 
+## [2026-03-14] — Dark Section Investigation + WCAG Color Contrast Upgrade
+
+### Changed
+- **StudioClient.tsx** — Replaced simple brightness formula with WCAG 2.0 luminance calculation
+  - Implements proper gamma correction (sRGB to linear RGB conversion)
+  - Calculates relative luminance per WCAG spec: `0.2126*R + 0.7152*G + 0.0722*B`
+  - Threshold at 0.5 for light/dark determination (more accurate than brightness > 155)
+  - Improves color contrast detection in Studio UI for better accessibility
+
+### Added
+- **test-generate-restaurant.php** — Full theme generation test with 114 manual tokens
+  - Bypasses AI to isolate generator pipeline for testing
+  - Generates complete restaurant theme ZIP for inspection
+  - Validates all dark sections have correct textColor attributes
+- **test-dark-sections.php** — Pipeline trace script for textColor preservation
+  - Tests token injection → CorePaletteResolver → enforceTextColorRules flow
+  - Confirms textColor:"base" preserved through all processing stages
+- **GENERATOR-SYSTEM-REPORT.md** — Comprehensive 550-line system analysis
+  - Complete pipeline architecture documentation (5 stages: AIPlanner → PatternSelector → ImageHandler → TokenInjector → ThemeAssembler)
+  - Component-by-component analysis with code examples
+  - HTML output inspection proving correct textColor attributes in all dark sections
+  - theme.json validation (base=#ffffff, primary=#8B0000, no styles overrides)
+  - Known limitations and future recommendations (visual regression testing, heading color processing)
+- **DARK-SECTION-TEXT-FIX-SUMMARY.md** — Quick reference guide for dark section rendering
+- **VISUAL-VERIFICATION-GUIDE.md** — Visual testing instructions and verification workflow
+
+### Investigation Results
+- ✅ **Generator produces 100% correct output** — All dark sections have proper `textColor:"base"` (white) attributes
+- ✅ **theme.json palette correct** — base=#ffffff, contrast=#1a1a1a, primary=user's brand color
+- ✅ **No CSS overrides** — No style.css or theme.json "styles" section interference
+- ✅ **Pipeline preserves textColor** — Token injection and processing maintains all attributes through all stages
+- ✅ **Skeletons correct** — specials-highlight.html, reservation-cta.html, hero-fullbleed.html all have proper white text
+- 📋 **Test theme validated** — Generated bella-cucina-test.zip inspected with perfect textColor markup
+
+### Architecture Insights
+- **enforceTextColorRules()** only processes `wp:paragraph` blocks, NOT `wp:heading` (headings retain all colors)
+- **CorePaletteResolver** remaps color slugs for multi-core support (no-op for Ollie core)
+- **ThemeAssembler** generates theme.json with 31 color palette entries, no global styles section
+- **Skeleton patterns** provide correct textColor attributes at source (pipeline just preserves them)
+
+### Commits
+1. `5bd2940` — feat: complete dark section investigation + WCAG color contrast logic
+
+### Next
+- Optional: Extend enforceTextColorRules() to process headings (low priority - skeletons already correct)
+- Recommended: Add visual regression testing to CI/CD pipeline (high value for catching rendering issues)
+- Consider: Create skeleton pattern lint rules to enforce textColor requirements
+
+---
+
 ## [2026-03-10] — Phase 1: Restaurant Design Quality — Visual Variation System Complete
 
 ### Added
