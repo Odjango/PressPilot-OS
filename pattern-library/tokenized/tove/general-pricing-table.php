@@ -11,7 +11,7 @@
 		<!-- wp:group {"backgroundColor":"tertiary","className":"no-margin"} -->
 		<div class="wp-block-group no-margin has-tertiary-background-color has-background">
 			<!-- wp:heading {"textAlign":"center","level":3,"style":{"spacing":{"margin":{"bottom":"0em","top":"0em"}}}} -->
-			<h3 class="has-text-align-center" style="margin-top:0em;margin-bottom:0em">{{PLAN_1_NAME}}</h3>
+			<h3 class="has-text-align-center wp-block-heading" style="margin-top:0em;margin-bottom:0em">{{PLAN_1_NAME}}</h3>
 			<!-- /wp:heading -->
 
 			<!-- wp:separator {"opacity":"css","className":"aligncenter"} -->
@@ -65,7 +65,7 @@
 		<div
 			class="wp-block-group no-margin has-foreground-color has-primary-background-color has-text-color has-background">
 			<!-- wp:heading {"textAlign":"center","level":3,"style":{"spacing":{"margin":{"bottom":"0em","top":"0em"}}}} -->
-			<h3 class="has-text-align-center" style="margin-top:0em;margin-bottom:0em">{{PLAN_2_NAME}}</h3>
+			<h3 class="has-text-align-center wp-block-heading" style="margin-top:0em;margin-bottom:0em">{{PLAN_2_NAME}}</h3>
 			<!-- /wp:heading -->
 
 			<!-- wp:separator {"opacity":"css","className":"aligncenter"} -->
@@ -117,7 +117,7 @@
 		<!-- wp:group {"backgroundColor":"secondary","className":"no-margin"} -->
 		<div class="wp-block-group no-margin has-secondary-background-color has-background">
 			<!-- wp:heading {"textAlign":"center","level":3,"style":{"spacing":{"margin":{"bottom":"0em","top":"0em"}}}} -->
-			<h3 class="has-text-align-center" style="margin-top:0em;margin-bottom:0em">Deluxe</h3>
+			<h3 class="has-text-align-center wp-block-heading" style="margin-top:0em;margin-bottom:0em">Deluxe</h3>
 			<!-- /wp:heading -->
 
 			<!-- wp:separator {"opacity":"css","className":"aligncenter"} -->

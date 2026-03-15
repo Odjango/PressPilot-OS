@@ -10,11 +10,11 @@
 	<figure class="wp-block-media-text__media" style="background-image:url(<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/illustrations/cup-illustration-square.png);background-position:0% 50%"><img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/illustrations/cup-illustration-square.png" alt="" /></figure>
 	<div class="wp-block-media-text__content">
 		<!-- wp:heading {"level":3} -->
-		<h3>{{MENU_SECTION_1_TITLE}}</h3>
+		<h3 class="wp-block-heading">{{MENU_SECTION_1_TITLE}}</h3>
 		<!-- /wp:heading -->
 
 		<!-- wp:separator {"className":"is-style-wide"} -->
-		<hr class="wp-block-separator is-style-wide" />
+		<hr class="wp-block-separator is-style-wide" has-alpha-channel-opacity" />
 		<!-- /wp:separator -->
 
 		<!-- wp:columns {"className":"is-style-tove-horizontal-separators"} -->
@@ -22,7 +22,7 @@
 			<!-- wp:column -->
 			<div class="wp-block-column">
 				<!-- wp:heading {"level":6,"style":{"typography":{"fontSize":"14px"}},"backgroundColor":"secondary","textColor":"foreground"} -->
-				<h6 class="has-foreground-color has-secondary-background-color has-text-color has-background" style="font-size:14px">The Details</h6>
+				<h6 class="has-foreground-color has-secondary-background-color has-text-color has-background wp-block-heading" style="font-size:14px">The Details</h6>
 				<!-- /wp:heading -->
 
 				<!-- wp:paragraph -->
@@ -38,7 +38,7 @@
 			<!-- wp:column -->
 			<div class="wp-block-column">
 				<!-- wp:heading {"level":6,"style":{"typography":{"fontSize":"14px"}},"backgroundColor":"secondary","textColor":"foreground"} -->
-				<h6 class="has-foreground-color has-secondary-background-color has-text-color has-background" style="font-size:14px">The Hours</h6>
+				<h6 class="has-foreground-color has-secondary-background-color has-text-color has-background wp-block-heading" style="font-size:14px">The Hours</h6>
 				<!-- /wp:heading -->
 
 				<!-- wp:paragraph -->
@@ -54,17 +54,17 @@
 		<!-- /wp:columns -->
 
 		<!-- wp:separator {"className":"is-style-wide"} -->
-		<hr class="wp-block-separator is-style-wide" />
+		<hr class="wp-block-separator is-style-wide" has-alpha-channel-opacity" />
 		<!-- /wp:separator -->
 
 		<!-- wp:buttons -->
 		<div class="wp-block-buttons">
 			<!-- wp:button {"backgroundColor":"primary","className":"is-style-outline"} -->
-			<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-primary-background-color has-background">About</a></div>
+			<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button has-primary-background-color has-background">About</a></div>
 			<!-- /wp:button -->
 
 			<!-- wp:button {"backgroundColor":"primary","className":"is-style-outline"} -->
-			<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-primary-background-color has-background">Directions</a></div>
+			<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button has-primary-background-color has-background">Directions</a></div>
 			<!-- /wp:button -->
 		</div>
 		<!-- /wp:buttons -->

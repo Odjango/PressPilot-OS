@@ -12,14 +12,14 @@
 		<div class="wp-block-columns alignwide are-vertically-aligned-bottom">
 			<!-- wp:column {"verticalAlignment":"bottom"} -->
 			<div class="wp-block-column is-vertically-aligned-bottom"><!-- wp:heading {"level":1} -->
-				<h1>FAQ</h1>
+				<h1 class="wp-block-heading">FAQ</h1>
 				<!-- /wp:heading -->
 			</div>
 			<!-- /wp:column -->
 
 			<!-- wp:column {"verticalAlignment":"bottom"} -->
 			<div class="wp-block-column is-vertically-aligned-bottom"><!-- wp:heading {"level":5} -->
-				<h5><strong>Can’t find your question? <a href="#">Email us</a>!</strong></h5>
+				<h5 class="wp-block-heading"><strong>Can’t find your question? <a href="#">Email us</a>!</strong></h5>
 				<!-- /wp:heading -->
 			</div>
 			<!-- /wp:column -->
@@ -34,7 +34,7 @@
 			<!-- wp:columns -->
 			<div class="wp-block-columns"><!-- wp:column -->
 				<div class="wp-block-column"><!-- wp:heading {"level":5} -->
-					<h5>When is your coffee roasted?</h5>
+					<h5 class="wp-block-heading">When is your coffee roasted?</h5>
 					<!-- /wp:heading -->
 				</div>
 				<!-- /wp:column -->
@@ -58,7 +58,7 @@
 			<!-- wp:columns -->
 			<div class="wp-block-columns"><!-- wp:column -->
 				<div class="wp-block-column"><!-- wp:heading {"level":5} -->
-					<h5>Can I learn more about your environmental work?</h5>
+					<h5 class="wp-block-heading">Can I learn more about your environmental work?</h5>
 					<!-- /wp:heading -->
 				</div>
 				<!-- /wp:column -->
@@ -84,7 +84,7 @@
 			<!-- wp:columns -->
 			<div class="wp-block-columns"><!-- wp:column -->
 				<div class="wp-block-column"><!-- wp:heading {"level":5} -->
-					<h5>What’s your laptop policy?</h5>
+					<h5 class="wp-block-heading">What’s your laptop policy?</h5>
 					<!-- /wp:heading -->
 				</div>
 				<!-- /wp:column -->

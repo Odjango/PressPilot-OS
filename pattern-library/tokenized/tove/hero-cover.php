@@ -14,11 +14,11 @@
 			<!-- wp:group {"align":"wide","layout":{"inherit":false}} -->
 			<div class="wp-block-group alignwide">
 				<!-- wp:heading {"level":6,"backgroundColor":"primary","textColor":"foreground"} -->
-				<h6 class="has-foreground-color has-primary-background-color has-text-color has-background">New!</h6>
+				<h6 class="has-foreground-color has-primary-background-color has-text-color has-background wp-block-heading">New!</h6>
 				<!-- /wp:heading -->
 
 				<!-- wp:heading {"level":1,"textColor":"background","fontSize":"gigantic"} -->
-				<h1 class="has-background-color has-text-color has-gigantic-font-size">Epic Menu,<br>Epic Fall</h1>
+				<h1 class="has-background-color has-text-color has-gigantic-font-size wp-block-heading">Epic Menu,<br>Epic Fall</h1>
 				<!-- /wp:heading -->
 
 				<!-- wp:buttons -->

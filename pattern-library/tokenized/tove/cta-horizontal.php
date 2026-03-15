@@ -8,7 +8,7 @@
 <!-- wp:group {"align":"wide","backgroundColor":"senary","className":"is-style-tove-shaded","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between"}} -->
 <div class="wp-block-group alignwide is-style-tove-shaded has-senary-background-color has-background">
 	<!-- wp:heading {"textAlign":"center"} -->
-	<h2 class="has-text-align-center">{{CTA_TITLE}}</h2>
+	<h2 class="has-text-align-center wp-block-heading">{{CTA_TITLE}}</h2>
 	<!-- /wp:heading -->
 
 	<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center","orientation":"horizontal"}} -->

@@ -9,7 +9,7 @@
 <div class="wp-block-group alignwide is-style-tove-shaded has-senary-background-color has-background">
 	<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"}},"layout":{"inherit":true,"type":"constrained"}} -->
 	<div class="wp-block-group"><!-- wp:heading {"textAlign":"center"} -->
-		<h2 class="has-text-align-center">{{CTA_TITLE}}</h2>
+		<h2 class="has-text-align-center wp-block-heading">{{CTA_TITLE}}</h2>
 		<!-- /wp:heading -->
 
 		<!-- wp:paragraph {"align":"center"} -->

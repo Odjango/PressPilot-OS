@@ -9,7 +9,7 @@
 <div class="wp-block-group">
 
 	<!-- wp:heading {"level":6} -->
-	<h6>Our Opening Hours</h6>
+	<h6 class="wp-block-heading">Our Opening Hours</h6>
 	<!-- /wp:heading -->
 
 	<!-- wp:table {"hasFixedLayout":true,"borderColor":"foreground","className":"is-style-tove-vertical-borders"} -->

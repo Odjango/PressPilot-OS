@@ -15,11 +15,11 @@
 				<!-- wp:column {"width":"560px"} -->
 				<div class="wp-block-column" style="flex-basis:560px">
 					<!-- wp:heading {"level":6,"backgroundColor":"senary"} -->
-					<h6 class="has-senary-background-color has-background">Coffee on the quick</h6>
+					<h6 class="has-senary-background-color has-background wp-block-heading">Coffee on the quick</h6>
 					<!-- /wp:heading -->
 
 					<!-- wp:heading {"level":1,"style":{"typography":{"fontWeight":"500"}}} -->
-					<h1 style="font-weight:500">Say Hi to the New Niofika Café App</h1>
+					<h1 class="wp-block-heading" style="font-weight:500">Say Hi to the New Niofika Café App</h1>
 					<!-- /wp:heading -->
 
 					<!-- wp:paragraph {"fontSize":"large"} -->
@@ -33,11 +33,11 @@
 					<!-- wp:buttons -->
 					<div class="wp-block-buttons">
 						<!-- wp:button -->
-						<div class="wp-block-button"><a class="wp-block-button__link">For iPhone</a></div>
+						<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">For iPhone</a></div>
 						<!-- /wp:button -->
 
 						<!-- wp:button -->
-						<div class="wp-block-button"><a class="wp-block-button__link">For Android</a></div>
+						<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">For Android</a></div>
 						<!-- /wp:button -->
 					</div>
 					<!-- /wp:buttons -->

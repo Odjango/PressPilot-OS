@@ -8,7 +8,7 @@
 <!-- wp:group {"align":"wide","layout":{"inherit":true}} -->
 <div class="wp-block-group alignwide">
 	<!-- wp:heading {"textAlign":"center"} -->
-	<h2 class="has-text-align-center">{{MENU_TITLE}}</h2>
+	<h2 class="has-text-align-center wp-block-heading">{{MENU_TITLE}}</h2>
 	<!-- /wp:heading -->
 
 	<!-- wp:columns {"align":"wide"} -->
@@ -18,15 +18,15 @@
 			<!-- wp:group {"backgroundColor":"senary"} -->
 			<div class="wp-block-group has-senary-background-color has-background">
 				<!-- wp:heading {"textAlign":"center","level":3,"style":{"spacing":{"margin":{"bottom":"0em","top":"0em"}}}} -->
-				<h3 class="has-text-align-center" style="margin-bottom:0em;margin-top:0em;">{{MENU_SECTION_1_TITLE}}</h3>
+				<h3 class="has-text-align-center wp-block-heading" style="margin-bottom:0em;margin-top:0em;">{{MENU_SECTION_1_TITLE}}</h3>
 				<!-- /wp:heading -->
 
 				<!-- wp:separator {"color":"primary","align":"center"} -->
-				<hr class="wp-block-separator aligncenter has-text-color has-background has-primary-background-color has-primary-color" />
+				<hr class="wp-block-separator aligncenter has-text-color has-background has-primary-background-color has-primary-color" has-alpha-channel-opacity" />
 				<!-- /wp:separator -->
 
 				<!-- wp:heading {"textAlign":"center","level":3} -->
-				<h3 class="has-text-align-center">07 – 18</h3>
+				<h3 class="has-text-align-center wp-block-heading">07 – 18</h3>
 				<!-- /wp:heading -->
 			</div>
 			<!-- /wp:group -->
@@ -38,15 +38,15 @@
 			<!-- wp:group {"backgroundColor":"senary"} -->
 			<div class="wp-block-group has-senary-background-color has-background">
 				<!-- wp:heading {"textAlign":"center","level":3,"style":{"spacing":{"margin":{"bottom":"0em","top":"0em"}}}} -->
-				<h3 class="has-text-align-center" style="margin-bottom:0em;margin-top:0em;">Saturday</h3>
+				<h3 class="has-text-align-center wp-block-heading" style="margin-bottom:0em;margin-top:0em;">Saturday</h3>
 				<!-- /wp:heading -->
 
 				<!-- wp:separator {"color":"primary","align":"center"} -->
-				<hr class="wp-block-separator aligncenter has-text-color has-background has-primary-background-color has-primary-color" />
+				<hr class="wp-block-separator aligncenter has-text-color has-background has-primary-background-color has-primary-color" has-alpha-channel-opacity" />
 				<!-- /wp:separator -->
 
 				<!-- wp:heading {"textAlign":"center","level":3} -->
-				<h3 class="has-text-align-center">07 – 19</h3>
+				<h3 class="has-text-align-center wp-block-heading">07 – 19</h3>
 				<!-- /wp:heading -->
 			</div>
 			<!-- /wp:group -->
@@ -58,15 +58,15 @@
 			<!-- wp:group {"backgroundColor":"senary"} -->
 			<div class="wp-block-group has-senary-background-color has-background">
 				<!-- wp:heading {"textAlign":"center","level":3,"style":{"spacing":{"margin":{"bottom":"0em","top":"0em"}}}} -->
-				<h3 class="has-text-align-center" style="margin-bottom:0em;margin-top:0em;">Sunday</h3>
+				<h3 class="has-text-align-center wp-block-heading" style="margin-bottom:0em;margin-top:0em;">Sunday</h3>
 				<!-- /wp:heading -->
 
 				<!-- wp:separator {"color":"primary","align":"center"} -->
-				<hr class="wp-block-separator aligncenter has-text-color has-background has-primary-background-color has-primary-color" />
+				<hr class="wp-block-separator aligncenter has-text-color has-background has-primary-background-color has-primary-color" has-alpha-channel-opacity" />
 				<!-- /wp:separator -->
 
 				<!-- wp:heading {"textAlign":"center","level":3} -->
-				<h3 class="has-text-align-center">07 – 19</h3>
+				<h3 class="has-text-align-center wp-block-heading">07 – 19</h3>
 				<!-- /wp:heading -->
 			</div>
 			<!-- /wp:group -->

@@ -12,7 +12,7 @@
 		<!-- wp:group {"layout":{"inherit":false,"contentSize":"500px"}} -->
 		<div class="wp-block-group">
 			<!-- wp:heading {"textAlign":"center","level":3} -->
-			<h3 class="has-text-align-center">{{MENU_SECTION_1_TITLE}}</h3>
+			<h3 class="has-text-align-center wp-block-heading">{{MENU_SECTION_1_TITLE}}</h3>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"align":"center","fontSize":"large"} -->
@@ -22,7 +22,7 @@
 			<!-- wp:buttons {"contentJustification":"center"} -->
 			<div class="wp-block-buttons is-content-justification-center">
 				<!-- wp:button -->
-				<div class="wp-block-button"><a class="wp-block-button__link">Read More</a></div>
+				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Read More</a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->

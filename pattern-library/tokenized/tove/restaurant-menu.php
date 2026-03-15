@@ -8,7 +8,7 @@
 <!-- wp:group {"align":"wide","backgroundColor":"senary","className":"is-style-tove-shaded","layout":{"inherit":false}} -->
 <div class="wp-block-group alignwide is-style-tove-shaded has-senary-background-color has-background">
 	<!-- wp:heading {"textAlign":"center"} -->
-	<h2 class="has-text-align-center">{{MENU_TITLE}}</h2>
+	<h2 class="has-text-align-center wp-block-heading">{{MENU_TITLE}}</h2>
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph {"align":"center"} -->
@@ -16,7 +16,7 @@
 	<!-- /wp:paragraph -->
 
 	<!-- wp:separator {"className":"is-style-default"} -->
-	<hr class="wp-block-separator is-style-default" />
+	<hr class="wp-block-separator is-style-default" has-alpha-channel-opacity" />
 	<!-- /wp:separator -->
 
 	<!-- wp:columns -->
@@ -24,7 +24,7 @@
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:heading {"textAlign":"left","level":6,"backgroundColor":"secondary"} -->
-			<h6 class="has-text-align-left has-secondary-background-color has-background">Coffee</h6>
+			<h6 class="has-text-align-left has-secondary-background-color has-background wp-block-heading">Coffee</h6>
 			<!-- /wp:heading -->
 
 			<!-- wp:table {"className":"is-style-tove-vertical-borders no-margin-top"} -->
@@ -69,7 +69,7 @@
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:heading {"textAlign":"left","level":6,"backgroundColor":"secondary"} -->
-			<h6 class="has-text-align-left has-secondary-background-color has-background">Snacks</h6>
+			<h6 class="has-text-align-left has-secondary-background-color has-background wp-block-heading">Snacks</h6>
 			<!-- /wp:heading -->
 
 			<!-- wp:table {"className":"is-style-tove-vertical-borders  no-margin-top"} -->
@@ -106,7 +106,7 @@
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:heading {"textAlign":"left","level":6,"backgroundColor":"secondary"} -->
-			<h6 class="has-text-align-left has-secondary-background-color has-background">Food</h6>
+			<h6 class="has-text-align-left has-secondary-background-color has-background wp-block-heading">Food</h6>
 			<!-- /wp:heading -->
 
 			<!-- wp:table {"className":"is-style-tove-vertical-borders  no-margin-top"} -->

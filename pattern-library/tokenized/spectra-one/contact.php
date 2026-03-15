@@ -85,7 +85,7 @@
 <div class="wp-block-group"><!-- wp:paragraph {"className":"wp-block-heading","fontSize":"x-small"} -->
 <p class="wp-block-heading has-x-small-font-size">Follow us</p>
 <!-- /wp:paragraph -->
-<!-- wp:social-links {"iconColor":"heading","iconColorValue":"var(--wp--preset--color--heading)","size":"has-small-icon-size","className":"is-style-logos-only"} -->
+<!-- wp:social-links {"iconColor":"heading","size":"has-small-icon-size","className":"is-style-logos-only"} -->
 <ul class="wp-block-social-links has-small-icon-size has-icon-color is-style-logos-only"><!-- wp:social-link {"url":"#","service":"facebook"} /-->
 <!-- wp:social-link {"url":"#","service":"twitter"} /-->
 <!-- wp:social-link {"url":"#","service":"linkedin"} /-->

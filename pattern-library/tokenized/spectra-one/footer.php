@@ -28,7 +28,7 @@ $images = [
             <!-- wp:paragraph {"style":{"spacing":{"padding":{"right":"var:preset|spacing|medium"}}},"fontSize":"small"} -->
             <p class="has-small-font-size" style="padding-right:var(--wp--preset--spacing--medium)">{{FOOTER_TEXT}}</p>
             <!-- /wp:paragraph -->
-            <!-- wp:social-links {"iconColor":"heading","iconColorValue":"var(--wp--preset--color--heading)","openInNewTab":true,"size":"has-small-icon-size","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|x-small","left":"var:preset|spacing|x-small"}}},"className":"is-style-logos-only"} -->
+            <!-- wp:social-links {"iconColor":"heading","openInNewTab":true,"size":"has-small-icon-size","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|x-small","left":"var:preset|spacing|x-small"}}},"className":"is-style-logos-only"} -->
             <ul class="wp-block-social-links has-small-icon-size has-icon-color is-style-logos-only">
                 <!-- wp:social-link {"url":"#","service":"facebook"} /-->
                 <!-- wp:social-link {"url":"#","service":"twitter"} /-->

@@ -16,7 +16,7 @@
 		<!-- wp:paragraph -->
 		<p><a href="#">{{BUSINESS_NAME}}</a> · <a href="#">Terms of Service</a> · <a href="#">Contact Us</a></p>
 		<!-- /wp:paragraph -->
-		<!-- wp:social-links {"iconColor":"base","iconColorValue":"#fff","iconBackgroundColor":"contrast","iconBackgroundColorValue":"#000","style":{"spacing":{"blockGap":"10px"}},"className":"is-style-default"} -->
+		<!-- wp:social-links {"iconColor":"base","iconBackgroundColor":"contrast","style":{"spacing":{"blockGap":"10px"}},"className":"is-style-default"} -->
 		<ul class="wp-block-social-links has-icon-color has-icon-background-color is-style-default">
 			<!-- wp:social-link {"url":"#","service":"x"} /-->
 			<!-- wp:social-link {"url":"#","service":"linkedin"} /-->

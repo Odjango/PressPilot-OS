@@ -8,12 +8,12 @@
 <!-- wp:group {"align":"wide","layout":{"inherit":false,"contentSize":"710px","type":"constrained"}} -->
 <div class="wp-block-group alignwide">
 	<!-- wp:heading {"textAlign":"center","level":6,"backgroundColor":"primary","textColor":"foreground"} -->
-	<h6 class="has-text-align-center has-foreground-color has-primary-background-color has-text-color has-background">
+	<h6 class="has-text-align-center has-foreground-color has-primary-background-color has-text-color has-background wp-block-heading">
 		Now serving...</h6>
 	<!-- /wp:heading -->
 
 	<!-- wp:heading {"textAlign":"center","level":1} -->
-	<h1 class="has-text-align-center">{{HERO_TITLE}}</h1>
+	<h1 class="has-text-align-center wp-block-heading">{{HERO_TITLE}}</h1>
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph {"align":"center","fontSize":"large"} -->
