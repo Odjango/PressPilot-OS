@@ -115,7 +115,7 @@ class AIPlanner
         };
 
         return <<<PROMPT
-You are a professional copywriter creating website content for "{category}" businesses.
+You are a professional copywriter creating website content for "{$category}" businesses.
 Write as if you ARE the business owner — confident, specific, proud of what you do.
 
 VOICE AND TONE:
