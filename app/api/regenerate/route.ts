@@ -20,6 +20,12 @@ export async function POST(request: Request) {
         // M1 feature flag: route regeneration to Laravel when BACKEND_URL is set.
         const proxied = await proxyJsonToBackend(request, '/regenerate', 'POST', body);
         if (proxied) {
+            // Log non-2xx responses for debugging
+            if (proxied.status >= 400) {
+                const cloned = proxied.clone();
+                const errorBody = await cloned.text().catch(() => '(unreadable)');
+                console.error(`[Regenerate] Backend returned ${proxied.status}:`, errorBody);
+            }
             return proxied;
         }
 
@@ -47,7 +53,13 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: true, jobId });
 
     } catch (error) {
-        console.error('[Regenerate] Error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorStack = error instanceof Error ? error.stack : undefined;
+        console.error('[Regenerate] Error:', errorMessage, errorStack);
+        return NextResponse.json({
+            error: 'Internal Server Error',
+            details: errorMessage,
+            debug_hint: 'Check browser DevTools Network tab → click the failed request → Response tab for full error'
+        }, { status: 500 });
     }
 }
