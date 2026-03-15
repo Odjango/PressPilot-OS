@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Services\ColorHarmony;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 use ZipArchive;
@@ -331,61 +332,35 @@ PHP;
         $brandBackground = $colors['background'] ?? '#ffffff';
         $brandForeground = $colors['foreground'] ?? '#333333';
 
-        // Generate derived colors
-        $tertiary = $this->lightenColor($brandPrimary, 0.85);  // Light tint of primary
-        $borderLight = $this->lightenColor($brandPrimary, 0.90); // Very light tint
-        $borderDark = $this->lightenColor($brandPrimary, 0.70);  // Medium tint
-        $primaryAccent = $this->lightenColor($brandPrimary, 0.80); // Light accent
-        $mainAccent = $this->lightenColor($brandForeground, 0.40); // Lighter text
+        // Generate derived colors using HSL color harmony (replaces mechanical lightenColor blend)
+        $harmony = app(ColorHarmony::class);
+        $derivedColors = $harmony->generateDerivedPalette(
+            primary: $brandPrimary,
+            secondary: $brandSecondary,
+            accent: $brandAccent,
+            background: $brandBackground,
+            foreground: $brandForeground,
+        );
 
         // Build COMPLETE Ollie-compatible palette with all slugs that patterns reference
         // This ensures no "Attempt Recovery" errors from missing color variables
-        $fullPalette = [
-            // Core brand colors (user-provided)
-            'primary'               => $brandPrimary,
-            'secondary'             => $brandSecondary,
-            'primary-alt'           => $brandAccent,
-            'accent'                => $brandAccent,
-            'base'                  => $brandBackground,
-            'main'                  => $brandForeground,
+        $fullPalette = array_merge(
+            [
+                // Core brand colors (user-provided) — NEVER auto-generated
+                'primary'               => $brandPrimary,
+                'secondary'             => $brandSecondary,
+                'primary-alt'           => $brandAccent,
+                'accent'                => $brandAccent,
+                'base'                  => $brandBackground,
+                'main'                  => $brandForeground,
 
-            // Additional brand variants (auto-generated)
-            'tertiary'              => $tertiary,
-            'foreground'            => $brandForeground,
-            'background'            => $brandBackground,
-            'contrast'              => '#1a1a1a',
-
-            // Border colors (derived from primary)
-            'border'                => $borderLight,
-            'border-light'          => $borderLight,
-            'border-dark'           => $borderDark,
-
-            // Accent variants (derived)
-            'primary-accent'        => $primaryAccent,
-            'main-accent'           => $mainAccent,
-
-            // Background variants (for has-*-background-color classes)
-            'primary-background'    => $this->lightenColor($brandPrimary, 0.95),
-            'secondary-background'  => $this->lightenColor($brandSecondary, 0.95),
-            'tertiary-background'   => $this->lightenColor($tertiary, 0.50),
-            'base-background'       => $brandBackground,
-            'main-background'       => $this->lightenColor($brandForeground, 0.95),
-            'border-light-background' => $this->lightenColor($borderLight, 0.50),
-            'border-dark-background'  => $this->lightenColor($borderDark, 0.50),
-
-            // Border variants for has-*-border-color classes
-            'tertiary-border'       => $tertiary,
-            'border-light-border'   => $borderLight,
-            'primary-border'        => $brandPrimary,
-            'base-border'           => $this->lightenColor($brandBackground, 0.90),
-
-            // Icon and utility colors
-            'icon'                  => $brandPrimary,
-            'icon-background'       => $this->lightenColor($brandPrimary, 0.95),
-            'link'                  => $brandPrimary,
-            'text'                  => $brandForeground,
-            'inline'                => $brandForeground,
-        ];
+                // Additional brand aliases
+                'foreground'            => $brandForeground,
+                'background'            => $brandBackground,
+                'contrast'              => '#1a1a1a',
+            ],
+            $derivedColors // All HSL-derived colors (tertiary, borders, backgrounds, etc.)
+        );
 
         // Resolve canonical slugs to target core slugs
         $paletteOverrides = [];

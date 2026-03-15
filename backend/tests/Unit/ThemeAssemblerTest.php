@@ -141,6 +141,43 @@ class ThemeAssemblerTest extends TestCase
         $this->assertStringContainsString("O\\'Brien\\'s Restaurant", $functions);
     }
 
+    public function test_theme_json_colors_use_hsl_harmony(): void
+    {
+        [$assembler, $project, $patterns] = $this->makeAssemblerFixture('Harmony Test');
+        $project['colors'] = [
+            'primary' => '#e67e22',   // warm orange
+            'secondary' => '#d35400', // dark orange
+            'accent' => '#f39c12',    // golden
+            'background' => '#ffffff',
+            'foreground' => '#2c1810',
+        ];
+
+        $result = $assembler->assemble($project, $patterns, []);
+        $this->registerCleanup($result['themeDir'], $result['zipPath']);
+
+        $themeJson = json_decode(file_get_contents($result['themeDir'] . '/theme.json'), true);
+        $palette = [];
+        foreach ($themeJson['settings']['color']['palette'] as $entry) {
+            $palette[$entry['slug']] = $entry['color'];
+        }
+
+        // Tertiary should preserve warm hue (not cold blue/gray from lightenColor)
+        $harmony = new \App\Services\ColorHarmony();
+        $tertiaryHsl = $harmony->hexToHsl($palette['tertiary']);
+        $isWarm = ($tertiaryHsl['h'] >= 0 && $tertiaryHsl['h'] <= 80) || ($tertiaryHsl['h'] >= 300);
+        $this->assertTrue($isWarm, "Tertiary hue {$tertiaryHsl['h']} lost warm tone");
+
+        // Background variants should be very light (L >= 85)
+        $primaryBgHsl = $harmony->hexToHsl($palette['primary-background'] ?? $palette['primary background'] ?? '#ffffff');
+        $this->assertGreaterThanOrEqual(85, $primaryBgHsl['l'], "primary-background too dark");
+
+        // Borders should be visible against white (contrast ratio >= 1.2)
+        if (isset($palette['border'])) {
+            $borderRatio = $harmony->contrastRatio($palette['border'], '#ffffff');
+            $this->assertGreaterThanOrEqual(1.2, $borderRatio, "border invisible against white");
+        }
+    }
+
     /**
      * @return array{0: ThemeAssembler, 1: array<string, mixed>, 2: array<string, mixed>}
      */
