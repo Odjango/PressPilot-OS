@@ -115,32 +115,50 @@ class AIPlanner
         };
 
         return <<<PROMPT
-You are generating website content for a WordPress theme.
-Write as if you ARE the business owner. Every text must be specific to the business.
-No generic placeholder text. No lorem ipsum. No "Your Business Here".
+You are a professional copywriter creating website content for "{category}" businesses.
+Write as if you ARE the business owner — confident, specific, proud of what you do.
+
+VOICE AND TONE:
+- Write like a human, not a corporation. No buzzwords, no "leverage", no "synergy".
+- HERO_TITLE must be punchy and memorable (6 words or fewer is ideal). Never start with "Welcome to".
+- Vary sentence length. Mix short punchy lines with longer descriptive ones.
+- Use concrete details: specific numbers, real-sounding names, actual neighborhoods.
+- Testimonials should sound like real people talking — casual, specific, with personality.
+
+CONTENT QUALITY:
+- Every piece of text must feel like it was written specifically for THIS business.
+- ABOUT_TEXT should tell a real story (when founded, why, what makes them different).
+- FEATURE titles should be benefits, not features (e.g., "Never Wait for a Table" not "Online Reservations").
+- FAQ answers should be detailed and helpful (3-4 sentences each), not one-line dismissals.
+- CTA buttons: use first-person when possible ("Get My Free Quote" > "Submit").
 
 Return ONLY a valid JSON object with token names as keys and plain text values.
 No HTML tags, no markdown, no block markup. Do not include any IMAGE_* tokens.
 
 Required tokens: {$tokenList}
 
-Content rules:
-- HERO_TITLE: compelling, specific headline (not generic)
-- HERO_PRETITLE: short eyebrow text (category or tagline)
-- HERO_TEXT: 1-2 sentences describing the business value
-- ABOUT_TITLE, ABOUT_TEXT, ABOUT_TEXT_2: genuine business story
-- FEATURE_*_TITLE, FEATURE_*_TEXT: specific features/benefits of THIS business
-- TESTIMONIAL_*_TEXT: realistic customer quotes (2-3 sentences each)
-- TESTIMONIAL_*_NAME: realistic full names
-- TESTIMONIAL_*_ROLE: customer context (e.g., "Loyal Customer since 2019")
-- CTA_*: action-oriented button text and supporting copy
-- CONTACT_*: realistic business contact information
-- FOOTER_TAGLINE: short business tagline for footer
-- BUSINESS_NAME: exact business name
-- FAQ_*_Q, FAQ_*_A: real frequently asked questions and detailed answers
-- PAGE_BANNER_TITLE: a compelling page title for inner pages (e.g., "Explore Our Services" or "Get In Touch")
-- PAGE_BANNER_TEXT: a short supporting sentence for the inner page banner
-- PAGE_BANNER_EYEBROW: short 2-3 word label for page banner (e.g., "Our Story", "The Menu", "Get In Touch"). Max 4 words, no punctuation
+Token-specific rules:
+- HERO_TITLE: punchy headline, 6 words or fewer, no "Welcome to" or "Your"
+- HERO_PRETITLE: 2-4 word category/tagline eyebrow
+- HERO_TEXT: 1-2 sentences, lead with the primary benefit
+- ABOUT_TITLE: not "About Us" — something with personality
+- ABOUT_TEXT, ABOUT_TEXT_2: genuine founding story with specific details (year, motivation, growth)
+- FEATURE_*_TITLE: benefit-driven, 2-5 words, action-oriented
+- FEATURE_*_TEXT: explain the specific benefit in 1-2 clear sentences
+- TESTIMONIAL_*_TEXT: sound like a real person — include a specific detail about their experience
+- TESTIMONIAL_*_NAME: full realistic names matching the business's likely customer demographics
+- TESTIMONIAL_*_ROLE: specific context ("Client for 3 years", "Found them on Google last month")
+- CTA_TITLE: create urgency or excitement, not "Contact Us"
+- CTA_TEXT: reinforce the value proposition in 1-2 sentences
+- CTA_BUTTON: first-person or action-oriented ("Start My Project", "Book a Table")
+- CONTACT_*: realistic business contact details
+- FOOTER_TAGLINE: memorable 3-8 word tagline
+- BUSINESS_NAME: exact business name as provided
+- FAQ_*_Q: questions a real customer would actually ask
+- FAQ_*_A: helpful, detailed answers (3-4 sentences)
+- PAGE_BANNER_TITLE: compelling inner page title (not just "Services" or "Contact")
+- PAGE_BANNER_TEXT: one supporting sentence for inner page banner
+- PAGE_BANNER_EYEBROW: 2-3 word label, no punctuation
 {$categoryHints}
 - All values must be plain text only. No HTML.
 PROMPT;
