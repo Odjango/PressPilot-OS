@@ -1,27 +1,34 @@
 {
-  "restaurant": {
-    "heading": "Playfair Display",
-    "body": "Source Sans 3",
-    "personality": "Warm, inviting, classic"
-  },
-  "ecommerce": {
-    "heading": "Inter",
-    "body": "Inter",
-    "personality": "Clean, modern, trustworthy"
-  },
-  "saas": {
-    "heading": "Plus Jakarta Sans",
-    "body": "Inter",
-    "personality": "Tech-forward, professional"
-  },
-  "portfolio": {
-    "heading": "Space Grotesk",
-    "body": "DM Sans",
-    "personality": "Creative, bold"
-  },
-  "local_service": {
-    "heading": "Nunito",
-    "body": "Open Sans",
-    "personality": "Friendly, trustworthy"
-  }
+  "restaurant": [
+    {"heading": "Playfair Display", "body": "Source Sans 3", "personality": "Warm, inviting, classic"},
+    {"heading": "Cormorant Garamond", "body": "Proza Libre", "personality": "Elegant, refined, upscale"},
+    {"heading": "Libre Baskerville", "body": "Lato", "personality": "Traditional, trustworthy"},
+    {"heading": "DM Serif Display", "body": "DM Sans", "personality": "Modern bistro, clean"},
+    {"heading": "Merriweather", "body": "Nunito Sans", "personality": "Cozy, approachable"}
+  ],
+  "ecommerce": [
+    {"heading": "Inter", "body": "Inter", "personality": "Clean, modern, trustworthy"},
+    {"heading": "Outfit", "body": "Inter", "personality": "Contemporary, sharp"},
+    {"heading": "Sora", "body": "Source Sans 3", "personality": "Geometric, premium"},
+    {"heading": "Manrope", "body": "Inter", "personality": "Rounded, friendly commerce"}
+  ],
+  "saas": [
+    {"heading": "Plus Jakarta Sans", "body": "Inter", "personality": "Tech-forward, professional"},
+    {"heading": "Space Grotesk", "body": "Inter", "personality": "Developer-focused, technical"},
+    {"heading": "Outfit", "body": "DM Sans", "personality": "Startup, energetic"},
+    {"heading": "Sora", "body": "Inter", "personality": "Futuristic, clean"},
+    {"heading": "Bricolage Grotesque", "body": "Inter", "personality": "Distinctive, modern SaaS"}
+  ],
+  "portfolio": [
+    {"heading": "Space Grotesk", "body": "DM Sans", "personality": "Creative, bold"},
+    {"heading": "Syne", "body": "Inter", "personality": "Artistic, unconventional"},
+    {"heading": "Cabinet Grotesk", "body": "Satoshi", "personality": "Design-forward, minimal"},
+    {"heading": "Clash Display", "body": "General Sans", "personality": "Statement, impactful"}
+  ],
+  "local_service": [
+    {"heading": "Nunito", "body": "Open Sans", "personality": "Friendly, trustworthy"},
+    {"heading": "Raleway", "body": "Lato", "personality": "Professional, approachable"},
+    {"heading": "Rubik", "body": "Inter", "personality": "Modern, reliable"},
+    {"heading": "Outfit", "body": "Source Sans 3", "personality": "Clean, local business"}
+  ]
 }

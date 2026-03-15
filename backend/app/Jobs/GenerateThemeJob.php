@@ -132,10 +132,21 @@ class GenerateThemeJob implements ShouldQueue
                 $fontPairings = json_decode(file_get_contents($fontPairingsPath), true) ?? [];
                 $vertical = $this->normalizeCategory($projectData['businessCategory'] ?? $projectData['category'] ?? 'local_service');
                 if (isset($fontPairings[$vertical])) {
-                    $projectData['fontPairing'] = $fontPairings[$vertical];
+                    $options = $fontPairings[$vertical];
+
+                    // Support both old format (single object) and new format (array of objects)
+                    if (isset($options['heading'])) {
+                        // Old format: single pairing
+                        $pairing = $options;
+                    } else {
+                        // New format: array of pairings — pick one at random
+                        $pairing = $options[array_rand($options)];
+                    }
+
+                    $projectData['fontPairing'] = $pairing;
                     // Override fontFamily with heading font (backward compatible)
                     if (! isset($projectData['fontFamily'])) {
-                        $projectData['fontFamily'] = $fontPairings[$vertical]['heading'];
+                        $projectData['fontFamily'] = $pairing['heading'];
                     }
                 }
             }
@@ -177,8 +188,15 @@ class GenerateThemeJob implements ShouldQueue
             $blockResult = $blockValidator->validateTheme($assembled['themeDir']);
             if (!empty($blockResult['errors'])) {
                 Log::error('BlockConfigValidator: Blocking errors found', ['errors' => $blockResult['errors']]);
-                // Don't throw — log as critical but allow generation to proceed
-                // These will be caught by PlaygroundValidator as a second gate
+            }
+
+            // Pre-ZIP save() compliance validation (HTML class/attribute sync)
+            $saveValidator = new \App\Services\SaveComplianceValidator();
+            $saveResult = $saveValidator->validateTheme($assembled['themeDir']);
+            if (!$saveResult['valid']) {
+                Log::error('SaveComplianceValidator: Violations found', [
+                    'errors' => $saveResult['errors'],
+                ]);
             }
 
             // Step 6: Validate assembled theme
