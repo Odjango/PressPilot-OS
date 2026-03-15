@@ -99,13 +99,13 @@ class TokenInjector
                 Log::warning("TokenInjector: Token {$tokenName} has no value");
             }
 
-            // IMAGE_* tokens in HTML content: raw URLs (no escaping needed for img src)
+            // IMAGE_* tokens in HTML content: must HTML-escape for img src attributes (&→&amp;)
             if (str_starts_with($tokenName, 'IMAGE_')) {
                 $url = trim((string) $value);
                 if ($url === '' || !filter_var($url, FILTER_VALIDATE_URL)) {
                     return 'https://placehold.co/1200x600';
                 }
-                return $url;
+                return htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
             }
 
             // Text tokens: HTML escape for content
